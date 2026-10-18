@@ -11,6 +11,7 @@
     "nav.work": "Work",
     "nav.way": "Process",
     "nav.contact": "Contact",
+    "nav.posters": "Posters",
 
     "hero.h": '<span class="ln"><span>A Japanese IT agency,</span></span> <span class="ln"><span>now in <em>Uzbekistan!</em></span></span>',
     "hero.slogan": "A Japanese IT agency, now in Uzbekistan!",
@@ -18,6 +19,13 @@
     "hero.hint": "Slice with your cursor",
     "hero.hintTouch": "Slice with your finger",
     "hero.down": "Go to projects",
+
+    "ch.tag": "Our work",
+    "ch.h": "First, we built <br>for ourselves.",
+    "ch.sub": "Hoglt and PoolTimer are products of the Qilich team. Now it’s your turn.",
+    "ch.hg": "Screen time",
+    "ch.pt": "Pool halls",
+    "case.by": "Built by Qilich",
 
     "hg.tag": "Screen time · iOS &amp; Android",
     "hg.h": "Kids’ phones. <br>Parents’ rules.",
@@ -74,6 +82,7 @@
     "nav.work": "Проекты",
     "nav.way": "Путь",
     "nav.contact": "Контакты",
+    "nav.posters": "Постеры",
 
     "hero.h": '<span class="ln"><span>Японское IT-агентство</span></span> <span class="ln"><span>теперь в <em>Узбекистане!</em></span></span>',
     "hero.slogan": "Японское IT-агентство теперь в Узбекистане!",
@@ -81,6 +90,13 @@
     "hero.hint": "Режьте курсором",
     "hero.hintTouch": "Режьте пальцем",
     "hero.down": "К проектам",
+
+    "ch.tag": "Наши работы",
+    "ch.h": "Сначала мы сделали <br>для себя.",
+    "ch.sub": "Hoglt и PoolTimer — продукты команды Qilich. Теперь ваша очередь.",
+    "ch.hg": "Экранное время",
+    "ch.pt": "Бильярдные клубы",
+    "case.by": "Сделано Qilich",
 
     "hg.tag": "Экранное время · iOS и Android",
     "hg.h": "Телефон ребёнка. <br>Правила родителей.",

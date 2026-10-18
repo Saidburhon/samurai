@@ -18,9 +18,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@400..900&display=swap" />
   <!-- Japanese glyphs: only the characters used on the page are downloaded -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E4%B8%80%E4%BA%8C%E4%B8%89%E5%9B%9B%E4%BA%94%E5%85%AD%E4%B8%83%E6%A7%8B%E5%9E%8B%E6%96%AC%E6%AE%8B%E5%BF%83%E6%9D%B1%E4%BA%AC%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E4%B8%80%E4%BA%8C%E4%B8%89%E5%9B%9B%E4%BA%94%E5%85%AD%E4%B8%83%E6%A7%8B%E5%9E%8B%E6%96%AC%E6%AE%8B%E5%BF%83%E6%9D%B1%E4%BA%AC%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93%E5%AE%9F%E7%B8%BE%E9%80%A3%E7%B5%A1" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=2" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -46,7 +46,7 @@
     <span>QILICH</span>
   </a>
   <nav class="nav-links" aria-label="Boʻlimlar" data-i18n-label="nav.label">
-    <a href="#hoglt" data-i18n="nav.work">Loyihalar</a>
+    <a href="#work" data-i18n="nav.work">Loyihalar</a>
     <a href="#way" data-i18n="nav.way">Yoʻl</a>
     <a href="#contact" data-i18n="nav.contact">Aloqa</a>
   </nav>
@@ -58,17 +58,28 @@
   </div>
 </header>
 
+<!-- the katana: scroll progress, one notch per poster -->
+<nav class="katana" id="katana" aria-label="Posterlar" data-i18n-label="nav.posters">
+  <span class="k-kashira"></span>
+  <span class="k-tsuka"></span>
+  <span class="k-tsuba"></span>
+  <span class="k-habaki"></span>
+  <div class="k-track">
+    <div class="k-sheath"><div class="k-blade"></div><i class="k-glint"></i></div>
+    <ol class="k-marks" id="kMarks"></ol>
+  </div>
+</nav>
+
 <main id="main">
 
 <!-- 一 HERO -->
-<section class="poster p-hero" id="top" data-num="一">
+<section class="poster p-hero" id="top" data-num="一" data-k="Qilich">
   <div class="sun" id="sun" aria-hidden="true">
     <div class="sun-half sun-a"><span>剣</span></div>
     <div class="sun-half sun-b"><span>剣</span></div>
     <div class="sun-slash"></div>
   </div>
   <canvas class="blade" id="blade" aria-hidden="true"></canvas>
-  <div class="vert" aria-hidden="true"><span>技術</span><i></i><span>規律</span><i></i><span>名誉</span></div>
 
   <div class="hero-text">
     <p class="tag mono rv"><span>一 / 七</span> Qilich · 2026</p>
@@ -76,13 +87,37 @@
     <p class="stack mono rv" data-i18n="hero.stack">iOS · Android · Veb · Desktop · IoT</p>
   </div>
   <p class="hint mono rv" aria-hidden="true"><span class="hint-mouse" data-i18n="hero.hint">Kursor bilan kesing</span><span class="hint-touch" data-i18n="hero.hintTouch">Barmogʻingiz bilan kesing</span></p>
-  <a href="#hoglt" class="scroll-cue" aria-label="Loyihalarga oʻtish" data-i18n-label="hero.down"><svg class="i"><use href="#i-arrow-down"/></svg></a>
+  <a href="#work" class="scroll-cue" aria-label="Loyihalarga oʻtish" data-i18n-label="hero.down"><svg class="i"><use href="#i-arrow-down"/></svg></a>
+</section>
+
+<!-- 実績 the bridge: why two products follow a samurai -->
+<section class="chapter" id="work" aria-labelledby="chTitle">
+  <div class="chapter-cut" aria-hidden="true"><i></i></div>
+  <div class="chapter-text">
+    <p class="ch-tag mono rv"><span class="kj">実績</span> <span data-i18n="ch.tag">Ishlarimiz</span></p>
+    <h2 id="chTitle" class="big rv" data-i18n="ch.h">Avval oʻzimiz uchun <br>yaratdik.</h2>
+    <p class="ch-sub rv" data-i18n="ch.sub">Hoglt va PoolTimer — Qilich jamoasining mahsulotlari. Endi navbat sizniki.</p>
+  </div>
+  <div class="ch-tiles">
+    <a class="ch-tile t-hoglt rv" href="#hoglt">
+      <span class="no mono">01</span>
+      <img src="assets/img/hoglt/wave.webp" width="384" height="384" alt="" />
+      <b>Hoglt</b><small data-i18n="ch.hg">Ekran vaqti</small>
+    </a>
+    <a class="ch-tile t-pool rv" href="#pooltimer">
+      <span class="no mono">02</span>
+      <span class="mini-table" aria-hidden="true"><i class="mono">1:12</i></span>
+      <b>PoolTimer</b><small data-i18n="ch.pt">Bilyard klublari</small>
+    </a>
+  </div>
 </section>
 
 <!-- 二 HOGLT -->
-<section class="poster p-hoglt" id="hoglt" data-num="二" aria-labelledby="hgTitle">
+<section class="poster p-case p-hoglt" id="hoglt" data-num="二" data-k="Hoglt" aria-labelledby="hgTitle">
+  <p class="tag mono"><span>二 / 七</span> <span data-i18n="case.by">Qilich yaratgan</span> · 01</p>
+  <div class="case rvc">
   <div class="p-head">
-    <p class="tag mono"><span>二 / 七</span> <span data-i18n="hg.tag">Ekran vaqti · iOS va Android</span></p>
+    <p class="case-top mono" data-i18n="hg.tag">Ekran vaqti · iOS va Android</p>
     <h2 id="hgTitle" class="sr-only">Hoglt</h2>
     <img class="hg-logo rv" src="assets/img/hoglt/logo.webp" width="400" height="141" alt="Hoglt" />
     <p class="big rv" data-i18n="hg.h">Bolaning telefoni. <br>Ota-onaning qoidasi.</p>
@@ -115,12 +150,15 @@
     </div>
     <figcaption class="mono" data-i18n="hg.drag">Kunni aylantiring</figcaption>
   </figure>
+  </div>
 </section>
 
 <!-- 三 POOLTIMER -->
-<section class="poster p-pool" id="pooltimer" data-num="三" aria-labelledby="ptTitle">
+<section class="poster p-case p-pool" id="pooltimer" data-num="三" data-k="PoolTimer" aria-labelledby="ptTitle">
+  <p class="tag mono"><span>三 / 七</span> <span data-i18n="case.by">Qilich yaratgan</span> · 02</p>
+  <div class="case rvc">
   <div class="p-head">
-    <p class="tag mono"><span>三 / 七</span> <span data-i18n="pt.tag">Bilyard klublari uchun</span></p>
+    <p class="case-top mono" data-i18n="pt.tag">Bilyard klublari uchun</p>
     <h2 id="ptTitle" class="pt-logo rv"><svg class="ball" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#000" stroke="#ffb547" stroke-width="2"/><circle cx="12" cy="12" r="5.2" fill="#fff"/><text x="12" y="15.2" text-anchor="middle" font-size="8.5" font-weight="800" font-family="Archivo, sans-serif" fill="#000">8</text></svg><span>Pool<em>Timer</em></span></h2>
     <p class="big rv" data-i18n="pt.h">Har daqiqa — <br>hisobda.</p>
     <p class="aka mono rv" data-i18n="pt.aka">Oʻzbekistonda — ClubTime</p>
@@ -152,10 +190,11 @@
     </div>
     <div class="tg" id="tg" aria-live="polite"><b>Telegram</b><span id="tgText"></span></div>
   </div>
+  </div>
 </section>
 
 <!-- 四 STACK -->
-<section class="poster p-stack" id="stack" data-num="四" aria-labelledby="mxTitle">
+<section class="poster p-stack" id="stack" data-num="四" data-k="Arsenal" aria-labelledby="mxTitle">
   <div class="p-head">
     <p class="tag mono"><span>四 / 七</span> Arsenal</p>
     <h2 id="mxTitle" class="big rv" data-i18n="mx.h">Bir jamoa. <br>Butun stek.</h2>
@@ -179,7 +218,7 @@
 </section>
 
 <!-- 五 TOKYO · TASHKENT -->
-<section class="poster p-tokyo" id="tokyo" data-num="五" aria-labelledby="tkTitle">
+<section class="poster p-tokyo" id="tokyo" data-num="五" data-k="東京" data-tone="red" aria-labelledby="tkTitle">
   <p class="tag mono"><span>五 / 七</span> 東京 — <span data-i18n="tk.city">Toshkent</span></p>
   <h2 id="tkTitle" class="big rv" data-i18n="tk.h">Tokio standarti. <br>Toshkent vaqti.</h2>
   <div class="route rv">
@@ -202,7 +241,7 @@
 </section>
 
 <!-- 六 THE WAY -->
-<section class="poster p-way" id="way" data-num="六" aria-labelledby="wayTitle">
+<section class="poster p-way" id="way" data-num="六" data-k="道" data-tone="light" aria-labelledby="wayTitle">
   <p class="tag mono"><span>六 / 七</span> 道</p>
   <h2 id="wayTitle" class="big rv" data-i18n="way.h">Toʻrt zarba.</h2>
   <ol class="steps" id="steps">
@@ -215,7 +254,7 @@
 </section>
 
 <!-- 七 CONTACT -->
-<section class="poster p-contact" id="contact" data-num="七" aria-labelledby="ctTitle">
+<section class="poster p-contact" id="contact" data-num="七" data-k="連絡" aria-labelledby="ctTitle">
   <p class="tag mono"><span>七 / 七</span> <span data-i18n="nav.contact">Aloqa</span></p>
   <h2 id="ctTitle" class="big rv" data-i18n="ct.h">Loyihangiz bormi?</h2>
   <div class="ct-links">
@@ -243,9 +282,9 @@
     phone: "+998972707007"
   };
 </script>
-<script src="assets/js/i18n.js?v=2"></script>
-<script src="assets/js/main.js?v=2" defer></script>
-<script src="assets/js/hero.js?v=2" defer></script>
-<script src="assets/js/posters.js?v=2" defer></script>
+<script src="assets/js/i18n.js?v=4"></script>
+<script src="assets/js/main.js?v=4" defer></script>
+<script src="assets/js/hero.js?v=4" defer></script>
+<script src="assets/js/posters.js?v=4" defer></script>
 </body>
 </html>
