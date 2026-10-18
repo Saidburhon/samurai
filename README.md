@@ -43,7 +43,7 @@ At the bottom of `public/index.html` there is one config block:
 ```js
 window.QILICH_CONFIG = {
   telegram: "",       // e.g. "qilich_agency" (username without @)
-  email: "",          // e.g. "hello@qilich.com"
+  email: "",          // e.g. "inbox@qilich.com"
   phone: "",          // e.g. "+998901234567"
   instagram: "",      // e.g. "qilich.agency"
   formEndpoint: ""    // optional: Formspree / Getform / your own API URL
@@ -95,8 +95,8 @@ npm run deploy:www      # www.qilich.com → qilich.com
 
 ### Email
 
-Turn on **Email Routing** for `qilich.com` and forward `hello@qilich.com` to your own inbox. It's free.
-Then set `email: "hello@qilich.com"` in `QILICH_CONFIG`.
+Turn on **Email Routing** for `qilich.com` and forward `inbox@qilich.com` to your own inbox. It's free.
+Then set `email: "inbox@qilich.com"` in `QILICH_CONFIG`.
 
 ## About the concept demos
 

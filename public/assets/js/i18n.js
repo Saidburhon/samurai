@@ -212,7 +212,8 @@
     "ft.copy": "Qilich · IT solutions. Forged in Uzbekistan.",
     "ft.disc": "Concept demos are illustrative and not affiliated with the brands shown.",
     "ft.top": "Back to top",
-    "ars.eye": "The Arsenal"
+    "ars.eye": "The Arsenal",
+    "ct2.email": "Email"
   };
 
   const doc = document.documentElement;

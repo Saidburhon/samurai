@@ -50,6 +50,7 @@
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 3 10.4l7 2.6 2.6 7z"/><path d="M10 13 21 3"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2" width="11" height="20" rx="2.8"/><path d="M10.5 18.5h3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7.5l8 6 8-6"/></symbol>
   <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx=".8"/><path d="M9.5 2.5V6M14.5 2.5V6M9.5 18v3.5M14.5 18v3.5M2.5 9.5H6M2.5 14.5H6M18 9.5h3.5M18 14.5h3.5"/></symbol>
   <symbol id="i-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="3"/><path d="M2.5 9h19"/><circle cx="6" cy="6.5" r=".7" fill="currentColor"/><circle cx="8.5" cy="6.5" r=".7" fill="currentColor"/></symbol>
   <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
@@ -665,9 +666,9 @@
       <h2 class="h2 h2-xl" data-split data-i18n="ct2.h">Bizga <em>imkonsizni</em> olib keling.</h2>
       <p class="lead" data-reveal data-i18n="ct2.lead">Nima qurmoqchi ekaningizni ayting. Biz uni qanday kesishimizni aytamiz: texnologiyalar, muddat va halol narx.</p>
       <div class="contact-links" data-reveal>
-        <a class="clink magnetic" data-link="telegram" href="#" target="_blank" rel="noopener" data-cursor="Open"><svg class="i"><use href="#i-send"/></svg><span>Telegram</span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
-        <a class="clink magnetic" data-link="email" href="#" data-cursor="Open"><svg class="i"><use href="#i-arrow-ur"/></svg><span>Email</span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
-        <a class="clink magnetic" data-link="phone" href="#" data-cursor="Call"><svg class="i"><use href="#i-phone"/></svg><span data-i18n="ct2.call">Qoʻngʻiroq qilish</span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
+        <a class="clink magnetic" data-link="phone" href="#" data-cursor="Call"><svg class="i"><use href="#i-phone"/></svg><span><small data-i18n="ct2.call">Qoʻngʻiroq qilish</small><b data-value="phone"></b></span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
+        <a class="clink magnetic" data-link="email" href="#" data-cursor="Write"><svg class="i"><use href="#i-mail"/></svg><span><small data-i18n="ct2.email">Elektron pochta</small><b data-value="email"></b></span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
+        <a class="clink magnetic" data-link="telegram" href="#" target="_blank" rel="noopener" data-cursor="Open"><svg class="i"><use href="#i-send"/></svg><span><small>Telegram</small><b data-value="telegram"></b></span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
       </div>
     </div>
 
@@ -725,7 +726,7 @@
       <div>
         <p class="f-k" data-i18n="nav.contact">Aloqa</p>
         <a href="#contact" data-i18n="cta.start">Loyiha boshlash</a>
-        <a href="#" data-link="telegram" target="_blank" rel="noopener">Telegram</a><a href="#" data-link="email">Email</a><a href="#" data-link="instagram" target="_blank" rel="noopener">Instagram</a>
+        <a href="#" data-link="phone" data-value="phone"></a><a href="#" data-link="email" data-value="email"></a><a href="#" data-link="telegram" target="_blank" rel="noopener">Telegram</a><a href="#" data-link="instagram" target="_blank" rel="noopener">Instagram</a>
       </div>
       <div class="f-motto">
         <p class="f-k">剣の道</p>
@@ -747,8 +748,8 @@
 <script>
   window.QILICH_CONFIG = {
     telegram: "",       // e.g. "qilich_agency" (username without @)
-    email: "",          // e.g. "hello@qilich.com"
-    phone: "",          // e.g. "+998901234567"
+    email: "inbox@qilich.com",
+    phone: "+998972707007",
     instagram: "",      // e.g. "qilich.agency"
     formEndpoint: ""    // optional: a Formspree / Getform / your own API URL. Leave empty to use email.
   };

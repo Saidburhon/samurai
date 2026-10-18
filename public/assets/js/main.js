@@ -377,6 +377,15 @@
       const h = hrefs[a.dataset.link];
       if (h) a.href = h; else a.classList.add('is-empty');
     });
+    // show the actual number and address, not just a label
+    const phone = clean(CONFIG.phone);
+    const uz = phone.replace(/[^\d+]/g, '').match(/^\+998(\d{2})(\d{3})(\d{2})(\d{2})$/);
+    const values = {
+      phone: uz ? `+998 ${uz[1]} ${uz[2]} ${uz[3]} ${uz[4]}` : phone,
+      email: clean(CONFIG.email),
+      telegram: clean(CONFIG.telegram) && '@' + clean(CONFIG.telegram)
+    };
+    $$('[data-value]').forEach(el => { el.textContent = values[el.dataset.value] || ''; });
 
     const form = $('#contactForm');
     if (!form) return;

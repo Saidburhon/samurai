@@ -924,7 +924,10 @@ html:not(.js) .manifesto-t .mw { color: var(--text); }
 .h2-xl { font-size: clamp(48px, 7.2vw, 124px); }
 .contact-links { display: grid; gap: 10px; margin-top: 14px; max-width: 440px; }
 .clink { display: flex; align-items: center; gap: 14px; padding: 18px 22px; border-radius: 18px; border: 1px solid var(--line-2); font-size: 18px; font-weight: 600; transition: background .35s, color .35s, border-color .35s; }
-.clink span { flex: 1; }
+.clink span { flex: 1; display: grid; gap: 3px; }
+.clink small { font: 500 10.5px/1.2 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); transition: color .35s; }
+.clink b { font-weight: 600; font-size: 19px; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.clink:hover small { color: rgba(9,9,11,.6); }
 .clink .i { width: 20px; height: 20px; }
 .clink:hover { background: var(--text); color: var(--ink); border-color: var(--text); }
 .clink.is-empty { display: none; }
