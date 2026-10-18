@@ -21,8 +21,9 @@
   --gold: #d6aa5c;
   --jade: #3fd18f;
 
-  --f-display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  /* Montserrat and Cormorant only kick in for Cyrillic (Russian), which Archivo and Instrument Serif lack */
+  --f-display: "Archivo", "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-serif: "Instrument Serif", "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --f-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --f-jp: "Yuji Boku", "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
 
@@ -698,11 +699,11 @@ html.has-cursor input[type="range"], html.has-cursor select { cursor: pointer; }
 .sf-mini .sf-layer { animation: none; }
 .sf-text { font-family: var(--f-serif); font-style: italic; font-size: 15px; fill: #fff7ec; transition: fill .5s; }
 .sf-opts { display: grid; gap: 8px; padding: 6px 14px; }
-.sf-opt, .sf-ins { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 6px; }
+.sf-opt, .sf-ins { display: grid; grid-template-columns: 46px 1fr; align-items: center; gap: 6px; }
 .sf-opt > span, .sf-ins > span { font: 600 9px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: #9a7f6a; }
 .sf-opt > div { display: flex; gap: 5px; }
-.sf-opt button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 2px; border-radius: 10px; border: 1px solid #eadfce; background: #fff; font-size: 11px; font-weight: 600; color: #4a3426; transition: all .25s; }
-.sf-opt button[style]::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sw); flex: none; }
+.sf-opt button { flex: 1; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 7px 1px; border-radius: 10px; border: 1px solid #eadfce; background: #fff; font-size: 10.5px; font-weight: 600; color: #4a3426; white-space: nowrap; overflow: hidden; transition: all .25s; }
+.sf-opt button[style]::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sw); flex: none; }
 .sf-opt button.is-on { border-color: #4a2e1f; background: #4a2e1f; color: #fff; }
 .sf-ins input { width: 100%; border: 1px solid #eadfce; border-radius: 10px; padding: 7px 10px; font-size: 13px; background: #fff; color: #2b1d14; outline: none; cursor: text; }
 .sf-ins input:focus { border-color: #c79a5c; }

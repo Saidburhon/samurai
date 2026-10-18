@@ -17,15 +17,16 @@ Plain HTML, CSS and JavaScript with no build step. It is served from Cloudflare 
 
 It works on phones, honours "reduce motion" settings, and shows no console errors.
 
-## Languages: Uzbek first, English on the switch
+## Languages: Uzbek first, Russian and English on the switch
 
 - **Uzbek is the default** and is written directly in `public/index.html`, so search engines and visitors without JavaScript get Uzbek.
-- **English** lives in `public/assets/js/i18n.js`, keyed by the `data-i18n` attribute on each element.
+- **Russian and English** live in `public/assets/js/i18n.js` (the `RU` and `EN` dictionaries), keyed by the `data-i18n` attribute on each element.
   `data-i18n-ph` covers placeholders and `data-i18n-label` covers `aria-label`.
-- The **UZ | EN switcher** in the nav remembers the visitor's choice. Share `https://qilich.com/?lang=en` to open the English version directly.
-- Text the demos draw themselves (toasts, receipts, Telegram messages, form messages) lives in `demos.js` and `main.js` as `L('uzbek', 'english')` pairs.
+- The **UZ | RU | EN switcher** in the nav remembers the visitor's choice. Share `https://qilich.com/?lang=ru` or `?lang=en` to open a version directly.
+- Text the demos draw themselves (toasts, receipts, Telegram messages, form messages) lives in `demos.js` and `main.js` as `L('uzbek', 'english', 'russian')` calls.
+- Archivo and Instrument Serif have no Cyrillic, so Russian text falls back to Montserrat and Cormorant Garamond. Browsers download those only when Cyrillic is on screen.
 
-To change a sentence, edit the Uzbek in `index.html` and the English under the same key in `i18n.js`. If an English entry is missing, the page keeps the Uzbek and logs a warning in the browser console.
+To change a sentence, edit the Uzbek in `index.html` and the Russian and English under the same key in `i18n.js`. If an entry is missing, the page keeps the Uzbek and logs a warning in the browser console.
 
 ## Run it locally
 
@@ -110,7 +111,7 @@ public/index.html             page markup + contact config
 public/404.html               not-found page
 public/_headers               security and cache headers
 public/assets/css/style.css   all styles (tokens at the top)
-public/assets/js/i18n.js      language switcher + English text
+public/assets/js/i18n.js      language switcher + Russian and English text
 public/assets/js/main.js      intro cut, cursor, nav, reveals, scroll effects, tabs, form
 public/assets/js/hero.js      blade trail, sparks, embers, parallax, sliced sun
 public/assets/js/demos.js     Tikoncha, ClubTime, Safia, Bon!, Akfa demos + code typer

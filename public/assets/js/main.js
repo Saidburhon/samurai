@@ -9,8 +9,8 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const CONFIG = window.QILICH_CONFIG || {};
-  // pick the Uzbek or English string for text this script writes itself (see i18n.js)
-  const L = (uz, en) => (doc.lang === 'en' ? en : uz);
+  // pick the Uzbek, English or Russian string for text this script writes itself (see i18n.js)
+  const L = (uz, en, ru) => (doc.lang === 'en' ? en : doc.lang === 'ru' ? ru : uz);
   const onLang = fn => document.addEventListener('qilich:lang', fn);
 
   const store = {
@@ -119,7 +119,7 @@
     const setMenu = v => {
       open = v;
       burger.setAttribute('aria-expanded', String(v));
-      burger.setAttribute('aria-label', v ? L('Menyuni yopish', 'Close menu') : L('Menyuni ochish', 'Open menu'));
+      burger.setAttribute('aria-label', v ? L('Menyuni yopish', 'Close menu', 'Закрыть меню') : L('Menyuni ochish', 'Open menu', 'Открыть меню'));
       menu.classList.toggle('is-open', v);
       menu.setAttribute('aria-hidden', String(!v));
       menu.inert = !v;
@@ -127,8 +127,8 @@
       if (v) n.classList.remove('is-hidden');
     };
     menu.inert = true;
-    burger.setAttribute('aria-label', L('Menyuni ochish', 'Open menu'));
-    onLang(() => burger.setAttribute('aria-label', open ? L('Menyuni yopish', 'Close menu') : L('Menyuni ochish', 'Open menu')));
+    burger.setAttribute('aria-label', L('Menyuni ochish', 'Open menu', 'Открыть меню'));
+    onLang(() => burger.setAttribute('aria-label', open ? L('Menyuni yopish', 'Close menu', 'Закрыть меню') : L('Menyuni ochish', 'Open menu', 'Открыть меню')));
     burger.addEventListener('click', () => setMenu(!open));
     $$('a', menu).forEach(a => a.addEventListener('click', () => setMenu(false)));
     addEventListener('keydown', e => { if (e.key === 'Escape' && open) setMenu(false); });
@@ -296,7 +296,7 @@
     let words = [];
     const build = () => {
       words = splitWords(m, 'mw');
-      words.forEach(w => { if (/^(cut\.|sloppy|zarba\.|pala-partish)$/.test(w.textContent)) w.classList.add('hl'); });
+      words.forEach(w => { if (/^(cut\.|sloppy|zarba\.|pala-partish|удар\.|небрежно\.)$/.test(w.textContent)) w.classList.add('hl'); });
       if (reduce) words.forEach(w => w.classList.add('on'));
     };
     build();
@@ -406,7 +406,7 @@
       if (!name || !who) {
         if (!name) form.elements.name.closest('.field').classList.add('has-err');
         if (!who) form.elements.contact.closest('.field').classList.add('has-err');
-        err.textContent = L('Siz bilan bogʻlanishimiz uchun ismingiz va telefon raqamingiz yoki Telegramingizni yozing.', 'Add your name and a phone number or Telegram so we can reach you.');
+        err.textContent = L('Siz bilan bogʻlanishimiz uchun ismingiz va telefon raqamingiz yoki Telegramingizni yozing.', 'Add your name and a phone number or Telegram so we can reach you.', 'Укажите имя и телефон или Telegram, чтобы мы могли с вами связаться.');
         (name ? form.elements.contact : form.elements.name).focus();
         return;
       }
@@ -427,23 +427,23 @@
             body: JSON.stringify(data)
           });
           if (!r.ok) throw new Error('HTTP ' + r.status);
-          doneS.textContent = L('Xabaringiz yetib keldi. Tez orada haqiqiy inson javob beradi.', "We've got it. Expect a reply from a real human soon.");
+          doneS.textContent = L('Xabaringiz yetib keldi. Tez orada haqiqiy inson javob beradi.', "We've got it. Expect a reply from a real human soon.", 'Сообщение получено. Скоро вам ответит живой человек.');
         } else if (clean(CONFIG.email)) {
           const email = clean(CONFIG.email);
-          location.href = `mailto:${email}?subject=${encodeURIComponent(L('Yangi loyiha: ', 'New project: ') + name)}&body=${encodeURIComponent(body)}`;
+          location.href = `mailto:${email}?subject=${encodeURIComponent(L('Yangi loyiha: ', 'New project: ', 'Новый проект: ') + name)}&body=${encodeURIComponent(body)}`;
           // a mailto link silently does nothing without a mail app, so always show the address too
           const a = document.createElement('a');
           a.href = `mailto:${email}`;
           a.textContent = email;
-          doneS.replaceChildren(L('Pochta ilovangiz hammasi toʻldirilgan holda ochilishi kerak. “Yuborish”ni bosing. Agar hech narsa ochilmasa, bizga yozing: ', 'Your mail app should open with everything filled in. Just press send. If nothing opened, write to us at '), a, '.');
+          doneS.replaceChildren(L('Pochta ilovangiz hammasi toʻldirilgan holda ochilishi kerak. “Yuborish”ni bosing. Agar hech narsa ochilmasa, bizga yozing: ', 'Your mail app should open with everything filled in. Just press send. If nothing opened, write to us at ', 'Должно открыться почтовое приложение со всеми данными. Просто нажмите «Отправить». Если ничего не открылось, напишите нам на '), a, '.');
         } else {
           console.warn('[Qilich] The contact form is not connected. Set QILICH_CONFIG.email or formEndpoint in index.html.');
-          doneS.textContent = L('Demo rejim: xabarlarni olish uchun formani QILICH_CONFIG (index.html) orqali ulang.', 'Demo mode: connect the form in QILICH_CONFIG (index.html) to receive messages.');
+          doneS.textContent = L('Demo rejim: xabarlarni olish uchun formani QILICH_CONFIG (index.html) orqali ulang.', 'Demo mode: connect the form in QILICH_CONFIG (index.html) to receive messages.', 'Демо-режим: подключите форму в QILICH_CONFIG (index.html), чтобы получать сообщения.');
         }
         form.classList.add('is-done');
         back.focus({ preventScroll: true });
       } catch (ex) {
-        err.textContent = L('Yuborishda xatolik yuz berdi. Birozdan soʻng qayta urinib koʻring.', 'Something went wrong while sending. Please try again in a moment.');
+        err.textContent = L('Yuborishda xatolik yuz berdi. Birozdan soʻng qayta urinib koʻring.', 'Something went wrong while sending. Please try again in a moment.', 'При отправке что-то пошло не так. Попробуйте ещё раз чуть позже.');
       } finally {
         btn.disabled = false;
       }

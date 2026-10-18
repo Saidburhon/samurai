@@ -16,7 +16,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@400..900&family=Cormorant+Garamond:ital,wght@1,500&display=swap" />
   <!-- Japanese glyphs: only the characters used on the page are downloaded -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E3%81%AE%E6%96%AC%E6%A7%8B%E3%81%88%E5%9E%8B%E6%AE%8B%E5%BF%83%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93" />
 
@@ -124,6 +124,7 @@
     </nav>
     <div class="lang" role="group" aria-label="Til / Language">
       <button type="button" data-lang="uz" aria-pressed="true" lang="uz">UZ</button>
+      <button type="button" data-lang="ru" aria-pressed="false" lang="ru">RU</button>
       <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
     </div>
     <a href="#contact" class="btn btn-red btn-sm nav-cta magnetic" data-cursor="Hi"><span data-i18n="cta.start">Loyiha boshlash</span> <svg class="i"><use href="#i-arrow-ur"/></svg></a>
@@ -409,7 +410,7 @@
                   </div>
                   <div class="sf-opt" data-key="size">
                     <span data-i18n="sf.size">Hajm</span>
-                    <div><button data-v="1">1 kg</button><button class="is-on" data-v="2">2 kg</button><button data-v="3">3 kg</button></div>
+                    <div><button data-v="1" data-i18n="sf.kg1">1 kg</button><button class="is-on" data-v="2" data-i18n="sf.kg2">2 kg</button><button data-v="3" data-i18n="sf.kg3">3 kg</button></div>
                   </div>
                   <label class="sf-ins"><span data-i18n="sf.ontop">Yozuv</span><input type="text" maxlength="16" value="Tabriklaymiz!" aria-label="Tort ustidagi yozuv" data-i18n-label="sf.insLabel" /></label>
                 </div>
@@ -514,7 +515,7 @@
                   <label class="ak-range"><span data-i18n="ak.h2">Boʻyi <b class="ak-hh">1400</b> mm</span><input type="range" min="600" max="2000" step="50" value="1400" data-k="h" aria-label="Boʻyi, millimetrda" data-i18n-label="ak.hLabel"></label>
                   <div class="ak-field">
                     <span data-i18n="ak.profile">Profil</span>
-                    <div class="seg seg-light" data-k="profile"><button data-v="60">60 mm</button><button class="is-on" data-v="70">70 mm</button><button data-v="80">80 mm</button></div>
+                    <div class="seg seg-light" data-k="profile"><button data-v="60" data-i18n="ak.p60">60 mm</button><button class="is-on" data-v="70" data-i18n="ak.p70">70 mm</button><button data-v="80" data-i18n="ak.p80">80 mm</button></div>
                   </div>
                   <div class="ak-field">
                     <span data-i18n="ak.glass">Oyna</span>

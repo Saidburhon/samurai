@@ -7,9 +7,9 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg';
   const som = n => Math.round(n).toLocaleString('ru-RU').replace(/\s/g, ' ');
-  // Uzbek or English for text the demos draw themselves; i18n.js handles the static page
-  const L = (uz, en) => (document.documentElement.lang === 'en' ? en : uz);
-  const SOM = () => L('soʻm', "so'm");
+  // Uzbek, English or Russian for text the demos draw themselves; i18n.js handles the static page
+  const L = (uz, en, ru) => { const l = document.documentElement.lang; return l === 'en' ? en : l === 'ru' ? ru : uz; };
+  const SOM = () => L('soʻm', "so'm", 'сум');
   const onLang = fn => document.addEventListener('qilich:lang', fn);
   const svgEl = (tag, attrs) => {
     const e = document.createElementNS(NS, tag);
@@ -82,16 +82,16 @@
     const apps = $$('.app', root);
     const MODES = {
       default: {
-        off: 38, usage: () => L('1:52', '1h 52m'), name: () => L('Standart rejim', 'Default mode'), trend: () => L('oʻtgan haftaga nisbatan −12%', '−12% vs last week'),
-        toast: () => ({ kind: 'ok', icon: 'i-check', title: L('Standart rejim', 'Default mode'), text: L('Faqat kuzatuv. Ota-onalar kunlik hisobot oladi.', 'Tracking only. Parents get a daily report.') })
+        off: 38, usage: () => L('1:52', '1h 52m', '1:52'), name: () => L('Standart rejim', 'Default mode', 'Стандартный режим'), trend: () => L('oʻtgan haftaga nisbatan −12%', '−12% vs last week', '−12% к прошлой неделе'),
+        toast: () => ({ kind: 'ok', icon: 'i-check', title: L('Standart rejim', 'Default mode', 'Стандартный режим'), text: L('Faqat kuzatuv. Ota-onalar kunlik hisobot oladi.', 'Tracking only. Parents get a daily report.', 'Только наблюдение. Родители получают ежедневный отчёт.') })
       },
       gujanak: {
-        off: 56, usage: () => L('1:18', '1h 18m'), name: () => L('Gʻujanak rejimi', "G'ujanak mode"), trend: () => L('oʻtgan haftaga nisbatan −38%', '−38% vs last week'),
-        toast: () => ({ kind: 'gold', icon: 'i-geo', title: L('Gʻujanak yoqildi', "G'ujanak is on"), text: L('Maktab geozonasi faol, cheklovlar qoʻllandi.', 'School geofence active, limits applied.') })
+        off: 56, usage: () => L('1:18', '1h 18m', '1:18'), name: () => L('Gʻujanak rejimi', "G'ujanak mode", 'Режим Gʻujanak'), trend: () => L('oʻtgan haftaga nisbatan −38%', '−38% vs last week', '−38% к прошлой неделе'),
+        toast: () => ({ kind: 'gold', icon: 'i-geo', title: L('Gʻujanak yoqildi', "G'ujanak is on", 'Gʻujanak включён'), text: L('Maktab geozonasi faol, cheklovlar qoʻllandi.', 'School geofence active, limits applied.', 'Геозона школы активна, ограничения включены.') })
       },
       qalqon: {
-        off: 76, usage: () => L('0:41', '0h 41m'), name: () => L('Qalqon rejimi', 'Qalqon mode'), trend: () => L('oʻtgan haftaga nisbatan −64%', '−64% vs last week'),
-        toast: () => ({ kind: '', icon: 'i-shield', title: L('Qalqon yoqildi', 'Qalqon is on'), text: L('Chalgʻituvchi ilovalar OT darajasida toʻsildi.', 'Distracting apps are shielded at OS level.') })
+        off: 76, usage: () => L('0:41', '0h 41m', '0:41'), name: () => L('Qalqon rejimi', 'Qalqon mode', 'Режим Qalqon'), trend: () => L('oʻtgan haftaga nisbatan −64%', '−64% vs last week', '−64% к прошлой неделе'),
+        toast: () => ({ kind: '', icon: 'i-shield', title: L('Qalqon yoqildi', 'Qalqon is on', 'Qalqon включён'), text: L('Chalgʻituvchi ilovalar OT darajasida toʻsildi.', 'Distracting apps are shielded at OS level.', 'Отвлекающие приложения заблокированы на уровне ОС.') })
       }
     };
     const appName = a => $('.app-lbl', a).textContent;
@@ -109,7 +109,7 @@
       $('.tk-mode-name', root).textContent = MODES[mode].name();
       $('.tk-usage', root).textContent = MODES[mode].usage();
       $('.tk-trend', root).textContent = MODES[mode].trend();
-      if (!ask.classList.contains('is-wait')) ask.textContent = L('Ota-onadan ruxsat soʻrash', 'Ask parent to unlock');
+      if (!ask.classList.contains('is-wait')) ask.textContent = L('Ota-onadan ruxsat soʻrash', 'Ask parent to unlock', 'Попросить родителя открыть');
       if (pending) $('.tk-shield-app', root).textContent = appName(pending);
     }
 
@@ -138,24 +138,24 @@
       shield.classList.remove('is-open');
       shield.inert = true;
       ask.classList.remove('is-wait');
-      ask.textContent = L('Ota-onadan ruxsat soʻrash', 'Ask parent to unlock');
+      ask.textContent = L('Ota-onadan ruxsat soʻrash', 'Ask parent to unlock', 'Попросить родителя открыть');
     }
 
     function openApp(a) {
       const id = a.dataset.app, name = appName(a);
       a.animate([{ transform: 'scale(1)' }, { transform: 'scale(.9)' }, { transform: 'scale(1)' }], { duration: 260 });
       if (!a.dataset.bad || mode === 'default' || granted.has(id)) {
-        const text = granted.has(id) ? L('Ota-ona 15 daqiqa ruxsat berdi.', '15 minutes granted by a parent.')
-          : mode === 'default' ? L('Ruxsat. Foydalanish kuzatilmoqda.', 'Allowed. Usage is being tracked.')
-          : L('Taʼlim ilovalari doim ochiq.', 'Learning apps are always open.');
-        toast({ kind: 'ok', icon: 'i-check', title: L(`${name} ochilmoqda`, `Opening ${name}`), text });
+        const text = granted.has(id) ? L('Ota-ona 15 daqiqa ruxsat berdi.', '15 minutes granted by a parent.', 'Родитель разрешил 15 минут.')
+          : mode === 'default' ? L('Ruxsat. Foydalanish kuzatilmoqda.', 'Allowed. Usage is being tracked.', 'Разрешено. Использование отслеживается.')
+          : L('Taʼlim ilovalari doim ochiq.', 'Learning apps are always open.', 'Учебные приложения всегда открыты.');
+        toast({ kind: 'ok', icon: 'i-check', title: L(`${name} ochilmoqda`, `Opening ${name}`, `Открываем ${name}`), text });
         return;
       }
       if (mode === 'gujanak') {
         const left = LIMITS[id];
         toast(left > 0
-          ? { kind: 'gold', icon: 'i-clock', title: L(`${name}: bugun ${left} daqiqa qoldi`, `${name}: ${left} min left today`), text: L('Gʻujanak cheklovni maktabda ham, uyda ham saqlaydi.', "G'ujanak keeps the limit, at school and at home.") }
-          : { kind: '', icon: 'i-lock', title: L(`${name}: kunlik limit tugadi`, `${name}: daily limit reached`), text: L('Ertaga qayta urinib koʻring yoki ota-onadan soʻrang.', 'Try again tomorrow, or ask a parent.') });
+          ? { kind: 'gold', icon: 'i-clock', title: L(`${name}: bugun ${left} daqiqa qoldi`, `${name}: ${left} min left today`, `${name}: сегодня осталось ${left} мин`), text: L('Gʻujanak cheklovni maktabda ham, uyda ham saqlaydi.', "G'ujanak keeps the limit, at school and at home.", 'Gʻujanak держит лимит и в школе, и дома.') }
+          : { kind: '', icon: 'i-lock', title: L(`${name}: kunlik limit tugadi`, `${name}: daily limit reached`, `${name}: дневной лимит исчерпан`), text: L('Ertaga qayta urinib koʻring yoki ota-onadan soʻrang.', 'Try again tomorrow, or ask a parent.', 'Попробуйте завтра или попросите родителя.') });
         return;
       }
       pending = a;
@@ -167,14 +167,14 @@
     function askParent() {
       if (!pending || ask.classList.contains('is-wait')) return;
       ask.classList.add('is-wait');
-      ask.textContent = L('Ota-ona javobi kutilmoqda…', 'Waiting for parent…');
+      ask.textContent = L('Ota-ona javobi kutilmoqda…', 'Waiting for parent…', 'Ждём ответа родителя…');
       const a = pending;
       askTimer = setTimeout(() => {
         granted.add(a.dataset.app);
         a.classList.add('is-granted');
         $('.app-badge', a).textContent = '15′';
         closeShield();
-        toast({ kind: 'tg', icon: 'i-send', title: L('Ota-ona Telegramda ruxsat berdi', 'Parent approved in Telegram'), text: L(`${appName(a)} uchun +15 daqiqa.`, `+15 min for ${appName(a)}.`) });
+        toast({ kind: 'tg', icon: 'i-send', title: L('Ota-ona Telegramda ruxsat berdi', 'Parent approved in Telegram', 'Родитель разрешил в Telegram'), text: L(`${appName(a)} uchun +15 daqiqa.`, `+15 min for ${appName(a)}.`, `+15 минут для ${appName(a)}.`) });
       }, 1700);
     }
 
@@ -214,14 +214,14 @@
     let clock = 21 * 60 + 47;
     let revenue = 1284000;
     const tables = [
-      { n: ['1-stol', 'Table 1'], kind: 'pool', rate: 60000 },
-      { n: ['2-stol', 'Table 2'], kind: 'pool', rate: 60000, start: clock - 47, orders: [{ n: 'Cola', p: 12000 }] },
-      { n: ['3-stol', 'Table 3'], kind: 'pool', rate: 60000 },
-      { n: ['VIP', 'VIP'], kind: 'pool', rate: 90000, start: clock - 83, orders: [{ n: 'Tea', p: 8000 }, { n: 'Snacks', p: 15000 }] },
-      { n: ['1-tennis', 'Tennis 1'], kind: 'tennis', rate: 40000 },
-      { n: ['2-tennis', 'Tennis 2'], kind: 'tennis', rate: 40000 }
+      { n: ['1-stol', 'Table 1', 'Стол 1'], kind: 'pool', rate: 60000 },
+      { n: ['2-stol', 'Table 2', 'Стол 2'], kind: 'pool', rate: 60000, start: clock - 47, orders: [{ n: 'Cola', p: 12000 }] },
+      { n: ['3-stol', 'Table 3', 'Стол 3'], kind: 'pool', rate: 60000 },
+      { n: ['VIP', 'VIP', 'VIP'], kind: 'pool', rate: 90000, start: clock - 83, orders: [{ n: 'Tea', p: 8000 }, { n: 'Snacks', p: 15000 }] },
+      { n: ['1-tennis', 'Tennis 1', 'Теннис 1'], kind: 'tennis', rate: 40000 },
+      { n: ['2-tennis', 'Tennis 2', 'Теннис 2'], kind: 'tennis', rate: 40000 }
     ];
-    const ITEMS = { Tea: ['Choy', 'Tea'], Cola: ['Kola', 'Cola'], Snacks: ['Gazak', 'Snacks'] };
+    const ITEMS = { Tea: ['Choy', 'Tea', 'Чай'], Cola: ['Kola', 'Cola', 'Кола'], Snacks: ['Gazak', 'Snacks', 'Снеки'] };
     const name = t => L(...t.n);
     const item = id => L(...ITEMS[id]);
     let sel = tables[0];
@@ -230,7 +230,7 @@
 
     const minutes = t => (t.start != null ? clock - t.start : 0);
     const hhmm = m => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
-    const dur = m => L(`${Math.floor(m / 60)} soat ${String(m % 60).padStart(2, '0')} daq`, `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`);
+    const dur = m => L(`${Math.floor(m / 60)} soat ${String(m % 60).padStart(2, '0')} daq`, `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`, `${Math.floor(m / 60)} ч ${String(m % 60).padStart(2, '0')} мин`);
     const timeCost = t => Math.round(minutes(t) * t.rate / 60 / 500) * 500;
     const total = t => timeCost(t) + t.orders.reduce((s, o) => s + o.p, 0);
 
@@ -252,11 +252,11 @@
         t.el.setAttribute('aria-pressed', String(t === sel));
         t.el.setAttribute('aria-label', name(t));
         $('.ct-t-name', t.el).textContent = name(t).toUpperCase();
-        $('.ct-t-time', t.el).textContent = t.start != null ? hhmm(minutes(t)) : L('BOʻSH', 'FREE');
+        $('.ct-t-time', t.el).textContent = t.start != null ? hhmm(minutes(t)) : L('BOʻSH', 'FREE', 'СВОБОДЕН');
       });
       const on = sel.start != null;
       ui.name.textContent = name(sel);
-      ui.state.textContent = on ? L('Oʻyinda', 'In play') : L('Boʻsh', 'Free');
+      ui.state.textContent = on ? L('Oʻyinda', 'In play', 'Идёт игра') : L('Boʻsh', 'Free', 'Свободен');
       ui.state.classList.toggle('is-on', on);
       ui.timer.textContent = hhmm(minutes(sel));
       ui.cost.textContent = som(total(sel));
@@ -294,7 +294,8 @@
       revenue += sum;
       printReceipt(t, m, tc, ords, sum);
       telegram(L(`${name(t)} yopildi · ${dur(m)} · ${som(sum)} ${SOM()}. Bugungi tushum: ${som(revenue)} ${SOM()}.`,
-        `${name(t)} closed · ${dur(m)} · ${som(sum)} ${SOM()}. Revenue today: ${som(revenue)} ${SOM()}.`));
+        `${name(t)} closed · ${dur(m)} · ${som(sum)} ${SOM()}. Revenue today: ${som(revenue)} ${SOM()}.`,
+        `${name(t)} закрыт · ${dur(m)} · ${som(sum)} ${SOM()}. Выручка за сегодня: ${som(revenue)} ${SOM()}.`));
       t.start = null;
       t.orders = [];
       paint();
@@ -326,15 +327,15 @@
       const date = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
       const rows = ords.map(o => `<div class="rc-r"><span>${item(o.n)} ×1</span><span>${som(o.p)}</span></div>`).join('');
       ui.paper.innerHTML = `
-        <div class="rc-h">${L('SIZNING KLUB · BILYARD', 'YOUR CLUB · BILLIARDS')}</div>
+        <div class="rc-h">${L('SIZNING KLUB · BILYARD', 'YOUR CLUB · BILLIARDS', 'ВАШ КЛУБ · БИЛЬЯРД')}</div>
         <div class="rc-s">${date} · ${hhmm(clock % 1440)}</div>
         <hr>
         <div class="rc-r"><span>${name(t)}</span><span>${dur(m)}</span></div>
-        <div class="rc-r"><span>${L('Tarif', 'Rate')} ${som(t.rate)}/${L('soat', 'h')}</span><span>${som(tc)}</span></div>
+        <div class="rc-r"><span>${L('Tarif', 'Rate', 'Тариф')} ${som(t.rate)}/${L('soat', 'h', 'ч')}</span><span>${som(tc)}</span></div>
         ${rows}
         <hr>
-        <div class="rc-r rc-t"><span>${L('JAMI', 'TOTAL')}</span><span>${som(sum)}</span></div>
-        <div class="rc-qr">${qr(m * 31 + sum % 997)}<span>${L('Kuzatish uchun<br>skanerlang', 'Scan to follow')}<br>@your_club</span></div>`;
+        <div class="rc-r rc-t"><span>${L('JAMI', 'TOTAL', 'ИТОГО')}</span><span>${som(sum)}</span></div>
+        <div class="rc-qr">${qr(m * 31 + sum % 997)}<span>${L('Kuzatish uchun<br>skanerlang', 'Scan to follow', 'Сканируйте,<br>чтобы подписаться')}<br>@your_club</span></div>`;
       clearTimeout(rcTimer);
       clearTimeout(rcOutTimer);
       ui.receipt.classList.remove('is-on', 'is-out');
@@ -455,11 +456,11 @@
     });
     input.addEventListener('input', () => draw(false));
     // swap the default inscription with the language, but never a visitor's own text
-    const DEFAULT_TEXT = ['Tabriklaymiz!', 'Happy B-day!'];
+    const DEFAULT_TEXT = ['Tabriklaymiz!', 'Happy B-day!', 'Поздравляем!'];
     if (input.value === DEFAULT_TEXT[0]) input.value = L(...DEFAULT_TEXT);
     onLang(() => {
       if (DEFAULT_TEXT.includes(input.value)) input.value = L(...DEFAULT_TEXT);
-      q('.sf-ins-echo').textContent = input.value.trim() || L('shunchaki muhabbat', 'nothing, just love');
+      q('.sf-ins-echo').textContent = input.value.trim() || L('shunchaki muhabbat', 'nothing, just love', 'просто с любовью');
       draw(false);
     });
 
@@ -470,7 +471,7 @@
       void bag.offsetWidth;
       bag.classList.add('bump');
       q('.sf-ordno').textContent = '#A-' + (1000 + Math.floor(Math.random() * 9000));
-      q('.sf-ins-echo').textContent = input.value.trim() || L('shunchaki muhabbat', 'nothing, just love');
+      q('.sf-ins-echo').textContent = input.value.trim() || L('shunchaki muhabbat', 'nothing, just love', 'просто с любовью');
       const mini = q('.sf-mini');
       mini.innerHTML = '';
       const clone = q('.sf-svg').cloneNode(true);
@@ -478,7 +479,7 @@
       clone.setAttribute('aria-hidden', 'true');
       mini.appendChild(clone);
       steps.forEach(li => li.classList.remove('done', 'now'));
-      steps[steps.length - 1].querySelector('span').textContent = L('Kuryer · 12 daqiqa', 'Courier · 12 min');
+      steps[steps.length - 1].querySelector('span').textContent = L('Kuryer · 12 daqiqa', 'Courier · 12 min', 'Курьер · 12 мин');
       build.classList.remove('is-on');
       track.classList.add('is-on');
       build.inert = true;
@@ -495,7 +496,7 @@
         const last = steps[steps.length - 1];
         last.classList.remove('now');
         last.classList.add('done');
-        last.querySelector('span').textContent = L('Yetkazildi. Yoqimli ishtaha!', 'Delivered. Enjoy!');
+        last.querySelector('span').textContent = L('Yetkazildi. Yoqimli ishtaha!', 'Delivered. Enjoy!', 'Доставлено. Приятного аппетита!');
       }, 300 + steps.length * 1300));
     });
     q('.sf-again').addEventListener('click', () => {
@@ -560,7 +561,7 @@
       l1.style.fill = d.c[2];
       cup.style.transform = `scale(${SIZE[st.s][0]})`;
       const p = d.p + SIZE[st.s][1] + MILK[st.m][0];
-      q('.bn-price').textContent = st.free ? L('Bepul ichimlik', 'Free cup') : `${som(p)} ${SOM()}`;
+      q('.bn-price').textContent = st.free ? L('Bepul ichimlik', 'Free cup', 'Бесплатно') : `${som(p)} ${SOM()}`;
     }
 
     seg(q('.bn-drinks'), b => { st.d = b.dataset.d; draw(true); });
@@ -576,15 +577,15 @@
         st.free = false;
         st.stamps = 0;
         paintStamps(-1);
-        toast({ kind: 'ok', icon: 'i-cup', title: L(`Buyurtma #${no} · bepul`, `Order #${no} · on the house`), text: L('Qaytganingiz uchun rahmat. 4 daqiqada tayyor.', 'Thanks for coming back. Ready in 4 min.') });
+        toast({ kind: 'ok', icon: 'i-cup', title: L(`Buyurtma #${no} · bepul`, `Order #${no} · on the house`, `Заказ #${no} · за наш счёт`), text: L('Qaytganingiz uchun rahmat. 4 daqiqada tayyor.', 'Thanks for coming back. Ready in 4 min.', 'Спасибо, что вернулись. Готово через 4 мин.') });
       } else {
         st.stamps = Math.min(8, st.stamps + 1);
         paintStamps(st.stamps - 1);
         if (st.stamps === 8) {
           st.free = true;
-          toast({ kind: 'ok', icon: 'i-check', title: L('Muhr kartasi toʻldi!', 'Stamp card complete!'), text: L('Keyingi ichimlik bizdan.', 'Your next cup is on us.') });
+          toast({ kind: 'ok', icon: 'i-check', title: L('Muhr kartasi toʻldi!', 'Stamp card complete!', 'Карта штампов заполнена!'), text: L('Keyingi ichimlik bizdan.', 'Your next cup is on us.', 'Следующий напиток — за наш счёт.') });
         } else {
-          toast({ kind: 'ok', icon: 'i-check', title: L(`Buyurtma #${no} qabul qilindi`, `Order #${no} accepted`), text: L('Toʻlandi. Eng yaqin Bon!da 4 daqiqada tayyor.', 'Paid. Ready in 4 min at the nearest Bon!') });
+          toast({ kind: 'ok', icon: 'i-check', title: L(`Buyurtma #${no} qabul qilindi`, `Order #${no} accepted`, `Заказ #${no} принят`), text: L('Toʻlandi. Eng yaqin Bon!da 4 daqiqada tayyor.', 'Paid. Ready in 4 min at the nearest Bon!', 'Оплачено. Готово через 4 мин в ближайшем Bon!') });
         }
       }
       setTimeout(() => {
@@ -671,9 +672,10 @@
       add('line', { x1: x0, y1: dimY, x2: x0 + ww, y2: dimY, ...line });
       add('line', { x1: dimX, y1: y0, x2: dimX, y2: y0 + hh, ...line });
       const tw = svgEl('text', { x: x0 + ww / 2, y: dimY - 5, 'text-anchor': 'middle', 'font-size': 10, 'font-family': 'JetBrains Mono, monospace', fill: '#374151' });
-      tw.textContent = `${st.w} mm`;
+      const mm = L('mm', 'mm', 'мм');
+      tw.textContent = `${st.w} ${mm}`;
       const th = svgEl('text', { x: dimX + 5, y: y0 + hh / 2, 'font-size': 10, 'font-family': 'JetBrains Mono, monospace', fill: '#374151', transform: `rotate(90 ${dimX + 5} ${y0 + hh / 2})`, 'text-anchor': 'middle' });
-      th.textContent = `${st.h} mm`;
+      th.textContent = `${st.h} ${mm}`;
       parts.push(tw, th);
 
       g.replaceChildren(...parts);
@@ -731,8 +733,8 @@
     const view = q('.ak-view');
     const dealerBtn = q('.ak-dealer');
     const ARROW = '<svg class="i"><use href="#i-arrow"/></svg>';
-    const dealerLabel = () => `${L('Eng yaqin dilerni topish', 'Find the nearest dealer')} ${ARROW}`;
-    const cardHTML = () => L('<b>Namunaviy diler · Toshkent</b>Koʻrgazma zali 4,2 km · 19:00 gacha ochiq', '<b>Sample dealer · Tashkent</b>Showroom 4.2 km away · open till 19:00');
+    const dealerLabel = () => `${L('Eng yaqin dilerni topish', 'Find the nearest dealer', 'Найти ближайшего дилера')} ${ARROW}`;
+    const cardHTML = () => L('<b>Namunaviy diler · Toshkent</b>Koʻrgazma zali 4,2 km · 19:00 gacha ochiq', '<b>Sample dealer · Tashkent</b>Showroom 4.2 km away · open till 19:00', '<b>Пример дилера · Ташкент</b>Шоурум в 4,2 км · открыт до 19:00');
     let card = null;
     const showWindow = () => {
       if (!view.classList.contains('show-map')) return;
@@ -751,7 +753,7 @@
       card.style.top = pins[0].style.top;
       wrap.appendChild(card);
       view.classList.add('show-map');
-      dealerBtn.textContent = L('Derazamga qaytish', 'Back to my window');
+      dealerBtn.textContent = L('Derazamga qaytish', 'Back to my window', 'Вернуться к окну');
       view.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
     });
     root.addEventListener('input', showWindow);
@@ -759,8 +761,8 @@
 
     dealerBtn.innerHTML = dealerLabel();
     onLang(() => {
-      calc();
-      dealerBtn.innerHTML = view.classList.contains('show-map') ? L('Derazamga qaytish', 'Back to my window') : dealerLabel();
+      draw();
+      dealerBtn.innerHTML = view.classList.contains('show-map') ? L('Derazamga qaytish', 'Back to my window', 'Вернуться к окну') : dealerLabel();
       if (card) card.innerHTML = cardHTML();
     });
     draw();
