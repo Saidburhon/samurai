@@ -1,7 +1,7 @@
 # Qilich — IT Solutions Agency landing page
 
-A single-page site for **Qilich** (Uzbek for "sword"), a Japanese-spirited IT solutions agency from Uzbekistan.
-Plain HTML, CSS and JavaScript: no build step, no framework, no dependencies to install.
+A single-page site for **Qilich** (Uzbek for "sword"), a Japanese IT solutions agency, now in Uzbekistan.
+Plain HTML, CSS and JavaScript with no build step. It is served from Cloudflare as a static-assets Worker, deployed with Wrangler.
 
 ## What's on the page
 
@@ -19,16 +19,16 @@ It works on phones, honours "reduce motion" settings, and shows no console error
 
 ## Run it locally
 
-Open `index.html` in a browser, or serve the folder:
-
 ```bash
-python3 -m http.server 8000
-# then open http://localhost:8000
+npm install        # installs the pinned Wrangler
+npm run dev        # http://localhost:8787, same runtime as production
 ```
+
+Or skip Node entirely: `python3 -m http.server 8000` inside `public/`.
 
 ## Before launch: connect your contacts
 
-At the bottom of `index.html` there is one config block:
+At the bottom of `public/index.html` there is one config block:
 
 ```js
 window.QILICH_CONFIG = {
@@ -44,25 +44,49 @@ window.QILICH_CONFIG = {
 - The form posts JSON to `formEndpoint` if you set one. Otherwise it opens the visitor's mail app addressed to `email`.
   With neither set, it shows a "demo mode" message, so **fill at least one in before launch**.
 
-## Deploy
+## Deploy to qilich.com (Cloudflare, free plan)
 
-It's a static folder, so any static host works:
+The site is a **static-assets Worker**: no server code, and static file requests are free and unlimited.
+HTTPS, CDN and compression come with it. Config lives in `wrangler.json`:
 
-- **Vercel / Netlify / Cloudflare Pages**: import the repo; no build command; output directory is the repo root.
-- **GitHub Pages**: Settings → Pages → deploy from branch, root folder.
+- `assets.directory` is `public/`, so only the site files are uploaded.
+- `routes` attaches `qilich.com` as a **custom domain**. Cloudflare creates the DNS record and certificate itself.
+- `not_found_handling: "404-page"` serves `public/404.html` for unknown paths.
+- `public/_headers` sets security headers and a short cache for `/assets/*`.
 
-Then point your domain at it.
+`workers/www-redirect/` is a tiny Worker that 301-redirects `www.qilich.com` to `qilich.com`, keeping the path.
 
-## Going live on qilich.com with Cloudflare
+### Before the first deploy
 
-1. **Domain:** buy `qilich.com` in Cloudflare (Domain Registration). It lands in your Cloudflare account, so DNS is already set up.
-2. **Hosting:** in Cloudflare, open Workers & Pages → Create → Pages → Connect to Git and pick `Saidburhon/samurai`.
-   - Production branch: `main`
-   - Framework preset: None. Build command: leave empty. Build output directory: `/`
-3. **Domain on the site:** in the Pages project, open Custom domains and add `qilich.com` (and `www.qilich.com` if you like).
-   Every push to `main` then redeploys automatically.
-4. **Email:** turn on Email Routing for `qilich.com` and forward `hello@qilich.com` to your own inbox. It's free.
-   Then set `email: "hello@qilich.com"` in `QILICH_CONFIG`.
+1. Buy `qilich.com` in Cloudflare (Domain Registration), so the zone is in your account.
+2. In DNS, make sure `qilich.com` and `www.qilich.com` have **no A, AAAA or CNAME records**. Otherwise the deploy fails with error 100117.
+3. **Don't open qilich.com until the first deploy is done.** If someone looks it up while it has no records, mobile carriers can cache "no such site" for up to 30 minutes.
+
+### Option A: deploy on every push (recommended)
+
+In Cloudflare: Workers & Pages → Create → **Import a repository** → `Saidburhon/samurai`.
+
+- Worker name: `qilich-com` (must match `name` in `wrangler.json`)
+- Production branch: `main`
+- Build command: leave empty
+- Deploy command: `npx wrangler deploy`
+
+Create a second Worker from the same repo for the redirect. Name it `www-redirect`, with deploy command `npx wrangler deploy -c workers/www-redirect/wrangler.json`.
+After that, every push to `main` goes live by itself.
+
+### Option B: deploy from your computer
+
+```bash
+npm install
+npx wrangler login      # one-time browser approval
+npm run deploy          # qilich.com
+npm run deploy:www      # www.qilich.com → qilich.com
+```
+
+### Email
+
+Turn on **Email Routing** for `qilich.com` and forward `hello@qilich.com` to your own inbox. It's free.
+Then set `email: "hello@qilich.com"` in `QILICH_CONFIG`.
 
 ## About the concept demos
 
@@ -72,12 +96,16 @@ They use no real logos and only sample prices. Keep those labels in place. If yo
 ## Files
 
 ```
-index.html             page markup + contact config
-assets/css/style.css   all styles (tokens at the top)
-assets/js/main.js      intro cut, cursor, nav, reveals, scroll effects, tabs, form
-assets/js/hero.js      blade trail, sparks, embers, parallax, sliced sun
-assets/js/demos.js     Tikoncha, ClubTime, Safia, Bon!, Akfa demos + code typer
-assets/img/            favicon, Uzbekistan map
+public/index.html             page markup + contact config
+public/404.html               not-found page
+public/_headers               security and cache headers
+public/assets/css/style.css   all styles (tokens at the top)
+public/assets/js/main.js      intro cut, cursor, nav, reveals, scroll effects, tabs, form
+public/assets/js/hero.js      blade trail, sparks, embers, parallax, sliced sun
+public/assets/js/demos.js     Tikoncha, ClubTime, Safia, Bon!, Akfa demos + code typer
+public/assets/img/            favicon, Uzbekistan map
+wrangler.json                 Cloudflare config for qilich.com
+workers/www-redirect/         www → bare domain redirect
 ```
 
 ## Credits
