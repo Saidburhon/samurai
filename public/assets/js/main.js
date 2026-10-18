@@ -9,6 +9,10 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const CONFIG = window.QILICH_CONFIG || {};
   const onLang = fn => document.addEventListener('qilich:lang', fn);
+  // pick the Uzbek, English or Russian string for text this script writes itself (see i18n.js)
+  const L = (uz, en, ru) => (doc.lang === 'en' ? en : doc.lang === 'ru' ? ru : uz);
+  const SFX = () => window.QSFX;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   /* ------------------------------------------------------------ intro cut */
   // the headline rises, a white slash crosses the sun and the two halves part
@@ -16,6 +20,7 @@
     const sun = $('#sun');
     const go = () => {
       doc.classList.add('is-ready');
+      setTimeout(() => doc.classList.add('is-risen'), 1300);
       if (!sun) return;
       if (reduce) { sun.style.setProperty('--open', 1); return; }
       sun.classList.add('is-slashing');
@@ -57,6 +62,7 @@
       a.href = '#' + p.id;
       a.innerHTML = `<span><b>${p.dataset.num}</b><em>${p.dataset.k || ''}</em></span><i></i>`;
       a.setAttribute('aria-label', `${p.dataset.num} ${p.dataset.k || ''}`);
+      a.addEventListener('click', e => { if (e.isTrusted && SFX()) SFX().play('shing', { rate: 1.25, gain: .4 }); });
       li.appendChild(a);
       if (list) list.appendChild(li);
       return { p, li, a, top: 0 };
@@ -120,34 +126,20 @@
     watch.forEach((el, target) => io.observe(target));
   }
 
-  /* --------------------------------------------------------------- clocks */
-  function clocks() {
-    const els = $$('.clock[data-tz]');
-    if (!els.length) return;
-    const pad = n => String(n).padStart(2, '0');
-    const tick = () => {
-      const now = Date.now();
-      els.forEach(el => {
-        const d = new Date(now + Number(el.dataset.tz) * 3600e3);
-        el.textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
-      });
-    };
-    tick();
-    setInterval(tick, 10e3);
-  }
-
   /* ---------------------------------------------------- the Way: the line */
   function wayLine() {
     const sec = $('#way');
     const fill = $('#wayFill');
+    const steps = $$('#steps li');
     if (!sec || !fill) return;
-    if (reduce) { fill.style.setProperty('--p', 1); return; }
+    if (reduce) { fill.style.setProperty('--p', 1); steps.forEach(li => li.classList.add('is-on')); return; }
     let queued = false;
     const update = () => {
       queued = false;
       const r = sec.getBoundingClientRect();
       const p = clamp((innerHeight * .85 - r.top) / (r.height * .7));
       fill.style.setProperty('--p', p.toFixed(3));
+      steps.forEach((li, i) => li.classList.toggle('is-on', p >= (i + .35) / steps.length));
     };
     addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
     addEventListener('resize', update);
@@ -169,6 +161,44 @@
       if (href) a.href = href; else a.hidden = true;
     });
     $$('[data-value]').forEach(el => { el.textContent = pretty[el.dataset.value] || ''; });
+
+    const toast = $('#toast');
+    let hide = 0;
+    const say = (msg, e) => {
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.remove('is-on'); void toast.offsetWidth; toast.classList.add('is-on');
+      if (e && e.isTrusted && SFX()) SFX().play('rin', { gain: .45 });
+      clearTimeout(hide);
+      hide = setTimeout(() => toast.classList.remove('is-on'), 2200);
+    };
+    const copy = text => (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject());
+    // a desktop can't dial: copy the number instead
+    const phone = $('[data-link="phone"]');
+    if (phone && fine) phone.addEventListener('click', e => {
+      e.preventDefault();
+      copy(pretty.phone).then(() => say(L('Raqam nusxalandi ✓', 'Number copied ✓', 'Номер скопирован ✓'), e))
+        .catch(() => say(pretty.phone, e));
+    });
+    const mail = $('[data-link="email"]');
+    if (mail && fine) mail.addEventListener('click', e => {
+      copy(email).then(() => say(L('Manzil nusxalandi ✓', 'Address copied ✓', 'Адрес скопирован ✓'), e)).catch(() => {});
+    });
+
+    // the platforms picked in the "Yours" column of the matrix
+    const chips = $('#ctStack');
+    let picked = [];
+    const paintStack = () => {
+      if (mail && email) {
+        const subject = picked.length ? L('Loyiha: ', 'Project: ', 'Проект: ') + picked.join(', ') : '';
+        mail.href = 'mailto:' + email + (subject ? '?subject=' + encodeURIComponent(subject) : '');
+      }
+      if (!chips) return;
+      chips.hidden = !picked.length;
+      chips.textContent = picked.join(' · ');
+    };
+    document.addEventListener('qilich:stack', e => { picked = e.detail || []; paintStack(); });
+    onLang(paintStack);
   }
 
   /* --------------------------------------------------------- footer word */
@@ -195,7 +225,6 @@
     nav();
     katana();
     reveals();
-    clocks();
     wayLine();
     contacts();
     footerWord();

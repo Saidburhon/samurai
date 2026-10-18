@@ -1,4 +1,5 @@
-/* Qilich — hero: the blade trail, sparks and the sun that splits as you scroll */
+/* Qilich — hero: the blade trail and sparks, and a sun you can cut.
+   Swipe fast across the sun (or click it) and it is sliced along your stroke, then settles. */
 (() => {
   'use strict';
 
@@ -9,8 +10,15 @@
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ctx = canvas.getContext('2d');
+  const SFX = () => window.QSFX;
   let W = 0, H = 0;
+  let disc = { x: 0, y: 0, r: 0 };   // the sun, in hero coordinates
 
+  const measure = () => {
+    if (!sun) return;
+    const h = hero.getBoundingClientRect(), s = sun.getBoundingClientRect();
+    disc = { x: s.left - h.left + s.width / 2, y: s.top - h.top + s.height / 2, r: s.width / 2 };
+  };
   const resize = () => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const r = hero.getBoundingClientRect();
@@ -18,6 +26,7 @@
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    measure();
   };
   resize();
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(hero);
@@ -38,12 +47,51 @@
 
   if (reduce) return;
 
-  /* ---- blade ---- */
+  /* ---- state ---- */
   const TRAIL_MS = 200;
   const trail = [];
   const sparks = [];
   let raf = 0, visible = true;
+  let ang = -11.3;                     // the current cut, in degrees
+  let kick = 0, kickV = 0;             // the halves' extra gap, on a spring
+  let lean = { x: 0, y: 0, tx: 0, ty: 0 };
+  let lastCut = 0, lastAngle = -11.3;
 
+  /* ---- the cut ---- */
+  function cut(deg, speed, trusted) {
+    const now = performance.now();
+    if (now - lastCut < 380 || !sun) return;
+    lastCut = now;
+    // a line has no direction: pick the equivalent angle closest to the current one
+    deg = ((deg + 90) % 180 + 180) % 180 - 90;
+    if (deg - ang > 90) deg -= 180;
+    if (ang - deg > 90) deg += 180;
+    ang = deg;
+    sun.style.setProperty('--ang', ang.toFixed(2) + 'deg');
+    // the halves fly apart along the new cut, hang for a moment, then settle back
+    kickV = 95 + Math.min(1.5, speed) * 30;
+    sun.classList.remove('is-slashing');
+    void sun.offsetWidth;
+    sun.classList.add('is-slashing', 'is-quick');
+    // sparks where the blade meets the edge of the sun
+    const rad = ang * Math.PI / 180, ux = Math.cos(rad), uy = Math.sin(rad);
+    [-1, 1].forEach(sd => {
+      const ex = disc.x + ux * disc.r * sd, ey = disc.y + uy * disc.r * sd;
+      for (let i = 0; i < 16; i++) {
+        sparks.push({ x: ex, y: ey, vx: ux * sd * (2 + Math.random() * 5) + (Math.random() - .5) * 3, vy: uy * sd * (2 + Math.random() * 5) + (Math.random() - .5) * 3 - 1, life: 1 });
+      }
+    });
+    if (trusted && SFX()) { SFX().play('shing', { rate: .92 + Math.min(.3, speed * .12), gain: .8 }); SFX().buzz(12); }
+    wake();
+  }
+  // does the stroke from a to b pass through the sun?
+  const crosses = (ax, ay, bx, by) => {
+    const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((disc.x - ax) * dx + (disc.y - ay) * dy) / L2));
+    return Math.hypot(ax + dx * t - disc.x, ay + dy * t - disc.y) < disc.r * .9;
+  };
+
+  /* ---- pointer ---- */
   hero.addEventListener('pointermove', e => {
     const r = canvas.getBoundingClientRect();
     const x = e.clientX - r.left, y = e.clientY - r.top, t = performance.now();
@@ -52,26 +100,44 @@
     if (prev) {
       const dx = x - prev.x, dy = y - prev.y;
       const speed = Math.hypot(dx, dy) / Math.max(1, t - prev.t);
-      if (speed > 1.6 && sparks.length < 120) {
+      if (speed > 1.6 && sparks.length < 160) {
         const n = Math.min(4, Math.floor(speed));
-        for (let i = 0; i < n; i++) {
-          sparks.push({ x, y, vx: (Math.random() - .5) * 4 + dx * .05, vy: (Math.random() - .5) * 4 + dy * .05, life: 1 });
-        }
+        for (let i = 0; i < n; i++) sparks.push({ x, y, vx: (Math.random() - .5) * 4 + dx * .05, vy: (Math.random() - .5) * 4 + dy * .05, life: 1 });
       }
+      if (Math.hypot(dx, dy) > 4) lastAngle = Math.atan2(dy, dx) * 180 / Math.PI;
+      // a fast stroke through the sun cuts it along the stroke
+      if (speed > 1.1 && Math.hypot(dx, dy) > 6 && crosses(prev.x, prev.y, x, y)) cut(lastAngle, speed, e.isTrusted);
     }
-    if (!raf && visible) raf = requestAnimationFrame(loop);
+    if (e.pointerType === 'mouse') {
+      lean.tx = (e.clientX / innerWidth - .5) * 2;
+      lean.ty = (e.clientY / innerHeight - .5) * 2;
+    }
+    wake();
   }, { passive: true });
+
+  // a click on the sun cuts it too, along the last direction the cursor moved
+  hero.addEventListener('click', e => {
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    if (Math.hypot(x - disc.x, y - disc.y) > disc.r) return;
+    const deg = Math.abs(lastAngle - ang) < 8 ? ang + (Math.random() < .5 ? -1 : 1) * (25 + Math.random() * 30) : lastAngle;
+    cut(deg, .8, e.isTrusted);
+  });
+
   // a new touch must not draw a line from where the previous one ended
   const resetTrail = () => { trail.length = 0; };
-  hero.addEventListener('pointerleave', resetTrail);
+  hero.addEventListener('pointerleave', () => { resetTrail(); lean.tx = 0; lean.ty = 0; wake(); });
   hero.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') resetTrail(); });
   hero.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') resetTrail(); });
   hero.addEventListener('pointercancel', resetTrail);
+  addEventListener('scroll', measure, { passive: true });
 
-  /* ---- loop: runs only while something is on the canvas ---- */
-  function loop() {
+  /* ---- loop: runs only while something moves ---- */
+  let lastT = 0;
+  function loop(now) {
     raf = 0;
-    const now = performance.now();
+    const dt = Math.min(40, now - (lastT || now - 16)) / 1000;
+    lastT = now;
     ctx.clearRect(0, 0, W, H);
 
     while (trail.length && now - trail[0].t > TRAIL_MS) trail.shift();
@@ -94,16 +160,32 @@
 
     for (let i = sparks.length - 1; i >= 0; i--) {
       const s = sparks[i];
-      s.x += s.vx; s.y += s.vy; s.vy += .14; s.vx *= .97; s.life -= .035;
+      s.x += s.vx; s.y += s.vy; s.vy += .14; s.vx *= .97; s.life -= .03;
       if (s.life <= 0) { sparks.splice(i, 1); continue; }
       ctx.fillStyle = `rgba(255,${150 + (s.life * 100 | 0)},${110 + (s.life * 80 | 0)},${s.life})`;
-      ctx.fillRect(s.x, s.y, 2, 2);
+      ctx.fillRect(s.x, s.y, 2.2, 2.2);
     }
 
-    if (visible && (trail.length || sparks.length)) raf = requestAnimationFrame(loop);
+    // the halves: a spring back to their resting gap
+    const k = 38, c = 8.5;
+    kickV += (-k * kick - c * kickV) * dt;
+    kick += kickV * dt;
+    if (kick < -1) { kick = -1; kickV = Math.max(0, kickV); }   // never closes past its resting gap
+    if (Math.abs(kick) < .02 && Math.abs(kickV) < .05) { kick = 0; kickV = 0; }
+    if (sun) sun.style.setProperty('--kick', kick.toFixed(3));
+
+    // the sun leans a little towards the cursor
+    lean.x += (lean.tx - lean.x) * (1 - Math.pow(.94, dt * 60));
+    lean.y += (lean.ty - lean.y) * (1 - Math.pow(.94, dt * 60));
+    if (sun) { sun.style.setProperty('--px', lean.x.toFixed(3)); sun.style.setProperty('--py', lean.y.toFixed(3)); }
+
+    const moving = trail.length || sparks.length || kick || kickV || Math.abs(lean.tx - lean.x) + Math.abs(lean.ty - lean.y) > .002;
+    if (visible && moving) raf = requestAnimationFrame(loop);
+    else lastT = 0;
   }
+  function wake() { if (!raf && visible) raf = requestAnimationFrame(loop); }
 
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) { measure(); wake(); } }).observe(hero);
   }
 })();

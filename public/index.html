@@ -20,7 +20,7 @@
   <!-- Japanese glyphs: only the characters used on the page are downloaded -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E4%B8%80%E4%BA%8C%E4%B8%89%E5%9B%9B%E4%BA%94%E5%85%AD%E4%B8%83%E6%A7%8B%E5%9E%8B%E6%96%AC%E6%AE%8B%E5%BF%83%E6%9D%B1%E4%BA%AC%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93%E5%AE%9F%E7%B8%BE%E9%80%A3%E7%B5%A1" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=6" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -30,6 +30,7 @@
   <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 3 10.4l7 2.6 2.6 7z"/><path d="M10 13 21 3"/></symbol>
   <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></symbol>
+  <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4 4.5v4h4"/></symbol>
   <symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 9V3.5h10V9"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol>
 </svg>
 
@@ -51,6 +52,7 @@
     <a href="#contact" data-i18n="nav.contact">Aloqa</a>
   </nav>
   <div class="nav-count mono" aria-hidden="true"><b id="navNum">一</b> / 七</div>
+  <button type="button" class="snd" data-sound aria-pressed="true" aria-label="Ovoz" data-i18n-label="nav.sound"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"/><path class="w" d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path class="w" d="M18.3 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
   <div class="lang" role="group" aria-label="Til / Language">
     <button type="button" data-lang="uz" aria-pressed="true" lang="uz">UZ</button>
     <button type="button" data-lang="ru" aria-pressed="false" lang="ru">RU</button>
@@ -73,7 +75,7 @@
 <main id="main">
 
 <!-- 一 HERO -->
-<section class="poster p-hero" id="top" data-num="一" data-k="Qilich">
+<section class="poster p-hero" id="top" data-num="一" data-k="Qilich" data-field="cut">
   <div class="sun" id="sun" aria-hidden="true">
     <div class="sun-half sun-a"><span>剣</span></div>
     <div class="sun-half sun-b"><span>剣</span></div>
@@ -82,26 +84,26 @@
   <canvas class="blade" id="blade" aria-hidden="true"></canvas>
 
   <div class="hero-text">
-    <h1 class="hero-h" data-i18n="hero.h"><span class="ln"><span>Yapon IT agenstvasi</span></span> <span class="ln"><span>endi <em>Oʻzbekistonda!</em></span></span></h1>
+    <h1 class="hero-h" data-i18n="hero.h" data-letters data-note="1"><span class="ln"><span>Yapon IT agenstvasi</span></span> <span class="ln"><span>endi <em>Oʻzbekistonda!</em></span></span></h1>
   </div>
   <a href="#work" class="scroll-cue" aria-label="Loyihalarga oʻtish" data-i18n-label="hero.down"><svg class="i"><use href="#i-arrow-down"/></svg></a>
 </section>
 
 <!-- 実績 the bridge: why two products follow a samurai -->
-<section class="chapter" id="work" aria-labelledby="chTitle">
+<section class="chapter" id="work" aria-labelledby="chTitle" data-field="bloom">
   <div class="chapter-cut" aria-hidden="true"><i></i></div>
   <div class="chapter-text">
     <p class="ch-tag rv" aria-hidden="true">実績</p>
-    <h2 id="chTitle" class="big rv" data-i18n="ch.h">Avval oʻzimiz uchun <br>yaratdik.</h2>
+    <h2 id="chTitle" class="big rv" data-i18n="ch.h" data-letters>Avval oʻzimiz uchun <br>yaratdik.</h2>
     <p class="ch-sub rv" data-i18n="ch.sub">Endi — siz uchun.</p>
   </div>
   <div class="ch-tiles">
-    <a class="ch-tile t-hoglt rv" href="#hoglt">
+    <a class="ch-tile t-hoglt rv" href="#hoglt" data-tilt>
       <span class="no mono">01</span>
       <img src="assets/img/hoglt/wave.webp" width="384" height="384" alt="" />
       <b>Hoglt</b><small data-i18n="ch.hg">Ekran vaqti</small>
     </a>
-    <a class="ch-tile t-pool rv" href="#pooltimer">
+    <a class="ch-tile t-pool rv" href="#pooltimer" data-tilt>
       <span class="no mono">02</span>
       <span class="mini-table" aria-hidden="true"><i class="mono">1:12</i></span>
       <b>PoolTimer</b><small data-i18n="ch.pt">Bilyard klublari</small>
@@ -111,11 +113,11 @@
 
 <!-- 二 HOGLT -->
 <section class="poster p-case p-hoglt" id="hoglt" data-num="二" data-k="Hoglt" aria-labelledby="hgTitle">
-  <div class="case rvc">
+  <div class="case rvc" data-field="orbit">
   <div class="p-head">
     <h2 id="hgTitle" class="sr-only">Hoglt</h2>
     <img class="hg-logo rv" src="assets/img/hoglt/logo.webp" width="400" height="141" alt="Hoglt" />
-    <p class="big rv" data-i18n="hg.h">Bolaning telefoni. <br>Ota-onaning qoidasi.</p>
+    <p class="big rv" data-i18n="hg.h" data-letters data-note="3">Bolaning telefoni. <br>Ota-onaning qoidasi.</p>
     <p class="aka mono rv" data-i18n="hg.aka">Oʻzbekistonda — Tikoncha</p>
     <ul class="hg-legend rv" id="hgLegend">
       <li data-state="sleep"><i></i><b data-i18n="hg.sleep">Uyqu</b><small data-i18n="hg.sleepSub">Telefon qulf</small></li>
@@ -138,21 +140,22 @@
       <circle id="dialKnob" cx="200" cy="24" r="9" />
     </svg>
     <div class="dial-core" aria-live="polite">
-      <img id="dialImg" src="assets/img/hoglt/shield.webp" width="384" height="384" alt="" />
+      <button type="button" class="hog" id="hog" aria-label="Kirpini turtish" data-i18n-label="hg.poke"><img id="dialImg" src="assets/img/hoglt/shield.webp" width="384" height="384" alt="" /></button>
       <b class="mono" id="dialTime">08:30</b>
       <span id="dialState">Maktab</span>
       <small id="dialSub">Faqat dars ilovalari</small>
     </div>
+    <button type="button" class="replay" id="dialReplay" aria-label="Kunni qayta koʻrsatish" data-i18n-label="hg.replay"><svg class="i"><use href="#i-replay"/></svg></button>
   </figure>
   </div>
 </section>
 
 <!-- 三 POOLTIMER -->
 <section class="poster p-case p-pool" id="pooltimer" data-num="三" data-k="PoolTimer" aria-labelledby="ptTitle">
-  <div class="case rvc">
+  <div class="case rvc" data-field="magnet">
   <div class="p-head">
     <h2 id="ptTitle" class="pt-logo rv"><svg class="ball" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#000" stroke="#ffb547" stroke-width="2"/><circle cx="12" cy="12" r="5.2" fill="#fff"/><text x="12" y="15.2" text-anchor="middle" font-size="8.5" font-weight="800" font-family="Archivo, sans-serif" fill="#000">8</text></svg><span>Pool<em>Timer</em></span></h2>
-    <p class="big rv" data-i18n="pt.h">Har daqiqa — <br>hisobda.</p>
+    <p class="big rv" data-i18n="pt.h" data-letters data-note="4">Har daqiqa — <br>hisobda.</p>
     <p class="aka mono rv" data-i18n="pt.aka">Oʻzbekistonda — ClubTime</p>
     <dl class="facts rv">
       <div><dt>11</dt><dd data-i18n="pt.f1">til</dd></div>
@@ -174,37 +177,38 @@
       <button type="button" class="tbl vip" data-n="5" data-run="125"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>VIP</i><b>0:00</b></span><span class="cost mono">0</span></button>
       <button type="button" class="tbl" data-n="6"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>06</i><b>0:00</b></span><span class="cost mono">0</span></button>
     </div>
+    <div class="receipts" id="receipts" aria-hidden="true"></div>
     <div class="tg" id="tg" aria-live="polite"><b>Telegram</b><span id="tgText"></span></div>
   </div>
   </div>
 </section>
 
 <!-- 四 STACK -->
-<section class="poster p-stack" id="stack" data-num="四" data-k="Arsenal" aria-labelledby="mxTitle">
+<section class="poster p-stack" id="stack" data-num="四" data-k="Arsenal" data-field="cross" aria-labelledby="mxTitle">
   <div class="p-head">
-      <h2 id="mxTitle" class="big rv" data-i18n="mx.h">Bir jamoa. <br>Butun stek.</h2>
+      <h2 id="mxTitle" class="big rv" data-i18n="mx.h" data-letters data-note="0">Bir jamoa. <br>Butun stek.</h2>
   </div>
   <div class="matrix rv" role="table" aria-label="Platformalar" data-i18n-label="mx.label">
     <div class="mx-row mx-head" role="row">
       <span role="columnheader"></span>
       <span role="columnheader">Hoglt</span>
       <span role="columnheader">PoolTimer</span>
-      <span role="columnheader" class="you" data-i18n="mx.you">Sizniki</span>
+      <span role="columnheader" class="you"><span data-i18n="mx.you">Sizniki</span> <b id="mxCount"></b></span>
     </div>
-    <div class="mx-row" role="row"><span role="rowheader">iOS</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader">Android</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader" data-i18n="mx.web">Veb</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader">Desktop</span><i role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader">Backend</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader">Telegram</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader">IoT</span><i role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
-    <div class="mx-row" role="row"><span role="rowheader">AI</span><i class="on" role="cell"></i><i role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">iOS</span><span role="cell"><i class="dot on"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="iOS" data-name="iOS"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader">Android</span><span role="cell"><i class="dot on"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="Android" data-name="Android"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader" data-i18n="mx.web">Veb</span><span role="cell"><i class="dot on"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="Web" data-name="Web"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader">Desktop</span><span role="cell"><i class="dot"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="Desktop" data-name="Desktop"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader">Backend</span><span role="cell"><i class="dot on"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="Backend" data-name="Backend"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader">Telegram</span><span role="cell"><i class="dot on"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="Telegram" data-name="Telegram"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader">IoT</span><span role="cell"><i class="dot"></i></span><span role="cell"><i class="dot on"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="IoT" data-name="IoT"></button></span></div>
+    <div class="mx-row" role="row"><span role="rowheader">AI</span><span role="cell"><i class="dot on"></i></span><span role="cell"><i class="dot"></i></span><span role="cell"><button type="button" class="dot you" aria-pressed="false" aria-label="AI" data-name="AI"></button></span></div>
   </div>
 </section>
 
 <!-- 五 TOKYO · TASHKENT -->
-<section class="poster p-tokyo" id="tokyo" data-num="五" data-k="東京" data-tone="red" aria-labelledby="tkTitle">
-  <h2 id="tkTitle" class="big rv" data-i18n="tk.h">Tokio standarti. <br>Toshkent vaqti.</h2>
+<section class="poster p-tokyo" id="tokyo" data-num="五" data-k="東京" data-tone="red" data-field="wave" aria-labelledby="tkTitle">
+  <h2 id="tkTitle" class="big rv" data-i18n="tk.h" data-letters data-note="5">Tokio standarti. <br>Toshkent vaqti.</h2>
   <div class="route rv">
     <div class="city">
       <span class="kj">東京</span>
@@ -221,27 +225,35 @@
       <small class="mono" data-i18n="tk.tash">Toshkent · UTC+5</small>
     </div>
   </div>
+  <div class="strips rv" id="strips">
+    <div class="strip" data-off="4"><span class="mono" data-i18n="tk.t">Tokio</span><div class="cells"></div></div>
+    <div class="strip" data-off="0"><span class="mono" data-i18n="tk.u">Toshkent</span><div class="cells"></div></div>
+    <div class="shared mono"><b>5</b> <span data-i18n="tk.both">soat birga</span></div>
+    <i class="now" aria-hidden="true"></i>
+  </div>
   <p class="route-meta mono rv"><span>5 991 km</span><span data-i18n="tk.diff">4 soat farq</span></p>
 </section>
 
 <!-- 六 THE WAY -->
-<section class="poster p-way" id="way" data-num="六" data-k="道" data-tone="light" aria-labelledby="wayTitle">
-  <h2 id="wayTitle" class="big rv" data-i18n="way.h">Toʻrt zarba.</h2>
+<section class="poster p-way" id="way" data-num="六" data-k="道" data-tone="light" data-field="split" aria-labelledby="wayTitle">
+  <h2 id="wayTitle" class="big rv" data-i18n="way.h" data-letters data-note="2">Toʻrt zarba.</h2>
   <ol class="steps" id="steps">
-    <li class="rv"><span class="kj">構</span><b data-i18n="way.1">Reja</b></li>
-    <li class="rv"><span class="kj">型</span><b data-i18n="way.2">Dizayn</b></li>
-    <li class="rv"><span class="kj">斬</span><b data-i18n="way.3">Kod</b></li>
-    <li class="rv"><span class="kj">残心</span><b data-i18n="way.4">Qoʻllab-quvvatlash</b></li>
+    <li class="rv"><button type="button" class="kj">構</button><b data-i18n="way.1">Reja</b></li>
+    <li class="rv"><button type="button" class="kj">型</button><b data-i18n="way.2">Dizayn</b></li>
+    <li class="rv"><button type="button" class="kj">斬</button><b data-i18n="way.3">Kod</b></li>
+    <li class="rv"><button type="button" class="kj">残心</button><b data-i18n="way.4">Qoʻllab-quvvatlash</b></li>
   </ol>
   <div class="way-line" aria-hidden="true"><i id="wayFill"></i></div>
 </section>
 
 <!-- 七 CONTACT -->
-<section class="poster p-contact" id="contact" data-num="七" data-k="連絡" aria-labelledby="ctTitle">
-  <h2 id="ctTitle" class="big rv" data-i18n="ct.h">Loyihangiz bormi?</h2>
+<section class="poster p-contact" id="contact" data-num="七" data-k="連絡" data-field="pulse" aria-labelledby="ctTitle">
+  <h2 id="ctTitle" class="big rv" data-i18n="ct.h" data-letters data-note="4">Loyihangiz bormi?</h2>
+  <p class="ct-stack mono" id="ctStack" hidden></p>
   <div class="ct-links">
     <a class="ct rv" data-link="phone" href="#"><b data-value="phone"></b></a>
     <a class="ct rv" data-link="email" href="#"><b data-value="email"></b></a>
+    <p class="toast mono" id="toast" role="status" aria-live="polite"></p>
   </div>
   <div class="set-sun" aria-hidden="true"></div>
 </section>
@@ -263,9 +275,11 @@
     phone: "+998972707007"
   };
 </script>
-<script src="assets/js/i18n.js?v=5"></script>
-<script src="assets/js/main.js?v=5" defer></script>
-<script src="assets/js/hero.js?v=5" defer></script>
-<script src="assets/js/posters.js?v=5" defer></script>
+<script src="assets/js/i18n.js?v=6"></script>
+<script src="assets/js/sfx.js?v=6" defer></script>
+<script src="assets/js/fx.js?v=6" defer></script>
+<script src="assets/js/main.js?v=6" defer></script>
+<script src="assets/js/hero.js?v=6" defer></script>
+<script src="assets/js/posters.js?v=6" defer></script>
 </body>
 </html>

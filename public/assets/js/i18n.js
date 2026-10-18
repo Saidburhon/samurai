@@ -12,6 +12,7 @@
     "nav.way": "Process",
     "nav.contact": "Contact",
     "nav.posters": "Posters",
+    "nav.sound": "Sound",
 
     "hero.h": '<span class="ln"><span>A Japanese IT agency,</span></span> <span class="ln"><span>now in <em>Uzbekistan!</em></span></span>',
     "hero.down": "Go to projects",
@@ -24,6 +25,8 @@
     "hg.h": "Kids’ phones. <br>Parents’ rules.",
     "hg.aka": "Known as Tikoncha in Uzbekistan",
     "hg.dial": "Daily schedule",
+    "hg.poke": "Poke the hedgehog",
+    "hg.replay": "Replay the day",
     "hg.sleep": "Sleep",
     "hg.sleepSub": "Phone locked",
     "hg.school": "School",
@@ -50,6 +53,9 @@
     "tk.tokyo": "Tokyo · UTC+9",
     "tk.tash": "Tashkent · UTC+5",
     "tk.diff": "4 hours apart",
+    "tk.t": "Tokyo",
+    "tk.u": "Tashkent",
+    "tk.both": "shared hours",
 
     "way.h": "Four strikes.",
     "way.1": "Plan",
@@ -69,6 +75,7 @@
     "nav.way": "Путь",
     "nav.contact": "Контакты",
     "nav.posters": "Постеры",
+    "nav.sound": "Звук",
 
     "hero.h": '<span class="ln"><span>Японское IT-агентство</span></span> <span class="ln"><span>теперь в <em>Узбекистане!</em></span></span>',
     "hero.down": "К проектам",
@@ -81,6 +88,8 @@
     "hg.h": "Телефон ребёнка. <br>Правила родителей.",
     "hg.aka": "В Узбекистане — Tikoncha",
     "hg.dial": "Распорядок дня",
+    "hg.poke": "Ткнуть ёжика",
+    "hg.replay": "Показать день заново",
     "hg.sleep": "Сон",
     "hg.sleepSub": "Телефон заблокирован",
     "hg.school": "Школа",
@@ -107,6 +116,9 @@
     "tk.tokyo": "Токио · UTC+9",
     "tk.tash": "Ташкент · UTC+5",
     "tk.diff": "Разница 4 часа",
+    "tk.t": "Токио",
+    "tk.u": "Ташкент",
+    "tk.both": "общих часов",
 
     "way.h": "Четыре удара.",
     "way.1": "План",
