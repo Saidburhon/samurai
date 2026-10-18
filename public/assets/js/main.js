@@ -21,14 +21,8 @@
     const go = () => {
       doc.classList.add('is-ready');
       setTimeout(() => doc.classList.add('is-risen'), 1300);
-      if (!sun) return;
-      if (reduce) { sun.style.setProperty('--open', 1); return; }
-      sun.classList.add('is-slashing');
-      setTimeout(() => {
-        sun.classList.add('is-opening');
-        sun.style.setProperty('--open', 1);
-        setTimeout(() => sun.classList.remove('is-opening'), 1200);
-      }, 330);
+      // the sun rises whole, then a single blade passes through it
+      if (sun && !reduce) setTimeout(() => { if (window.QHERO) window.QHERO.cut(-11.3); }, 900);
     };
     // wait for the fonts briefly so the headline doesn't rise in a fallback face
     Promise.race([

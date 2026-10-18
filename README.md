@@ -9,7 +9,7 @@ Seven full-screen posters, numbered 一 to 七, plus a short bridge after the he
 
 | # | Poster | What the visitor can do |
 |---|---|---|
-| 一 | **Hero** | Swipe fast across the sun (or click it) and it is cut along your stroke, with sparks and a blade sound, then settles. The cursor leaves a blade trail; the dots part as it passes. |
+| 一 | **Hero** | A whole red sun with 剣. Swipe fast across it (or click it) for a clean cut along your stroke: the top half slides along the blade, holds, and the sun heals. The intro does one cut by itself. The cursor leaves a blade trail; the dots part as it passes. |
 | 実績 | **Bridge** | "First, we built for ourselves. Now — for you." Two product tiles lean towards the cursor. A slash cuts across the screen as it scrolls in. |
 | 二 | **Hoglt** | When it scrolls into view, a whole school day passes on the 24-hour dial in under four seconds and stops at the real Tashkent time. Drag the dial (it ticks per half hour), tap the legend, replay the day, or poke the hedgehog: it curls into a ball. |
 | 三 | **PoolTimer** | Tap a table: the lamp flickers on and the timer runs. Tap it again: a receipt prints, flies into today's total, and a Telegram report arrives. |

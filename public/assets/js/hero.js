@@ -1,5 +1,6 @@
 /* Qilich — hero: the blade trail and sparks, and a sun you can cut.
-   Swipe fast across the sun (or click it) and it is sliced along your stroke, then settles. */
+   Swipe fast across the sun (or click it): a clean cut along your stroke, the top slides along
+   the blade, holds, and the sun heals whole again. */
 (() => {
   'use strict';
 
@@ -32,14 +33,14 @@
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(hero);
   else addEventListener('resize', resize);
 
-  /* ---- the sun splits further as you scroll ---- */
+  /* ---- the sun sinks a little as you scroll ---- */
   if (sun) {
     let last = -1;
     const onScroll = () => {
       const p = Math.min(1, Math.max(0, scrollY / (H * .9 || 1)));
       if (Math.abs(p - last) < .002) return;
       last = p;
-      sun.style.setProperty('--cut', p.toFixed(3));
+      sun.style.setProperty('--sink', p.toFixed(3));
     };
     addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -53,34 +54,33 @@
   const sparks = [];
   let raf = 0, visible = true;
   let ang = -11.3;                     // the current cut, in degrees
-  let kick = 0, kickV = 0;             // the halves' extra gap, on a spring
+  let cutAt = -1, slideMax = 0, slideDir = 1;   // the cut in progress
   let lean = { x: 0, y: 0, tx: 0, ty: 0 };
   let lastCut = 0, lastAngle = -11.3;
 
   /* ---- the cut ---- */
   function cut(deg, speed, trusted) {
     const now = performance.now();
-    if (now - lastCut < 380 || !sun) return;
+    if (now - lastCut < 700 || !sun) return;
     lastCut = now;
-    // a line has no direction: pick the equivalent angle closest to the current one
+    // a line has no direction: keep the angle within ±90° and remember which way the blade went
+    const raw = deg;
     deg = ((deg + 90) % 180 + 180) % 180 - 90;
-    if (deg - ang > 90) deg -= 180;
-    if (ang - deg > 90) deg += 180;
+    slideDir = Math.cos((raw - deg) * Math.PI / 180) > 0 ? 1 : -1;
     ang = deg;
     sun.style.setProperty('--ang', ang.toFixed(2) + 'deg');
-    // the halves fly apart along the new cut, hang for a moment, then settle back
-    kickV = 95 + Math.min(1.5, speed) * 30;
+    slideMax = 2.4 + Math.min(1, speed) * 2.6;
+    cutAt = now;
+    sun.classList.add('is-cutting');
     sun.classList.remove('is-slashing');
     void sun.offsetWidth;
-    sun.classList.add('is-slashing', 'is-quick');
-    // sparks where the blade meets the edge of the sun
-    const rad = ang * Math.PI / 180, ux = Math.cos(rad), uy = Math.sin(rad);
-    [-1, 1].forEach(sd => {
-      const ex = disc.x + ux * disc.r * sd, ey = disc.y + uy * disc.r * sd;
-      for (let i = 0; i < 16; i++) {
-        sparks.push({ x: ex, y: ey, vx: ux * sd * (2 + Math.random() * 5) + (Math.random() - .5) * 3, vy: uy * sd * (2 + Math.random() * 5) + (Math.random() - .5) * 3 - 1, life: 1 });
-      }
-    });
+    sun.classList.add('is-slashing');
+    // a few sparks where the blade leaves the sun
+    const rad = ang * Math.PI / 180, ux = Math.cos(rad) * slideDir, uy = Math.sin(rad) * slideDir;
+    const ex = disc.x + ux * disc.r, ey = disc.y + uy * disc.r;
+    for (let i = 0; i < 12; i++) {
+      sparks.push({ x: ex, y: ey, vx: ux * (2 + Math.random() * 5) + (Math.random() - .5) * 2, vy: uy * (2 + Math.random() * 5) + (Math.random() - .5) * 2 - 1, life: 1 });
+    }
     if (trusted && SFX()) { SFX().play('shing', { rate: .92 + Math.min(.3, speed * .12), gain: .8 }); SFX().buzz(12); }
     wake();
   }
@@ -166,24 +166,31 @@
       ctx.fillRect(s.x, s.y, 2.2, 2.2);
     }
 
-    // the halves: a spring back to their resting gap
-    const k = 38, c = 8.5;
-    kickV += (-k * kick - c * kickV) * dt;
-    kick += kickV * dt;
-    if (kick < -1) { kick = -1; kickV = Math.max(0, kickV); }   // never closes past its resting gap
-    if (Math.abs(kick) < .02 && Math.abs(kickV) < .05) { kick = 0; kickV = 0; }
-    if (sun) sun.style.setProperty('--kick', kick.toFixed(3));
+    // the cut: the top half slides out along the blade (110ms), holds, then glides home and the sun heals
+    if (cutAt >= 0 && sun) {
+      const e = now - cutAt;
+      let a;
+      if (e < 110) a = 1 - Math.pow(1 - e / 110, 3);
+      else if (e < 560) a = 1;
+      else if (e < 1360) { const q = (e - 560) / 800; a = 1 - (q < .5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2); }
+      else a = 0;
+      sun.style.setProperty('--slide', (slideDir * slideMax * a).toFixed(3));
+      sun.style.setProperty('--gap', (.45 * a).toFixed(3));
+      if (e >= 1360) { cutAt = -1; sun.classList.remove('is-cutting'); }
+    }
 
     // the sun leans a little towards the cursor
     lean.x += (lean.tx - lean.x) * (1 - Math.pow(.94, dt * 60));
     lean.y += (lean.ty - lean.y) * (1 - Math.pow(.94, dt * 60));
     if (sun) { sun.style.setProperty('--px', lean.x.toFixed(3)); sun.style.setProperty('--py', lean.y.toFixed(3)); }
 
-    const moving = trail.length || sparks.length || kick || kickV || Math.abs(lean.tx - lean.x) + Math.abs(lean.ty - lean.y) > .002;
+    const moving = trail.length || sparks.length || cutAt >= 0 || Math.abs(lean.tx - lean.x) + Math.abs(lean.ty - lean.y) > .002;
     if (visible && moving) raf = requestAnimationFrame(loop);
     else lastT = 0;
   }
   function wake() { if (!raf && visible) raf = requestAnimationFrame(loop); }
+  // the intro uses the same cut, silently
+  window.QHERO = { cut: deg => cut(deg, .6, false) };
 
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) { measure(); wake(); } }).observe(hero);
