@@ -1,4 +1,4 @@
-/* Samurai — core interactions: preloader, cursor, nav, reveals, scroll effects, tabs, form */
+/* Qilich — core interactions: preloader, cursor, nav, reveals, scroll effects, tabs, form */
 (() => {
   'use strict';
 
@@ -8,7 +8,7 @@
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const CONFIG = window.SAMURAI_CONFIG || {};
+  const CONFIG = window.QILICH_CONFIG || {};
 
   const store = {
     get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
@@ -44,8 +44,8 @@
     geo();
     addEventListener('resize', geo);
 
-    const repeat = store.get('samurai-seen') === '1';
-    store.set('samurai-seen', '1');
+    const repeat = store.get('qilich-seen') === '1';
+    store.set('qilich-seen', '1');
     const MIN = repeat ? 650 : 1600;
     const MAX = 4000;
     let loaded = false;
@@ -413,8 +413,8 @@
           a.textContent = email;
           doneS.replaceChildren('Your mail app should open with everything filled in. Just press send. If nothing opened, write to us at ', a, '.');
         } else {
-          console.warn('[Samurai] The contact form is not connected. Set SAMURAI_CONFIG.email or formEndpoint in index.html.');
-          doneS.textContent = 'Demo mode: connect the form in SAMURAI_CONFIG (index.html) to receive messages.';
+          console.warn('[Qilich] The contact form is not connected. Set QILICH_CONFIG.email or formEndpoint in index.html.');
+          doneS.textContent = 'Demo mode: connect the form in QILICH_CONFIG (index.html) to receive messages.';
         }
         form.classList.add('is-done');
         back.focus({ preventScroll: true });

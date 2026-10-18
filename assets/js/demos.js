@@ -1,4 +1,4 @@
-/* Samurai — interactive demos: Tikoncha, ClubTime, Safia, Bon!, Akfa, code typer */
+/* Qilich — interactive demos: Tikoncha, ClubTime, Safia, Bon!, Akfa, code typer */
 (() => {
   'use strict';
 

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SAMURAI — IT Solutions Agency
+   QILICH — IT Solutions Agency
    ========================================================================== */
 
 :root {
@@ -290,6 +290,7 @@ html.has-cursor input[type="range"], html.has-cursor select { cursor: pointer; }
 .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
 .hero-inner { position: relative; z-index: 2; }
 .hero-eyebrow { margin-bottom: 28px; }
+.slogan { color: var(--text); }
 .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--shu); box-shadow: 0 0 0 0 var(--shu-glow); animation: pulse 2s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,58,36,.6); } 70% { box-shadow: 0 0 0 12px rgba(255,58,36,0); } 100% { box-shadow: 0 0 0 0 rgba(255,58,36,0); } }
 .hero-title {
@@ -979,9 +980,10 @@ html:not(.js) .manifesto-t .mw { color: var(--text); }
   background: linear-gradient(100deg, var(--shu) 0 var(--fill), transparent var(--fill));
   -webkit-background-clip: text; background-clip: text;
   margin-left: -1vw; margin-right: -1vw;
+  padding-bottom: .16em; /* room for the Q's tail inside the filled area */
 }
 .footer-word span { display: inline-block; }
-.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 24px; padding: 26px var(--gutter) 34px; border-top: 1px solid var(--line); font-size: 13px; color: var(--soft); margin-top: 22px; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 24px; padding: 26px var(--gutter) 34px; border-top: 1px solid var(--line); font-size: 13px; color: var(--soft); margin-top: 0; }
 .to-top { display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
 .to-top:hover { color: var(--shu); }
 

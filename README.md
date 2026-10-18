@@ -1,6 +1,6 @@
-# Samurai — IT Solutions Agency landing page
+# Qilich — IT Solutions Agency landing page
 
-A single-page site for **Samurai**, an IT solutions agency from Uzbekistan.
+A single-page site for **Qilich** (Uzbek for "sword"), a Japanese-spirited IT solutions agency from Uzbekistan.
 Plain HTML, CSS and JavaScript: no build step, no framework, no dependencies to install.
 
 ## What's on the page
@@ -8,7 +8,7 @@ Plain HTML, CSS and JavaScript: no build step, no framework, no dependencies to 
 | Section | What it does |
 |---|---|
 | **Intro** | A katana slash cuts the loading screen in half and the two halves slide apart. |
-| **Hero** | Sliced red sun with a 侍 brush kanji. Your cursor leaves a blade trail with sparks. The sun splits further as you scroll. |
+| **Hero** | Sliced red sun with a 剣 (sword) brush kanji. Your cursor leaves a blade trail with sparks. The sun splits further as you scroll. |
 | **01 · Battle record** | Interactive case studies of real projects: **Tikoncha** (switch Default / G'ujanak / Qalqon, try to open a blocked app, ask a parent to unlock) and **ClubTime** (start a table, order drinks, stop it to print a thermal receipt and get the Telegram report). Both play a short walkthrough automatically until the visitor touches them. |
 | **02 · The Dojo** | Clickable concept apps for brands we haven't worked with yet: a **Safia** cake builder with order tracking, a **Bon!** coffee pre-order with a stamp card, and an **Akfa** window configurator with live price, heat-loss rating and a dealer map. Plus a "Your brand" call to action. |
 | **03 · The Arsenal** | Capabilities grid with a live-typing Kotlin/Swift snippet from the screen-time engine. |
@@ -31,11 +31,11 @@ python3 -m http.server 8000
 At the bottom of `index.html` there is one config block:
 
 ```js
-window.SAMURAI_CONFIG = {
-  telegram: "",       // e.g. "samurai_agency" (username without @)
-  email: "",          // e.g. "hello@samuraidevs.com"
+window.QILICH_CONFIG = {
+  telegram: "",       // e.g. "qilich_agency" (username without @)
+  email: "",          // e.g. "hello@qilich.com"
   phone: "",          // e.g. "+998901234567"
-  instagram: "",      // e.g. "samurai.agency"
+  instagram: "",      // e.g. "qilich.agency"
   formEndpoint: ""    // optional: Formspree / Getform / your own API URL
 };
 ```
@@ -53,18 +53,16 @@ It's a static folder, so any static host works:
 
 Then point your domain at it.
 
-## Domain shortlist
+## Going live on qilich.com with Cloudflare
 
-These `.com` names were **unregistered** when checked against the Verisign RDAP registry on 18 Oct 2026.
-Availability changes quickly, so confirm at a registrar before you decide:
-
-- `samuraidevs.com`
-- `samuraiforged.com`
-- `samuraisoftworks.com`
-- `samuraiuz.com`
-- `builtbysamurai.com`
-
-Already taken at the time: `samuraiit.com`, `samurai-it.com`, `samuraitech.com`, `samuraidev.com`, `samuraisoft.com`, `samurailabs.com`, `samuraistudio.com`, `samuraiagency.com`.
+1. **Domain:** buy `qilich.com` in Cloudflare (Domain Registration). It lands in your Cloudflare account, so DNS is already set up.
+2. **Hosting:** in Cloudflare, open Workers & Pages → Create → Pages → Connect to Git and pick `Saidburhon/samurai`.
+   - Production branch: `main`
+   - Framework preset: None. Build command: leave empty. Build output directory: `/`
+3. **Domain on the site:** in the Pages project, open Custom domains and add `qilich.com` (and `www.qilich.com` if you like).
+   Every push to `main` then redeploys automatically.
+4. **Email:** turn on Email Routing for `qilich.com` and forward `hello@qilich.com` to your own inbox. It's free.
+   Then set `email: "hello@qilich.com"` in `QILICH_CONFIG`.
 
 ## About the concept demos
 

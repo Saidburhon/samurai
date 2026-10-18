@@ -1,4 +1,4 @@
-/* Samurai — hero: blade trail, sparks, embers, parallax and the sliced sun */
+/* Qilich — hero: blade trail, sparks, embers, parallax and the sliced sun */
 (() => {
   'use strict';
 
