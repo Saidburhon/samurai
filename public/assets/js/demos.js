@@ -7,6 +7,10 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg';
   const som = n => Math.round(n).toLocaleString('ru-RU').replace(/\s/g, ' ');
+  // Uzbek or English for text the demos draw themselves; i18n.js handles the static page
+  const L = (uz, en) => (document.documentElement.lang === 'en' ? en : uz);
+  const SOM = () => L('soʻm', "so'm");
+  const onLang = fn => document.addEventListener('qilich:lang', fn);
   const svgEl = (tag, attrs) => {
     const e = document.createElementNS(NS, tag);
     for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -74,14 +78,23 @@
     const toast = phoneToast($('.ph-toast', phone));
     const shield = $('.tk-shield', root);
     const ask = $('.tk-ask', root);
-    const shieldApp = $('.tk-shield-app', root);
     const ring = $('.ring-fg', root);
     const apps = $$('.app', root);
     const MODES = {
-      default: { name: 'Default mode', off: 38, usage: '1h 52m', toast: { kind: 'ok', icon: 'i-check', title: 'Default mode', text: 'Tracking only. Parents get a daily report.' } },
-      gujanak: { name: "G'ujanak mode", off: 56, usage: '1h 18m', toast: { kind: 'gold', icon: 'i-geo', title: "G'ujanak is on", text: 'School geofence active, limits applied.' } },
-      qalqon: { name: 'Qalqon mode', off: 76, usage: '0h 41m', toast: { kind: '', icon: 'i-shield', title: 'Qalqon is on', text: 'Distracting apps are shielded at OS level.' } }
+      default: {
+        off: 38, usage: () => L('1:52', '1h 52m'), name: () => L('Standart rejim', 'Default mode'), trend: () => L('oʻtgan haftaga nisbatan −12%', '−12% vs last week'),
+        toast: () => ({ kind: 'ok', icon: 'i-check', title: L('Standart rejim', 'Default mode'), text: L('Faqat kuzatuv. Ota-onalar kunlik hisobot oladi.', 'Tracking only. Parents get a daily report.') })
+      },
+      gujanak: {
+        off: 56, usage: () => L('1:18', '1h 18m'), name: () => L('Gʻujanak rejimi', "G'ujanak mode"), trend: () => L('oʻtgan haftaga nisbatan −38%', '−38% vs last week'),
+        toast: () => ({ kind: 'gold', icon: 'i-geo', title: L('Gʻujanak yoqildi', "G'ujanak is on"), text: L('Maktab geozonasi faol, cheklovlar qoʻllandi.', 'School geofence active, limits applied.') })
+      },
+      qalqon: {
+        off: 76, usage: () => L('0:41', '0h 41m'), name: () => L('Qalqon rejimi', 'Qalqon mode'), trend: () => L('oʻtgan haftaga nisbatan −64%', '−64% vs last week'),
+        toast: () => ({ kind: '', icon: 'i-shield', title: L('Qalqon yoqildi', 'Qalqon is on'), text: L('Chalgʻituvchi ilovalar OT darajasida toʻsildi.', 'Distracting apps are shielded at OS level.') })
+      }
     };
+    const appName = a => $('.app-lbl', a).textContent;
     const LIMITS = { Reels: 12, Games: 0, Videos: 25, Social: 8 };
     const API = {
       android: 'Android · AccessibilityService · UsageStatsManager · DeviceAdmin',
@@ -92,25 +105,31 @@
     let askTimer;
     const granted = new Set();
 
+    function labels() {
+      $('.tk-mode-name', root).textContent = MODES[mode].name();
+      $('.tk-usage', root).textContent = MODES[mode].usage();
+      $('.tk-trend', root).textContent = MODES[mode].trend();
+      if (!ask.classList.contains('is-wait')) ask.textContent = L('Ota-onadan ruxsat soʻrash', 'Ask parent to unlock');
+      if (pending) $('.tk-shield-app', root).textContent = appName(pending);
+    }
+
     function setMode(m, silent) {
       mode = m;
       phone.dataset.mode = m;
       granted.clear();
-      $('.tk-mode-name', root).textContent = MODES[m].name;
-      $('.tk-usage', root).textContent = MODES[m].usage;
-      $('.tk-trend', root).textContent = { default: '−12% vs last week', gujanak: '−38% vs last week', qalqon: '−64% vs last week' }[m];
       ring.style.setProperty('--off', MODES[m].off);
       apps.forEach(a => {
         a.classList.remove('is-granted');
         if (!a.dataset.bad) return;
-        $('.app-badge', a).innerHTML = m === 'qalqon' ? '<svg class="i"><use href="#i-lock"/></svg>' : LIMITS[a.dataset.app] + 'm';
+        $('.app-badge', a).innerHTML = m === 'qalqon' ? '<svg class="i"><use href="#i-lock"/></svg>' : LIMITS[a.dataset.app] + '′';
       });
       closeShield();
       $$('.tk-modes > button', root).forEach(b => {
         b.classList.toggle('is-on', b.dataset.mode === m);
         b.setAttribute('aria-pressed', String(b.dataset.mode === m));
       });
-      if (!silent) toast(MODES[m].toast);
+      labels();
+      if (!silent) toast(MODES[m].toast());
     }
 
     function closeShield() {
@@ -119,26 +138,28 @@
       shield.classList.remove('is-open');
       shield.inert = true;
       ask.classList.remove('is-wait');
-      ask.textContent = 'Ask parent to unlock';
+      ask.textContent = L('Ota-onadan ruxsat soʻrash', 'Ask parent to unlock');
     }
 
     function openApp(a) {
-      const name = a.dataset.app;
+      const id = a.dataset.app, name = appName(a);
       a.animate([{ transform: 'scale(1)' }, { transform: 'scale(.9)' }, { transform: 'scale(1)' }], { duration: 260 });
-      if (!a.dataset.bad || mode === 'default' || granted.has(name)) {
-        const text = granted.has(name) ? '15 minutes granted by a parent.' : mode === 'default' ? 'Allowed. Usage is being tracked.' : 'Learning apps are always open.';
-        toast({ kind: 'ok', icon: 'i-check', title: `Opening ${name}`, text });
+      if (!a.dataset.bad || mode === 'default' || granted.has(id)) {
+        const text = granted.has(id) ? L('Ota-ona 15 daqiqa ruxsat berdi.', '15 minutes granted by a parent.')
+          : mode === 'default' ? L('Ruxsat. Foydalanish kuzatilmoqda.', 'Allowed. Usage is being tracked.')
+          : L('Taʼlim ilovalari doim ochiq.', 'Learning apps are always open.');
+        toast({ kind: 'ok', icon: 'i-check', title: L(`${name} ochilmoqda`, `Opening ${name}`), text });
         return;
       }
       if (mode === 'gujanak') {
-        const left = LIMITS[name];
+        const left = LIMITS[id];
         toast(left > 0
-          ? { kind: 'gold', icon: 'i-clock', title: `${name}: ${left} min left today`, text: "G'ujanak keeps the limit, at school and at home." }
-          : { kind: '', icon: 'i-lock', title: `${name}: daily limit reached`, text: 'Try again tomorrow, or ask a parent.' });
+          ? { kind: 'gold', icon: 'i-clock', title: L(`${name}: bugun ${left} daqiqa qoldi`, `${name}: ${left} min left today`), text: L('Gʻujanak cheklovni maktabda ham, uyda ham saqlaydi.', "G'ujanak keeps the limit, at school and at home.") }
+          : { kind: '', icon: 'i-lock', title: L(`${name}: kunlik limit tugadi`, `${name}: daily limit reached`), text: L('Ertaga qayta urinib koʻring yoki ota-onadan soʻrang.', 'Try again tomorrow, or ask a parent.') });
         return;
       }
       pending = a;
-      shieldApp.textContent = name;
+      $('.tk-shield-app', root).textContent = name;
       shield.inert = false;
       shield.classList.add('is-open');
     }
@@ -146,14 +167,14 @@
     function askParent() {
       if (!pending || ask.classList.contains('is-wait')) return;
       ask.classList.add('is-wait');
-      ask.textContent = 'Waiting for parent…';
+      ask.textContent = L('Ota-ona javobi kutilmoqda…', 'Waiting for parent…');
       const a = pending;
       askTimer = setTimeout(() => {
         granted.add(a.dataset.app);
         a.classList.add('is-granted');
-        $('.app-badge', a).textContent = '15m';
+        $('.app-badge', a).textContent = '15′';
         closeShield();
-        toast({ kind: 'tg', icon: 'i-send', title: 'Parent approved in Telegram', text: `+15 min for ${a.dataset.app}.` });
+        toast({ kind: 'tg', icon: 'i-send', title: L('Ota-ona Telegramda ruxsat berdi', 'Parent approved in Telegram'), text: L(`${appName(a)} uchun +15 daqiqa.`, `+15 min for ${appName(a)}.`) });
       }, 1700);
     }
 
@@ -166,6 +187,7 @@
       $('.tk-api', root).textContent = API[b.dataset.os];
     });
     setMode('default', true);
+    onLang(labels);
 
     const reels = apps.find(a => a.dataset.app === 'Reels');
     autoplay(root, [
@@ -192,20 +214,23 @@
     let clock = 21 * 60 + 47;
     let revenue = 1284000;
     const tables = [
-      { name: 'Table 1', kind: 'pool', rate: 60000 },
-      { name: 'Table 2', kind: 'pool', rate: 60000, start: clock - 47, orders: [{ n: 'Cola', p: 12000 }] },
-      { name: 'Table 3', kind: 'pool', rate: 60000 },
-      { name: 'VIP', kind: 'pool', rate: 90000, start: clock - 83, orders: [{ n: 'Tea', p: 8000 }, { n: 'Snacks', p: 15000 }] },
-      { name: 'Tennis 1', kind: 'tennis', rate: 40000 },
-      { name: 'Tennis 2', kind: 'tennis', rate: 40000 }
+      { n: ['1-stol', 'Table 1'], kind: 'pool', rate: 60000 },
+      { n: ['2-stol', 'Table 2'], kind: 'pool', rate: 60000, start: clock - 47, orders: [{ n: 'Cola', p: 12000 }] },
+      { n: ['3-stol', 'Table 3'], kind: 'pool', rate: 60000 },
+      { n: ['VIP', 'VIP'], kind: 'pool', rate: 90000, start: clock - 83, orders: [{ n: 'Tea', p: 8000 }, { n: 'Snacks', p: 15000 }] },
+      { n: ['1-tennis', 'Tennis 1'], kind: 'tennis', rate: 40000 },
+      { n: ['2-tennis', 'Tennis 2'], kind: 'tennis', rate: 40000 }
     ];
+    const ITEMS = { Tea: ['Choy', 'Tea'], Cola: ['Kola', 'Cola'], Snacks: ['Gazak', 'Snacks'] };
+    const name = t => L(...t.n);
+    const item = id => L(...ITEMS[id]);
     let sel = tables[0];
     let ordersKey = '';
     let visible = false;
 
     const minutes = t => (t.start != null ? clock - t.start : 0);
     const hhmm = m => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
-    const dur = m => `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`;
+    const dur = m => L(`${Math.floor(m / 60)} soat ${String(m % 60).padStart(2, '0')} daq`, `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`);
     const timeCost = t => Math.round(minutes(t) * t.rate / 60 / 500) * 500;
     const total = t => timeCost(t) + t.orders.reduce((s, o) => s + o.p, 0);
 
@@ -214,9 +239,7 @@
       const b = document.createElement('button');
       b.className = 'ct-table';
       b.dataset.kind = t.kind;
-      b.setAttribute('aria-label', t.name);
       b.innerHTML = `<span class="ct-light"></span><span class="ct-felt">${t.kind === 'pool' ? '<i></i>'.repeat(6) : ''}</span><span class="ct-t-name"></span><span class="ct-t-time"></span>`;
-      $('.ct-t-name', b).textContent = t.name.toUpperCase();
       b.addEventListener('click', () => select(t));
       ui.floor.appendChild(b);
       t.el = b;
@@ -227,22 +250,24 @@
         t.el.classList.toggle('is-on', t.start != null);
         t.el.classList.toggle('is-sel', t === sel);
         t.el.setAttribute('aria-pressed', String(t === sel));
-        $('.ct-t-time', t.el).textContent = t.start != null ? hhmm(minutes(t)) : 'FREE';
+        t.el.setAttribute('aria-label', name(t));
+        $('.ct-t-name', t.el).textContent = name(t).toUpperCase();
+        $('.ct-t-time', t.el).textContent = t.start != null ? hhmm(minutes(t)) : L('BOʻSH', 'FREE');
       });
       const on = sel.start != null;
-      ui.name.textContent = sel.name;
-      ui.state.textContent = on ? 'In play' : 'Free';
+      ui.name.textContent = name(sel);
+      ui.state.textContent = on ? L('Oʻyinda', 'In play') : L('Boʻsh', 'Free');
       ui.state.classList.toggle('is-on', on);
       ui.timer.textContent = hhmm(minutes(sel));
       ui.cost.textContent = som(total(sel));
-      const key = `${sel.name}|${sel.start}|${sel.orders.length}`;
+      const key = `${sel.n[1]}|${sel.start}|${sel.orders.length}|${document.documentElement.lang}`;
       if (key !== ordersKey) {
         ordersKey = key;
         ui.orders.innerHTML = '';
         sel.orders.forEach(o => {
           const li = document.createElement('li');
           li.innerHTML = '<span></span><span></span>';
-          li.children[0].textContent = o.n;
+          li.children[0].textContent = item(o.n);
           li.children[1].textContent = som(o.p);
           ui.orders.appendChild(li);
         });
@@ -268,7 +293,8 @@
       const m = minutes(t), sum = total(t), tc = timeCost(t), ords = t.orders.slice();
       revenue += sum;
       printReceipt(t, m, tc, ords, sum);
-      telegram(`${t.name} closed · ${dur(m)} · ${som(sum)} so'm. Revenue today: ${som(revenue)} so'm.`);
+      telegram(L(`${name(t)} yopildi · ${dur(m)} · ${som(sum)} ${SOM()}. Bugungi tushum: ${som(revenue)} ${SOM()}.`,
+        `${name(t)} closed · ${dur(m)} · ${som(sum)} ${SOM()}. Revenue today: ${som(revenue)} ${SOM()}.`));
       t.start = null;
       t.orders = [];
       paint();
@@ -298,17 +324,17 @@
     function printReceipt(t, m, tc, ords, sum) {
       const d = new Date();
       const date = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
-      const rows = ords.map(o => `<div class="rc-r"><span>${o.n} ×1</span><span>${som(o.p)}</span></div>`).join('');
+      const rows = ords.map(o => `<div class="rc-r"><span>${item(o.n)} ×1</span><span>${som(o.p)}</span></div>`).join('');
       ui.paper.innerHTML = `
-        <div class="rc-h">YOUR CLUB · BILLIARDS</div>
+        <div class="rc-h">${L('SIZNING KLUB · BILYARD', 'YOUR CLUB · BILLIARDS')}</div>
         <div class="rc-s">${date} · ${hhmm(clock % 1440)}</div>
         <hr>
-        <div class="rc-r"><span>${t.name}</span><span>${dur(m)}</span></div>
-        <div class="rc-r"><span>Rate ${som(t.rate)}/h</span><span>${som(tc)}</span></div>
+        <div class="rc-r"><span>${name(t)}</span><span>${dur(m)}</span></div>
+        <div class="rc-r"><span>${L('Tarif', 'Rate')} ${som(t.rate)}/${L('soat', 'h')}</span><span>${som(tc)}</span></div>
         ${rows}
         <hr>
-        <div class="rc-r rc-t"><span>TOTAL</span><span>${som(sum)}</span></div>
-        <div class="rc-qr">${qr(m * 31 + sum % 997)}<span>Scan to follow<br>@your_club</span></div>`;
+        <div class="rc-r rc-t"><span>${L('JAMI', 'TOTAL')}</span><span>${som(sum)}</span></div>
+        <div class="rc-qr">${qr(m * 31 + sum % 997)}<span>${L('Kuzatish uchun<br>skanerlang', 'Scan to follow')}<br>@your_club</span></div>`;
       clearTimeout(rcTimer);
       clearTimeout(rcOutTimer);
       ui.receipt.classList.remove('is-on', 'is-out');
@@ -335,6 +361,7 @@
     }
 
     setInterval(() => { clock++; if (visible && !document.hidden) paint(); }, 1000);
+    onLang(paint);
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) paint(); }).observe(root);
     } else {
@@ -416,7 +443,7 @@
       label.style.fill = st.sponge === 'honey' ? '#4a2716' : '#fff4e6';
       label.setAttribute('y', topY + LH / 2 + 5);
       label.style.fontSize = Math.min(15, (w - 14) / Math.max(1, txt.length * .52)) + 'px';
-      price.textContent = `${som(KG[st.sponge] * st.size + TOP[st.top])} so'm`;
+      price.textContent = `${som(KG[st.sponge] * st.size + TOP[st.top])} ${SOM()}`;
     }
 
     $$('.sf-opt', root).forEach(opt => {
@@ -427,6 +454,14 @@
       });
     });
     input.addEventListener('input', () => draw(false));
+    // swap the default inscription with the language, but never a visitor's own text
+    const DEFAULT_TEXT = ['Tabriklaymiz!', 'Happy B-day!'];
+    if (input.value === DEFAULT_TEXT[0]) input.value = L(...DEFAULT_TEXT);
+    onLang(() => {
+      if (DEFAULT_TEXT.includes(input.value)) input.value = L(...DEFAULT_TEXT);
+      q('.sf-ins-echo').textContent = input.value.trim() || L('shunchaki muhabbat', 'nothing, just love');
+      draw(false);
+    });
 
     let timers = [];
     q('.sf-order').addEventListener('click', () => {
@@ -435,7 +470,7 @@
       void bag.offsetWidth;
       bag.classList.add('bump');
       q('.sf-ordno').textContent = '#A-' + (1000 + Math.floor(Math.random() * 9000));
-      q('.sf-ins-echo').textContent = input.value.trim() || 'nothing, just love';
+      q('.sf-ins-echo').textContent = input.value.trim() || L('shunchaki muhabbat', 'nothing, just love');
       const mini = q('.sf-mini');
       mini.innerHTML = '';
       const clone = q('.sf-svg').cloneNode(true);
@@ -443,7 +478,7 @@
       clone.setAttribute('aria-hidden', 'true');
       mini.appendChild(clone);
       steps.forEach(li => li.classList.remove('done', 'now'));
-      steps[steps.length - 1].querySelector('span').textContent = 'Courier · 12 min';
+      steps[steps.length - 1].querySelector('span').textContent = L('Kuryer · 12 daqiqa', 'Courier · 12 min');
       build.classList.remove('is-on');
       track.classList.add('is-on');
       build.inert = true;
@@ -460,7 +495,7 @@
         const last = steps[steps.length - 1];
         last.classList.remove('now');
         last.classList.add('done');
-        last.querySelector('span').textContent = 'Delivered. Enjoy!';
+        last.querySelector('span').textContent = L('Yetkazildi. Yoqimli ishtaha!', 'Delivered. Enjoy!');
       }, 300 + steps.length * 1300));
     });
     q('.sf-again').addEventListener('click', () => {
@@ -525,7 +560,7 @@
       l1.style.fill = d.c[2];
       cup.style.transform = `scale(${SIZE[st.s][0]})`;
       const p = d.p + SIZE[st.s][1] + MILK[st.m][0];
-      q('.bn-price').textContent = st.free ? 'Free cup' : `${som(p)} so'm`;
+      q('.bn-price').textContent = st.free ? L('Bepul ichimlik', 'Free cup') : `${som(p)} ${SOM()}`;
     }
 
     seg(q('.bn-drinks'), b => { st.d = b.dataset.d; draw(true); });
@@ -541,15 +576,15 @@
         st.free = false;
         st.stamps = 0;
         paintStamps(-1);
-        toast({ kind: 'ok', icon: 'i-cup', title: `Order #${no} · on the house`, text: 'Thanks for coming back. Ready in 4 min.' });
+        toast({ kind: 'ok', icon: 'i-cup', title: L(`Buyurtma #${no} · bepul`, `Order #${no} · on the house`), text: L('Qaytganingiz uchun rahmat. 4 daqiqada tayyor.', 'Thanks for coming back. Ready in 4 min.') });
       } else {
         st.stamps = Math.min(8, st.stamps + 1);
         paintStamps(st.stamps - 1);
         if (st.stamps === 8) {
           st.free = true;
-          toast({ kind: 'ok', icon: 'i-check', title: 'Stamp card complete!', text: 'Your next cup is on us.' });
+          toast({ kind: 'ok', icon: 'i-check', title: L('Muhr kartasi toʻldi!', 'Stamp card complete!'), text: L('Keyingi ichimlik bizdan.', 'Your next cup is on us.') });
         } else {
-          toast({ kind: 'ok', icon: 'i-check', title: `Order #${no} accepted`, text: 'Paid. Ready in 4 min at the nearest Bon!' });
+          toast({ kind: 'ok', icon: 'i-check', title: L(`Buyurtma #${no} qabul qilindi`, `Order #${no} accepted`), text: L('Toʻlandi. Eng yaqin Bon!da 4 daqiqada tayyor.', 'Paid. Ready in 4 min at the nearest Bon!') });
         }
       }
       setTimeout(() => {
@@ -561,6 +596,7 @@
 
     paintStamps(-1);
     draw(false);
+    onLang(() => draw(false));
   }
 
   /* ==================================================================== AKFA */
@@ -694,12 +730,14 @@
     });
     const view = q('.ak-view');
     const dealerBtn = q('.ak-dealer');
-    const dealerLabel = dealerBtn.innerHTML;
+    const ARROW = '<svg class="i"><use href="#i-arrow"/></svg>';
+    const dealerLabel = () => `${L('Eng yaqin dilerni topish', 'Find the nearest dealer')} ${ARROW}`;
+    const cardHTML = () => L('<b>Namunaviy diler · Toshkent</b>Koʻrgazma zali 4,2 km · 19:00 gacha ochiq', '<b>Sample dealer · Tashkent</b>Showroom 4.2 km away · open till 19:00');
     let card = null;
     const showWindow = () => {
       if (!view.classList.contains('show-map')) return;
       view.classList.remove('show-map');
-      dealerBtn.innerHTML = dealerLabel;
+      dealerBtn.innerHTML = dealerLabel();
     };
     dealerBtn.addEventListener('click', () => {
       if (view.classList.contains('show-map')) { showWindow(); return; }
@@ -708,17 +746,23 @@
       pins[0].classList.add('is-near');
       card = document.createElement('div');
       card.className = 'ak-card';
-      card.innerHTML = '<b>Sample dealer · Tashkent</b>Showroom 4.2 km away · open till 19:00';
+      card.innerHTML = cardHTML();
       card.style.left = pins[0].style.left;
       card.style.top = pins[0].style.top;
       wrap.appendChild(card);
       view.classList.add('show-map');
-      dealerBtn.textContent = 'Back to my window';
+      dealerBtn.textContent = L('Derazamga qaytish', 'Back to my window');
       view.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
     });
     root.addEventListener('input', showWindow);
     $$('.ak-ctrl button:not(.ak-dealer)', root).forEach(b => b.addEventListener('click', showWindow));
 
+    dealerBtn.innerHTML = dealerLabel();
+    onLang(() => {
+      calc();
+      dealerBtn.innerHTML = view.classList.contains('show-map') ? L('Derazamga qaytish', 'Back to my window') : dealerLabel();
+      if (card) card.innerHTML = cardHTML();
+    });
     draw();
   }
 
