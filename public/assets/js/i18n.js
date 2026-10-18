@@ -14,22 +14,16 @@
     "nav.posters": "Posters",
 
     "hero.h": '<span class="ln"><span>A Japanese IT agency,</span></span> <span class="ln"><span>now in <em>Uzbekistan!</em></span></span>',
-    "hero.slogan": "A Japanese IT agency, now in Uzbekistan!",
-    "hero.stack": "iOS · Android · Web · Desktop · IoT",
-    "hero.hint": "Slice with your cursor",
-    "hero.hintTouch": "Slice with your finger",
     "hero.down": "Go to projects",
 
-    "ch.tag": "Our work",
     "ch.h": "First, we built <br>for ourselves.",
-    "ch.sub": "Hoglt and PoolTimer are products of the Qilich team. Now it’s your turn.",
+    "ch.sub": "Now — for you.",
     "ch.hg": "Screen time",
     "ch.pt": "Pool halls",
-    "case.by": "Built by Qilich",
 
-    "hg.tag": "Screen time · iOS &amp; Android",
     "hg.h": "Kids’ phones. <br>Parents’ rules.",
     "hg.aka": "Known as Tikoncha in Uzbekistan",
+    "hg.dial": "Daily schedule",
     "hg.sleep": "Sleep",
     "hg.sleepSub": "Phone locked",
     "hg.school": "School",
@@ -38,16 +32,11 @@
     "hg.limitSub": "Games: 1 hour",
     "hg.free": "Free time",
     "hg.freeSub": "Everything open",
-    "hg.drag": "Spin the day",
     "hg.f1": "Google Play installs",
     "hg.f2": "apps: child, parent, teacher",
 
-    "pt.tag": "For pool halls",
     "pt.h": "Every minute <br>on the bill.",
     "pt.aka": "Known as ClubTime in Uzbekistan",
-    "pt.plug": "Smart plugs",
-    "pt.print": "Receipts",
-    "pt.hint": "Tap a table",
     "pt.today": "Today",
     "pt.f1": "languages",
     "pt.f2": "platforms",
@@ -57,7 +46,6 @@
     "mx.you": "Yours",
     "mx.web": "Web",
 
-    "tk.city": "Tashkent",
     "tk.h": "Tokyo standards. <br>Tashkent hours.",
     "tk.tokyo": "Tokyo · UTC+9",
     "tk.tash": "Tashkent · UTC+5",
@@ -70,8 +58,6 @@
     "way.4": "Support",
 
     "ct.h": "Got a project?",
-    "ct.call": "Call",
-    "ct.mail": "Write",
     "ft.top": "Back to top ↑"
   };
 
@@ -85,22 +71,16 @@
     "nav.posters": "Постеры",
 
     "hero.h": '<span class="ln"><span>Японское IT-агентство</span></span> <span class="ln"><span>теперь в <em>Узбекистане!</em></span></span>',
-    "hero.slogan": "Японское IT-агентство теперь в Узбекистане!",
-    "hero.stack": "iOS · Android · Веб · Desktop · IoT",
-    "hero.hint": "Режьте курсором",
-    "hero.hintTouch": "Режьте пальцем",
     "hero.down": "К проектам",
 
-    "ch.tag": "Наши работы",
     "ch.h": "Сначала мы сделали <br>для себя.",
-    "ch.sub": "Hoglt и PoolTimer — продукты команды Qilich. Теперь ваша очередь.",
+    "ch.sub": "Теперь — для вас.",
     "ch.hg": "Экранное время",
     "ch.pt": "Бильярдные клубы",
-    "case.by": "Сделано Qilich",
 
-    "hg.tag": "Экранное время · iOS и Android",
     "hg.h": "Телефон ребёнка. <br>Правила родителей.",
     "hg.aka": "В Узбекистане — Tikoncha",
+    "hg.dial": "Распорядок дня",
     "hg.sleep": "Сон",
     "hg.sleepSub": "Телефон заблокирован",
     "hg.school": "Школа",
@@ -109,16 +89,11 @@
     "hg.limitSub": "Игры: 1 час",
     "hg.free": "Свободно",
     "hg.freeSub": "Всё открыто",
-    "hg.drag": "Покрутите день",
     "hg.f1": "установок в Google Play",
     "hg.f2": "приложения: ребёнок, родитель, учитель",
 
-    "pt.tag": "Для бильярдных клубов",
     "pt.h": "Каждая минута — <br>в чеке.",
     "pt.aka": "В Узбекистане — ClubTime",
-    "pt.plug": "Умные розетки",
-    "pt.print": "Чеки",
-    "pt.hint": "Нажмите на стол",
     "pt.today": "Сегодня",
     "pt.f1": "языков",
     "pt.f2": "платформы",
@@ -128,7 +103,6 @@
     "mx.you": "Ваш",
     "mx.web": "Веб",
 
-    "tk.city": "Ташкент",
     "tk.h": "Стандарты Токио. <br>Время Ташкента.",
     "tk.tokyo": "Токио · UTC+9",
     "tk.tash": "Ташкент · UTC+5",
@@ -141,8 +115,6 @@
     "way.4": "Поддержка",
 
     "ct.h": "Есть проект?",
-    "ct.call": "Позвонить",
-    "ct.mail": "Написать",
     "ft.top": "Наверх ↑"
   };
 

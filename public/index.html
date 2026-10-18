@@ -20,7 +20,7 @@
   <!-- Japanese glyphs: only the characters used on the page are downloaded -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E4%B8%80%E4%BA%8C%E4%B8%89%E5%9B%9B%E4%BA%94%E5%85%AD%E4%B8%83%E6%A7%8B%E5%9E%8B%E6%96%AC%E6%AE%8B%E5%BF%83%E6%9D%B1%E4%BA%AC%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93%E5%AE%9F%E7%B8%BE%E9%80%A3%E7%B5%A1" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=4" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -82,11 +82,8 @@
   <canvas class="blade" id="blade" aria-hidden="true"></canvas>
 
   <div class="hero-text">
-    <p class="tag mono rv"><span>一 / 七</span> Qilich · 2026</p>
     <h1 class="hero-h" data-i18n="hero.h"><span class="ln"><span>Yapon IT agenstvasi</span></span> <span class="ln"><span>endi <em>Oʻzbekistonda!</em></span></span></h1>
-    <p class="stack mono rv" data-i18n="hero.stack">iOS · Android · Veb · Desktop · IoT</p>
   </div>
-  <p class="hint mono rv" aria-hidden="true"><span class="hint-mouse" data-i18n="hero.hint">Kursor bilan kesing</span><span class="hint-touch" data-i18n="hero.hintTouch">Barmogʻingiz bilan kesing</span></p>
   <a href="#work" class="scroll-cue" aria-label="Loyihalarga oʻtish" data-i18n-label="hero.down"><svg class="i"><use href="#i-arrow-down"/></svg></a>
 </section>
 
@@ -94,9 +91,9 @@
 <section class="chapter" id="work" aria-labelledby="chTitle">
   <div class="chapter-cut" aria-hidden="true"><i></i></div>
   <div class="chapter-text">
-    <p class="ch-tag mono rv"><span class="kj">実績</span> <span data-i18n="ch.tag">Ishlarimiz</span></p>
+    <p class="ch-tag rv" aria-hidden="true">実績</p>
     <h2 id="chTitle" class="big rv" data-i18n="ch.h">Avval oʻzimiz uchun <br>yaratdik.</h2>
-    <p class="ch-sub rv" data-i18n="ch.sub">Hoglt va PoolTimer — Qilich jamoasining mahsulotlari. Endi navbat sizniki.</p>
+    <p class="ch-sub rv" data-i18n="ch.sub">Endi — siz uchun.</p>
   </div>
   <div class="ch-tiles">
     <a class="ch-tile t-hoglt rv" href="#hoglt">
@@ -114,10 +111,8 @@
 
 <!-- 二 HOGLT -->
 <section class="poster p-case p-hoglt" id="hoglt" data-num="二" data-k="Hoglt" aria-labelledby="hgTitle">
-  <p class="tag mono"><span>二 / 七</span> <span data-i18n="case.by">Qilich yaratgan</span> · 01</p>
   <div class="case rvc">
   <div class="p-head">
-    <p class="case-top mono" data-i18n="hg.tag">Ekran vaqti · iOS va Android</p>
     <h2 id="hgTitle" class="sr-only">Hoglt</h2>
     <img class="hg-logo rv" src="assets/img/hoglt/logo.webp" width="400" height="141" alt="Hoglt" />
     <p class="big rv" data-i18n="hg.h">Bolaning telefoni. <br>Ota-onaning qoidasi.</p>
@@ -135,7 +130,7 @@
     <a class="go rv" href="https://hoglt.com" target="_blank" rel="noopener">hoglt.com <svg class="i"><use href="#i-arrow-ur"/></svg></a>
   </div>
 
-  <figure class="dial rv" id="dial">
+  <figure class="dial rv" id="dial" aria-label="Kun jadvali" data-i18n-label="hg.dial">
     <svg viewBox="0 0 400 400" class="dial-svg" aria-hidden="true">
       <g id="dialArcs"></g>
       <g id="dialTicks"></g>
@@ -148,17 +143,14 @@
       <span id="dialState">Maktab</span>
       <small id="dialSub">Faqat dars ilovalari</small>
     </div>
-    <figcaption class="mono" data-i18n="hg.drag">Kunni aylantiring</figcaption>
   </figure>
   </div>
 </section>
 
 <!-- 三 POOLTIMER -->
 <section class="poster p-case p-pool" id="pooltimer" data-num="三" data-k="PoolTimer" aria-labelledby="ptTitle">
-  <p class="tag mono"><span>三 / 七</span> <span data-i18n="case.by">Qilich yaratgan</span> · 02</p>
   <div class="case rvc">
   <div class="p-head">
-    <p class="case-top mono" data-i18n="pt.tag">Bilyard klublari uchun</p>
     <h2 id="ptTitle" class="pt-logo rv"><svg class="ball" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#000" stroke="#ffb547" stroke-width="2"/><circle cx="12" cy="12" r="5.2" fill="#fff"/><text x="12" y="15.2" text-anchor="middle" font-size="8.5" font-weight="800" font-family="Archivo, sans-serif" fill="#000">8</text></svg><span>Pool<em>Timer</em></span></h2>
     <p class="big rv" data-i18n="pt.h">Har daqiqa — <br>hisobda.</p>
     <p class="aka mono rv" data-i18n="pt.aka">Oʻzbekistonda — ClubTime</p>
@@ -167,17 +159,11 @@
       <div><dt>4</dt><dd data-i18n="pt.f2">platforma</dd></div>
     </dl>
     <p class="pt-os mono rv">Android · iOS · Windows · macOS</p>
-    <ul class="pt-feat rv">
-      <li><svg class="i"><use href="#i-plug"/></svg><span data-i18n="pt.plug">Aqlli rozetka</span></li>
-      <li><svg class="i"><use href="#i-printer"/></svg><span data-i18n="pt.print">Chek</span></li>
-      <li><svg class="i"><use href="#i-send"/></svg><span>Telegram</span></li>
-    </ul>
     <a class="go rv" href="https://pooltimer.app" target="_blank" rel="noopener">pooltimer.app <svg class="i"><use href="#i-arrow-ur"/></svg></a>
   </div>
 
   <div class="hall rv" id="hall">
     <div class="hall-top mono">
-      <span data-i18n="pt.hint">Stolni bosing</span>
       <span><span data-i18n="pt.today">Bugun</span> <b id="hallTotal">0</b></span>
     </div>
     <div class="tables" id="tables">
@@ -196,8 +182,7 @@
 <!-- 四 STACK -->
 <section class="poster p-stack" id="stack" data-num="四" data-k="Arsenal" aria-labelledby="mxTitle">
   <div class="p-head">
-    <p class="tag mono"><span>四 / 七</span> Arsenal</p>
-    <h2 id="mxTitle" class="big rv" data-i18n="mx.h">Bir jamoa. <br>Butun stek.</h2>
+      <h2 id="mxTitle" class="big rv" data-i18n="mx.h">Bir jamoa. <br>Butun stek.</h2>
   </div>
   <div class="matrix rv" role="table" aria-label="Platformalar" data-i18n-label="mx.label">
     <div class="mx-row mx-head" role="row">
@@ -219,7 +204,6 @@
 
 <!-- 五 TOKYO · TASHKENT -->
 <section class="poster p-tokyo" id="tokyo" data-num="五" data-k="東京" data-tone="red" aria-labelledby="tkTitle">
-  <p class="tag mono"><span>五 / 七</span> 東京 — <span data-i18n="tk.city">Toshkent</span></p>
   <h2 id="tkTitle" class="big rv" data-i18n="tk.h">Tokio standarti. <br>Toshkent vaqti.</h2>
   <div class="route rv">
     <div class="city">
@@ -242,24 +226,22 @@
 
 <!-- 六 THE WAY -->
 <section class="poster p-way" id="way" data-num="六" data-k="道" data-tone="light" aria-labelledby="wayTitle">
-  <p class="tag mono"><span>六 / 七</span> 道</p>
   <h2 id="wayTitle" class="big rv" data-i18n="way.h">Toʻrt zarba.</h2>
   <ol class="steps" id="steps">
-    <li class="rv"><span class="kj">構</span><b data-i18n="way.1">Reja</b><small class="mono">Kamae</small></li>
-    <li class="rv"><span class="kj">型</span><b data-i18n="way.2">Dizayn</b><small class="mono">Kata</small></li>
-    <li class="rv"><span class="kj">斬</span><b data-i18n="way.3">Kod</b><small class="mono">Kiri</small></li>
-    <li class="rv"><span class="kj">残心</span><b data-i18n="way.4">Qoʻllab-quvvatlash</b><small class="mono">Zanshin</small></li>
+    <li class="rv"><span class="kj">構</span><b data-i18n="way.1">Reja</b></li>
+    <li class="rv"><span class="kj">型</span><b data-i18n="way.2">Dizayn</b></li>
+    <li class="rv"><span class="kj">斬</span><b data-i18n="way.3">Kod</b></li>
+    <li class="rv"><span class="kj">残心</span><b data-i18n="way.4">Qoʻllab-quvvatlash</b></li>
   </ol>
   <div class="way-line" aria-hidden="true"><i id="wayFill"></i></div>
 </section>
 
 <!-- 七 CONTACT -->
 <section class="poster p-contact" id="contact" data-num="七" data-k="連絡" aria-labelledby="ctTitle">
-  <p class="tag mono"><span>七 / 七</span> <span data-i18n="nav.contact">Aloqa</span></p>
   <h2 id="ctTitle" class="big rv" data-i18n="ct.h">Loyihangiz bormi?</h2>
   <div class="ct-links">
-    <a class="ct rv" data-link="phone" href="#"><small class="mono" data-i18n="ct.call">Qoʻngʻiroq</small><b data-value="phone"></b></a>
-    <a class="ct rv" data-link="email" href="#"><small class="mono" data-i18n="ct.mail">Yozing</small><b data-value="email"></b></a>
+    <a class="ct rv" data-link="phone" href="#"><b data-value="phone"></b></a>
+    <a class="ct rv" data-link="email" href="#"><b data-value="email"></b></a>
   </div>
   <div class="set-sun" aria-hidden="true"></div>
 </section>
@@ -270,7 +252,6 @@
   <div class="footer-word" id="footerWord" aria-hidden="true">QILICH</div>
   <div class="footer-row mono">
     <span>© 2026 Qilich</span>
-    <span data-i18n="hero.slogan">Yapon IT agenstvasi endi Oʻzbekistonda!</span>
     <a href="#top" data-i18n="ft.top">Yuqoriga ↑</a>
   </div>
 </footer>
@@ -282,9 +263,9 @@
     phone: "+998972707007"
   };
 </script>
-<script src="assets/js/i18n.js?v=4"></script>
-<script src="assets/js/main.js?v=4" defer></script>
-<script src="assets/js/hero.js?v=4" defer></script>
-<script src="assets/js/posters.js?v=4" defer></script>
+<script src="assets/js/i18n.js?v=5"></script>
+<script src="assets/js/main.js?v=5" defer></script>
+<script src="assets/js/hero.js?v=5" defer></script>
+<script src="assets/js/posters.js?v=5" defer></script>
 </body>
 </html>
