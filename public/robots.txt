@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qilich.com/sitemap.xml
