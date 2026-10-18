@@ -1,4 +1,4 @@
-/* Qilich — core interactions: preloader, cursor, nav, reveals, scroll effects, tabs, form */
+/* Qilich — page chrome: intro cut, nav, reveals, clocks, the Way line, contacts, footer */
 (() => {
   'use strict';
 
@@ -7,466 +7,139 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const CONFIG = window.QILICH_CONFIG || {};
-  // pick the Uzbek, English or Russian string for text this script writes itself (see i18n.js)
-  const L = (uz, en, ru) => (doc.lang === 'en' ? en : doc.lang === 'ru' ? ru : uz);
   const onLang = fn => document.addEventListener('qilich:lang', fn);
 
-  const store = {
-    get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
-    set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* private mode */ } }
-  };
-
-  /* ---------------------------------------------------------------- ready */
-  let isReady = false;
-  const readyCbs = [];
-  const onReady = fn => (isReady ? fn() : readyCbs.push(fn));
-  function ready() {
-    if (isReady) return;
-    isReady = true;
-    doc.classList.remove('is-loading');
-    doc.classList.add('is-ready');
-    readyCbs.forEach(fn => fn());
-  }
-
-  /* ------------------------------------------------------------ preloader */
-  function preloader() {
-    const pl = $('#preloader');
-    // no .js class means the inline failsafe already gave up on the intro
-    if (!pl || reduce || !doc.classList.contains('js')) { if (pl) pl.classList.add('is-done'); ready(); return; }
-
-    doc.classList.add('is-loading');
-
-    const geo = () => {
-      const W = innerWidth, H = innerHeight;
-      const y1 = H * .58, y2 = H * .42;
-      pl.style.setProperty('--len', Math.hypot(W, y1 - y2) + 'px');
-      pl.style.setProperty('--ang', (Math.atan2(y2 - y1, W) * 180 / Math.PI) + 'deg');
+  /* ------------------------------------------------------------ intro cut */
+  // the headline rises, a white slash crosses the sun and the two halves part
+  function intro() {
+    const sun = $('#sun');
+    const go = () => {
+      doc.classList.add('is-ready');
+      if (!sun) return;
+      if (reduce) { sun.style.setProperty('--open', 1); return; }
+      sun.classList.add('is-slashing');
+      setTimeout(() => {
+        sun.classList.add('is-opening');
+        sun.style.setProperty('--open', 1);
+        setTimeout(() => sun.classList.remove('is-opening'), 1200);
+      }, 330);
     };
-    geo();
-    addEventListener('resize', geo);
-
-    const repeat = store.get('qilich-seen') === '1';
-    store.set('qilich-seen', '1');
-    const MIN = repeat ? 650 : 1600;
-    const MAX = 4000;
-    let loaded = false;
-    Promise.all([
-      new Promise(r => (document.readyState === 'complete' ? r() : addEventListener('load', r, { once: true }))),
-      document.fonts ? document.fonts.ready : Promise.resolve()
-    ]).then(() => { loaded = true; });
-
-    const counts = $$('.pl-count', pl);
-    const t0 = performance.now();
-    const tick = now => {
-      const t = now - t0;
-      let p = clamp(t / MIN);
-      if (!loaded && t < MAX) p = Math.min(p, .9);
-      const v = Math.round((1 - Math.pow(1 - p, 3)) * 100);
-      counts.forEach(c => { c.textContent = String(v).padStart(3, '0'); });
-      if (p < 1) requestAnimationFrame(tick); else cut();
-    };
-    requestAnimationFrame(tick);
-
-    function cut() {
-      pl.classList.add('is-cut');
-      setTimeout(() => { pl.classList.add('is-split'); ready(); }, 360);
-      setTimeout(() => { pl.classList.add('is-done'); removeEventListener('resize', geo); }, 1650);
-    }
-  }
-
-  /* --------------------------------------------------------------- cursor */
-  function cursor() {
-    if (!finePointer) return;
-    const c = $('.cursor'), dot = $('.cursor-dot'), ring = $('.cursor-ring'), label = $('.cursor-label');
-    if (!c) return;
-    doc.classList.add('has-cursor');
-    let x = -100, y = -100, rx = -100, ry = -100, raf = 0;
-    // the ring eases toward the pointer; the loop sleeps once it has caught up
-    const loop = () => {
-      rx += (x - rx) * (reduce ? 1 : .2);
-      ry += (y - ry) * (reduce ? 1 : .2);
-      dot.style.transform = `translate3d(${x}px,${y}px,0)`;
-      ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
-      raf = Math.abs(x - rx) + Math.abs(y - ry) > .2 ? requestAnimationFrame(loop) : 0;
-    };
-    addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse') return;
-      x = e.clientX; y = e.clientY;
-      if (!c.classList.contains('is-on')) { rx = x; ry = y; c.classList.add('is-on'); }
-      if (!raf) raf = requestAnimationFrame(loop);
-    }, { passive: true });
-    document.addEventListener('mouseleave', () => c.classList.remove('is-on'));
-
-    document.addEventListener('pointerover', e => {
-      const t = e.target.closest('input, textarea, select, a, button, label, [data-cursor]');
-      c.classList.remove('is-hover', 'is-link', 'is-native');
-      if (!t) return;
-      if (t.matches('input, textarea, select')) { c.classList.add('is-native'); return; }
-      const l = t.dataset.cursor;
-      if (l) { label.textContent = l; c.classList.add('is-hover'); }
-      else c.classList.add('is-link');
-    });
+    // wait for the fonts briefly so the headline doesn't rise in a fallback face
+    Promise.race([
+      document.fonts ? document.fonts.ready : Promise.resolve(),
+      new Promise(r => setTimeout(r, 900))
+    ]).then(() => requestAnimationFrame(go));
   }
 
   /* ------------------------------------------------------------------ nav */
   function nav() {
-    const n = $('#nav');
-    const burger = $('#burger');
-    const menu = $('#mobileMenu');
-    let open = false;
-    const setMenu = v => {
-      open = v;
-      burger.setAttribute('aria-expanded', String(v));
-      burger.setAttribute('aria-label', v ? L('Menyuni yopish', 'Close menu', 'Закрыть меню') : L('Menyuni ochish', 'Open menu', 'Открыть меню'));
-      menu.classList.toggle('is-open', v);
-      menu.setAttribute('aria-hidden', String(!v));
-      menu.inert = !v;
-      doc.style.overflow = v ? 'hidden' : '';
-      if (v) n.classList.remove('is-hidden');
-    };
-    menu.inert = true;
-    burger.setAttribute('aria-label', L('Menyuni ochish', 'Open menu', 'Открыть меню'));
-    onLang(() => burger.setAttribute('aria-label', open ? L('Menyuni yopish', 'Close menu', 'Закрыть меню') : L('Menyuni ochish', 'Open menu', 'Открыть меню')));
-    burger.addEventListener('click', () => setMenu(!open));
-    $$('a', menu).forEach(a => a.addEventListener('click', () => setMenu(false)));
-    addEventListener('keydown', e => { if (e.key === 'Escape' && open) setMenu(false); });
-    // the burger disappears above 900px, so a menu left open there would trap the page
-    const wide = matchMedia('(min-width: 901px)');
-    const onWide = () => { if (wide.matches && open) setMenu(false); };
-    if (wide.addEventListener) wide.addEventListener('change', onWide); else wide.addListener(onWide);
-
-    let lastY = scrollY;
-    scrollFns.push(y => {
-      n.classList.toggle('is-scrolled', y > 24);
-      if (!open) n.classList.toggle('is-hidden', y > lastY + 2 && y > 500);
-      if (y < lastY - 2) n.classList.remove('is-hidden');
-      lastY = y;
-    });
-
-    const links = $$('.nav-links a');
-    const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          links.forEach(l => l.classList.remove('is-active'));
-          const l = byId.get(e.target.id);
-          if (l) l.classList.add('is-active');
-        });
-      }, { rootMargin: '-45% 0px -50% 0px' });
-      $$('#top, #work, #dojo, #arsenal, #way, #contact').forEach(s => io.observe(s));
-    }
+    const bar = $('#nav');
+    const num = $('#navNum');
+    const onScroll = () => bar.classList.toggle('is-scrolled', scrollY > 24);
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    if (!num || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) num.textContent = e.target.dataset.num; });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    $$('.poster[data-num]').forEach(p => io.observe(p));
   }
 
-  /* --------------------------------------------------------------- scroll */
-  const scrollFns = [];
-  function scrollLoop() {
-    let ticking = false;
-    const run = () => { ticking = false; const y = scrollY; scrollFns.forEach(fn => fn(y)); };
-    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(run); } }, { passive: true });
-    addEventListener('resize', run);
-    run();
-  }
-
-  function katana() {
-    const k = $('.katana');
-    if (!k) return;
-    scrollFns.push(y => {
-      const max = doc.scrollHeight - innerHeight;
-      k.style.setProperty('--p', max > 0 ? (y / max).toFixed(4) : 0);
-    });
-  }
-
-  /* --------------------------------------------------------------- reveal */
-  function splitWords(el, cls = 'w') {
-    let i = 0;
-    const walk = node => {
-      [...node.childNodes].forEach(ch => {
-        if (ch.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          ch.textContent.split(/( )/).forEach(part => {
-            if (part === ' ') { frag.appendChild(document.createTextNode(' ')); return; }
-            if (!part) return;
-            const w = document.createElement('span');
-            w.className = cls;
-            if (cls === 'w') {
-              const inner = document.createElement('span');
-              inner.textContent = part;
-              inner.style.setProperty('--wi', i);
-              w.appendChild(inner);
-            } else {
-              w.textContent = part;
-            }
-            i++;
-            frag.appendChild(w);
-          });
-          ch.replaceWith(frag);
-        } else if (ch.nodeType === 1) {
-          walk(ch);
-        }
-      });
-    };
-    walk(el);
-    return $$('.' + cls, el);
-  }
-
-  function reveal() {
-    $$('[data-split]').forEach(el => splitWords(el));
-    // i18n.js swaps the raw text back in, so split it again (already revealed headings stay revealed)
-    onLang(() => $$('[data-split]').forEach(el => splitWords(el)));
-    const els = $$('[data-reveal], [data-split], .steps');
-    if (reduce || !('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('is-in')); return; }
+  /* -------------------------------------------------------------- reveals */
+  function reveals() {
+    const items = $$('.rv');
+    $$('.poster').forEach(p => $$('.rv', p).forEach((el, i) => el.style.setProperty('--d', (i * .07).toFixed(2) + 's')));
+    if (reduce || !('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in')); return; }
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (!e.isIntersecting) return;
-        e.target.classList.add('is-in');
+        e.target.classList.add('in');
         io.unobserve(e.target);
       });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
-    els.forEach(e => io.observe(e));
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+    items.forEach(el => io.observe(el));
   }
 
-  /* --------------------------------------------------------- hero extras */
-  function countUp(el, dur = 1500) {
-    const to = +el.dataset.count;
-    const pad = String(to).length < 2 ? 2 : String(to).length;
-    if (reduce) { el.textContent = String(to).padStart(pad, '0'); return; }
-    const t0 = performance.now();
-    const step = now => {
-      const p = clamp((now - t0) / dur);
-      el.textContent = String(Math.round(to * (1 - Math.pow(1 - p, 4)))).padStart(pad, '0');
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }
-  function heroStats() {
-    onReady(() => setTimeout(() => $$('.hero [data-count]').forEach(el => countUp(el)), 900));
-  }
-
-  /* -------------------------------------------------------------- marquee */
-  function marquee() {
-    const fill = track => {
-      const items = [...track.children];
-      const setW = track.scrollWidth;
-      const copies = Math.max(1, Math.ceil((innerWidth * 1.2) / Math.max(setW, 1)));
-      for (let c = 1; c < copies * 2; c++) {
-        items.forEach(it => {
-          const k = it.cloneNode(true);
-          k.setAttribute('aria-hidden', 'true');
-          track.appendChild(k);
-        });
-      }
-    };
-    $$('.mq-track').forEach(fill);
-    onLang(() => $$('.mq-track').forEach(fill));
-  }
-
-  /* ------------------------------------------------------------- magnetic */
-  function magnetic() {
-    if (!finePointer || reduce) return;
-    $$('.magnetic').forEach(el => {
-      el.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1), background .3s, color .3s, border-color .3s, box-shadow .3s';
-      el.addEventListener('pointermove', e => {
-        const r = el.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width / 2);
-        const dy = e.clientY - (r.top + r.height / 2);
-        el.style.transform = `translate(${dx * .22}px, ${dy * .32}px)`;
+  /* --------------------------------------------------------------- clocks */
+  function clocks() {
+    const els = $$('.clock[data-tz]');
+    if (!els.length) return;
+    const pad = n => String(n).padStart(2, '0');
+    const tick = () => {
+      const now = Date.now();
+      els.forEach(el => {
+        const d = new Date(now + Number(el.dataset.tz) * 3600e3);
+        el.textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
       });
-      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
-    });
-  }
-
-  /* ------------------------------------------------------- card spotlight */
-  function spotlight() {
-    $$('.card').forEach(c => {
-      c.addEventListener('pointermove', e => {
-        const r = c.getBoundingClientRect();
-        c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        c.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
-    });
-  }
-
-  /* ------------------------------------------------------------ manifesto */
-  function manifesto() {
-    const m = $('#manifesto');
-    if (!m) return;
-    let words = [];
-    const build = () => {
-      words = splitWords(m, 'mw');
-      words.forEach(w => { if (/^(cut\.|sloppy|zarba\.|pala-partish|удар\.|небрежно\.)$/.test(w.textContent)) w.classList.add('hl'); });
-      if (reduce) words.forEach(w => w.classList.add('on'));
     };
-    build();
-    onLang(() => { build(); scrollFns.forEach(fn => fn(scrollY)); });
-    if (reduce) return;
-    scrollFns.push(() => {
-      const r = m.getBoundingClientRect();
-      const p = clamp((innerHeight * .88 - r.top) / (r.height + innerHeight * .4));
-      const n = Math.round(p * words.length * 1.08);
-      words.forEach((w, i) => w.classList.toggle('on', i < n));
+    tick();
+    setInterval(tick, 10e3);
+  }
+
+  /* ---------------------------------------------------- the Way: the line */
+  function wayLine() {
+    const sec = $('#way');
+    const fill = $('#wayFill');
+    if (!sec || !fill) return;
+    if (reduce) { fill.style.setProperty('--p', 1); return; }
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const r = sec.getBoundingClientRect();
+      const p = clamp((innerHeight * .85 - r.top) / (r.height * .7));
+      fill.style.setProperty('--p', p.toFixed(3));
+    };
+    addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+
+  /* ------------------------------------------------------------- contacts */
+  function contacts() {
+    const tel = String(CONFIG.phone || '').replace(/[^\d+]/g, '');
+    const email = String(CONFIG.email || '').trim();
+    const pretty = {
+      // +998972707007 → +998 97 270 70 07
+      phone: tel.replace(/^\+998(\d{2})(\d{3})(\d{2})(\d{2})$/, '+998 $1 $2 $3 $4'),
+      email
+    };
+    const hrefs = { phone: tel && 'tel:' + tel, email: email && 'mailto:' + email };
+    $$('[data-link]').forEach(a => {
+      const href = hrefs[a.dataset.link];
+      if (href) a.href = href; else a.hidden = true;
     });
+    $$('[data-value]').forEach(el => { el.textContent = pretty[el.dataset.value] || ''; });
   }
 
   /* --------------------------------------------------------- footer word */
+  // scale QILICH to fill the footer edge to edge
   function footerWord() {
-    const fw = $('.footer-word');
-    if (!fw) return;
-    // size the wordmark so it spans the full width, whatever the font metrics
-    const word = $('span', fw);
+    const w = $('#footerWord');
+    if (!w) return;
     const fit = () => {
-      fw.style.fontSize = '';
-      const target = doc.clientWidth * .97;
-      const w = word.getBoundingClientRect().width;
-      if (w > 0) fw.style.fontSize = (parseFloat(getComputedStyle(fw).fontSize) * target / w) + 'px';
+      w.style.fontSize = '100px';
+      w.style.width = 'max-content';
+      const need = w.getBoundingClientRect().width;
+      w.style.width = '';
+      const avail = w.clientWidth;
+      if (need) w.style.fontSize = (100 * avail / need * .99).toFixed(2) + 'px';
     };
     fit();
-    if (document.fonts) document.fonts.ready.then(fit);
     addEventListener('resize', fit);
-    scrollFns.push(y => {
-      const max = doc.scrollHeight - innerHeight;
-      const span = fw.offsetHeight * 1.6 + 160;
-      const p = clamp(1 - (max - y) / span);
-      fw.style.setProperty('--fill', (p * 100).toFixed(1) + '%');
-    });
+    if (document.fonts) document.fonts.ready.then(fit);
+    onLang(fit);
   }
 
-  /* ------------------------------------------------------------ dojo tabs */
-  function tabs() {
-    const list = $('.dojo-tabs');
-    if (!list) return;
-    const tabsEls = $$('[role="tab"]', list);
-    const select = (t, focus) => {
-      tabsEls.forEach(x => {
-        const on = x === t;
-        x.classList.toggle('is-on', on);
-        x.setAttribute('aria-selected', String(on));
-        x.tabIndex = on ? 0 : -1;
-        const p = document.getElementById(x.getAttribute('aria-controls'));
-        p.hidden = !on;
-        p.classList.toggle('is-on', on);
-      });
-      if (focus) t.focus();
-      t.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
-    };
-    tabsEls.forEach(t => t.addEventListener('click', () => select(t)));
-    list.addEventListener('keydown', e => {
-      const i = tabsEls.indexOf(document.activeElement);
-      if (i < 0) return;
-      let j = null;
-      if (e.key === 'ArrowRight') j = (i + 1) % tabsEls.length;
-      if (e.key === 'ArrowLeft') j = (i - 1 + tabsEls.length) % tabsEls.length;
-      if (e.key === 'Home') j = 0;
-      if (e.key === 'End') j = tabsEls.length - 1;
-      if (j !== null) { e.preventDefault(); select(tabsEls[j], true); }
-    });
-  }
-
-  /* -------------------------------------------------------------- contact */
-  function contact() {
-    const clean = v => String(v || '').trim().replace(/^@/, '');
-    const hrefs = {
-      telegram: clean(CONFIG.telegram) && `https://t.me/${clean(CONFIG.telegram)}`,
-      email: clean(CONFIG.email) && `mailto:${clean(CONFIG.email)}`,
-      phone: clean(CONFIG.phone) && `tel:${clean(CONFIG.phone).replace(/[^\d+]/g, '')}`,
-      instagram: clean(CONFIG.instagram) && `https://instagram.com/${clean(CONFIG.instagram)}`
-    };
-    $$('[data-link]').forEach(a => {
-      const h = hrefs[a.dataset.link];
-      if (h) a.href = h; else a.classList.add('is-empty');
-    });
-    // show the actual number and address, not just a label
-    const phone = clean(CONFIG.phone);
-    const uz = phone.replace(/[^\d+]/g, '').match(/^\+998(\d{2})(\d{3})(\d{2})(\d{2})$/);
-    const values = {
-      phone: uz ? `+998 ${uz[1]} ${uz[2]} ${uz[3]} ${uz[4]}` : phone,
-      email: clean(CONFIG.email),
-      telegram: clean(CONFIG.telegram) && '@' + clean(CONFIG.telegram)
-    };
-    $$('[data-value]').forEach(el => { el.textContent = values[el.dataset.value] || ''; });
-
-    const form = $('#contactForm');
-    if (!form) return;
-    const err = $('.form-err', form);
-    const doneS = $('.form-done-s', form);
-    const back = $('.form-back', form);
-    back.addEventListener('click', () => {
-      form.classList.remove('is-done');
-      form.elements.message.focus();
-    });
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const fd = new FormData(form);
-      const name = String(fd.get('name') || '').trim();
-      const who = String(fd.get('contact') || '').trim();
-      $$('.field', form).forEach(f => f.classList.remove('has-err'));
-      err.textContent = '';
-      if (!name || !who) {
-        if (!name) form.elements.name.closest('.field').classList.add('has-err');
-        if (!who) form.elements.contact.closest('.field').classList.add('has-err');
-        err.textContent = L('Siz bilan bogʻlanishimiz uchun ismingiz va telefon raqamingiz yoki Telegramingizni yozing.', 'Add your name and a phone number or Telegram so we can reach you.', 'Укажите имя и телефон или Telegram, чтобы мы могли с вами связаться.');
-        (name ? form.elements.contact : form.elements.name).focus();
-        return;
-      }
-      const data = {
-        name, contact: who,
-        types: fd.getAll('type'),
-        budget: String(fd.get('budget') || ''),
-        message: String(fd.get('message') || '').trim()
-      };
-      const body = `Project: ${data.types.join(', ') || '—'}\nName: ${name}\nContact: ${who}\nBudget: ${data.budget}\n\n${data.message}`;
-      const btn = $('button[type="submit"]', form);
-      btn.disabled = true;
-      try {
-        if (clean(CONFIG.formEndpoint)) {
-          const r = await fetch(CONFIG.formEndpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(data)
-          });
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          doneS.textContent = L('Xabaringiz yetib keldi. Tez orada haqiqiy inson javob beradi.', "We've got it. Expect a reply from a real human soon.", 'Сообщение получено. Скоро вам ответит живой человек.');
-        } else if (clean(CONFIG.email)) {
-          const email = clean(CONFIG.email);
-          location.href = `mailto:${email}?subject=${encodeURIComponent(L('Yangi loyiha: ', 'New project: ', 'Новый проект: ') + name)}&body=${encodeURIComponent(body)}`;
-          // a mailto link silently does nothing without a mail app, so always show the address too
-          const a = document.createElement('a');
-          a.href = `mailto:${email}`;
-          a.textContent = email;
-          doneS.replaceChildren(L('Pochta ilovangiz hammasi toʻldirilgan holda ochilishi kerak. “Yuborish”ni bosing. Agar hech narsa ochilmasa, bizga yozing: ', 'Your mail app should open with everything filled in. Just press send. If nothing opened, write to us at ', 'Должно открыться почтовое приложение со всеми данными. Просто нажмите «Отправить». Если ничего не открылось, напишите нам на '), a, '.');
-        } else {
-          console.warn('[Qilich] The contact form is not connected. Set QILICH_CONFIG.email or formEndpoint in index.html.');
-          doneS.textContent = L('Demo rejim: xabarlarni olish uchun formani QILICH_CONFIG (index.html) orqali ulang.', 'Demo mode: connect the form in QILICH_CONFIG (index.html) to receive messages.', 'Демо-режим: подключите форму в QILICH_CONFIG (index.html), чтобы получать сообщения.');
-        }
-        form.classList.add('is-done');
-        back.focus({ preventScroll: true });
-      } catch (ex) {
-        err.textContent = L('Yuborishda xatolik yuz berdi. Birozdan soʻng qayta urinib koʻring.', 'Something went wrong while sending. Please try again in a moment.', 'При отправке что-то пошло не так. Попробуйте ещё раз чуть позже.');
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  }
-
-  /* ------------------------------------------------------------------ go */
-  document.addEventListener('DOMContentLoaded', () => {
-    const y = $('#year');
-    if (y) y.textContent = new Date().getFullYear();
-    preloader();
-    cursor();
+  const init = () => {
+    intro();
     nav();
-    katana();
-    reveal();
-    heroStats();
-    marquee();
-    magnetic();
-    spotlight();
-    manifesto();
+    reveals();
+    clocks();
+    wayLine();
+    contacts();
     footerWord();
-    tabs();
-    contact();
-    scrollLoop();
-  });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();

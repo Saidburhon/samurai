@@ -5,17 +5,21 @@ Plain HTML, CSS and JavaScript with no build step. It is served from Cloudflare 
 
 ## What's on the page
 
-| Section | What it does |
-|---|---|
-| **Intro** | A katana slash cuts the loading screen in half and the two halves slide apart. |
-| **Hero** | Sliced red sun with a 剣 (sword) brush kanji. Your cursor leaves a blade trail with sparks. The sun splits further as you scroll. |
-| **01 · Battle record** | Interactive case studies of real projects: **Tikoncha** (switch Default / G'ujanak / Qalqon, try to open a blocked app, ask a parent to unlock) and **ClubTime** (start a table, order drinks, stop it to print a thermal receipt and get the Telegram report). Both play a short walkthrough automatically until the visitor touches them. |
-| **02 · The Dojo** | Clickable concept apps for brands we haven't worked with yet: a **Safia** cake builder with order tracking, a **Bon!** coffee pre-order with a stamp card, and an **Akfa** window configurator with live price, heat-loss rating and a dealer map. Plus a "Your brand" call to action. |
-| **03 · The Arsenal** | Capabilities grid with a live-typing Kotlin/Swift snippet from the screen-time engine. |
-| **04 · The Way** | The process: Kamae → Kata → Kiri → Zanshin. |
-| **Manifesto + Contact** | Scroll-lit manifesto and a project form. |
+Seven full-screen posters, numbered 一 to 七. Little text, mostly visuals.
+
+| # | Poster | What it shows |
+|---|---|---|
+| 一 | **Hero** | The slogan, and a sliced red sun with the 剣 (sword) kanji. A white slash cuts the sun on load and it splits further as you scroll. Your cursor or finger leaves a blade trail. |
+| 二 | **Hoglt** (Tikoncha) | A 24-hour dial of a school day: sleep, school, limit, free time. The hedgehog changes with the hour. Drag the dial or tap the legend. Real numbers: 10K+ Google Play installs, 3 apps. Links to hoglt.com. |
+| 三 | **PoolTimer** (ClubTime) | A pool hall of six tables. Tap a table to start or stop it; closing one sends a Telegram-style report. Real numbers: 11 languages, 4 platforms. Links to pooltimer.app. |
+| 四 | **Arsenal** | A matrix: which platforms each product runs on, plus an empty "Yours" column. |
+| 五 | **Tokyo · Tashkent** | Two live clocks, the 5,991 km arc between them and the 4-hour difference. |
+| 六 | **The Way** | Kamae → Kata → Kiri → Zanshin: plan, design, code, support. |
+| 七 | **Contact** | The phone number and email, large. |
 
 It works on phones, honours "reduce motion" settings, and shows no console errors.
+
+The Hoglt logo and hedgehog images in `public/assets/img/hoglt/` come from hoglt.com.
 
 ## Languages: Uzbek first, Russian and English on the switch
 
@@ -23,8 +27,8 @@ It works on phones, honours "reduce motion" settings, and shows no console error
 - **Russian and English** live in `public/assets/js/i18n.js` (the `RU` and `EN` dictionaries), keyed by the `data-i18n` attribute on each element.
   `data-i18n-ph` covers placeholders and `data-i18n-label` covers `aria-label`.
 - The **UZ | RU | EN switcher** in the nav remembers the visitor's choice. Share `https://qilich.com/?lang=ru` or `?lang=en` to open a version directly.
-- Text the demos draw themselves (toasts, receipts, Telegram messages, form messages) lives in `demos.js` and `main.js` as `L('uzbek', 'english', 'russian')` calls.
-- Archivo and Instrument Serif have no Cyrillic, so Russian text falls back to Montserrat and Cormorant Garamond. Browsers download those only when Cyrillic is on screen.
+- Text the posters draw themselves (the PoolTimer prices and Telegram report) lives in `posters.js` as `L('uzbek', 'english', 'russian')` calls.
+- Archivo has no Cyrillic, so Russian text falls back to Montserrat. Browsers download it only when Cyrillic is on screen.
 
 To change a sentence, edit the Uzbek in `index.html` and the Russian and English under the same key in `i18n.js`. If an entry is missing, the page keeps the Uzbek and logs a warning in the browser console.
 
@@ -37,23 +41,18 @@ npm run dev        # http://localhost:8787, same runtime as production
 
 Or skip Node entirely: `python3 -m http.server 8000` inside `public/`.
 
-## Before launch: connect your contacts
+## Contacts
 
 At the bottom of `public/index.html` there is one config block:
 
 ```js
 window.QILICH_CONFIG = {
-  telegram: "",       // e.g. "qilich_agency" (username without @)
-  email: "",          // e.g. "inbox@qilich.com"
-  phone: "",          // e.g. "+998901234567"
-  instagram: "",      // e.g. "qilich.agency"
-  formEndpoint: ""    // optional: Formspree / Getform / your own API URL
+  email: "inbox@qilich.com",
+  phone: "+998972707007"
 };
 ```
 
-- Contact buttons stay hidden until their value is filled in.
-- The form posts JSON to `formEndpoint` if you set one. Otherwise it opens the visitor's mail app addressed to `email`.
-  With neither set, it shows a "demo mode" message, so **fill at least one in before launch**.
+A contact link stays hidden if its value is empty.
 
 ## Deploy to qilich.com (Cloudflare, free plan)
 
@@ -97,13 +96,6 @@ npm run deploy:www      # www.qilich.com → qilich.com
 ### Email
 
 Turn on **Email Routing** for `qilich.com` and forward `inbox@qilich.com` to your own inbox. It's free.
-Then set `email: "inbox@qilich.com"` in `QILICH_CONFIG`.
-
-## About the concept demos
-
-The Safia, Bon! and Akfa screens are unsolicited concepts. The page labels them "Concept · not affiliated" and carries a disclaimer.
-They use no real logos and only sample prices. Keep those labels in place. If you plan to use a brand's name in paid ads or pitch decks, consider asking that brand first.
-
 ## Files
 
 ```
@@ -112,16 +104,15 @@ public/404.html               not-found page
 public/_headers               security and cache headers
 public/assets/css/style.css   all styles (tokens at the top)
 public/assets/js/i18n.js      language switcher + Russian and English text
-public/assets/js/main.js      intro cut, cursor, nav, reveals, scroll effects, tabs, form
-public/assets/js/hero.js      blade trail, sparks, embers, parallax, sliced sun
-public/assets/js/demos.js     Tikoncha, ClubTime, Safia, Bon!, Akfa demos + code typer
-public/assets/img/            favicon, Uzbekistan map
+public/assets/js/main.js      intro cut, nav, reveals, clocks, the Way line, contacts, footer
+public/assets/js/hero.js      blade trail, sparks, the sun splitting on scroll
+public/assets/js/posters.js   Hoglt day dial, PoolTimer hall, platform matrix
+public/assets/img/            favicon, Hoglt logo and hedgehog images
 wrangler.json                 Cloudflare config for qilich.com
 workers/www-redirect/         www → bare domain redirect
 ```
 
 ## Credits
 
-- Fonts: Archivo, Instrument Serif, JetBrains Mono, Yuji Boku and Shippori Mincho B1 via Google Fonts.
+- Fonts: Archivo, Montserrat, JetBrains Mono, Yuji Boku and Shippori Mincho B1 via Google Fonts.
   Only the handful of Japanese glyphs used on the page are downloaded.
-- Map of Uzbekistan: [Simplemaps](https://simplemaps.com/resources/svg-license), free for commercial use.

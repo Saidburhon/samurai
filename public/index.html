@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Qilich — Yapon IT agenstvasi Oʻzbekistonda</title>
-  <meta name="description" content="Qilich — Oʻzbekistondagi yapon IT agenstvasi. Operatsion tizim darajasidagi mobil ilovalar, uskunalarga ulangan klub tizimlari, kafe ilovalari va korporativ platformalar. Ekranda ishlaydigan har qanday narsani yaratamiz." />
-  <meta name="theme-color" content="#09090b" />
+  <meta name="description" content="Qilich — Oʻzbekistondagi yapon IT agenstvasi. iOS, Android, veb, desktop va IoT. Hoglt va PoolTimer mualliflari." />
+  <meta name="theme-color" content="#0b0b0c" />
   <meta property="og:title" content="Qilich — Yapon IT agenstvasi endi Oʻzbekistonda!" />
-  <meta property="og:description" content="Yapon IT agenstvasi Oʻzbekistonda: iOS va Android, veb, IoT, Telegram, AI." />
+  <meta property="og:description" content="iOS · Android · Veb · IoT. Hoglt va PoolTimer mualliflari." />
   <meta property="og:locale" content="uz_UZ" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://qilich.com/" />
@@ -16,748 +16,236 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@400..900&family=Cormorant+Garamond:ital,wght@1,500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@400..900&display=swap" />
   <!-- Japanese glyphs: only the characters used on the page are downloaded -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E3%81%AE%E6%96%AC%E6%A7%8B%E3%81%88%E5%9E%8B%E6%AE%8B%E5%BF%83%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E5%89%A3%E4%B8%80%E4%BA%8C%E4%B8%89%E5%9B%9B%E4%BA%94%E5%85%AD%E4%B8%83%E6%A7%8B%E5%9E%8B%E6%96%AC%E6%AE%8B%E5%BF%83%E6%9D%B1%E4%BA%AC%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E9%81%93" />
 
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <script>
-    document.documentElement.classList.add('js');
-    // failsafe: if the scripts never run, drop the intro and show the page as-is
-    setTimeout(function () {
-      var d = document.documentElement;
-      if (!d.classList.contains('is-ready')) d.classList.remove('js', 'is-loading');
-    }, 7000);
-  </script>
+  <link rel="stylesheet" href="assets/css/style.css?v=2" />
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
-<!-- ============ ICON SPRITE ============ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
   <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
-  <symbol id="i-reels" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8.5h18M8.5 3l3 5.5M14.5 3l3 5.5"/><path d="M10 12v5l4.5-2.5z" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 8h10a5 5 0 0 1 5 5v.5a3.5 3.5 0 0 1-6.3 2.1L14.5 14h-5l-1.2 1.6A3.5 3.5 0 0 1 2 13.5V13a5 5 0 0 1 5-5z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="15.5" cy="11" r=".9" fill="currentColor"/><circle cx="17.5" cy="13" r=".9" fill="currentColor"/></symbol>
-  <symbol id="i-social" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/><circle cx="17" cy="8" r="2.4"/><path d="M15.8 13.2c2.6-.3 4.4 1.3 4.9 4.1"/></symbol>
-  <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.3-2.5z" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7.5 4.5 4 4.8v13c3.5-.3 6 .2 8 1.7 2-1.5 4.5-2 8-1.7v-13c-3.5-.3-6 .2-8 1.7z"/><path d="M12 6.5v13"/></symbol>
-  <symbol id="i-math" viewBox="0 0 24 24"><path d="M17 5H7l5.5 7L7 19h10"/></symbol>
-  <symbol id="i-lang" viewBox="0 0 24 24"><path d="M3 6h10M8 4v2M5.2 6c.9 3.7 3.4 6.4 6.8 7.6M11 6c-1 3.8-3.6 6.6-7 7.8"/><path d="M13.5 20l3.5-8.5 3.5 8.5M14.7 17.3h4.6"/></symbol>
-  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
-  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 8.3-8 9-4.6-.7-8-4.4-8-9V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 3 10.4l7 2.6 2.6 7z"/><path d="M10 13 21 3"/></symbol>
-  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2" width="11" height="20" rx="2.8"/><path d="M10.5 18.5h3"/></symbol>
-  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7.5l8 6 8-6"/></symbol>
-  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx=".8"/><path d="M9.5 2.5V6M14.5 2.5V6M9.5 18v3.5M14.5 18v3.5M2.5 9.5H6M2.5 14.5H6M18 9.5h3.5M18 14.5h3.5"/></symbol>
-  <symbol id="i-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="3"/><path d="M2.5 9h19"/><circle cx="6" cy="6.5" r=".7" fill="currentColor"/><circle cx="8.5" cy="6.5" r=".7" fill="currentColor"/></symbol>
-  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
-  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
-  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
-  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 20.5h18M6 17v-5M10.5 17V7M15 17v-8M19.5 17V4"/></symbol>
-  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 12.5h-11z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
-  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M5 8.5h11v5.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10h1.8a2.6 2.6 0 0 1 0 5.2H15.6M8 3.5v2M11 3.5v2"/></symbol>
-  <symbol id="i-bottle" viewBox="0 0 24 24"><path d="M10 2.5h4V5l2 3v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8l2-3z"/><path d="M8 12.5h8"/></symbol>
-  <symbol id="i-snack" viewBox="0 0 24 24"><path d="M4 9h16l-2 11H6z"/><path d="M8 9 7 4.5M12 9V3.5M16 9l1-4.5"/></symbol>
-  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0M5.8 12.5a9.4 9.4 0 0 1 12.4 0M9.2 16a4.6 4.6 0 0 1 5.6 0"/><circle cx="12" cy="19.3" r=".9" fill="currentColor"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></symbol>
   <symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 9V3.5h10V9"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol>
-  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h10"/></symbol>
-  <symbol id="i-geo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-dasharray="3 3"/><circle cx="12" cy="12" r="2.5"/></symbol>
-  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9.5h4l3 3.5V16h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></symbol>
-  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
 
-<!-- ============ PRELOADER: the cut ============ -->
-<div class="preloader" id="preloader" aria-hidden="true">
-  <div class="pl-half pl-a">
-    <div class="pl-inner">
-      <div class="pl-sun"></div>
-      <div class="pl-kanji">剣</div>
-      <div class="pl-word">QILICH</div>
-      <div class="pl-meta pl-meta-l"><span class="pl-label" data-i18n="pl.label">Qilich charxlanmoqda</span> <span class="pl-count">000</span></div>
-      <div class="pl-meta pl-meta-r" data-i18n="pl.meta">IT yechimlar — Oʻzbekiston</div>
-    </div>
-  </div>
-  <div class="pl-half pl-b">
-    <div class="pl-inner">
-      <div class="pl-sun"></div>
-      <div class="pl-kanji">剣</div>
-      <div class="pl-word">QILICH</div>
-      <div class="pl-meta pl-meta-l"><span class="pl-label" data-i18n="pl.label">Qilich charxlanmoqda</span> <span class="pl-count">000</span></div>
-      <div class="pl-meta pl-meta-r" data-i18n="pl.meta">IT yechimlar — Oʻzbekiston</div>
-    </div>
-  </div>
-  <div class="pl-slash"></div>
-</div>
-
-<!-- ============ CHROME ============ -->
-<div class="cursor" aria-hidden="true"><div class="cursor-dot"></div><div class="cursor-ring"><span class="cursor-label"></span></div></div>
-
-<div class="katana" aria-hidden="true">
-  <div class="katana-tsuka"></div>
-  <div class="katana-tsuba"></div>
-  <div class="katana-blade"><div class="katana-blade-fill"></div></div>
-</div>
-
 <header class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="#top" class="logo" aria-label="Qilich — bosh sahifa" data-i18n-label="nav.home">
-      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-        <defs>
-          <clipPath id="lgTop"><polygon points="0,0 40,0 40,15 0,25"/></clipPath>
-          <clipPath id="lgBot"><polygon points="0,25 40,15 40,40 0,40"/></clipPath>
-        </defs>
-        <circle cx="20" cy="20" r="16" fill="#ff3a24" clip-path="url(#lgTop)" transform="translate(-.5 -1.3)"/>
-        <circle cx="20" cy="20" r="16" fill="#ff3a24" clip-path="url(#lgBot)" transform="translate(.5 1.3)"/>
-      </svg>
-      <span class="logo-word">QILICH</span>
-    </a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="#work" data-cursor="Go" data-i18n="nav.work">Loyihalar</a>
-      <a href="#dojo" data-cursor="Go">Dojo</a>
-      <a href="#arsenal" data-cursor="Go">Arsenal</a>
-      <a href="#way" data-cursor="Go" data-i18n="nav.way">Yoʻl</a>
-    </nav>
-    <div class="lang" role="group" aria-label="Til / Language">
-      <button type="button" data-lang="uz" aria-pressed="true" lang="uz">UZ</button>
-      <button type="button" data-lang="ru" aria-pressed="false" lang="ru">RU</button>
-      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
-    </div>
-    <a href="#contact" class="btn btn-red btn-sm nav-cta magnetic" data-cursor="Hi"><span data-i18n="cta.start">Loyiha boshlash</span> <svg class="i"><use href="#i-arrow-ur"/></svg></a>
-    <button class="nav-burger" id="burger" aria-label="Menyuni ochish" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
+  <a href="#top" class="logo" aria-label="Qilich — bosh sahifa" data-i18n-label="nav.home">
+    <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <defs>
+        <clipPath id="lgTop"><polygon points="0,0 40,0 40,15 0,25"/></clipPath>
+        <clipPath id="lgBot"><polygon points="0,25 40,15 40,40 0,40"/></clipPath>
+      </defs>
+      <circle cx="20" cy="20" r="16" fill="#ff3a24" clip-path="url(#lgTop)" transform="translate(-.5 -1.3)"/>
+      <circle cx="20" cy="20" r="16" fill="#ff3a24" clip-path="url(#lgBot)" transform="translate(.5 1.3)"/>
+    </svg>
+    <span>QILICH</span>
+  </a>
+  <nav class="nav-links" aria-label="Boʻlimlar" data-i18n-label="nav.label">
+    <a href="#hoglt" data-i18n="nav.work">Loyihalar</a>
+    <a href="#way" data-i18n="nav.way">Yoʻl</a>
+    <a href="#contact" data-i18n="nav.contact">Aloqa</a>
+  </nav>
+  <div class="nav-count mono" aria-hidden="true"><b id="navNum">一</b> / 七</div>
+  <div class="lang" role="group" aria-label="Til / Language">
+    <button type="button" data-lang="uz" aria-pressed="true" lang="uz">UZ</button>
+    <button type="button" data-lang="ru" aria-pressed="false" lang="ru">RU</button>
+    <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
   </div>
 </header>
 
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <nav aria-label="Mobile">
-    <a href="#work"><span>01</span><b data-i18n="nav.work">Loyihalar</b></a>
-    <a href="#dojo"><span>02</span>Dojo</a>
-    <a href="#arsenal"><span>03</span>Arsenal</a>
-    <a href="#way"><span>04</span><b data-i18n="nav.way">Yoʻl</b></a>
-    <a href="#contact"><span>05</span><b data-i18n="nav.contact">Aloqa</b></a>
-  </nav>
-  <div class="mobile-menu-kanji" aria-hidden="true">剣</div>
-</div>
-
 <main id="main">
 
-<!-- ============ HERO ============ -->
-<section class="hero" id="top">
-  <svg class="hero-sun" id="heroSun" viewBox="0 0 600 600" aria-hidden="true">
-    <defs>
-      <radialGradient id="sunGrad" cx="38%" cy="32%" r="78%">
-        <stop offset="0" stop-color="#ff6a45"/>
-        <stop offset=".55" stop-color="#ff3a24"/>
-        <stop offset="1" stop-color="#a81c0c"/>
-      </radialGradient>
-      <clipPath id="sunTop"><polygon points="-50,-50 650,-50 650,236 -50,364"/></clipPath>
-      <clipPath id="sunBot"><polygon points="-50,364 650,236 650,650 -50,650"/></clipPath>
-    </defs>
-    <g class="sun-top"><circle cx="300" cy="300" r="270" fill="url(#sunGrad)" clip-path="url(#sunTop)"/></g>
-    <g class="sun-bot"><circle cx="300" cy="300" r="270" fill="url(#sunGrad)" clip-path="url(#sunBot)"/></g>
-  </svg>
-  <div class="hero-kanji" aria-hidden="true">剣</div>
-  <div class="hero-vert" aria-hidden="true"><span>技術</span><i></i><span>規律</span><i></i><span>名誉</span></div>
-  <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+<!-- 一 HERO -->
+<section class="poster p-hero" id="top" data-num="一">
+  <div class="sun" id="sun" aria-hidden="true">
+    <div class="sun-half sun-a"><span>剣</span></div>
+    <div class="sun-half sun-b"><span>剣</span></div>
+    <div class="sun-slash"></div>
+  </div>
+  <canvas class="blade" id="blade" aria-hidden="true"></canvas>
+  <div class="vert" aria-hidden="true"><span>技術</span><i></i><span>規律</span><i></i><span>名誉</span></div>
 
-  <div class="container hero-inner">
-    <p class="eyebrow hero-eyebrow reveal-hero" style="--d:.05s"><span class="pulse-dot"></span> <span class="slogan" data-i18n="hero.slogan">Yapon IT agenstvasi endi Oʻzbekistonda!</span></p>
-    <h1 class="hero-title">
-      <span class="line"><span data-i18n="hero.l1">Imkonsizni</span></span>
-      <span class="line"><span data-i18n="hero.l2"><em>kesib oʻtamiz.</em></span></span>
-    </h1>
-    <p class="hero-sub reveal-hero" style="--d:.55s" data-i18n="hero.sub"><b>Qilich</b> — samuray intizomi bilan ishlaydigan jamoa. Boshqalar voz kechadigan dasturlarni biz yaratamiz: operatsion tizim ichiga kiradigan mobil ilovalar, haqiqiy uskunalarga ulangan klub tizimlari, mijozlar sevib qoladigan kafe ilovalari va xatoga yoʻl qoʻyib boʻlmaydigan kompaniyalar uchun platformalar.</p>
-    <div class="hero-cta reveal-hero" style="--d:.7s">
-      <a href="#contact" class="btn btn-red magnetic" data-cursor="Hi"><span data-i18n="cta.start">Loyiha boshlash</span> <svg class="i"><use href="#i-arrow"/></svg></a>
-      <a href="#dojo" class="btn btn-ghost magnetic" data-cursor="Play"><span data-i18n="cta.demos">Demolarni sinab koʻring</span> <svg class="i"><use href="#i-arrow-down"/></svg></a>
-    </div>
-    <p class="hero-hint reveal-hero" style="--d:.85s"><span class="hint-mouse" data-i18n="hero.hint">Qilich izini chizish uchun kursorni yurgizing</span><span class="hint-touch" data-i18n="hero.hintTouch">Kesish uchun yon tomonga suring</span></p>
+  <div class="hero-text">
+    <p class="tag mono rv"><span>一 / 七</span> Qilich · 2026</p>
+    <h1 class="hero-h" data-i18n="hero.h"><span class="ln"><span>Yapon IT agenstvasi</span></span> <span class="ln"><span>endi <em>Oʻzbekistonda!</em></span></span></h1>
+    <p class="stack mono rv" data-i18n="hero.stack">iOS · Android · Veb · Desktop · IoT</p>
+  </div>
+  <p class="hint mono rv" aria-hidden="true"><span class="hint-mouse" data-i18n="hero.hint">Kursor bilan kesing</span><span class="hint-touch" data-i18n="hero.hintTouch">Barmogʻingiz bilan kesing</span></p>
+  <a href="#hoglt" class="scroll-cue" aria-label="Loyihalarga oʻtish" data-i18n-label="hero.down"><svg class="i"><use href="#i-arrow-down"/></svg></a>
+</section>
+
+<!-- 二 HOGLT -->
+<section class="poster p-hoglt" id="hoglt" data-num="二" aria-labelledby="hgTitle">
+  <div class="p-head">
+    <p class="tag mono"><span>二 / 七</span> <span data-i18n="hg.tag">Ekran vaqti · iOS va Android</span></p>
+    <h2 id="hgTitle" class="sr-only">Hoglt</h2>
+    <img class="hg-logo rv" src="assets/img/hoglt/logo.webp" width="400" height="141" alt="Hoglt" />
+    <p class="big rv" data-i18n="hg.h">Bolaning telefoni. <br>Ota-onaning qoidasi.</p>
+    <p class="aka mono rv" data-i18n="hg.aka">Oʻzbekistonda — Tikoncha</p>
+    <ul class="hg-legend rv" id="hgLegend">
+      <li data-state="sleep"><i></i><b data-i18n="hg.sleep">Uyqu</b><small data-i18n="hg.sleepSub">Telefon qulf</small></li>
+      <li data-state="school"><i></i><b data-i18n="hg.school">Maktab</b><small data-i18n="hg.schoolSub">Faqat dars ilovalari</small></li>
+      <li data-state="limit"><i></i><b data-i18n="hg.limit">Limit</b><small data-i18n="hg.limitSub">Oʻyinlar: 1 soat</small></li>
+      <li data-state="free"><i></i><b data-i18n="hg.free">Boʻsh vaqt</b><small data-i18n="hg.freeSub">Hammasi ochiq</small></li>
+    </ul>
+    <dl class="facts rv">
+      <div><dt>10K+</dt><dd data-i18n="hg.f1">Google Play yuklamalari</dd></div>
+      <div><dt>3</dt><dd data-i18n="hg.f2">ilova: bola, ota-ona, ustoz</dd></div>
+    </dl>
+    <a class="go rv" href="https://hoglt.com" target="_blank" rel="noopener">hoglt.com <svg class="i"><use href="#i-arrow-ur"/></svg></a>
   </div>
 
-  <div class="container hero-foot">
-    <div class="stat reveal-hero" style="--d:.85s"><b data-count="2">0</b><span data-i18n="stat.1">tizim darajasida boshqariladigan operatsion tizim: iOS va Android</span></div>
-    <div class="stat reveal-hero" style="--d:.95s"><b data-count="5">0</b><span data-i18n="stat.2">ilova Tikoncha ekotizimida ishga tushirilgan</span></div>
-    <div class="stat reveal-hero" style="--d:1.05s"><b data-count="100">0</b><span data-i18n="stat.3">ta stol bitta ClubTime ekranidan boshqariladi</span></div>
-    <div class="stat reveal-hero" style="--d:1.15s"><b data-count="1">0</b><span data-i18n="stat.4">jamoa: ilk eskizdan App Store’gacha va undan keyin</span></div>
+  <figure class="dial rv" id="dial">
+    <svg viewBox="0 0 400 400" class="dial-svg" aria-hidden="true">
+      <g id="dialArcs"></g>
+      <g id="dialTicks"></g>
+      <line id="dialHand" x1="200" y1="200" x2="200" y2="24" />
+      <circle id="dialKnob" cx="200" cy="24" r="9" />
+    </svg>
+    <div class="dial-core" aria-live="polite">
+      <img id="dialImg" src="assets/img/hoglt/shield.webp" width="384" height="384" alt="" />
+      <b class="mono" id="dialTime">08:30</b>
+      <span id="dialState">Maktab</span>
+      <small id="dialSub">Faqat dars ilovalari</small>
+    </div>
+    <figcaption class="mono" data-i18n="hg.drag">Kunni aylantiring</figcaption>
+  </figure>
+</section>
+
+<!-- 三 POOLTIMER -->
+<section class="poster p-pool" id="pooltimer" data-num="三" aria-labelledby="ptTitle">
+  <div class="p-head">
+    <p class="tag mono"><span>三 / 七</span> <span data-i18n="pt.tag">Bilyard klublari uchun</span></p>
+    <h2 id="ptTitle" class="pt-logo rv"><svg class="ball" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#000" stroke="#ffb547" stroke-width="2"/><circle cx="12" cy="12" r="5.2" fill="#fff"/><text x="12" y="15.2" text-anchor="middle" font-size="8.5" font-weight="800" font-family="Archivo, sans-serif" fill="#000">8</text></svg><span>Pool<em>Timer</em></span></h2>
+    <p class="big rv" data-i18n="pt.h">Har daqiqa — <br>hisobda.</p>
+    <p class="aka mono rv" data-i18n="pt.aka">Oʻzbekistonda — ClubTime</p>
+    <dl class="facts rv">
+      <div><dt>11</dt><dd data-i18n="pt.f1">til</dd></div>
+      <div><dt>4</dt><dd data-i18n="pt.f2">platforma</dd></div>
+    </dl>
+    <p class="pt-os mono rv">Android · iOS · Windows · macOS</p>
+    <ul class="pt-feat rv">
+      <li><svg class="i"><use href="#i-plug"/></svg><span data-i18n="pt.plug">Aqlli rozetka</span></li>
+      <li><svg class="i"><use href="#i-printer"/></svg><span data-i18n="pt.print">Chek</span></li>
+      <li><svg class="i"><use href="#i-send"/></svg><span>Telegram</span></li>
+    </ul>
+    <a class="go rv" href="https://pooltimer.app" target="_blank" rel="noopener">pooltimer.app <svg class="i"><use href="#i-arrow-ur"/></svg></a>
+  </div>
+
+  <div class="hall rv" id="hall">
+    <div class="hall-top mono">
+      <span data-i18n="pt.hint">Stolni bosing</span>
+      <span><span data-i18n="pt.today">Bugun</span> <b id="hallTotal">0</b></span>
+    </div>
+    <div class="tables" id="tables">
+      <button type="button" class="tbl" data-n="1" data-run="72"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>01</i><b>0:00</b></span><span class="cost mono">0</span></button>
+      <button type="button" class="tbl" data-n="2"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>02</i><b>0:00</b></span><span class="cost mono">0</span></button>
+      <button type="button" class="tbl" data-n="3" data-run="25"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>03</i><b>0:00</b></span><span class="cost mono">0</span></button>
+      <button type="button" class="tbl" data-n="4"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>04</i><b>0:00</b></span><span class="cost mono">0</span></button>
+      <button type="button" class="tbl vip" data-n="5" data-run="125"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>VIP</i><b>0:00</b></span><span class="cost mono">0</span></button>
+      <button type="button" class="tbl" data-n="6"><span class="lamp"></span><span class="felt"></span><span class="led mono"><i>06</i><b>0:00</b></span><span class="cost mono">0</span></button>
+    </div>
+    <div class="tg" id="tg" aria-live="polite"><b>Telegram</b><span id="tgText"></span></div>
   </div>
 </section>
 
-<!-- ============ MARQUEE ============ -->
-<section class="marquee" aria-label="Nimalar yaratamiz" data-i18n-label="mq.label">
-  <div class="mq mq-red">
-    <div class="mq-track" data-i18n="mq.red"><span>Android</span><i>斬</i><span>iOS</span><i>斬</i><span>Screen Time API</span><i>斬</i><span>Veb-platformalar</span><i>斬</i><span>Telegram botlar</span><i>斬</i><span>IoT va uskunalar</span><i>斬</i><span>Kafe ilovalari</span><i>斬</i></div>
+<!-- 四 STACK -->
+<section class="poster p-stack" id="stack" data-num="四" aria-labelledby="mxTitle">
+  <div class="p-head">
+    <p class="tag mono"><span>四 / 七</span> Arsenal</p>
+    <h2 id="mxTitle" class="big rv" data-i18n="mx.h">Bir jamoa. <br>Butun stek.</h2>
   </div>
-  <div class="mq mq-dark">
-    <div class="mq-track mq-rev" data-i18n="mq.dark"><span>Admin panellar</span><i>✦</i><span>AI integratsiyalar</span><i>✦</i><span>Desktop dasturlar</span><i>✦</i><span>Toʻlovlar</span><i>✦</i><span>Landing sahifalar</span><i>✦</i><span>Korporativ tizimlar</span><i>✦</i><span>Dashboardlar</span><i>✦</i></div>
-  </div>
-</section>
-
-<!-- ============ WORK ============ -->
-<section class="section work" id="work">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow" data-reveal><span class="num">01</span> <span data-i18n="work.eye">Jang tarixi</span></p>
-      <h2 class="h2" data-split data-i18n="work.h">Jangda chiniqqan.</h2>
-      <p class="lead" data-reveal data-i18n="work.lead">Haqiqiy cheklovlarga ega haqiqiy mahsulotlar: operatsion tizim chegaralari, jismoniy uskunalar, real pul. Bular qilichimiz ortidagi janglar va ikkalasini ham quyida sinab koʻrishingiz mumkin.</p>
+  <div class="matrix rv" role="table" aria-label="Platformalar" data-i18n-label="mx.label">
+    <div class="mx-row mx-head" role="row">
+      <span role="columnheader"></span>
+      <span role="columnheader">Hoglt</span>
+      <span role="columnheader">PoolTimer</span>
+      <span role="columnheader" class="you" data-i18n="mx.you">Sizniki</span>
     </div>
-
-    <div class="cases">
-      <!-- ===== TIKONCHA ===== -->
-      <article class="case" id="case-tikoncha" style="--i:0">
-        <div class="case-info">
-          <div class="case-top">
-            <span class="case-idx">01</span>
-            <ul class="tags" data-i18n="tk.tags"><li>EdTech</li><li>Ota-ona nazorati</li><li>iOS va Android</li></ul>
-          </div>
-          <h3 class="case-title">Tikoncha</h3>
-          <p class="case-lead" data-i18n="tk.lead">Ekran vaqtini boshqarish — yangi boshlovchilar ishi emas. Tikoncha Android’da <em>ham</em>, iOS’da ham operatsion tizimning ichiga kiradi: oʻquvchilarni darsda diqqatli qiladi, ota-ona va oʻqituvchilarga esa nazoratni beradi.</p>
-          <ul class="case-modes">
-            <li><b data-i18n="tk.m1">Standart</b><span data-i18n="tk.m1d">Jimgina kuzatuv: foydalanish statistikasi va ota-onalarga kunlik hisobot.</span></li>
-            <li><b>Gʻujanak</b><span data-i18n="tk.m2d">Maktab geozonasi ichida yoqiladigan aqlli cheklovlar.</span></li>
-            <li><b>Qalqon</b><span data-i18n="tk.m3d">Himoya rejimi: OT darajasida bloklash, uni oʻchirib ham, chetlab oʻtib ham boʻlmaydi.</span></li>
-          </ul>
-          <p class="case-note"><svg class="i"><use href="#i-lock"/></svg> <span data-i18n="tk.note">Qalqon faqat taymer, maxfiy kod, matnli topshiriq yoki ota-ona ruxsati bilan ochiladi.</span></p>
-          <div class="eco">
-            <p class="eco-title" data-i18n="tk.eco">Bitta ekotizim, beshta mahsulot</p>
-            <ul data-i18n="tk.ecoList"><li>Oʻquvchi ilovasi <small>Android va iOS</small></li><li>Ota-ona ilovasi + Telegram bot</li><li>Oʻqituvchi ilovasi <small>va veb</small></li><li>Maktab admin paneli</li><li>Superadmin</li></ul>
-          </div>
-          <p class="stack mono">Kotlin · Compose · Swift · FamilyControls · DeviceActivity · AccessibilityService · DeviceAdmin · Ktor · WorkManager</p>
-        </div>
-
-        <div class="case-demo tk" id="tkDemo">
-          <div class="seg tk-os" role="group" aria-label="Platforma" data-i18n-label="tk.platform">
-            <button class="seg-btn is-on" data-os="android" aria-pressed="true">Android</button>
-            <button class="seg-btn" data-os="ios" aria-pressed="false">iOS</button>
-          </div>
-
-          <div class="phone tk-phone" data-os="android" data-mode="default">
-            <div class="phone-cam"></div>
-            <div class="phone-screen">
-              <div class="ph-status"><span class="ph-time">08:47</span><span class="ph-icons"><svg class="i"><use href="#i-wifi"/></svg><span class="ph-batt"></span></span></div>
-              <div class="tk-head">
-                <div>
-                  <p class="tk-hello">Salom, Aziz</p>
-                  <p class="tk-mode-name">Standart rejim</p>
-                </div>
-                <span class="tk-geo"><svg class="i"><use href="#i-geo"/></svg> <span data-i18n="tk.school">Maktabda</span></span>
-              </div>
-              <div class="tk-ring">
-                <svg viewBox="0 0 120 120" aria-hidden="true">
-                  <circle cx="60" cy="60" r="50" class="ring-bg"/>
-                  <circle cx="60" cy="60" r="50" class="ring-fg" pathLength="100"/>
-                </svg>
-                <div class="tk-ring-txt"><b class="tk-usage">1:52</b><span data-i18n="tk.today">bugungi ekran vaqti</span></div>
-              </div>
-              <div class="tk-grid">
-                <button class="app" data-app="Reels" data-bad="1" style="--c1:#ff4f8b;--c2:#ff9a3c"><span class="app-ic"><svg class="i"><use href="#i-reels"/></svg></span><span class="app-lbl">Reels</span><span class="app-badge"></span></button>
-                <button class="app" data-app="Games" data-bad="1" style="--c1:#7b5cff;--c2:#b05cff"><span class="app-ic"><svg class="i"><use href="#i-game"/></svg></span><span class="app-lbl" data-i18n="app.games">Oʻyinlar</span><span class="app-badge"></span></button>
-                <button class="app" data-app="Videos" data-bad="1" style="--c1:#ff3b30;--c2:#ff6b4a"><span class="app-ic"><svg class="i"><use href="#i-film"/></svg></span><span class="app-lbl" data-i18n="app.videos">Videolar</span><span class="app-badge"></span></button>
-                <button class="app" data-app="Social" data-bad="1" style="--c1:#2f8cff;--c2:#4fc3ff"><span class="app-ic"><svg class="i"><use href="#i-social"/></svg></span><span class="app-lbl" data-i18n="app.social">Ijtimoiy</span><span class="app-badge"></span></button>
-                <button class="app" data-app="E-books" style="--c1:#1fb57a;--c2:#4fd69c"><span class="app-ic"><svg class="i"><use href="#i-book"/></svg></span><span class="app-lbl" data-i18n="app.ebooks">Kitoblar</span><span class="app-badge"></span></button>
-                <button class="app" data-app="Math" style="--c1:#00a3a3;--c2:#33c9c0"><span class="app-ic"><svg class="i"><use href="#i-math"/></svg></span><span class="app-lbl" data-i18n="app.math">Matematika</span><span class="app-badge"></span></button>
-                <button class="app" data-app="Dictionary" style="--c1:#f0a400;--c2:#ffc93c"><span class="app-ic"><svg class="i"><use href="#i-lang"/></svg></span><span class="app-lbl" data-i18n="app.dictionary">Lugʻat</span><span class="app-badge"></span></button>
-                <button class="app" data-app="Maps" style="--c1:#5561ff;--c2:#7f8bff"><span class="app-ic"><svg class="i"><use href="#i-pin"/></svg></span><span class="app-lbl" data-i18n="app.maps">Xarita</span><span class="app-badge"></span></button>
-              </div>
-              <div class="tk-week" aria-hidden="true">
-                <p><span data-i18n="tk.week">Shu hafta</span> <b class="tk-trend">oʻtgan haftaga nisbatan −12%</b></p>
-                <div class="tk-bars"><i style="--h:.92"></i><i style="--h:.78"></i><i style="--h:.85"></i><i style="--h:.6"></i><i style="--h:.66"></i><i style="--h:.48"></i><i style="--h:.55"></i></div>
-                <div class="tk-days" data-i18n="tk.days"><span>Du</span><span>Se</span><span>Ch</span><span>Pa</span><span>Ju</span><span>Sh</span><span>Ya</span></div>
-              </div>
-              <div class="tk-shield" aria-live="polite">
-                <div class="tk-shield-ic"><svg class="i"><use href="#i-shield"/></svg></div>
-                <p class="tk-shield-t" data-i18n="tk.shieldT">Qalqon yoqilgan</p>
-                <p class="tk-shield-s"><b class="tk-shield-app">Reels</b> <span data-i18n="tk.blocked">soat <b>14:00</b> gacha bloklangan. Avval darslar.</span></p>
-                <button class="tk-ask">Ota-onadan ruxsat soʻrash</button>
-                <button class="tk-close" data-i18n="tk.back">Darslarga qaytish</button>
-                <p class="tk-shield-f" data-i18n="tk.other">Boshqa yoʻllar: taymer · maxfiy kod · matnli topshiriq</p>
-              </div>
-              <div class="ph-toast" role="status"></div>
-              <div class="ph-home"></div>
-            </div>
-          </div>
-
-          <div class="seg tk-modes" role="group" aria-label="Rejim" data-i18n-label="tk.mode">
-            <button class="seg-btn is-on" data-mode="default" aria-pressed="true" data-i18n="tk.m1">Standart</button>
-            <button class="seg-btn" data-mode="gujanak" aria-pressed="false">Gʻujanak</button>
-            <button class="seg-btn seg-red" data-mode="qalqon" aria-pressed="false"><svg class="i"><use href="#i-shield"/></svg> Qalqon</button>
-          </div>
-          <p class="demo-hint mono"><span class="tk-api">Android · AccessibilityService · UsageStatsManager · DeviceAdmin</span></p>
-          <p class="demo-hint" data-i18n="tk.hint">Rejimni tanlang va <b>Reels</b>ni ochib koʻring.</p>
-        </div>
-      </article>
-
-      <!-- ===== CLUBTIME ===== -->
-      <article class="case" id="case-clubtime" style="--i:1">
-        <div class="case-info">
-          <div class="case-top">
-            <span class="case-idx">02</span>
-            <ul class="tags" data-i18n="ct.tags"><li>Desktop</li><li>IoT</li><li>Telegram</li><li>Xizmat koʻrsatish</li></ul>
-          </div>
-          <h3 class="case-title">ClubTime</h3>
-          <p class="case-lead" data-i18n="ct.lead">Bilyard va stol tennisi klublari uchun operatsion tizim. Har bir stolning vaqti hisoblanadi, har bir ichimlik sanaladi, har bir chiroq ulangan — egasi esa hammasini dunyoning istalgan joyidan Telegram orqali koʻradi.</p>
-          <ul class="case-feats">
-            <li><svg class="i"><use href="#i-clock"/></svg><span data-i18n="ct.f1">Har bir stol uchun sessiya taymeri. Hozirdan yoki oldingi vaqtdan boshlang, nomli partiyalarga ajrating, kim qancha toʻlashini hisoblang.</span></li>
-            <li><svg class="i"><use href="#i-bottle"/></svg><span data-i18n="ct.f2">Bar ombori: buyurtma, qaytarish, qoldiq va tannarx — haqiqiy foydani koʻrasiz.</span></li>
-            <li><svg class="i"><use href="#i-printer"/></svg><span data-i18n="ct.f3">Klubingiz brendi va ijtimoiy tarmoqlaringiz QR kodi tushirilgan termochek.</span></li>
-            <li><svg class="i"><use href="#i-send"/></svg><span data-i18n="ct.f4">Oʻzgartirib boʻlmaydigan hisobotlar: har bir sessiyadan keyin Telegram xabari, kun oxirida Excel fayl.</span></li>
-            <li><svg class="i"><use href="#i-bolt"/></svg><span data-i18n="ct.f5">Wi-Fi relelar START va STOP bosilganda stol ustidagi chiroqni yoqib-oʻchiradi.</span></li>
-          </ul>
-          <p class="stack mono">Desktop app · Wi-Fi smart relays · Thermal printing · Telegram Bot API · Excel reports · Remote monitoring</p>
-        </div>
-
-        <div class="case-demo ct" id="ctDemo">
-          <div class="ct-window">
-            <div class="ct-bar">
-              <span class="dots"><i></i><i></i><i></i></span>
-              <span class="ct-bar-t" data-i18n="ct.window">ClubTime · Klub zali</span>
-              <span class="ct-clock mono">21:47</span>
-            </div>
-            <div class="ct-kpis">
-              <div><span data-i18n="ct.rev">Bugungi tushum</span><b class="ct-rev mono">1 284 000</b><small data-i18n="som">soʻm</small></div>
-              <div><span data-i18n="ct.active">Faol stollar</span><b class="ct-active mono">2/6</b></div>
-              <div class="ct-iot"><svg class="i"><use href="#i-wifi"/></svg><span data-i18n="ct.relays">Relelar onlayn</span></div>
-            </div>
-            <div class="ct-body">
-              <div class="ct-floor" role="group" aria-label="Stollar" data-i18n-label="ct.tables">
-                <!-- tables injected by demos.js -->
-              </div>
-              <div class="ct-panel">
-                <div class="ct-panel-h">
-                  <p class="ct-sel-name">1-stol</p>
-                  <p class="ct-sel-state">Boʻsh</p>
-                </div>
-                <p class="ct-timer mono">00:00</p>
-                <p class="ct-cost"><span class="mono ct-cost-v">0</span> <span data-i18n="som">soʻm</span></p>
-                <div class="ct-bar-items">
-                  <button data-item="Tea" data-price="8000"><svg class="i"><use href="#i-cup"/></svg><span data-i18n="ct.tea">Choy</span></button>
-                  <button data-item="Cola" data-price="12000"><svg class="i"><use href="#i-bottle"/></svg><span data-i18n="ct.cola">Kola</span></button>
-                  <button data-item="Snacks" data-price="15000"><svg class="i"><use href="#i-snack"/></svg><span data-i18n="ct.snacks">Gazak</span></button>
-                </div>
-                <ul class="ct-orders"></ul>
-                <button class="ct-go">START</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="ct-receipt" aria-live="polite">
-            <div class="ct-paper"></div>
-          </div>
-          <div class="tg-toast" role="status">
-            <span class="tg-av"><svg class="i"><use href="#i-send"/></svg></span>
-            <div><b>ClubTime Bot</b><p class="tg-msg"></p></div>
-          </div>
-          <p class="demo-hint" data-i18n="ct.hint">Stolni tanlang, <b>START</b> ni bosing, choy buyurtma qiling, keyin <b>STOP</b>. Bu yerda bir soniya klubdagi bir daqiqaga teng.</p>
-        </div>
-      </article>
-    </div>
+    <div class="mx-row" role="row"><span role="rowheader">iOS</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">Android</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader" data-i18n="mx.web">Veb</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">Desktop</span><i role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">Backend</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">Telegram</span><i class="on" role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">IoT</span><i role="cell"></i><i class="on" role="cell"></i><i class="you" role="cell"></i></div>
+    <div class="mx-row" role="row"><span role="rowheader">AI</span><i class="on" role="cell"></i><i role="cell"></i><i class="you" role="cell"></i></div>
   </div>
 </section>
 
-<!-- ============ DOJO / CONCEPTS ============ -->
-<section class="section dojo" id="dojo">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow" data-reveal><span class="num">02</span> <span data-i18n="dojo.eye">Dojo · konsept demolar</span></p>
-      <h2 class="h2" data-split data-i18n="dojo.h">Agar ularda <em>Qilich</em> boʻlsa-chi?</h2>
-      <p class="lead" data-reveal data-i18n="dojo.lead">Bu brendlar bilan hali ishlamaganmiz. Shunday boʻlsa ham, ular uchun nima yarata olishimizni koʻrsatish uchun konseptlar tayyorladik. Bu yerdagi har bir ekran jonli — bosib koʻring.</p>
+<!-- 五 TOKYO · TASHKENT -->
+<section class="poster p-tokyo" id="tokyo" data-num="五" aria-labelledby="tkTitle">
+  <p class="tag mono"><span>五 / 七</span> 東京 — <span data-i18n="tk.city">Toshkent</span></p>
+  <h2 id="tkTitle" class="big rv" data-i18n="tk.h">Tokio standarti. <br>Toshkent vaqti.</h2>
+  <div class="route rv">
+    <div class="city">
+      <span class="kj">東京</span>
+      <b class="mono clock" data-tz="9">--:--</b>
+      <small class="mono" data-i18n="tk.tokyo">Tokio · UTC+9</small>
     </div>
-
-    <div class="dojo-tabs" role="tablist" aria-label="Konsept demolar" data-i18n-label="dojo.tabs" data-reveal>
-      <button role="tab" class="dtab is-on" aria-selected="true" aria-controls="p-safia" id="t-safia" data-theme="safia"><span class="dtab-k" data-i18n="tab.safia">Nonvoyxona va kafe ilovasi</span><span class="dtab-n">Safia</span></button>
-      <button role="tab" class="dtab" aria-selected="false" aria-controls="p-bon" id="t-bon" data-theme="bon" tabindex="-1"><span class="dtab-k" data-i18n="tab.bon">Kofeni oldindan buyurtma</span><span class="dtab-n">Bon!</span></button>
-      <button role="tab" class="dtab" aria-selected="false" aria-controls="p-akfa" id="t-akfa" data-theme="akfa" tabindex="-1"><span class="dtab-k" data-i18n="tab.akfa">Sanoat platformasi</span><span class="dtab-n">Akfa</span></button>
-      <button role="tab" class="dtab dtab-you" aria-selected="false" aria-controls="p-you" id="t-you" data-theme="you" tabindex="-1"><span class="dtab-k" data-i18n="tab.next">Navbatdagi</span><span class="dtab-n" data-i18n="tab.you">Sizning brendingiz</span></button>
+    <svg class="arc" viewBox="0 0 600 160" aria-hidden="true">
+      <path id="arcPath" d="M20 150 Q300 -50 580 150" />
+      <circle r="7" class="arc-dot"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#arcPath"/></animateMotion></circle>
+    </svg>
+    <div class="city">
+      <span class="kj mark" aria-hidden="true"><i></i><i></i></span>
+      <b class="mono clock" data-tz="5">--:--</b>
+      <small class="mono" data-i18n="tk.tash">Toshkent · UTC+5</small>
     </div>
-
-    <div class="dojo-stage" data-reveal>
-      <!-- ===== SAFIA ===== -->
-      <div class="dpanel is-on" role="tabpanel" id="p-safia" aria-labelledby="t-safia">
-        <div class="dpanel-copy">
-          <p class="concept-badge" data-i18n="concept">Konsept · aloqador emas</p>
-          <h3 data-i18n="sf.h">Oʻzini oʻzi <em>sotadigan tort.</em></h3>
-          <p data-i18n="sf.p">Nonvoyxona tarmogʻi bayramlar bilan yashaydi. Shuning uchun ilova ham ulardan boshlanadi: tortni oʻzingiz yarating, uning jonli yigʻilishini kuzating, ertangi vaqtni tanlang va uni pechdan eshigingizgacha kuzatib boring.</p>
-          <ul class="checks" data-i18n="sf.checks"><li><svg class="i"><use href="#i-check"/></svg>Tort ustidagi yozuv bilan jonli konstruktor</li><li><svg class="i"><use href="#i-check"/></svg>Har bir filialda olib ketish vaqti yoki kuryer orqali yetkazish</li><li><svg class="i"><use href="#i-check"/></svg>Tugʻilgan kun eslatmalari va sodiqlik hamyoni</li><li><svg class="i"><use href="#i-check"/></svg>Ortida: oshxona ekrani, kuryer ilovasi, admin panel va POS sinxronizatsiyasi</li></ul>
-        </div>
-        <div class="dpanel-demo">
-          <div class="phone phone-light sf" data-os="ios" id="sfDemo">
-            <div class="phone-cam"></div>
-            <div class="phone-screen">
-              <div class="ph-status"><span class="ph-time">10:24</span><span class="ph-icons"><svg class="i"><use href="#i-wifi"/></svg><span class="ph-batt"></span></span></div>
-              <div class="sf-view sf-build is-on">
-                <div class="sf-top"><span class="sf-logo">Safia</span><span class="sf-bag"><svg class="i"><use href="#i-bag"/></svg><b>0</b></span></div>
-                <p class="sf-h" data-i18n="sf.build">Tortingizni yarating</p>
-                <div class="sf-cake">
-                  <svg viewBox="0 0 240 170" class="sf-svg" aria-label="Tort koʻrinishi" data-i18n-label="sf.preview">
-                    <ellipse cx="120" cy="156" rx="104" ry="11" fill="#e9dccb"/>
-                    <ellipse cx="120" cy="152" rx="96" ry="9" fill="#fff"/>
-                    <g class="sf-layers"></g>
-                    <g class="sf-topping"></g>
-                    <text class="sf-text" x="120" y="0" text-anchor="middle"></text>
-                  </svg>
-                </div>
-                <div class="sf-opts">
-                  <div class="sf-opt" data-key="sponge">
-                    <span data-i18n="sf.sponge">Biskvit</span>
-                    <div><button class="is-on" data-v="honey" style="--sw:#d9a35b" data-i18n="sf.honey">Asalli</button><button data-v="choco" style="--sw:#5a3324" data-i18n="sf.choco">Shokolad</button><button data-v="velvet" style="--sw:#a4262c">Velvet</button></div>
-                  </div>
-                  <div class="sf-opt" data-key="top">
-                    <span data-i18n="sf.topping">Bezak</span>
-                    <div><button class="is-on" data-v="berries" style="--sw:#c2185b" data-i18n="sf.berries">Rezavor</button><button data-v="drip" style="--sw:#3b2116" data-i18n="sf.drip">Glazur</button><button data-v="nuts" style="--sw:#b07a3b" data-i18n="sf.nuts">Yongʻoq</button></div>
-                  </div>
-                  <div class="sf-opt" data-key="size">
-                    <span data-i18n="sf.size">Hajm</span>
-                    <div><button data-v="1" data-i18n="sf.kg1">1 kg</button><button class="is-on" data-v="2" data-i18n="sf.kg2">2 kg</button><button data-v="3" data-i18n="sf.kg3">3 kg</button></div>
-                  </div>
-                  <label class="sf-ins"><span data-i18n="sf.ontop">Yozuv</span><input type="text" maxlength="16" value="Tabriklaymiz!" aria-label="Tort ustidagi yozuv" data-i18n-label="sf.insLabel" /></label>
-                </div>
-                <button class="sf-order"><span data-i18n="sf.order">Buyurtma berish</span><b class="sf-price">240 000 soʻm</b></button>
-              </div>
-              <div class="sf-view sf-track">
-                <div class="sf-top"><span class="sf-logo">Safia</span><span class="sf-ordno mono">#A-1042</span></div>
-                <p class="sf-h" data-i18n="sf.onway">Tortingiz yoʻlda</p>
-                <div class="sf-mini"></div>
-                <ol class="sf-steps">
-                  <li><i></i><div><b data-i18n="sf.s1">Buyurtma qabul qilindi</b><span data-i18n="sf.s1d">Ertaga · 10:00</span></div></li>
-                  <li><i></i><div><b data-i18n="sf.s2">Pishirilmoqda</b><span data-i18n="sf.s2d">Biskvit pechda</span></div></li>
-                  <li><i></i><div><b data-i18n="sf.s3">Bezatilmoqda</b><span data-i18n="sf.s3d">“<em class="sf-ins-echo">Tabriklaymiz!</em>” yozilmoqda</span></div></li>
-                  <li><i></i><div><b data-i18n="sf.s4">Yoʻlda</b><span>Kuryer · 12 daqiqa</span></div></li>
-                </ol>
-                <button class="sf-again" data-i18n="sf.again">Yana bittasini yaratish</button>
-              </div>
-              <div class="ph-home"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== BON! ===== -->
-      <div class="dpanel" role="tabpanel" id="p-bon" aria-labelledby="t-bon" hidden>
-        <div class="dpanel-copy">
-          <p class="concept-badge" data-i18n="concept">Konsept · aloqador emas</p>
-          <h3 data-i18n="bn.h">Navbatni chetlab oʻting. <em>Marosimni saqlang.</em></h3>
-          <p data-i18n="bn.p">Ertalabki shoshilinch — bu navbatlar. Yoʻlda buyurtma bering, ilovada toʻlang va ismingiz yozilgan stakanni olib keting. Har bir stakan sodiqlik kartasini toʻldiradi, karta esa mijozlarni qaytaradi.</p>
-          <ul class="checks" data-i18n="bn.checks"><li><svg class="i"><use href="#i-check"/></svg>Har bir filial uchun tayyor boʻlish vaqti koʻrsatilgan oldindan buyurtma</li><li><svg class="i"><use href="#i-check"/></svg>Raqamli muhr kartasi: 8 ta muhr — bepul ichimlik</li><li><svg class="i"><use href="#i-check"/></svg>Payme, Click va karta orqali bir bosishda toʻlov</li><li><svg class="i"><use href="#i-check"/></svg>Barista navbat ekrani va eng gavjum soatlar tahlili</li></ul>
-        </div>
-        <div class="dpanel-demo">
-          <div class="phone bn" data-os="ios" id="bnDemo">
-            <div class="phone-cam"></div>
-            <div class="phone-screen">
-              <div class="ph-status"><span class="ph-time">08:12</span><span class="ph-icons"><svg class="i"><use href="#i-wifi"/></svg><span class="ph-batt"></span></span></div>
-              <div class="bn-top"><span class="bn-logo">Bon!</span><span class="bn-eta mono" data-i18n="bn.eta">Eng yaqin · 4 daq</span></div>
-              <div class="bn-drinks" role="group" aria-label="Ichimlik" data-i18n-label="bn.drink">
-                <button class="is-on" data-d="cappuccino" data-i18n="bn.capp">Kapuchino</button>
-                <button data-d="latte">Latte</button>
-                <button data-d="raf">Raf</button>
-                <button data-d="matcha">Matcha</button>
-                <button data-d="cocoa" data-i18n="bn.cocoa">Kakao</button>
-              </div>
-              <div class="bn-cup-wrap">
-                <svg viewBox="0 0 200 210" class="bn-cup" aria-label="Ichimligingiz" data-i18n-label="bn.your">
-                  <defs>
-                    <clipPath id="cupClip"><path d="M40 40 L160 40 L148 190 Q147 200 137 200 L63 200 Q53 200 52 190 Z"/></clipPath>
-                  </defs>
-                  <g clip-path="url(#cupClip)">
-                    <rect class="bn-l bn-l1" x="30" y="30" width="140" height="170"/>
-                    <rect class="bn-l bn-l2" x="30" y="30" width="140" height="170"/>
-                    <rect class="bn-l bn-l3" x="30" y="30" width="140" height="170"/>
-                  </g>
-                  <path d="M40 40 L160 40 L148 190 Q147 200 137 200 L63 200 Q53 200 52 190 Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.5"/>
-                  <g class="bn-lid"><rect x="34" y="26" width="132" height="14" rx="5"/><rect x="62" y="18" width="76" height="10" rx="4"/></g>
-                  <g class="bn-steam"><path d="M84 30c-6-8 6-12 0-20"/><path d="M100 26c-6-8 6-12 0-20"/><path d="M116 30c-6-8 6-12 0-20"/></g>
-                </svg>
-                <p class="bn-name mono" data-i18n="bn.name">Malika uchun</p>
-              </div>
-              <div class="bn-row">
-                <div class="seg bn-size" role="group" aria-label="Hajm" data-i18n-label="sf.size"><button data-s="S">S</button><button class="is-on" data-s="M">M</button><button data-s="L">L</button></div>
-                <div class="seg bn-milk" role="group" aria-label="Sut" data-i18n-label="bn.milk"><button class="is-on" data-m="classic" data-i18n="bn.classic">Oddiy</button><button data-m="oat" data-i18n="bn.oat">Suli</button><button data-m="coco" data-i18n="bn.coco">Kokos</button></div>
-              </div>
-              <div class="bn-stamps"><p><span data-i18n="bn.stamps">Muhr kartasi</span> <b class="bn-stamp-n">5/8</b></p><div class="bn-stamp-row"></div></div>
-              <button class="bn-order"><span data-i18n="bn.order">Buyurtma va toʻlov</span><b class="bn-price">32 000 soʻm</b></button>
-              <div class="ph-toast" role="status"></div>
-              <div class="ph-home"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== AKFA ===== -->
-      <div class="dpanel dpanel-wide" role="tabpanel" id="p-akfa" aria-labelledby="t-akfa" hidden>
-        <div class="dpanel-copy">
-          <p class="concept-badge" data-i18n="concept">Konsept · aloqador emas</p>
-          <h3 data-i18n="ak.h">Saytdan <em>savdo mashinasigacha.</em></h3>
-          <p data-i18n="ak.p">Ishlab chiqaruvchining sayti shunchaki risola boʻlmasligi kerak. Mijoz derazani sozlaydi, narx va issiqlik koʻrsatkichini darhol koʻradi va eng yaqin dilerga yoʻnaltiriladi. Dilerlar portal oladi, zavod esa maʼlumot.</p>
-          <ul class="checks" data-i18n="ak.checks"><li><svg class="i"><use href="#i-check"/></svg>Narx va issiqlik reytingini darhol hisoblaydigan mahsulot konfiguratori</li><li><svg class="i"><use href="#i-check"/></svg>Diler qidiruvi va B2B buyurtma portali</li><li><svg class="i"><use href="#i-check"/></svg>ERP va 1C integratsiyasi, buyurtmani oʻrnatuvchigacha kuzatish</li></ul>
-        </div>
-        <div class="dpanel-demo">
-          <div class="browser ak" id="akDemo">
-            <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="browser-url mono">concept / window-configurator</span></div>
-            <div class="ak-body">
-              <div class="ak-nav"><span class="ak-logo">AKFA</span><span class="ak-links" data-i18n="ak.links"><span>Derazalar</span><span>Eshiklar</span><span>Fasadlar</span><span>Dilerlar</span></span><span class="concept-badge concept-badge-dark" data-i18n="ak.concept">Konsept</span></div>
-              <div class="ak-main">
-                <div class="ak-view">
-                  <svg viewBox="0 0 420 340" class="ak-svg" aria-label="Deraza koʻrinishi" data-i18n-label="ak.preview"></svg>
-                  <div class="ak-map" aria-hidden="true">
-                    <img src="assets/img/uz-map.svg" alt="" loading="lazy" />
-                    <!-- dealer pins injected by demos.js -->
-                  </div>
-                </div>
-                <div class="ak-ctrl">
-                  <p class="ak-h" data-i18n="ak.cfg">Derazangizni sozlang</p>
-                  <div class="ak-field">
-                    <span data-i18n="ak.sashes">Tabaqalar</span>
-                    <div class="seg seg-light" data-k="sash"><button data-v="1">1</button><button class="is-on" data-v="2">2</button><button data-v="3">3</button></div>
-                  </div>
-                  <label class="ak-range"><span data-i18n="ak.w">Eni <b class="ak-w">1400</b> mm</span><input type="range" min="600" max="2400" step="50" value="1400" data-k="w" aria-label="Eni, millimetrda" data-i18n-label="ak.wLabel"></label>
-                  <label class="ak-range"><span data-i18n="ak.h2">Boʻyi <b class="ak-hh">1400</b> mm</span><input type="range" min="600" max="2000" step="50" value="1400" data-k="h" aria-label="Boʻyi, millimetrda" data-i18n-label="ak.hLabel"></label>
-                  <div class="ak-field">
-                    <span data-i18n="ak.profile">Profil</span>
-                    <div class="seg seg-light" data-k="profile"><button data-v="60" data-i18n="ak.p60">60 mm</button><button class="is-on" data-v="70" data-i18n="ak.p70">70 mm</button><button data-v="80" data-i18n="ak.p80">80 mm</button></div>
-                  </div>
-                  <div class="ak-field">
-                    <span data-i18n="ak.glass">Oyna</span>
-                    <div class="seg seg-light" data-k="glass"><button data-v="1" data-i18n="ak.g1">1 qavat</button><button class="is-on" data-v="2" data-i18n="ak.g2">2 qavat</button><button data-v="3" data-i18n="ak.g3">3 qavat</button></div>
-                  </div>
-                  <div class="ak-field">
-                    <span data-i18n="ak.color">Rang</span>
-                    <div class="ak-colors" data-k="color"><button class="is-on" data-v="white" style="--sw:#f4f5f6" aria-label="Oq" data-i18n-label="ak.white"></button><button data-v="anthracite" style="--sw:#3a3f45" aria-label="Antratsit" data-i18n-label="ak.anthracite"></button><button data-v="oak" style="--sw:#a8743f" aria-label="Oltin eman" data-i18n-label="ak.oak"></button></div>
-                  </div>
-                  <div class="ak-out">
-                    <div><span data-i18n="ak.est">Taxminiy narx</span><b class="ak-price">0</b><small data-i18n="ak.estNote">soʻm · namunaviy hisob</small></div>
-                    <div><span data-i18n="ak.heat">Issiqlik yoʻqotish</span><b class="ak-u">0</b><small>Uw, W/m²K</small><div class="ak-meter"><i></i></div></div>
-                  </div>
-                  <button class="ak-dealer">Eng yaqin dilerni topish <svg class="i"><use href="#i-arrow"/></svg></button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== YOURS ===== -->
-      <div class="dpanel dpanel-you" role="tabpanel" id="p-you" aria-labelledby="t-you" hidden>
-        <div class="you">
-          <p class="you-k" aria-hidden="true">道</p>
-          <h3 data-i18n="you.h">Sizning brendingiz. <em>Bizning qilich.</em></h3>
-          <p data-i18n="you.p">Kafe, klinika, zavod, maktab, bank yoki marketpleys: brendingizni yuboring va biz u qanday koʻrinishi mumkinligini koʻrsatamiz — hali bir soʻm ham sarflamasdan.</p>
-          <ul class="you-chips" data-i18n="you.chips"><li>Restoran va kafelar</li><li>Chakana savdo va e-tijorat</li><li>Ishlab chiqarish</li><li>Klinikalar</li><li>Taʼlim</li><li>Logistika</li><li>Mehmonxona va sayohat</li><li>Fintex</li></ul>
-          <a href="#contact" class="btn btn-red magnetic" data-cursor="Hi"><span data-i18n="you.cta">Konsept soʻrash</span> <svg class="i"><use href="#i-arrow"/></svg></a>
-        </div>
-      </div>
-    </div>
-
-    <p class="disclaimer" data-i18n="dojo.disc">Konsept ishlar faqat namoyish uchun. Qilich Safia, Bon! yoki Akfa bilan bogʻliq emas, ular tomonidan maʻqullanmagan va ular uchun ishlamaydi. Barcha nomlar va savdo belgilari tegishli egalariga qarashli.</p>
   </div>
+  <p class="route-meta mono rv"><span>5 991 km</span><span data-i18n="tk.diff">4 soat farq</span></p>
 </section>
 
-<!-- ============ ARSENAL ============ -->
-<section class="section arsenal" id="arsenal">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow" data-reveal><span class="num">03</span> <span data-i18n="ars.eye">Arsenal</span></p>
-      <h2 class="h2" data-split data-i18n="ars.h">Bitta jamoa. Har bir texnologik&nbsp;qatlam.</h2>
-      <p class="lead" data-reveal data-i18n="ars.lead">Oʻquvchi telefonidagi tizim ruxsatlaridan tortib bilyard stoli ustidagi relegacha — hammasini oʻzimiz qilamiz. Boshqalarga topshirmaymiz, bahona qilmaymiz.</p>
-    </div>
-
-    <div class="bento">
-      <article class="card card-sys" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-shield"/></svg></span><span class="rare" data-i18n="ars.rare">Noyob koʻnikma</span></div>
-        <h3 data-i18n="ars.sys">Tizim darajasidagi mobil</h3>
-        <p data-i18n="ars.sysP">Accessibility xizmatlari, device admin, foydalanish statistikasi, overlay va Apple’ning Screen Time freymvorklari. Aksariyat agentliklar yaqinlashmaydigan chuqurlik.</p>
-        <pre class="code" aria-label="Kod namunasi" data-i18n-label="ars.code"><code id="codeType"></code><span class="caret"></span></pre>
-      </article>
-      <article class="card" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-phone"/></svg></span></div>
-        <h3 data-i18n="ars.mob">Mobil ilovalar</h3>
-        <p data-i18n="ars.mobP">Native Android va iOS yoki maqsadga muvofiq boʻlsa kross-platforma.</p>
-        <p class="chips"><span>Kotlin</span><span>Compose</span><span>Swift</span><span>SwiftUI</span><span>Flutter</span></p>
-      </article>
-      <article class="card" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-browser"/></svg></span></div>
-        <h3 data-i18n="ars.web">Veb-platformalar</h3>
-        <p data-i18n="ars.webP">Korporativ saytlar, e-tijorat, dashboardlar va mijoz olib keladigan landing sahifalar.</p>
-        <p class="chips"><span>React</span><span>Next.js</span><span>TypeScript</span></p>
-      </article>
-      <article class="card" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-db"/></svg></span></div>
-        <h3 data-i18n="ars.be">Backend va API</h3>
-        <p data-i18n="ars.beP">Tez, xavfsiz va qonun talab qilsa, Oʻzbekistondagi serverlarda.</p>
-        <p class="chips"><span>FastAPI</span><span>Django</span><span>Node</span><span>PostgreSQL</span><span>Redis</span><span>Docker</span></p>
-      </article>
-      <article class="card" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-cpu"/></svg></span></div>
-        <h3 data-i18n="ars.iot">IoT va uskunalar</h3>
-        <p data-i18n="ars.iotP">Haqiqiy tugmalarni bosadigan dasturlar: relelar, printerlar, POS terminallar va sensorlar.</p>
-        <p class="chips"><span data-i18n="ars.relays">Wi-Fi relelar</span><span>ESP32</span><span>ESC/POS</span></p>
-      </article>
-      <article class="card" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-send"/></svg></span></div>
-        <h3>Telegram</h3>
-        <p data-i18n="ars.tgP">Botlar, mini ilovalar, toʻlovlar va egalari rostdan oʻqiydigan hisobotlar.</p>
-        <p class="chips"><span>Bot API</span><span>Mini Apps</span><span>Payme</span><span>Click</span></p>
-      </article>
-      <article class="card card-wide" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-spark"/></svg></span></div>
-        <h3 data-i18n="ars.ai">Kerakli joyda ishlaydigan AI</h3>
-        <p data-i18n="ars.aiP">Telefondan hech narsa chiqmasdan zararli rasmlarni bloklaydigan qurilma ichidagi neyron filtrlar, hamda tushuntiradigan, xulosa qiladigan va avtomatlashtiradigan LLM yordamchilar.</p>
-        <p class="chips"><span>On-device ML</span><span>MobileNet</span><span>LLM APIs</span><span data-i18n="ars.auto">Avtomatlashtirish</span></p>
-      </article>
-      <article class="card card-wide card-chart" data-reveal>
-        <div class="card-h"><span class="card-ic"><svg class="i"><use href="#i-chart"/></svg></span></div>
-        <h3 data-i18n="ars.adm">Admin panellar va analitika</h3>
-        <p data-i18n="ars.admP">Maktablar, klublar va korxonalar uchun rollar, ruxsatlar, eksport va dashboardlar.</p>
-        <div class="mini-bars" aria-hidden="true"><i style="--h:38%"></i><i style="--h:52%"></i><i style="--h:44%"></i><i style="--h:68%"></i><i style="--h:60%"></i><i style="--h:82%"></i><i style="--h:74%"></i><i style="--h:96%"></i></div>
-      </article>
-    </div>
-  </div>
+<!-- 六 THE WAY -->
+<section class="poster p-way" id="way" data-num="六" aria-labelledby="wayTitle">
+  <p class="tag mono"><span>六 / 七</span> 道</p>
+  <h2 id="wayTitle" class="big rv" data-i18n="way.h">Toʻrt zarba.</h2>
+  <ol class="steps" id="steps">
+    <li class="rv"><span class="kj">構</span><b data-i18n="way.1">Reja</b><small class="mono">Kamae</small></li>
+    <li class="rv"><span class="kj">型</span><b data-i18n="way.2">Dizayn</b><small class="mono">Kata</small></li>
+    <li class="rv"><span class="kj">斬</span><b data-i18n="way.3">Kod</b><small class="mono">Kiri</small></li>
+    <li class="rv"><span class="kj">残心</span><b data-i18n="way.4">Qoʻllab-quvvatlash</b><small class="mono">Zanshin</small></li>
+  </ol>
+  <div class="way-line" aria-hidden="true"><i id="wayFill"></i></div>
 </section>
 
-<!-- ============ THE WAY ============ -->
-<section class="section way" id="way">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow" data-reveal><span class="num">04</span> <span data-i18n="nav.way">Yoʻl</span></p>
-      <h2 class="h2" data-split data-i18n="way.h">Toʻrt harakat. Ortiqcha&nbsp;zarba&nbsp;yoʻq.</h2>
-    </div>
-    <ol class="steps">
-      <li class="step" data-reveal style="--d:0s">
-        <span class="step-k">構え</span>
-        <p class="step-r mono">01 · Kamae</p>
-        <h3 data-i18n="way.s1">Holat</h3>
-        <p data-i18n="way.s1p">Bir qator kod yozishdan oldin biznesingizni oʻrganamiz: maqsadlar, foydalanuvchilar, cheklovlar. Soʻng aniq ish hajmi, muddat va narxni olasiz.</p>
-      </li>
-      <li class="step" data-reveal style="--d:.1s">
-        <span class="step-k">型</span>
-        <p class="step-r mono">02 · Kata</p>
-        <h3 data-i18n="way.s2">Shakl</h3>
-        <p data-i18n="way.s2p">Foydalanuvchi yoʻllari, interfeys dizayni va bosib koʻriladigan prototip. Mahsulotni qurilishidan oldin qoʻlingiz bilan sinab koʻrasiz.</p>
-      </li>
-      <li class="step" data-reveal style="--d:.2s">
-        <span class="step-k">斬</span>
-        <p class="step-r mono">03 · Kiri</p>
-        <h3 data-i18n="way.s3">Zarba</h3>
-        <p data-i18n="way.s3p">Qisqa sprintlar va har hafta ishlaydigan versiya. Sizga tegishli toza kod. Hech qanday yashirin narsa yoʻq.</p>
-      </li>
-      <li class="step" data-reveal style="--d:.3s">
-        <span class="step-k">残心</span>
-        <p class="step-r mono">04 · Zanshin</p>
-        <h3 data-i18n="way.s4">Hushyorlik</h3>
-        <p data-i18n="way.s4p">Ishga tushirish — oxiri emas. Monitoring, qoʻllab-quvvatlash, analitika va yangi funksiyalar: zarbadan keyin ham hushyor turamiz.</p>
-      </li>
-    </ol>
+<!-- 七 CONTACT -->
+<section class="poster p-contact" id="contact" data-num="七" aria-labelledby="ctTitle">
+  <p class="tag mono"><span>七 / 七</span> <span data-i18n="nav.contact">Aloqa</span></p>
+  <h2 id="ctTitle" class="big rv" data-i18n="ct.h">Loyihangiz bormi?</h2>
+  <div class="ct-links">
+    <a class="ct rv" data-link="phone" href="#"><small class="mono" data-i18n="ct.call">Qoʻngʻiroq</small><b data-value="phone"></b></a>
+    <a class="ct rv" data-link="email" href="#"><small class="mono" data-i18n="ct.mail">Yozing</small><b data-value="email"></b></a>
   </div>
-</section>
-
-<!-- ============ MANIFESTO ============ -->
-<section class="manifesto" aria-label="Manifest" data-i18n-label="man.label">
-  <div class="container">
-    <p class="manifesto-t" id="manifesto" data-i18n="man.t">Har bir kod qatori — bu zarba. Samuray hech qachon pala-partish zarba bermaydi. Biz ham.</p>
-  </div>
-</section>
-
-<!-- ============ CONTACT ============ -->
-<section class="section contact" id="contact">
-  <div class="contact-sun" aria-hidden="true"></div>
-  <div class="container contact-grid">
-    <div class="contact-copy">
-      <p class="eyebrow" data-reveal><span class="num">05</span> <span data-i18n="nav.contact">Aloqa</span></p>
-      <h2 class="h2 h2-xl" data-split data-i18n="ct2.h">Bizga <em>imkonsizni</em> olib keling.</h2>
-      <p class="lead" data-reveal data-i18n="ct2.lead">Nima qurmoqchi ekaningizni ayting. Biz uni qanday kesishimizni aytamiz: texnologiyalar, muddat va halol narx.</p>
-      <div class="contact-links" data-reveal>
-        <a class="clink magnetic" data-link="phone" href="#" data-cursor="Call"><svg class="i"><use href="#i-phone"/></svg><span><small data-i18n="ct2.call">Qoʻngʻiroq qilish</small><b data-value="phone"></b></span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
-        <a class="clink magnetic" data-link="email" href="#" data-cursor="Write"><svg class="i"><use href="#i-mail"/></svg><span><small data-i18n="ct2.email">Elektron pochta</small><b data-value="email"></b></span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
-        <a class="clink magnetic" data-link="telegram" href="#" target="_blank" rel="noopener" data-cursor="Open"><svg class="i"><use href="#i-send"/></svg><span><small>Telegram</small><b data-value="telegram"></b></span><svg class="i i-sm"><use href="#i-arrow-ur"/></svg></a>
-      </div>
-    </div>
-
-    <form class="form" id="contactForm" novalidate data-reveal>
-      <fieldset class="form-chips">
-        <legend data-i18n="f.legend">Nima yasaymiz?</legend>
-        <label><input type="checkbox" name="type" value="Mobile app"><span data-i18n="f.mob">Mobil ilova</span></label>
-        <label><input type="checkbox" name="type" value="Website"><span data-i18n="f.web">Veb-sayt</span></label>
-        <label><input type="checkbox" name="type" value="Café / restaurant app"><span data-i18n="f.cafe">Kafe ilovasi</span></label>
-        <label><input type="checkbox" name="type" value="Enterprise system"><span data-i18n="f.ent">Korporativ tizim</span></label>
-        <label><input type="checkbox" name="type" value="IoT / hardware"><span data-i18n="f.iot">IoT / uskunalar</span></label>
-        <label><input type="checkbox" name="type" value="Telegram bot"><span>Telegram bot</span></label>
-        <label><input type="checkbox" name="type" value="Something wild"><span data-i18n="f.wild">Gʻaroyib gʻoya</span></label>
-      </fieldset>
-      <div class="form-row">
-        <label class="field"><span data-i18n="f.name">Ismingiz</span><input name="name" type="text" autocomplete="name" required placeholder="Aziz Karimov"></label>
-        <label class="field"><span data-i18n="f.contact">Telefon yoki Telegram</span><input name="contact" type="text" autocomplete="tel" required placeholder="+998 90 123 45 67"></label>
-      </div>
-      <label class="field"><span data-i18n="f.budget">Byudjet</span>
-        <select name="budget">
-          <option value="Not sure yet" data-i18n="f.b0">Hali bilmayman</option>
-          <option value="Under $3k" data-i18n="f.b1">$3k dan kam</option>
-          <option value="$3k–10k">$3k–10k</option>
-          <option value="$10k–30k">$10k–30k</option>
-          <option value="$30k+">$30k+</option>
-        </select>
-      </label>
-      <label class="field"><span data-i18n="f.msg">Loyiha haqida aytib bering</span><textarea name="message" rows="4" placeholder="Bizga shunday ilova kerakki…" data-i18n-ph="f.msgPh"></textarea></label>
-      <button type="submit" class="btn btn-red btn-block magnetic" data-cursor="Send"><span data-i18n="f.send">Dojoga yuborish</span> <svg class="i"><use href="#i-arrow"/></svg></button>
-      <p class="form-err" role="alert"></p>
-      <div class="form-done" aria-live="polite">
-        <div class="seal">剣</div>
-        <p class="form-done-t" data-i18n="f.doneT">Xabar muhrlandi.</p>
-        <p class="form-done-s" data-i18n="f.doneS">Xabaringiz tayyor. Pochta ilovangiz ochilgan boʻlsa, “Yuborish”ni bosing. Tez orada bogʻlanamiz.</p>
-        <button type="button" class="form-back" data-i18n="f.back">Formaga qaytish</button>
-      </div>
-    </form>
-  </div>
+  <div class="set-sun" aria-hidden="true"></div>
 </section>
 
 </main>
 
-<!-- ============ FOOTER ============ -->
 <footer class="footer">
-  <div class="container">
-    <div class="footer-cols">
-      <div>
-        <p class="f-k" data-i18n="ft.nav">Boʻlimlar</p>
-        <a href="#work" data-i18n="nav.work">Loyihalar</a><a href="#dojo">Dojo</a><a href="#arsenal">Arsenal</a><a href="#way" data-i18n="nav.way">Yoʻl</a>
-      </div>
-      <div>
-        <p class="f-k" data-i18n="ft.battles">Janglar</p>
-        <a href="#case-tikoncha">Tikoncha</a><a href="#case-clubtime">ClubTime</a>
-      </div>
-      <div>
-        <p class="f-k" data-i18n="nav.contact">Aloqa</p>
-        <a href="#contact" data-i18n="cta.start">Loyiha boshlash</a>
-        <a href="#" data-link="phone" data-value="phone"></a><a href="#" data-link="email" data-value="email"></a><a href="#" data-link="telegram" target="_blank" rel="noopener">Telegram</a><a href="#" data-link="instagram" target="_blank" rel="noopener">Instagram</a>
-      </div>
-      <div class="f-motto">
-        <p class="f-k">剣の道</p>
-        <p data-i18n="ft.motto">Qilich yoʻli.<br>Kodda intizom. Ishda sharaf.</p>
-      </div>
-    </div>
-  </div>
-  <div class="footer-word" aria-hidden="true"><span>QILICH</span></div>
-  <div class="container footer-bottom">
-    <p>© <span id="year">2026</span> <span data-i18n="ft.copy">Qilich · IT yechimlar. Oʻzbekistonda yaratilgan.</span></p>
-    <p class="muted" data-i18n="ft.disc">Konsept demolar namoyish uchun va koʻrsatilgan brendlar bilan bogʻliq emas.</p>
-    <a href="#top" class="to-top" data-cursor="Up"><span data-i18n="ft.top">Yuqoriga</span> <svg class="i"><use href="#i-arrow-ur"/></svg></a>
+  <div class="footer-word" id="footerWord" aria-hidden="true">QILICH</div>
+  <div class="footer-row mono">
+    <span>© 2026 Qilich</span>
+    <span data-i18n="hero.slogan">Yapon IT agenstvasi endi Oʻzbekistonda!</span>
+    <a href="#top" data-i18n="ft.top">Yuqoriga ↑</a>
   </div>
 </footer>
 
-<div class="grain" aria-hidden="true"></div>
-
-<!-- ============ CONFIG: edit your contacts here ============ -->
 <script>
+  /* ===== Contacts: one place to change them ===== */
   window.QILICH_CONFIG = {
-    telegram: "",       // e.g. "qilich_agency" (username without @)
     email: "inbox@qilich.com",
-    phone: "+998972707007",
-    instagram: "",      // e.g. "qilich.agency"
-    formEndpoint: ""    // optional: a Formspree / Getform / your own API URL. Leave empty to use email.
+    phone: "+998972707007"
   };
 </script>
-<script src="assets/js/i18n.js" defer></script>
-<script src="assets/js/main.js" defer></script>
-<script src="assets/js/hero.js" defer></script>
-<script src="assets/js/demos.js" defer></script>
+<script src="assets/js/i18n.js?v=2"></script>
+<script src="assets/js/main.js?v=2" defer></script>
+<script src="assets/js/hero.js?v=2" defer></script>
+<script src="assets/js/posters.js?v=2" defer></script>
 </body>
 </html>
