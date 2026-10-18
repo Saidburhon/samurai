@@ -22,6 +22,9 @@
 
   /* ================================================================ FIELDS */
   // m: the dot's offset from the cursor and how strongly it is touched (0..1); returns [dx, dy, grow, lit]
+  // how hard the dots answer: kept low so the fields stay in the background
+  const MOVE = .5, GROW = .45, LIT = .5, HI_ALPHA = .55;
+
   const MODES = {
     // the blade parts the dots sideways as it passes
     cut(dx, dy, a, f) {
@@ -49,13 +52,13 @@
     // a crosshair along the grid's row and column
     cross(dx, dy, a, f, d, S) {
       const row = Math.abs(dy) < S * .5, col = Math.abs(dx) < S * .5;
-      const reach = smooth(1 - d / (f.R * 2.2));
+      const reach = smooth(1 - d / (f.R * 1.4));
       const on = (row || col) ? reach : 0;
       return [0, 0, on * 1.8 + a * .5, Math.max(on, a * .35)];
     },
     // ripples travelling east to west, Tokyo to Tashkent
     wave(dx, dy, a, f, d) {
-      const w = Math.sin(d * .07 - f.t * .006);
+      const w = Math.sin(d * .07 - f.t * .004);
       const k = a * w * 5 / (d || 1);
       return [dx * k, dy * k, a * (1 + w), a * (.5 + .5 * w)];
     },
@@ -105,7 +108,7 @@
       const c = getComputedStyle(host);
       colRest = c.getPropertyValue('--dot').trim() || 'rgba(255,255,255,.07)';
       colHi = c.getPropertyValue('--dot-hi').trim() || '#ff3a24';
-      f.R = Math.max(110, Math.min(190, W * .12));
+      f.R = Math.max(90, Math.min(150, W * .1));
       // the resting grid is drawn once and copied every frame
       rest = document.createElement('canvas');
       rest.width = canvas.width; rest.height = canvas.height;
@@ -150,16 +153,17 @@
         // click rings push the dots outwards as they pass
         for (const b of bursts) {
           const bx = x - b.x, by = y - b.y, bd = Math.hypot(bx, by) || 1;
-          const w = Math.exp(-((bd - b.r) ** 2) / 900) * b.life;
-          mx += bx / bd * w * 10; my += by / bd * w * 10; grow += w * 1.6; lit = Math.max(lit, w);
+          const w = Math.exp(-((bd - b.r) ** 2) / 700) * b.life * .7;
+          mx += bx / bd * w * 6; my += by / bd * w * 6; grow += w * 1.4; lit = Math.max(lit, w);
         }
-        const r = 1 + grow;
-        const p = lit > .25 ? hi : dim;
+        const r = 1 + grow * GROW;
+        mx *= MOVE; my *= MOVE;
+        const p = lit > LIT ? hi : dim;
         p.moveTo(x + mx + r, y + my);
         p.arc(x + mx, y + my, r, 0, 6.2832);
       }
       ctx.fillStyle = colRest; ctx.fill(dim);
-      ctx.fillStyle = colHi; ctx.fill(hi);
+      ctx.fillStyle = colHi; ctx.globalAlpha = HI_ALPHA; ctx.fill(hi); ctx.globalAlpha = 1;
     }
 
     function loop(now) {
@@ -172,14 +176,14 @@
       const k = ease(.24, dt);
       f.x += (f.tx - f.x) * k; f.y += (f.ty - f.y) * k;
       const want = inside && pointing ? 1 : 0;
-      f.amt += (want - f.amt) * ease(want > f.amt ? .14 : .07, dt);
+      f.amt += (want - f.amt) * ease(want > f.amt ? .09 : .06, dt);
       // the cursor's direction and speed, smoothed
       const vx = (f.x - px) / dt, vy = (f.y - py) / dt, sp = Math.hypot(vx, vy);
       f.speed += (sp - f.speed) * ease(.2, dt);
       if (sp > .02) { const kk = ease(.3, dt); f.ux += (vx / sp - f.ux) * kk; f.uy += (vy / sp - f.uy) * kk; const n = Math.hypot(f.ux, f.uy) || 1; f.ux /= n; f.uy /= n; }
       for (let i = bursts.length - 1; i >= 0; i--) {
         const b = bursts[i];
-        b.r += dt * .9; b.life -= dt / 900;
+        b.r += dt * .8; b.life -= dt / 750;
         if (b.life <= 0) bursts.splice(i, 1);
       }
       draw(false);
