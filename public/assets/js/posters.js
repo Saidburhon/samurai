@@ -42,7 +42,7 @@
     const DAY = [[0, 7, 'sleep'], [7, 8, 'free'], [8, 14, 'school'], [14, 19, 'limit'], [19, 21, 'free'], [21, 24, 'sleep']];
     const IMG = { sleep: 'sleep', school: 'shield', limit: 'timer', free: 'wave' };
     const NOTE = { sleep: 0, school: 2, limit: 3, free: 5 };
-    [...Object.values(IMG), 'curled'].forEach(n => { new Image().src = `assets/img/hoglt/${n}.webp`; });
+    [...Object.values(IMG), 'curled'].forEach(n => { new Image().src = `/assets/img/hoglt/${n}.webp`; });
 
     const C = 200, R = 168;
     const pt = (h, r) => {
@@ -105,7 +105,7 @@
       if (s === shown && !force) return;
       const changed = s !== shown;
       shown = s;
-      if (!curled) img.src = `assets/img/hoglt/${IMG[s]}.webp`;
+      if (!curled) img.src = `/assets/img/hoglt/${IMG[s]}.webp`;
       if (changed && !force) { restart(hog, 'pop'); buzz(e, 6); }
       stateEl.textContent = textOf(s, 'b');
       subEl.textContent = textOf(s, 'small');
@@ -218,13 +218,13 @@
       e.stopPropagation();
       if (curled) { restart(hog, 'shake'); play(e, 'thunk', { rate: 1.3, gain: .6 }); return; }
       curled = true;
-      img.src = 'assets/img/hoglt/curled.webp';
+      img.src = '/assets/img/hoglt/curled.webp';
       restart(hog, 'curl');
       play(e, 'thunk', { gain: .9 });
       buzz(e, 14);
       setTimeout(() => {
         curled = false;
-        img.src = `assets/img/hoglt/${IMG[shown]}.webp`;
+        img.src = `/assets/img/hoglt/${IMG[shown]}.webp`;
         restart(hog, 'pop');
       }, 3200);
     });

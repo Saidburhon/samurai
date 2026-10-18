@@ -78,9 +78,9 @@ ul, ol { padding: 0; list-style: none; }
 .nav-count { display: none; font-size: 12px; color: var(--muted); letter-spacing: .1em; }
 .nav-count b { font-family: var(--f-jp); font-weight: 800; color: var(--shu); font-size: 14px; }
 .lang { display: flex; gap: 2px; font-family: var(--f-mono); font-size: 12px; }
-.lang button { padding: 6px 7px; border-radius: 6px; color: var(--muted); transition: color .2s; }
-.lang button:hover { color: var(--text); }
-.lang button[aria-pressed="true"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--shu); border-radius: 0; }
+.lang a { padding: 6px 7px; border-radius: 6px; color: var(--muted); transition: color .2s; }
+.lang a:hover { color: var(--text); }
+.lang a[aria-current="page"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--shu); border-radius: 0; }
 
 /* ---------- poster ---------- */
 .poster {
@@ -471,7 +471,7 @@ html:not(.js) .way-line i { width: 100%; }
   .set-sun { width: 110vw; right: -40vw; bottom: -60vw; }
 }
 @media (max-width: 380px) {
-  .lang button { padding: 6px 4px; }
+  .lang a { padding: 6px 4px; }
   .nav-count { display: none; }
   .snd { margin-left: auto; }
 }

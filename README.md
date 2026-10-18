@@ -31,16 +31,23 @@ Effects that follow the cursor only run with a mouse; on phones a tap sends a ri
 
 The Hoglt logo and hedgehog images in `public/assets/img/hoglt/` come from hoglt.com.
 
-## Languages: Uzbek first, Russian and English on the switch
+## Languages: three real pages
 
-- **Uzbek is the default** and is written directly in `public/index.html`, so search engines and visitors without JavaScript get Uzbek.
-- **Russian and English** live in `public/assets/js/i18n.js` (the `RU` and `EN` dictionaries), keyed by the `data-i18n` attribute on each element.
-  `data-i18n-ph` covers placeholders and `data-i18n-label` covers `aria-label`.
-- The **UZ | RU | EN switcher** in the nav remembers the visitor's choice. Share `https://qilich.com/?lang=ru` or `?lang=en` to open a version directly.
-- Text the posters draw themselves (the PoolTimer prices and Telegram report) lives in `posters.js` as `L('uzbek', 'english', 'russian')` calls.
-- Archivo has no Cyrillic, so Russian text falls back to Montserrat. Browsers download it only when Cyrillic is on screen.
+Each language is its own page, so Google and Yandex index all three:
 
-To change a sentence, edit the Uzbek in `index.html` and the Russian and English under the same key in `i18n.js`. If an entry is missing, the page keeps the Uzbek and logs a warning in the browser console.
+| URL | Language | Source |
+|---|---|---|
+| `/` | Uzbek | `public/index.html`, edited by hand |
+| `/ru/` | Russian | generated |
+| `/en/` | English | generated |
+
+- Russian and English text lives in `scripts/i18n.mjs`, keyed by the `data-i18n` attribute on each element (`data-i18n-label` covers `aria-label`).
+- Page titles, descriptions, share images and the structured data (Organization, ProfessionalService, WebSite) per language are in `scripts/build-langs.mjs`.
+- **After changing any text, run `npm run build`.** It rewrites `public/ru/index.html`, `public/en/index.html`, the head of `public/index.html` and `public/sitemap.xml`; commit the result. It stops with an error if a translation is missing.
+- The UZ | RU | EN links remember the visitor's choice; old `?lang=ru` links still work.
+- Text the scripts write themselves (prices, the Telegram report, toasts) uses `L('uzbek', 'english', 'russian')` in `posters.js` and `main.js`.
+- Archivo has no Cyrillic, so Russian falls back to Montserrat.
+- Share images (`assets/img/og-*.png`) are 1200×630, one per language.
 
 ## Run it locally
 
@@ -113,7 +120,10 @@ public/index.html             page markup + contact config
 public/404.html               not-found page
 public/_headers               security and cache headers
 public/assets/css/style.css   all styles (tokens at the top)
-public/assets/js/i18n.js      language switcher + Russian and English text
+public/assets/js/i18n.js      remembers the chosen language
+public/ru/, public/en/        generated Russian and English pages
+scripts/i18n.mjs              Russian and English text
+scripts/build-langs.mjs       builds /ru/, /en/, head tags, structured data, sitemap
 public/assets/js/main.js      intro cut, nav, katana scroll bar, reveals, clocks, the Way line, contacts, footer
 public/assets/js/hero.js      blade trail, sparks, the sun you can cut, the sun splitting on scroll
 public/assets/js/posters.js   Hoglt dial and hedgehog, PoolTimer hall, matrix picks, day strips, stamps
