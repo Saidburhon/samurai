@@ -115,7 +115,9 @@
 
     function closeShield() {
       clearTimeout(askTimer);
+      pending = null;
       shield.classList.remove('is-open');
+      shield.inert = true;
       ask.classList.remove('is-wait');
       ask.textContent = 'Ask parent to unlock';
     }
@@ -137,11 +139,12 @@
       }
       pending = a;
       shieldApp.textContent = name;
+      shield.inert = false;
       shield.classList.add('is-open');
     }
 
     function askParent() {
-      if (!pending) return;
+      if (!pending || ask.classList.contains('is-wait')) return;
       ask.classList.add('is-wait');
       ask.textContent = 'Waiting for parent…';
       const a = pending;
@@ -197,6 +200,8 @@
       { name: 'Tennis 2', kind: 'tennis', rate: 40000 }
     ];
     let sel = tables[0];
+    let ordersKey = '';
+    let visible = false;
 
     const minutes = t => (t.start != null ? clock - t.start : 0);
     const hhmm = m => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
@@ -230,14 +235,18 @@
       ui.state.classList.toggle('is-on', on);
       ui.timer.textContent = hhmm(minutes(sel));
       ui.cost.textContent = som(total(sel));
-      ui.orders.innerHTML = '';
-      sel.orders.forEach(o => {
-        const li = document.createElement('li');
-        li.innerHTML = '<span></span><span></span>';
-        li.children[0].textContent = o.n;
-        li.children[1].textContent = som(o.p);
-        ui.orders.appendChild(li);
-      });
+      const key = `${sel.name}|${sel.start}|${sel.orders.length}`;
+      if (key !== ordersKey) {
+        ordersKey = key;
+        ui.orders.innerHTML = '';
+        sel.orders.forEach(o => {
+          const li = document.createElement('li');
+          li.innerHTML = '<span></span><span></span>';
+          li.children[0].textContent = o.n;
+          li.children[1].textContent = som(o.p);
+          ui.orders.appendChild(li);
+        });
+      }
       ui.items.forEach(b => { b.disabled = !on; });
       ui.go.textContent = on ? 'STOP' : 'START';
       ui.go.classList.toggle('is-stop', on);
@@ -285,7 +294,7 @@
       }
       return `<svg viewBox="0 0 21 21" fill="#121212" shape-rendering="crispEdges">${finder(0, 0)}${finder(14, 0)}${finder(0, 14)}${cells}</svg>`;
     }
-    let rcTimer;
+    let rcTimer, rcOutTimer;
     function printReceipt(t, m, tc, ords, sum) {
       const d = new Date();
       const date = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
@@ -300,15 +309,18 @@
         <hr>
         <div class="rc-r rc-t"><span>TOTAL</span><span>${som(sum)}</span></div>
         <div class="rc-qr">${qr(m * 31 + sum % 997)}<span>Scan to follow<br>@your_club</span></div>`;
+      clearTimeout(rcTimer);
+      clearTimeout(rcOutTimer);
       ui.receipt.classList.remove('is-on', 'is-out');
       void ui.paper.offsetWidth;
       ui.receipt.classList.add('is-on');
-      clearTimeout(rcTimer);
       rcTimer = setTimeout(hideReceipt, 7000);
     }
     function hideReceipt() {
+      clearTimeout(rcTimer);
+      clearTimeout(rcOutTimer);
       ui.receipt.classList.add('is-out');
-      setTimeout(() => ui.receipt.classList.remove('is-on', 'is-out'), 450);
+      rcOutTimer = setTimeout(() => ui.receipt.classList.remove('is-on', 'is-out'), 450);
     }
     ui.receipt.addEventListener('click', hideReceipt);
 
@@ -322,7 +334,12 @@
       tgTimer = setTimeout(() => ui.tg.classList.remove('is-on'), 5200);
     }
 
-    setInterval(() => { if (!document.hidden) { clock++; paint(); } }, 1000);
+    setInterval(() => { clock++; if (visible && !document.hidden) paint(); }, 1000);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) paint(); }).observe(root);
+    } else {
+      visible = true;
+    }
     paint();
 
     const t1 = tables[0];
@@ -429,6 +446,8 @@
       steps[steps.length - 1].querySelector('span').textContent = 'Courier · 12 min';
       build.classList.remove('is-on');
       track.classList.add('is-on');
+      build.inert = true;
+      track.inert = false;
       timers.forEach(clearTimeout);
       timers = [];
       steps.forEach((li, i) => {
@@ -448,8 +467,11 @@
       timers.forEach(clearTimeout);
       track.classList.remove('is-on');
       build.classList.add('is-on');
+      track.inert = true;
+      build.inert = false;
     });
 
+    track.inert = true;
     draw(true);
   }
 
@@ -503,7 +525,7 @@
       l1.style.fill = d.c[2];
       cup.style.transform = `scale(${SIZE[st.s][0]})`;
       const p = d.p + SIZE[st.s][1] + MILK[st.m][0];
-      q('.bn-price').textContent = st.free ? "Free · 8th cup" : `${som(p)} so'm`;
+      q('.bn-price').textContent = st.free ? 'Free cup' : `${som(p)} so'm`;
     }
 
     seg(q('.bn-drinks'), b => { st.d = b.dataset.d; draw(true); });
@@ -746,6 +768,10 @@ func enableQalqon(_ pick: FamilyActivitySelection) {
     if (reduce) { pre.dataset.file = SNIPPETS[0].file; code.innerHTML = hl(SNIPPETS[0].src); return; }
 
     let si = 0;
+    let visible = !('IntersectionObserver' in window);
+    let parked = null;
+    // timers only fire while the card is on screen; otherwise the next step waits
+    const later = (fn, ms) => setTimeout(() => { if (visible) fn(); else parked = fn; }, ms);
     const run = () => {
       const { file, src } = SNIPPETS[si];
       pre.dataset.file = file;
@@ -753,14 +779,19 @@ func enableQalqon(_ pick: FamilyActivitySelection) {
       const step = () => {
         i = Math.min(src.length, i + (src[i] === ' ' ? 2 : 1));
         code.innerHTML = hl(src.slice(0, i));
-        if (i < src.length) setTimeout(step, src[i - 1] === '\n' ? 130 : 14 + Math.random() * 22);
-        else setTimeout(() => { si = (si + 1) % SNIPPETS.length; run(); }, 3400);
+        if (i < src.length) later(step, src[i - 1] === '\n' ? 130 : 14 + Math.random() * 22);
+        else later(() => { si = (si + 1) % SNIPPETS.length; run(); }, 3400);
       };
       step();
     };
-    if (!('IntersectionObserver' in window)) { run(); return; }
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); run(); } }, { threshold: .3 });
-    io.observe(pre);
+    if (visible) { run(); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (!visible) return;
+      if (!started) { started = true; run(); }
+      else if (parked) { const fn = parked; parked = null; fn(); }
+    }, { threshold: .3 }).observe(pre);
   }
 
   document.addEventListener('DOMContentLoaded', () => {

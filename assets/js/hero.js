@@ -77,7 +77,12 @@
       if (d2 < 3600 && d2 > 1) { const d = Math.sqrt(d2); p.x += ex / d * 6; p.y += ey / d * 6; }
     }
   }, { passive: true });
-  hero.addEventListener('pointerleave', () => { trail.length = 0; });
+  // a new touch must not draw a line from where the previous one ended
+  const resetTrail = () => { trail.length = 0; };
+  hero.addEventListener('pointerleave', resetTrail);
+  hero.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') resetTrail(); });
+  hero.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') resetTrail(); });
+  hero.addEventListener('pointercancel', resetTrail);
 
   /* ---- loop ---- */
   let visible = true, raf = 0;
@@ -86,9 +91,11 @@
     if (!visible) return;
     const now = performance.now();
 
-    px += (tx - px) * .06; py += (ty - py) * .06;
-    hero.style.setProperty('--px', px.toFixed(3));
-    hero.style.setProperty('--py', py.toFixed(3));
+    if (Math.abs(tx - px) + Math.abs(ty - py) > .001) {
+      px += (tx - px) * .06; py += (ty - py) * .06;
+      hero.style.setProperty('--px', px.toFixed(3));
+      hero.style.setProperty('--py', py.toFixed(3));
+    }
 
     ctx.clearRect(0, 0, W, H);
 

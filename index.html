@@ -15,10 +15,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" />
   <!-- Japanese glyphs: only the characters used on the page are downloaded -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E4%BE%8D%E6%96%AC%E6%A7%8B%E3%81%88%E5%9E%8B%E6%AE%8B%E5%BF%83%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E4%B8%8B%E9%81%93%E5%88%80" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&display=swap&text=%E4%BE%8D%E3%81%AE%E6%96%AC%E6%A7%8B%E3%81%88%E5%9E%8B%E6%AE%8B%E5%BF%83%E6%8A%80%E8%A1%93%E8%A6%8F%E5%BE%8B%E5%90%8D%E8%AA%89%E4%B8%8B%E9%81%93%E5%88%80" />
 
   <link rel="stylesheet" href="assets/css/style.css" />
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    document.documentElement.classList.add('js');
+    // failsafe: if the scripts never run, drop the intro and show the page as-is
+    setTimeout(function () {
+      var d = document.documentElement;
+      if (!d.classList.contains('is-ready')) d.classList.remove('js', 'is-loading');
+    }, 7000);
+  </script>
 </head>
 <body>
 
@@ -71,7 +78,15 @@
       <div class="pl-meta pl-meta-r">IT Solutions — Uzbekistan</div>
     </div>
   </div>
-  <!-- .pl-b is cloned from .pl-a by main.js -->
+  <div class="pl-half pl-b">
+    <div class="pl-inner">
+      <div class="pl-sun"></div>
+      <div class="pl-kanji">侍</div>
+      <div class="pl-word">SAMURAI</div>
+      <div class="pl-meta pl-meta-l"><span class="pl-label">Sharpening the blade</span> <span class="pl-count">000</span></div>
+      <div class="pl-meta pl-meta-r">IT Solutions — Uzbekistan</div>
+    </div>
+  </div>
   <div class="pl-slash"></div>
 </div>
 
@@ -151,7 +166,7 @@
       <a href="#contact" class="btn btn-red magnetic" data-cursor="Hi">Start a project <svg class="i"><use href="#i-arrow"/></svg></a>
       <a href="#dojo" class="btn btn-ghost magnetic" data-cursor="Play">Play with the demos <svg class="i"><use href="#i-arrow-down"/></svg></a>
     </div>
-    <p class="hero-hint reveal-hero" style="--d:.85s"><span class="hint-mouse">Move your cursor to draw the blade</span><span class="hint-touch">Swipe across the screen to slash</span></p>
+    <p class="hero-hint reveal-hero" style="--d:.85s"><span class="hint-mouse">Move your cursor to draw the blade</span><span class="hint-touch">Swipe sideways to slash</span></p>
   </div>
 
   <div class="container hero-foot">
@@ -433,7 +448,7 @@
           <p>Morning rush means queues. Order on the way, pay in the app, and walk in to a cup with your name on it. Every cup fills the loyalty card, and the card brings people back.</p>
           <ul class="checks">
             <li><svg class="i"><use href="#i-check"/></svg>Pre-order with a live pickup ETA per branch</li>
-            <li><svg class="i"><use href="#i-check"/></svg>Digital stamp card, so the 8th cup is on the house</li>
+            <li><svg class="i"><use href="#i-check"/></svg>Digital stamp card: 8 stamps earn a free cup</li>
             <li><svg class="i"><use href="#i-check"/></svg>Payme, Click and card payments in one tap</li>
             <li><svg class="i"><use href="#i-check"/></svg>Barista queue screen and peak-hour analytics</li>
           </ul>
@@ -706,6 +721,7 @@
         <div class="seal">侍</div>
         <p class="form-done-t">Message sealed.</p>
         <p class="form-done-s">Your message is ready. If your mail app opened, just press send. We'll be in touch.</p>
+        <button type="button" class="form-back">Back to the form</button>
       </div>
     </form>
   </div>

@@ -26,19 +26,14 @@
     doc.classList.add('is-ready');
     readyCbs.forEach(fn => fn());
   }
-  window.SAMURAI = { onReady };
 
   /* ------------------------------------------------------------ preloader */
   function preloader() {
     const pl = $('#preloader');
-    if (!pl || reduce) { if (pl) pl.classList.add('is-done'); ready(); return; }
+    // no .js class means the inline failsafe already gave up on the intro
+    if (!pl || reduce || !doc.classList.contains('js')) { if (pl) pl.classList.add('is-done'); ready(); return; }
 
     doc.classList.add('is-loading');
-    const a = $('.pl-a', pl);
-    const b = a.cloneNode(true);
-    b.classList.replace('pl-a', 'pl-b');
-    pl.insertBefore(b, $('.pl-slash', pl));
-    pl.classList.add('is-go');
 
     const geo = () => {
       const W = innerWidth, H = innerHeight;
@@ -84,21 +79,22 @@
     const c = $('.cursor'), dot = $('.cursor-dot'), ring = $('.cursor-ring'), label = $('.cursor-label');
     if (!c) return;
     doc.classList.add('has-cursor');
-    let x = -100, y = -100, rx = -100, ry = -100;
-    addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse') return;
-      x = e.clientX; y = e.clientY;
-      if (!c.classList.contains('is-on')) { rx = x; ry = y; c.classList.add('is-on'); }
-    }, { passive: true });
-    document.addEventListener('mouseleave', () => c.classList.remove('is-on'));
+    let x = -100, y = -100, rx = -100, ry = -100, raf = 0;
+    // the ring eases toward the pointer; the loop sleeps once it has caught up
     const loop = () => {
       rx += (x - rx) * (reduce ? 1 : .2);
       ry += (y - ry) * (reduce ? 1 : .2);
       dot.style.transform = `translate3d(${x}px,${y}px,0)`;
       ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
-      requestAnimationFrame(loop);
+      raf = Math.abs(x - rx) + Math.abs(y - ry) > .2 ? requestAnimationFrame(loop) : 0;
     };
-    requestAnimationFrame(loop);
+    addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      x = e.clientX; y = e.clientY;
+      if (!c.classList.contains('is-on')) { rx = x; ry = y; c.classList.add('is-on'); }
+      if (!raf) raf = requestAnimationFrame(loop);
+    }, { passive: true });
+    document.addEventListener('mouseleave', () => c.classList.remove('is-on'));
 
     document.addEventListener('pointerover', e => {
       const t = e.target.closest('input, textarea, select, a, button, label, [data-cursor]');
@@ -131,6 +127,10 @@
     burger.addEventListener('click', () => setMenu(!open));
     $$('a', menu).forEach(a => a.addEventListener('click', () => setMenu(false)));
     addEventListener('keydown', e => { if (e.key === 'Escape' && open) setMenu(false); });
+    // the burger disappears above 900px, so a menu left open there would trap the page
+    const wide = matchMedia('(min-width: 901px)');
+    const onWide = () => { if (wide.matches && open) setMenu(false); };
+    if (wide.addEventListener) wide.addEventListener('change', onWide); else wide.addListener(onWide);
 
     let lastY = scrollY;
     scrollFns.push(y => {
@@ -335,7 +335,6 @@
       });
       if (focus) t.focus();
       t.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
-      document.dispatchEvent(new CustomEvent('dojo:show', { detail: t.getAttribute('aria-controls') }));
     };
     tabsEls.forEach(t => t.addEventListener('click', () => select(t)));
     list.addEventListener('keydown', e => {
@@ -368,6 +367,11 @@
     if (!form) return;
     const err = $('.form-err', form);
     const doneS = $('.form-done-s', form);
+    const back = $('.form-back', form);
+    back.addEventListener('click', () => {
+      form.classList.remove('is-done');
+      form.elements.message.focus();
+    });
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const fd = new FormData(form);
@@ -401,13 +405,19 @@
           if (!r.ok) throw new Error('HTTP ' + r.status);
           doneS.textContent = "We've got it. Expect a reply from a real human soon.";
         } else if (clean(CONFIG.email)) {
-          location.href = `mailto:${clean(CONFIG.email)}?subject=${encodeURIComponent('New project: ' + name)}&body=${encodeURIComponent(body)}`;
-          doneS.textContent = 'Your mail app should open with everything filled in. Just press send.';
+          const email = clean(CONFIG.email);
+          location.href = `mailto:${email}?subject=${encodeURIComponent('New project: ' + name)}&body=${encodeURIComponent(body)}`;
+          // a mailto link silently does nothing without a mail app, so always show the address too
+          const a = document.createElement('a');
+          a.href = `mailto:${email}`;
+          a.textContent = email;
+          doneS.replaceChildren('Your mail app should open with everything filled in. Just press send. If nothing opened, write to us at ', a, '.');
         } else {
           console.warn('[Samurai] The contact form is not connected. Set SAMURAI_CONFIG.email or formEndpoint in index.html.');
           doneS.textContent = 'Demo mode: connect the form in SAMURAI_CONFIG (index.html) to receive messages.';
         }
         form.classList.add('is-done');
+        back.focus({ preventScroll: true });
       } catch (ex) {
         err.textContent = 'Something went wrong while sending. Please try again in a moment.';
       } finally {

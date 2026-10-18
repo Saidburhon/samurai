@@ -120,21 +120,18 @@ html:not(.js) .preloader { display: none; }
   width: min(46vmin, 420px); aspect-ratio: 1; border-radius: 50%;
   background: radial-gradient(circle at 38% 32%, #ff6a45, #ff3a24 55%, #a81c0c);
   box-shadow: 0 0 120px rgba(255, 58, 36, .35);
-  transform: scale(0);
+  transform: scale(0); animation: plSun 1.1s var(--ease) .1s forwards;
 }
-.is-go .pl-sun { animation: plSun 1.1s var(--ease) .1s forwards; }
 .pl-kanji {
   font-family: var(--f-jp); font-size: min(34vmin, 310px); line-height: 1; color: var(--ink);
-  clip-path: inset(0 0 100% 0);
+  clip-path: inset(0 0 100% 0); animation: plInk 1.3s var(--ease-io) .45s forwards;
   transform: translateY(-2%);
 }
-.is-go .pl-kanji { animation: plInk 1.3s var(--ease-io) .45s forwards; }
 .pl-word {
   align-self: end; margin-bottom: 14vh;
   font-weight: 800; font-stretch: 125%; letter-spacing: .6em; padding-left: .6em; font-size: 13px; color: var(--text);
-  opacity: 0;
+  opacity: 0; animation: plFade .8s ease .8s forwards;
 }
-.is-go .pl-word { animation: plFade .8s ease .8s forwards; }
 .pl-meta { position: absolute; bottom: 26px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .pl-meta-l { left: var(--gutter); }
 .pl-meta-r { right: var(--gutter); }
@@ -214,6 +211,8 @@ html:not(.js) .preloader { display: none; }
 .cursor.is-link .cursor-ring { width: 54px; height: 54px; margin: -27px 0 0 -27px; border-color: var(--shu); background: rgba(255,58,36,.08); }
 .cursor.is-native { opacity: 0; }
 html.has-cursor body, html.has-cursor a, html.has-cursor button, html.has-cursor label, html.has-cursor .app { cursor: none; }
+html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor: auto; }
+html.has-cursor input[type="range"], html.has-cursor select { cursor: pointer; }
 
 .katana {
   position: fixed; right: 20px; top: 104px; bottom: 30px; width: 18px; z-index: 50;
@@ -258,6 +257,7 @@ html.has-cursor body, html.has-cursor a, html.has-cursor button, html.has-cursor
   display: flex; flex-direction: column; justify-content: center;
   padding: calc(var(--nav-h) + 40px) 0 32px;
   --px: 0; --py: 0; --cut: 0;
+  touch-action: pan-y pinch-zoom; /* vertical swipes scroll, sideways swipes draw the blade */
 }
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: -3;
@@ -808,7 +808,8 @@ html.has-cursor body, html.has-cursor a, html.has-cursor button, html.has-cursor
 .ak-map .ak-pin { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #e30613; box-shadow: 0 0 0 3px rgba(227,6,19,.18); }
 .ak-pin.is-near { width: 14px; height: 14px; margin: -7px 0 0 -7px; animation: pinPulse 1.4s infinite; }
 @keyframes pinPulse { 0% { box-shadow: 0 0 0 0 rgba(227,6,19,.5); } 70% { box-shadow: 0 0 0 16px rgba(227,6,19,0); } 100% { box-shadow: 0 0 0 0 rgba(227,6,19,0); } }
-.ak-card { position: absolute; transform: translate(-50%, calc(-100% - 14px)); padding: 8px 11px; border-radius: 10px; background: #14171c; color: #fff; font-size: 11px; line-height: 1.35; white-space: nowrap; box-shadow: 0 10px 24px -8px rgba(0,0,0,.4); animation: panelIn .5s var(--ease); }
+.ak-card { position: absolute; transform: translate(-50%, calc(-100% - 14px)); padding: 8px 11px; border-radius: 10px; background: #14171c; color: #fff; font-size: 11px; line-height: 1.35; white-space: nowrap; box-shadow: 0 10px 24px -8px rgba(0,0,0,.4); animation: cardIn .5s var(--ease); }
+@keyframes cardIn { from { opacity: 0; transform: translate(-50%, calc(-100% - 2px)); } }
 .ak-card b { display: block; font-size: 12px; }
 .ak-card::after { content: ""; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; margin-left: -5px; background: inherit; transform: rotate(45deg); }
 
@@ -904,7 +905,7 @@ html.has-cursor body, html.has-cursor a, html.has-cursor button, html.has-cursor
 .manifesto-t .mw.on { color: var(--text); }
 .manifesto-t .mw.hl.on { color: var(--shu); font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
 .manifesto-t .mw.hl { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
-html:not(.js) .manifesto-t, .no-anim .manifesto-t .mw { color: var(--text); }
+html:not(.js) .manifesto-t .mw { color: var(--text); }
 
 /* ==========================================================================
    CONTACT
@@ -955,6 +956,9 @@ html:not(.js) .manifesto-t, .no-anim .manifesto-t .mw { color: var(--text); }
 @keyframes seal { 0% { opacity: 0; transform: scale(2.2) rotate(-24deg); } 55% { opacity: 1; transform: scale(.92) rotate(-6deg); } 100% { opacity: 1; transform: scale(1) rotate(-8deg); } }
 .form-done-t { font-size: 30px; font-weight: 800; font-stretch: 110%; letter-spacing: -.02em; }
 .form-done-s { color: var(--muted); max-width: 36ch; }
+.form-done-s a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.form-back { margin-top: 14px; padding: 11px 20px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 14px; font-weight: 600; color: var(--soft); transition: background .3s, color .3s; }
+.form-back:hover { background: rgba(255,255,255,.06); color: var(--text); }
 
 /* ==========================================================================
    FOOTER
@@ -1014,7 +1018,6 @@ html:not(.js) .manifesto-t, .no-anim .manifesto-t .mw { color: var(--text); }
   .hero-kanji { font-size: 52vw; transform: translate(calc(var(--px) * -6px), calc(var(--py) * -6px)); }
   .hero-inner { margin-top: min(64vw, 440px); }
   .hero-eyebrow { font-size: 11px; letter-spacing: .1em; margin-bottom: 20px; }
-  .hero-hint { display: none; }
   .hero-foot { grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 56px; }
   .dojo-tabs { display: flex; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--gutter) * -1) 14px; padding: 0 var(--gutter) 4px; scroll-snap-type: x mandatory; }
   .dojo-tabs::-webkit-scrollbar { display: none; }
