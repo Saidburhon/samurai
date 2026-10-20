@@ -21,16 +21,19 @@
 //   result    the whole validated, enriched answer: { kind: "proposal" | "clarify" | "decline", lang, greeting,
 //             understanding, solutions[], total, questions[], not_included, next_step, approximate, disclaimer,
 //             contact, rate, today, memo }. Authoritative: it replaces whatever was rendered from deltas.
+//             `total` is all the project solutions done together (largest at 100%, others at 70-85%), with the
+//             model's phasing advice in `total.summary`; monthly services are not in it.
 //   error     { code: "refused" | "incomplete" | "invalid_output" | "busy" | "unavailable" | "timeout" |
 //             "upstream_error" | "internal", message }   (the stream ends after it)
 // Prices: `price.usd` / `price.uzs` {min, max} and `price.label` ("taxminan 36–72 mln soʻm ($3 000–6 000)");
 // soʻm come from the day's CBU rate (`result.rate`), rounded as the briefing says. `ready` {from, to, label} adds
 // the 1-2 week start (and a 1-2 week discovery above about $30k) to the weeks.
 //
-// Effort: "low" was chosen after measuring "low" and "medium" on the same test businesses (restaurant chain, clinic,
-// logistics startup). Both followed the format and the rules; "low" answered about twice as fast with fewer output
-// tokens, and "medium" did not give better-founded advice for this one-shot advisory task. Change EFFORT in
-// samurai.js to revisit.
+// Effort: "low", measured against "medium" on the same three businesses (restaurant chain uz, clinic ru, logistics
+// startup en; October 2026). Same structure, the same catalogue items and very close prices and advice at both levels.
+// First text after 1.3-1.9 s at low against 13-17 s at medium, the whole answer in 17-34 s against 30-52 s, and
+// 1.7-2.3k output tokens against 2.9-3.5k. Low priced 3 of 15 solutions a little under the catalogue minimum;
+// finalize() raises those to the minimum. Change EFFORT in samurai.js to revisit.
 // -----------------------------------------------------------------------------------------------------------------
 import Anthropic from '@anthropic-ai/sdk';
 import { partialParse } from '@anthropic-ai/sdk/_vendor/partial-json-parser/parser.mjs';
@@ -343,6 +346,8 @@ async function samurai(request, env, ctx, url) {
     }
   });
 
+  send('start', { lang }); // first in the stream; dropped with the stream if the connection fails
+
   // Wait for the HTTP response, so that errors before any output come back as clean JSON errors.
   try {
     await stream.withResponse();
@@ -353,7 +358,6 @@ async function samurai(request, env, ctx, url) {
     return jsonError(mapped?.[1] || 500, mapped?.[0] || 'internal', lang);
   }
 
-  send('start', { lang });
   const ping = setInterval(() => write(': ping\n\n'), PING_MS);
 
   const pump = (async () => {

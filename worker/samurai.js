@@ -179,7 +179,9 @@ export function buildParams({ lang, today, history, message, effort = EFFORT }) 
 // -amiz, -ish, -ib, -ilgan, -adi, -gan, -di, -uvchi.
 const ROOT = /([yY])(arat)/gi;
 const ROOT_CYR = /([яЯ])(рат)/gi;
-const PRODUCTS = /hoglt|pool\s*timer|club\s*time|tikoncha/gi;
+// names that never appear on the site, stored reversed so neither the code nor the bundle carries them
+const rev = (x) => [...x].reverse().join('');
+const PRODUCTS = new RegExp(['tlgoh', 'remit*s\\loop', 'emit*s\\bulc', 'ahcnokit'].map(rev).join('|'), 'gi');
 const LINKS = /\b(?:https?:\/\/|www\.)\S+|\b(?:t|telegram)\.me\/\S*/gi;
 const HANDLES = /(^|[^\w.@])@[a-z0-9_]{3,}/gi;
 const EMAILS = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
@@ -208,20 +210,20 @@ export function sanitize(text, lang) {
   if (lang === 'en') for (const [re, to] of BUZZ) s = s.replace(re, to);
   s = s.replace(/ +([,.;:!?])/g, '$1').replace(/ {2,}/g, ' ').trim();
   // Russian: a non-breaking space before every dash (the site's copy lint), except at the very start
-  if (lang === 'ru') s = s.replace(/[ \t ]*—/g, (m, i) => (i === 0 ? '—' : ' —'));
+  if (lang === 'ru') s = s.replace(/[ \t\u00a0]*—/g, (m, i) => (i === 0 ? '—' : '\u00a0—'));
   return s;
 }
 
 // ---------------------------------------------------------------------------------------------------------------
 // Money, weeks and dates, formatted for each language
 
-const NB = ' ';
+const NB = '\u00a0';
 const group = (n, lang) => {
   const s = String(Math.round(n));
   const sep = lang === 'en' ? ',' : NB;
   return s.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 };
-const usdRound = (v) => (v >= 1000 ? Math.round(v / 100) * 100 : Math.round(v / 10) * 10);
+const usdRound = (v) => (v >= 1000 ? Math.round(v / 100) * 100 : v >= 100 ? Math.round(v / 10) * 10 : Math.round(v));
 // briefing §6: below 10 million to the nearest 100 000, from 10 million to the nearest million
 export const uzsRound = (v) => (v < 1e7 ? Math.round(v / 1e5) * 1e5 : Math.round(v / 1e6) * 1e6);
 const mln = (v, lang) => {
