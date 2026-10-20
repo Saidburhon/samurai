@@ -171,7 +171,10 @@ html.intro .cue { animation: tick .4s linear 8s both; }
   .h1 { top: 92px; bottom: auto; left: var(--m); max-width: min(330px, calc(100vw - 2 * var(--m))); font-size: var(--h1); line-height: 1.0; }
   .h1 .ln { display: inline; overflow: visible; }
   .h1 .ln > span { display: inline; }
-  html.intro .h1 .ln > span { animation-name: tick; }
+  /* the lines run inline here: one fade for the whole h1, not one per inline span (a composited inline span that
+     breaks across lines can keep a stale tile at its line end under software raster) */
+  html.intro .h1 .ln > span { animation: none; }
+  html.intro .h1 { animation: tick calc(.6s * var(--k)) linear calc(.1s * var(--k)) both; }
   .b-hero .sub { left: var(--m); top: auto; bottom: 40px; width: min(228px, calc(62.6vw - var(--m) - 30px)); min-width: 0; }
   .sub p { font-size: 15px; }
   .cta { margin-top: 18px; }
