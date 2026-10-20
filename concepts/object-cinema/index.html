@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qilich — Yapon IT agenstvasi endi Oʻzbekistonda!</title>
+<meta name="description" content="Ilovalar, saytlar, botlar va tizimlarni yapon standartlarida quramiz.">
+<link rel="preload" href="fonts/geologica-latin-200-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/martian-latin-300-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mincho-text-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-scene="hero">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="mon" viewBox="0 0 32 32">
+      <path fill-rule="evenodd" d="M16 3.6a12.4 12.4 0 1 1 0 24.8a12.4 12.4 0 1 1 0-24.8zM16 8.3a7.7 7.7 0 1 0 0 15.4a7.7 7.7 0 1 0 0-15.4z"/>
+      <path d="M16 11.2c.95 0 1.55.35 1.55.9c0 .9-.7 3.1-1.55 7.6c-.85-4.5-1.55-6.7-1.55-7.6c0-.55.6-.9 1.55-.9z"/>
+      <path d="M22.6 22.1l8.6 8.4c.25.26-.05.6-.36.42L21.2 23.6z"/>
+    </symbol>
+    <filter id="inked" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75" result="m"/>
+      <feComposite in="SourceGraphic" in2="m" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<a class="skip" href="#aloqa">Aloqaga oʻtish</a>
+
+<div id="paper" aria-hidden="true">
+  <div class="sheet washi"></div>
+  <div class="sheet sumi"></div>
+  <div class="sheet ai"></div>
+  <div class="deckle"></div>
+</div>
+<div id="oshigata" aria-hidden="true"><canvas id="stipple"></canvas><svg id="osh"></svg></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<svg id="frontfx" aria-hidden="true"></svg>
+
+<header class="nav">
+  <a class="brand" href="#" aria-label="Qilich">
+    <svg class="mon" aria-hidden="true"><use href="#mon"/></svg>
+    <span class="word">QILICH</span>
+  </a>
+  <div class="clocks" aria-label="Vaqt">
+    <span><span class="lbl">Toshkent</span> <time class="t-tas">14:32</time></span>
+    <span class="sep">·</span>
+    <span><span class="lbl">Tokio</span> <time class="t-tok">18:32</time></span>
+  </div>
+  <nav class="links" aria-label="Asosiy">
+    <a href="#xizmatlar">Xizmatlar</a>
+    <a href="#jarayon">Jarayon</a>
+    <a href="#aloqa">Aloqa</a>
+  </nav>
+  <div class="langs"><a class="on" href="/" hreflang="uz">UZ</a><a href="/ru/" hreflang="ru">RU</a><a href="/en/" hreflang="en">EN</a></div>
+  <button class="sound" aria-label="Ovoz" type="button"><svg viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h2M5 3v6M8 1v10M11 4v4M14 2v8M17 5v2"/></svg></button>
+  <a class="btn" href="#aloqa"><span>Bogʻlanish</span></a>
+  <button class="menu" type="button" aria-label="Menyu"><span>Menyu</span></button>
+</header>
+
+<main id="story">
+  <section class="scene s-hero" id="mei">
+    <h1 class="h1"><span class="ln"><span>Yapon IT agenstvasi</span></span> <span class="ln"><span>endi Oʻzbekistonda!</span></span></h1>
+    <div class="sub">
+      <p>Ilovalar, saytlar, botlar va tizimlarni yapon standartlarida quramiz.</p>
+      <a class="cta" href="#aloqa"><span>Bogʻlanish</span><svg viewBox="0 0 30 8" aria-hidden="true"><path d="M0 4.4h20.5l.6-.8h1.4l.5.5c2.4-.2 4.6-.7 6.6-1.6c-1.7 1.6-4 2.6-7.4 2.9h-1.7l-.4-.5H0z"/></svg></a>
+    </div>
+    <div class="mei" lang="ja" title="Imzo: Toshkentda yashovchi Qilich qoʻli bilan" aria-label="Imzo: Toshkentda yashovchi Qilich qoʻli bilan">
+      <span class="v">タシケント住</span><span class="v">キリチ作</span>
+    </div>
+    <div class="hanko" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></div>
+    <div class="cue" aria-hidden="true"><span>Pastga</span><i></i></div>
+  </section>
+
+  <section class="scene s-utsuri" id="xizmatlar">
+    <div class="kick"><span class="mono">Xizmatlar</span><span class="mono num">01 / 05</span></div>
+    <h2 class="h2">Nima quramiz</h2>
+    <ul class="svc">
+      <li class="on"><i></i>iOS va Android ilovalar</li>
+      <li>Saytlar va veb-platformalar</li>
+      <li>Telegram-botlar</li>
+      <li>Backend va integratsiyalar</li>
+      <li>Desktop ilovalar</li>
+      <li>IoT</li>
+      <li>AI integratsiyasi</li>
+    </ul>
+    <div class="hako" lang="ja"><b>映</b><span class="rom">UTSURI</span><span class="gl">aks</span></div>
+  </section>
+
+  <section class="scene s-tsuba" id="tsuba">
+    <h2 class="h2 big"><span>Tigʻ — yapon.</span> <span>Dasta — oʻzbek.</span></h2>
+    <p class="cap mono">Margʻilon atlasi · girih · paxta</p>
+    <div class="hako" lang="ja"><b>鍔</b><span class="rom">TSUBA</span><span class="gl">himoya halqasi</span></div>
+  </section>
+</main>
+
+<div class="ruler" aria-hidden="true">
+  <div class="track"><i class="ink"></i><i class="dot"></i></div>
+  <ol>
+    <li class="on"><b lang="ja">銘</b></li><li><b lang="ja">映</b></li><li><b lang="ja">焼</b></li><li><b lang="ja">研</b></li><li><b lang="ja">鍔</b></li><li><b lang="ja">時</b></li><li><b lang="ja">納</b></li>
+  </ol>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<script>
+/* concept viewer: scenes come from the #hash (also works where query strings are not allowed) */
+(function(){var h=location.hash.slice(1);if(h)window.__QS='?'+h;
+var S=[["scene=hero", "Hero"], ["scene=reveal&t=0.72", "Steel fills the drawing"], ["scene=utsuri", "Services in the steel"], ["scene=tsuba", "Tsuba"]];
+addEventListener('DOMContentLoaded',function(){var n=document.createElement('nav');n.className='qv';
+var cur=(window.__QS||location.search||'?scene=hero').slice(1);
+n.innerHTML='<a href="../index.html">&larr; All concepts</a>'+S.map(function(s){return '<a href="#'+s[0]+'"'+(s[0]===cur?' aria-current="true"':'')+'>'+s[1]+'</a>';}).join('');
+n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&a.getAttribute('href').charAt(0)==='#'){e.preventDefault();location.hash=a.getAttribute('href');location.reload();}});
+document.body.appendChild(n);});})();
+</script>
+<style>.qv{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483647;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(18,18,24,.82);backdrop-filter:blur(8px);font:500 12px/1 system-ui,sans-serif;max-width:calc(100vw - 20px);overflow-x:auto;white-space:nowrap}.qv a{color:#eee;text-decoration:none;padding:8px 11px;border-radius:999px}.qv a:hover{background:rgba(255,255,255,.12)}.qv a[aria-current]{background:#fff;color:#111}.qv a:first-child{opacity:.75}</style>
+<script type="module" src="bundle.js"></script>
+</body>
+</html>

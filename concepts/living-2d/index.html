@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qalam · Qilich 文武 — prototype</title>
+<style>html,body{background:#EEE6D4;margin:0}</style>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="cloth" aria-hidden="true"></canvas>
+  <div id="under"></div>
+  <canvas id="paper" aria-hidden="true"></canvas>
+  <div id="over"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+</div>
+<script>
+/* concept viewer: scenes come from the #hash (also works where query strings are not allowed) */
+(function(){var h=location.hash.slice(1);if(h)window.__QS='?'+h;
+var S=[["scene=hero", "Hero"], ["scene=wedge&t=0.72", "The cut"], ["scene=bunbu&t=0.66", "文 and 武"], ["scene=bunbu&t=1", "Diptych"], ["scene=tanzaku", "Services"], ["scene=time", "Two cities"]];
+addEventListener('DOMContentLoaded',function(){var n=document.createElement('nav');n.className='qv';
+var cur=(window.__QS||location.search||'?scene=hero').slice(1);
+n.innerHTML='<a href="../index.html">&larr; All concepts</a>'+S.map(function(s){return '<a href="#'+s[0]+'"'+(s[0]===cur?' aria-current="true"':'')+'>'+s[1]+'</a>';}).join('');
+n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&a.getAttribute('href').charAt(0)==='#'){e.preventDefault();location.hash=a.getAttribute('href');location.reload();}});
+document.body.appendChild(n);});})();
+</script>
+<style>.qv{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483647;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(18,18,24,.82);backdrop-filter:blur(8px);font:500 12px/1 system-ui,sans-serif;max-width:calc(100vw - 20px);overflow-x:auto;white-space:nowrap}.qv a{color:#eee;text-decoration:none;padding:8px 11px;border-radius:999px}.qv a:hover{background:rgba(255,255,255,.12)}.qv a[aria-current]{background:#fff;color:#111}.qv a:first-child{opacity:.75}</style>
+<script type="module" src="bundle.js"></script>
+</body>
+</html>

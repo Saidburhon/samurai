@@ -1,0 +1,141 @@
+:root{
+  --washi:#ECE6DA; --togi:#F3F0EA; --sumi:#0F0E0C; --kurogane:#2A2724; --hagane:#9AA3A8;
+  --shu:#D9381E; --ai:#141C36; --ishkor:#2A8C98; --ganch:#EAD9BD;
+  --fg:var(--sumi); --fg2:var(--kurogane); --line:rgba(15,14,12,.22);
+  --m:40px; --col:calc((100vw - 2*var(--m) - 11*24px)/12); --g:24px;
+  --sans:QOkina, Geologica, Arial, sans-serif;
+  --mono:QOkinaMono, 'Martian Mono', ui-monospace, monospace;
+  --jp:'Zen Old Mincho', serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--washi);color:var(--fg);font-family:var(--sans);font-weight:380;font-variation-settings:"SHRP" 30;
+  overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.skip{position:absolute;left:-999px}
+.mono{font-family:var(--mono);font-stretch:87.5%;font-weight:400;letter-spacing:.04em;font-size:13px}
+
+/* ---------- grounds ---------- */
+#paper{position:fixed;inset:0;z-index:0}
+.sheet{position:absolute;inset:0;opacity:0}
+.sheet.washi{background-color:var(--washi);background-size:512px 512px}
+.sheet.sumi{background:var(--sumi)}
+.sheet.ai{background:radial-gradient(120% 90% at 64% 50%, #1b2546 0%, var(--ai) 55%, #0c1124 100%)}
+.deckle{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(62% 56% at 66% 36%, rgba(255,247,230,.26), transparent 72%),
+             radial-gradient(130% 115% at 56% 38%, transparent 46%, rgba(64,46,24,.13) 100%)}
+body[data-scene=hero] .sheet.washi, body[data-scene=reveal] .sheet.washi{opacity:1}
+body[data-scene=utsuri] .sheet.sumi{opacity:1}
+body[data-scene=tsuba] .sheet.ai{opacity:1}
+body[data-scene=utsuri] .deckle, body[data-scene=tsuba] .deckle{background:radial-gradient(130% 110% at 50% 50%, transparent 50%, rgba(0,0,0,.35) 100%)}
+
+#oshigata{position:fixed;inset:0;z-index:1;pointer-events:none}
+#oshigata canvas,#oshigata svg{position:absolute;left:0;top:0}
+#osh .dim{font-family:var(--mono);font-stretch:87.5%;font-size:13px;letter-spacing:.06em;fill:var(--sumi);stroke:none;opacity:.78}
+#osh .dim .jp{font-family:var(--jp);font-weight:500;font-size:14px;letter-spacing:.12em}
+#osh .dim-soft{opacity:.6}
+#gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:2;pointer-events:none}
+.grain{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:.07;mix-blend-mode:multiply;background-size:160px 160px}
+body[data-scene=utsuri] .grain, body[data-scene=tsuba] .grain{mix-blend-mode:screen;opacity:.05}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;z-index:10;left:0;right:0;top:0;height:72px;padding:0 var(--m);display:flex;align-items:center;gap:28px;color:var(--fg)}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.brand .mon{width:24px;height:24px;fill:currentColor}
+.brand .word{font-weight:600;font-variation-settings:"SHRP" 100;font-size:14px;letter-spacing:.2em;padding-top:1px}
+.clocks{position:absolute;left:calc(var(--m) + 2*(var(--col) + var(--g)));font-family:var(--mono);font-stretch:87.5%;font-size:13px;letter-spacing:.04em;display:flex;gap:12px;align-items:baseline}
+.clocks .lbl{opacity:.55}
+.clocks .sep{opacity:.35}
+.links{display:flex;gap:26px}
+.links a,.btn span{font-size:13px;font-weight:560;letter-spacing:.08em;text-transform:uppercase;font-variation-settings:"SHRP" 60}
+.langs{display:flex;gap:2px;font-family:var(--mono);font-stretch:87.5%;font-size:13px;letter-spacing:.04em}
+.langs a{padding:4px 6px;opacity:.45;position:relative}
+.langs a.on{opacity:1}
+.langs a.on::after{content:"";position:absolute;left:50%;bottom:-3px;width:3px;height:3px;margin-left:-1.5px;background:currentColor;border-radius:50%}
+.sound svg{width:20px;height:12px;stroke:currentColor;stroke-width:1.2;fill:none;opacity:.7;display:block}
+.btn{display:inline-flex;align-items:center;height:36px;padding:0 16px;border:1px solid currentColor;}
+.menu{display:none}
+
+/* ---------- ruler ---------- */
+.ruler{position:fixed;z-index:9;left:var(--m);right:var(--m);bottom:0;height:40px;color:var(--fg)}
+.ruler .track{display:none}
+.ruler .ink{position:absolute;left:0;top:-1px;height:3px;width:0}
+.ruler .dot{position:absolute;left:0;top:-2px;width:5px;height:5px;border-radius:50%;background:currentColor}
+.ruler ol{list-style:none;display:flex;position:absolute;inset:0}
+.ruler li{flex:1;display:flex;align-items:center;gap:12px;font-family:var(--jp);font-size:13px;line-height:40px}
+.ruler li::before,.ruler li::after{content:"";flex:1;height:1px;background:var(--line)}
+.ruler li b{font-weight:500;opacity:.4}
+.ruler li.on b{opacity:1}
+.ruler li.on::before{background:linear-gradient(90deg,var(--line),currentColor)}
+
+/* ---------- scenes ---------- */
+#story{position:fixed;inset:0;z-index:5;pointer-events:none}
+.scene{position:absolute;inset:0;display:none}
+.scene a,.scene button{pointer-events:auto}
+body[data-scene=hero] .s-hero, body[data-scene=reveal] .s-hero{display:block}
+body[data-scene=utsuri] .s-utsuri{display:block}
+body[data-scene=tsuba] .s-tsuba{display:block}
+
+.h1{position:absolute;left:var(--m);bottom:86px;font-weight:280;font-size:76px;line-height:.98;letter-spacing:-.035em;font-variation-settings:"SHRP" 100;max-width:900px}
+.h1 .ln{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.h1 .ln>span{display:inline-block}
+.sub{position:absolute;left:calc(var(--m) + 8*(var(--col) + var(--g)));top:598px;width:calc(3*var(--col) + 2*var(--g));color:var(--fg2)}
+.sub p{font-size:17px;line-height:1.45;font-weight:380;font-variation-settings:"SHRP" 30;text-wrap:pretty}
+.cta{display:inline-flex;align-items:center;gap:14px;margin-top:26px;padding:0 0 9px;border-bottom:1px solid var(--line);color:var(--sumi)}
+.cta span{font-size:13px;font-weight:560;letter-spacing:.08em;text-transform:uppercase;font-variation-settings:"SHRP" 60}
+.cta svg{width:30px;height:8px;fill:currentColor}
+.mei{position:absolute;right:calc(var(--m) - 4px);top:378px;font-family:var(--jp);font-weight:500;font-size:20px;line-height:1;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.16em;color:var(--sumi);display:flex;gap:0}
+.mei .v+.v{margin-top:.55em}
+.hanko{position:absolute;right:calc(var(--m) - 1px);top:620px;width:28px;height:28px;transform:rotate(-3deg)}
+.hanko svg{width:100%;height:100%;display:block;filter:url(#inked)}
+.hanko rect{fill:var(--shu)}
+.hanko .m{fill:var(--washi)}
+.cue{position:absolute;right:var(--m);bottom:58px;display:none;align-items:flex-end;gap:10px;font-family:var(--mono);font-stretch:87.5%;font-size:13px;letter-spacing:.04em;color:var(--fg2)}
+.cue i{display:block;width:1px;height:38px;background:linear-gradient(var(--sumi),transparent 92%)}
+body[data-scene=hero] .cue{display:flex}
+body[data-scene=reveal] .sub, body[data-scene=reveal] .hanko{display:none}
+
+/* dark scenes */
+body[data-scene=utsuri], body[data-scene=tsuba]{--fg:var(--washi);--fg2:var(--hagane);--line:rgba(236,230,218,.18)}
+body[data-scene=utsuri] .btn{border-color:rgba(236,230,218,.5)}
+
+.kick{position:absolute;left:var(--m);top:122px;display:flex;gap:18px;color:var(--hagane)}
+.kick .num{opacity:.6}
+.h2{position:absolute;left:var(--m);top:150px;font-weight:280;font-size:54px;line-height:1;letter-spacing:-.03em;font-variation-settings:"SHRP" 100;color:var(--washi)}
+.svc{position:absolute;left:calc(var(--m) + 8*(var(--col) + var(--g)));bottom:86px;list-style:none;color:rgba(236,230,218,.42);font-size:18px;line-height:1;font-variation-settings:"SHRP" 30}
+.svc li{padding:7px 0 7px 28px;position:relative;white-space:nowrap}
+.svc li.on{color:var(--washi);font-size:22px}
+.svc li i{position:absolute;left:0;top:50%;width:16px;height:1px;background:var(--washi)}
+.hako{position:absolute;right:calc(var(--m) - 6px);display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--fg)}
+.hako b{font-family:var(--jp);font-weight:900;font-size:40px;line-height:1}
+.hako .rom,.hako .gl{font-family:var(--mono);font-stretch:87.5%;font-size:13px;letter-spacing:.12em;writing-mode:vertical-rl}
+.hako .gl{opacity:.55;letter-spacing:.06em}
+.s-utsuri .hako{top:auto;bottom:92px}
+
+.s-tsuba .h2.big{top:auto;bottom:228px;font-size:72px;line-height:1.02;letter-spacing:-.035em}
+.s-tsuba .h2.big span{display:block}
+.s-tsuba .cap{position:absolute;left:var(--m);bottom:160px;color:var(--hagane)}
+.s-tsuba .hako{top:118px}
+
+/* ---------- phone ---------- */
+@media (max-width:600px){
+  :root{--m:16px;--g:12px}
+  .nav{height:60px;gap:14px}
+  .clocks,.links,.sound,.btn{display:none}
+  .brand .mon{width:22px;height:22px}
+  .brand .word{font-size:13px}
+  .menu{display:block;font-size:13px;font-weight:560;letter-spacing:.08em;text-transform:uppercase;padding:8px 0 8px 4px}
+  .langs a:not(.on){display:none}
+  .h1{top:92px;bottom:auto;font-size:40px;line-height:1.0;max-width:330px}
+  .h1 .ln{display:inline;overflow:visible}
+  .h1 .ln>span{display:inline}
+  .sub{left:var(--m);top:auto;bottom:40px;width:228px}
+  .sub p{font-size:15px}
+  .cta{margin-top:18px}
+  .mei{left:calc(var(--m) - 2px);right:auto;top:330px;font-size:17px}
+  .hanko{left:calc(var(--m) + 1px);right:auto;top:548px;width:22px;height:22px}
+  .ruler{display:none}
+  .cue{display:none !important}
+}
+#frontfx{position:fixed;left:0;top:0;z-index:3;pointer-events:none}

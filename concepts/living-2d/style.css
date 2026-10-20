@@ -1,0 +1,105 @@
+:root{
+  --washi:#EEE6D4; --washi-deep:#E2D6BE; --sumi:#16120E; --sumi-60:#5E554B; --ai:#1E2D66; --ai-light:#3A5BAA;
+  --ai-deep:#111B44; --kinu:#EFE8D8; --shu:#D3462B; --feruza:#1E9C93;
+  --serif:'Noto Serif Display', 'Times New Roman', serif; --sans:Onest, system-ui, sans-serif; --mono:'IBM Plex Mono', ui-monospace, monospace;
+  --mincho:'Shippori Mincho B1', serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--washi);color:var(--sumi);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#app{position:relative;width:100vw;height:100vh;overflow:hidden}
+#app>canvas,#under,#over{position:absolute;inset:0;width:100%;height:100%}
+#cloth{z-index:0}
+#under{z-index:1}
+#paper{z-index:2}
+#over{z-index:3;pointer-events:none}
+#fx{z-index:4;pointer-events:none}
+
+/* ---------- hero */
+.hero-gap{position:absolute;color:var(--kinu)}
+.h1{margin:0;font-family:var(--serif);font-stretch:62.5%;font-weight:300;font-size:clamp(52px,8.4vw,132px);line-height:.92;letter-spacing:-.012em;font-optical-sizing:auto;white-space:nowrap}
+.h1 em{font-style:italic;font-weight:300;letter-spacing:-.005em}
+.sub{margin:22px 0 0 4px;font:400 19px/1.45 var(--sans);color:rgba(239,232,216,.82);max-width:40em;letter-spacing:.002em}
+.hero-gap.phone .h1{font-size:40px;line-height:.98}
+.hero-gap.phone .sub{font-size:15px;max-width:19em;margin-top:12px;margin-left:2px}
+
+.piece-ui{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:0 0}
+.piece-ui>*{position:absolute}
+
+.nav{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 72px 0 100px;color:var(--sumi)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.nseal{width:24px;height:24px;display:block}
+.word{position:relative;font:600 14px/1 var(--sans);letter-spacing:.26em}
+.nav-r{display:flex;align-items:center;gap:34px}
+.langs{font:500 13px/1 var(--mono);letter-spacing:.08em;display:flex;gap:10px;color:var(--sumi-60)}
+.langs i{font-style:normal;opacity:.6}
+.langs .on{color:var(--sumi);position:relative}
+.langs .on::after{content:"";position:absolute;left:50%;bottom:-9px;width:5px;height:5px;margin-left:-2.5px;background:var(--shu);border-radius:1px}
+.bell{display:flex;align-items:center;gap:8px;color:var(--sumi-60);font:500 13px/1 var(--mono);letter-spacing:.08em}
+.bell i{width:7px;height:7px;border:1.2px solid currentColor;border-radius:50%;display:block}
+.menu{position:relative;width:38px;height:38px}
+.menu canvas{position:absolute}
+
+.clocks{font:400 13px/1 var(--mono);letter-spacing:.08em;color:var(--sumi-60);white-space:nowrap;display:flex;gap:9px;justify-content:flex-end}
+.clocks b{font-weight:500;color:var(--sumi)}
+.clocks i{font-style:normal;opacity:.6;margin:0 4px}
+.signature{writing-mode:vertical-rl;font:500 16px/1 var(--mincho);letter-spacing:.32em;color:var(--sumi);display:flex;gap:10px;transform:translateX(-100%)}
+.signature .k{font-weight:800}
+.caption{margin:0;font:400 15px/1 var(--sans);color:var(--sumi-60);display:flex;align-items:center;gap:10px;white-space:nowrap}
+.caption svg{color:var(--sumi);opacity:.8}
+.cutname{position:absolute;display:flex;flex-direction:column;gap:8px;align-items:flex-start;color:var(--sumi)}
+.cutname span{font:800 15px/1 var(--mincho);writing-mode:vertical-rl;letter-spacing:.24em}
+.cutname b{font:500 13px/1 var(--mono);letter-spacing:.08em;writing-mode:vertical-rl;color:var(--sumi-60)}
+.binding{position:absolute;left:0;top:0}
+
+html.phone .nav{height:56px;padding:0 16px 0 22px}
+html.phone .clocks{font-size:13px}
+
+/* ---------- scene 2: 文武 */
+.h2{position:absolute;margin:0;font-family:var(--serif);font-stretch:70%;font-weight:400;letter-spacing:-.01em;line-height:.95;color:var(--sumi)}
+.bunbu-h2{left:104px;top:86px;font-size:60px}
+.pair{position:absolute;margin:0;font:italic 300 34px/1 var(--serif);font-stretch:75%;color:var(--sumi);white-space:nowrap}
+.bunbu-cap{position:absolute;left:0;right:0;bottom:44px;margin:0;text-align:center;font:400 16px/1 var(--sans);color:var(--sumi-60)}
+.bunbu-cap span{font:800 17px/1 var(--mincho);color:var(--sumi);letter-spacing:.08em;margin:0 2px}
+.margin-v{position:absolute;right:40px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;display:flex;gap:10px;align-items:center;color:var(--sumi-60)}
+.margin-v span{font:800 15px/1 var(--mincho);color:var(--sumi)}
+.margin-v i{font:500 13px/1 var(--mono);font-style:normal;letter-spacing:.12em}
+html.phone .bunbu-h2{left:22px;top:66px;font-size:36px}
+html.phone .pair{font-size:24px}
+html.phone .bunbu-cap{font-size:14px;bottom:26px;padding:0 22px}
+html.phone .margin-v{display:none}
+
+/* ---------- scene 3: tanzaku */
+.string-wrap{position:absolute;inset:0}
+.string-wrap svg{position:absolute;left:0;top:0}
+.strip{position:absolute;display:flex;flex-direction:column;align-items:center;padding-top:20px}
+.strip.sumi{color:var(--sumi)}
+.strip.kinu{color:var(--kinu)}
+.strip .idx{font:500 13px/1 var(--mono);letter-spacing:.1em;opacity:.75}
+.strip .name{writing-mode:vertical-rl;font-family:var(--serif);font-stretch:75%;font-weight:400;font-size:33px;line-height:1.08;margin-top:30px;display:flex;flex-direction:column;letter-spacing:-.005em;white-space:nowrap}
+.strip .ja{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);writing-mode:vertical-rl;font:800 19px/1 var(--mincho);letter-spacing:.14em}
+.strip.sumi .ja{color:var(--sumi)}
+.tz-h2{left:104px;bottom:98px;font-size:76px;color:var(--kinu)}
+.tz-hint{position:absolute;left:108px;bottom:70px;margin:0;font:400 16px/1.3 var(--sans);color:rgba(239,232,216,.72)}
+.spine{position:absolute;right:56px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;display:flex;gap:16px;align-items:center;color:var(--kinu)}
+.spine span{font:800 22px/1 var(--mincho);letter-spacing:.2em}
+.spine i{font:500 13px/1 var(--mono);font-style:normal;letter-spacing:.12em;opacity:.7}
+.nav.on-cloth{color:var(--kinu)}
+.nav.on-cloth .langs{color:rgba(239,232,216,.6)}
+.nav.on-cloth .langs .on{color:var(--kinu)}
+.nav.on-cloth .bell{color:rgba(239,232,216,.6)}
+
+/* ---------- scene 4: 時 vaqt */
+.jk-h2{left:104px;top:96px;font-size:62px;line-height:1}
+.jk-times{position:absolute;left:104px;top:430px;display:flex;flex-direction:column;gap:26px}
+.jk-times .tm{display:flex;align-items:baseline;gap:22px}
+.jk-times b{font-family:var(--serif);font-stretch:62.5%;font-weight:200;font-size:104px;line-height:.8;letter-spacing:-.01em;color:var(--sumi);font-variant-numeric:lining-nums}
+.jk-times span{font:500 13px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sumi-60);display:flex;align-items:center;gap:8px}
+.jk-times .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot.feruza{background:var(--feruza)}
+.dot.shu{background:var(--shu)}
+.jk-sub{position:absolute;left:106px;bottom:70px;margin:0;font:400 18px/1.4 var(--sans);color:var(--sumi-60)}
+.jk-wrap{position:absolute;inset:0}
+.jk-svg{position:absolute;left:0;top:0}
+.jk-svg .tk{font:500 13px var(--mono);fill:#5E554B;text-anchor:middle}
+.jk-svg .tk2{fill:#8a7f72}
+.jk-svg .arc{font:500 13px var(--mono);letter-spacing:.1em;fill:#16120E}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qilich — Abr 絣 prototype</title>
+<style>html{background:#120F17}</style>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage" aria-hidden="true"></div>
+<div id="ui"></div>
+<script>
+/* concept viewer: scenes come from the #hash (also works where query strings are not allowed) */
+(function(){var h=location.hash.slice(1);if(h)window.__QS='?'+h;
+var S=[["scene=hero", "Hero (move the cursor)"], ["scene=weave", "Weaving in"], ["scene=stripes", "Services"], ["scene=jidoka", "Thread breaks"]];
+addEventListener('DOMContentLoaded',function(){var n=document.createElement('nav');n.className='qv';
+var cur=(window.__QS||location.search||'?scene=hero').slice(1);
+n.innerHTML='<a href="../index.html">&larr; All concepts</a>'+S.map(function(s){return '<a href="#'+s[0]+'"'+(s[0]===cur?' aria-current="true"':'')+'>'+s[1]+'</a>';}).join('');
+n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&a.getAttribute('href').charAt(0)==='#'){e.preventDefault();location.hash=a.getAttribute('href');location.reload();}});
+document.body.appendChild(n);});})();
+</script>
+<style>.qv{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483647;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(18,18,24,.82);backdrop-filter:blur(8px);font:500 12px/1 system-ui,sans-serif;max-width:calc(100vw - 20px);overflow-x:auto;white-space:nowrap}.qv a{color:#eee;text-decoration:none;padding:8px 11px;border-radius:999px}.qv a:hover{background:rgba(255,255,255,.12)}.qv a[aria-current]{background:#fff;color:#111}.qv a:first-child{opacity:.75}</style>
+<script type="module" src="bundle.js"></script>
+</body>
+</html>

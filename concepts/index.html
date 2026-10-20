@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qilich Concept Prototypes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Onest:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700&display=swap&text=%E4%B8%80%E6%8C%AF%E6%96%87%E6%AD%A6%E5%89%A3%E7%8E%89%E7%B5%A3">
+<style>
+/* Layout: a contact-sheet gallery. Each concept is a strip: its name and score, then its live scenes as frames you open */
+:root {
+  --bg: #ecebe7;
+  --panel: #f8f7f4;
+  --ink: #15161c;
+  --muted: #5d5f68;
+  --rule: #d4d2cb;
+  --pick: #1f3a8f;
+  --frame: #15161c;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --kanji: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #121318; --panel: #1a1c23; --ink: #ecebe6; --muted: #a3a5ae; --rule: #2c2f39; --pick: #9db2ff; --frame: #000; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #121318; --panel: #1a1c23; --ink: #ecebe6; --muted: #a3a5ae; --rule: #2c2f39; --pick: #9db2ff; --frame: #000; color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 72px;
+}
+main { max-width: 1180px; margin: 0 auto; display: grid; gap: 48px; }
+h1, h2 { font-family: var(--display); margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: clamp(32px, 6vw, 54px); line-height: 1; font-weight: 800; }
+h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.05; font-weight: 800; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font: 500 12px/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 14px; }
+.lede { font-size: 18px; }
+.how { color: var(--muted); font-size: 15px; }
+.concept { display: grid; gap: 18px; padding-top: 28px; border-top: 1px solid var(--rule); }
+.head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: start; }
+.kanji { font: 700 52px/0.95 var(--kanji); }
+.idea { color: var(--muted); margin-top: 6px; }
+.score { text-align: right; display: grid; gap: 2px; justify-items: end; }
+.score b { font: 800 30px/1 var(--display); font-variant-numeric: tabular-nums; }
+.score small { font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.badge { font: 500 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--pick); padding: 6px 8px; border-radius: 4px; margin-bottom: 6px; }
+.frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.frames.with-phone { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.shot { display: grid; gap: 7px; color: inherit; text-decoration: none; min-width: 0; }
+.shot img { width: 100%; height: auto; display: block; aspect-ratio: 16 / 10; object-fit: cover; background: var(--frame); border-radius: 6px; outline: 1px solid var(--rule); outline-offset: -1px; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.shot.phone img { aspect-ratio: 16 / 10; object-fit: contain; }
+.shot:hover img, .shot:focus-visible img { transform: translateY(-3px); }
+.shot:focus-visible { outline: 2px solid var(--pick); outline-offset: 4px; border-radius: 8px; }
+.cap { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+.cap span:last-child { color: var(--muted); font: 500 12px/1.6 var(--mono); white-space: nowrap; }
+.note { color: var(--muted); font-size: 14px; }
+@media (max-width: 640px) {
+  .head { grid-template-columns: auto minmax(0, 1fr); }
+  .score { grid-column: 1 / -1; justify-items: start; text-align: left; grid-auto-flow: column; align-items: baseline; justify-content: start; gap: 10px; }
+  .kanji { font-size: 40px; }
+  .frames { grid-template-columns: 1fr 1fr; }
+  .cap span:last-child { display: none; }
+}
+footer { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <span class="eyebrow">qilich.com · four directions, working in code</span>
+    <h1>Qilich Concept Prototypes</h1>
+    <p class="lede">Each frame below opens live in your browser. Everything is drawn by code: 3D, shaders and type, with no images.</p>
+    <p class="how">These are the key moments of each concept, not the full scrolling site yet. Inside a prototype, use the bar at the bottom to switch scenes. The loom and the kendama heroes react to your cursor. For the phone view, open the same page on your phone or narrow the window. The score is what three independent judges predicted each concept would get if fully built; the bar to beat is Lusion at 8.45.</p>
+  </header>
+
+  <section class="concept" aria-labelledby="c-abr">
+    <div class="head">
+      <span class="kanji" aria-hidden="true">絣</span>
+      <div><h2 id="c-abr">Abr: the loom</h2><p class="idea">Uzbek abr and Japanese kasuri are the same craft. Scrolling weaves the page; the sword beats every thread tight.</p></div>
+      <div class="score"><span class="badge">Jury pick, 2 of 3</span><b>8.71</b><small>predicted</small></div>
+    </div>
+    <div class="frames">
+      <a class="shot" href="wildcard/index.html#scene=hero"><img src="thumbs/wildcard--d-hero.jpg" alt="Loom hero: the slogan woven into silk, Oʻzbekistonda in abr colours, a steel blade at the bottom" loading="lazy" width="960" height="600"><span class="cap"><span>Hero</span><span>live</span></span></a>
+      <a class="shot" href="wildcard/index.html#scene=hero"><img src="thumbs/wildcard--d-hover.jpg" alt="Cursor sliding threads out of register across the woven headline" loading="lazy" width="960" height="600"><span class="cap"><span>Your cursor pulls threads</span><span>live</span></span></a>
+      <a class="shot" href="wildcard/index.html#scene=weave"><img src="thumbs/wildcard--d-weave.jpg" alt="The headline being woven in at the blade" loading="lazy" width="960" height="600"><span class="cap"><span>Weaving in</span><span>scene</span></span></a>
+      <a class="shot" href="wildcard/index.html#scene=stripes"><img src="thumbs/wildcard--d-stripes.jpg" alt="Services woven as coloured stripes with a wooden shuttle" loading="lazy" width="960" height="600"><span class="cap"><span>Services as stripes</span><span>scene</span></span></a>
+      <a class="shot" href="wildcard/index.html#scene=jidoka"><img src="thumbs/wildcard--d-jidoka.jpg" alt="Indigo cloth with a broken saffron thread and a paper lantern signal" loading="lazy" width="960" height="600"><span class="cap"><span>A thread breaks, the loom stops</span><span>scene</span></span></a>
+      <a class="shot phone" href="wildcard/index.html#scene=hero"><img src="thumbs/wildcard--m-hero.jpg" alt="Loom hero on a phone" loading="lazy" width="390" height="844"><span class="cap"><span>Phone</span><span>open on phone</span></span></a>
+    </div>
+  </section>
+
+  <section class="concept" aria-labelledby="c-bunbu">
+    <div class="head">
+      <span class="kanji" aria-hidden="true">文武</span>
+      <div><h2 id="c-bunbu">Qalam · Qilich: pen and sword</h2><p class="idea">A brush writes every scene on paper; a named sword cut opens the next one.</p></div>
+      <div class="score"><span class="badge">Jury pick, 1 of 3</span><b>8.62</b><small>predicted</small></div>
+    </div>
+    <div class="frames">
+      <a class="shot" href="living-2d/index.html#scene=hero"><img src="thumbs/living-2d--01-hero-desktop.jpg" alt="A brushed stroke cut open over an indigo ikat band with the headline" loading="lazy" width="960" height="600"><span class="cap"><span>Hero</span><span>scene</span></span></a>
+      <a class="shot" href="living-2d/index.html#scene=wedge&amp;t=0.72"><img src="thumbs/living-2d--02-signature-cut.jpg" alt="A steel glint cutting through the wet brush stroke" loading="lazy" width="960" height="600"><span class="cap"><span>The cut</span><span>scene</span></span></a>
+      <a class="shot" href="living-2d/index.html#scene=bunbu&amp;t=0.66"><img src="thumbs/living-2d--03-bunbu-kirie.jpg" alt="文 brushed while 武 is cut out of the paper" loading="lazy" width="960" height="600"><span class="cap"><span>文 is written, 武 is cut</span><span>scene</span></span></a>
+      <a class="shot" href="living-2d/index.html#scene=bunbu&amp;t=1"><img src="thumbs/living-2d--04-bunbu-diptych.jpg" alt="The pen and sword diptych: 文 and 武" loading="lazy" width="960" height="600"><span class="cap"><span>Pen and sword</span><span>scene</span></span></a>
+      <a class="shot" href="living-2d/index.html#scene=tanzaku"><img src="thumbs/living-2d--05-tanzaku-services.jpg" alt="Services as paper strips hanging over indigo cloth" loading="lazy" width="960" height="600"><span class="cap"><span>Services as paper strips</span><span>scene</span></span></a>
+      <a class="shot" href="living-2d/index.html#scene=time"><img src="thumbs/living-2d--06-time-enso.jpg" alt="Two brushed ensō circles showing Tashkent and Tokyo working hours" loading="lazy" width="960" height="600"><span class="cap"><span>Tashkent and Tokyo</span><span>scene</span></span></a>
+      <a class="shot phone" href="living-2d/index.html#scene=hero"><img src="thumbs/living-2d--07-hero-phone.jpg" alt="Pen and sword hero on a phone" loading="lazy" width="390" height="844"><span class="cap"><span>Phone</span><span>open on phone</span></span></a>
+    </div>
+  </section>
+
+  <section class="concept" aria-labelledby="c-sword">
+    <div class="head">
+      <span class="kanji" aria-hidden="true">一振</span>
+      <div><h2 id="c-sword">Hitofuri: one sword</h2><p class="idea">The site is one katana built in 3D: a Japanese blade with an Uzbek grip.</p></div>
+      <div class="score"><b>8.51</b><small>predicted · hardest to build</small></div>
+    </div>
+    <div class="frames">
+      <a class="shot" href="object-cinema/index.html#scene=hero"><img src="thumbs/object-cinema--01-hero-1440.jpg" alt="A steel katana with an ikat grip floating over washi with its ink drawing" loading="lazy" width="960" height="600"><span class="cap"><span>Hero</span><span>scene</span></span></a>
+      <a class="shot" href="object-cinema/index.html#scene=reveal&amp;t=0.72"><img src="thumbs/object-cinema--02-signature-reveal-1440.jpg" alt="Steel filling the ink drawing of the sword" loading="lazy" width="960" height="600"><span class="cap"><span>Steel fills the drawing</span><span>scene</span></span></a>
+      <a class="shot" href="object-cinema/index.html#scene=utsuri"><img src="thumbs/object-cinema--03-utsuri-services-1440.jpg" alt="iOS · Android reflected in the polished blade" loading="lazy" width="960" height="600"><span class="cap"><span>Services reflected in steel</span><span>scene</span></span></a>
+      <a class="shot" href="object-cinema/index.html#scene=tsuba"><img src="thumbs/object-cinema--04-tsuba-1440.jpg" alt="A girih-pierced sword guard lit from behind on indigo" loading="lazy" width="960" height="600"><span class="cap"><span>Japanese blade, Uzbek grip</span><span>scene</span></span></a>
+      <a class="shot phone" href="object-cinema/index.html#scene=hero"><img src="thumbs/object-cinema--05-hero-phone-390.jpg" alt="Sword hero on a phone" loading="lazy" width="390" height="844"><span class="cap"><span>Phone</span><span>open on phone</span></span></a>
+    </div>
+  </section>
+
+  <section class="concept" aria-labelledby="c-kendama">
+    <div class="head">
+      <span class="kanji" aria-hidden="true">剣玉</span>
+      <div><h2 id="c-kendama">Kendama: sword and ball</h2><p class="idea">剣 (sword) is the first character of kendama. A cartoon-smooth toy you poke, swing and catch.</p></div>
+      <div class="score"><b>8.31</b><small>predicted</small></div>
+    </div>
+    <div class="frames">
+      <a class="shot" href="playground/index.html#scene=hero"><img src="thumbs/playground--01-hero.jpg" alt="The slogan as toy blocks beside a kendama in a parcel from Tokyo to Tashkent" loading="lazy" width="960" height="600"><span class="cap"><span>Hero</span><span>live</span></span></a>
+      <a class="shot" href="playground/index.html#scene=hero"><img src="thumbs/playground--04-intro-3s.jpg" alt="The kendama springs out of its parcel" loading="lazy" width="960" height="600"><span class="cap"><span>It springs out of the box</span><span>live</span></span></a>
+      <a class="shot" href="playground/index.html#scene=hero"><img src="thumbs/playground--02-signature-juggle.jpg" alt="The kendama catches its ball with a TAQ! burst" loading="lazy" width="960" height="600"><span class="cap"><span>It does tricks</span><span>live</span></span></a>
+      <a class="shot" href="playground/index.html#scene=hero"><img src="thumbs/playground--03-signature-knock.jpg" alt="The ball knocks a word block out of the slogan" loading="lazy" width="960" height="600"><span class="cap"><span>Poke it, it knocks words over</span><span>live</span></span></a>
+      <a class="shot" href="playground/index.html#scene=hours"><img src="thumbs/playground--05-hours.jpg" alt="Tokyo and Tashkent clocks over a toy abacus of working hours" loading="lazy" width="960" height="600"><span class="cap"><span>Tokyo and Tashkent</span><span>scene</span></span></a>
+      <a class="shot" href="playground/index.html#scene=contact"><img src="thumbs/playground--06-contact.jpg" alt="Contact: the phone number and email as toy blocks" loading="lazy" width="960" height="600"><span class="cap"><span>Contact</span><span>scene</span></span></a>
+      <a class="shot phone" href="playground/index.html#scene=hero"><img src="thumbs/playground--07-phone-hero.jpg" alt="Kendama hero on a phone" loading="lazy" width="390" height="844"><span class="cap"><span>Phone</span><span>open on phone</span></span></a>
+    </div>
+  </section>
+
+  <footer>Tell me which one you want built, or what to mix: for example, the loom's weaving with the pen-and-sword's brush.</footer>
+</main>
+</body>
+</html>

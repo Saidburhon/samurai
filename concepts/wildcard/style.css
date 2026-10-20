@@ -1,0 +1,104 @@
+:root {
+  --silk: #efe6d2;
+  --silk-shade: #dccfb5;
+  --ivory: #f6f1e6;
+  --ai: #18234a;
+  --ai-deep: #0f1631;
+  --loom: #120f17;
+  --atlas: #d1145a;
+  --saffron: #f2b11b;
+  --emerald: #0a7f55;
+  --shu: #e2421f;
+  --dela: 'Dela Gothic One', sans-serif;
+  --text: 'Onest', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Zen Kaku Gothic New', monospace;
+  --jp: 'Zen Kaku Gothic New', sans-serif;
+  --m: 48px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--loom); height: 100%; overflow: hidden; }
+body { color: var(--ai); font-family: var(--text); -webkit-font-smoothing: antialiased; }
+#stage, #ui { position: fixed; inset: 0; }
+#stage canvas { display: block; }
+#ui { pointer-events: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---------- header */
+.hd { position: absolute; left: 0; right: 0; top: 0; height: 64px; padding: 0 var(--m); display: flex; align-items: center; justify-content: space-between; }
+.hd.dark { color: var(--ivory); }
+.wm { font-family: var(--dela); font-size: 23px; line-height: 1; letter-spacing: 0.01em; display: inline-flex; align-items: center; color: inherit; }
+.wm i { display: inline-block; width: 5px; height: 25px; margin: 0 4px; background: currentColor; position: relative; top: -1px; }
+.wm i::after { content: ''; position: absolute; left: 0; right: 0; top: 13px; height: 6px; background: var(--atlas); }
+.wm i.t2::after { background: var(--saffron); top: 6px; }
+.idx { position: absolute; left: 50%; transform: translateX(-50%); font: 500 11px/1 var(--mono); letter-spacing: 0.12em; opacity: 0.72; }
+.hr { display: flex; align-items: center; gap: 26px; font: 500 12px/1 var(--mono); letter-spacing: 0.06em; }
+.hr .tel { color: inherit; }
+.lang { display: inline-flex; gap: 12px; }
+.lang span { opacity: 0.45; }
+.lang b { font-weight: 500; position: relative; }
+.lang b::after { content: ''; position: absolute; left: -2px; right: -2px; bottom: -6px; height: 2px; background: var(--atlas); }
+.snd { width: 26px; height: 10px; fill: currentColor; color: inherit; opacity: 0.8; }
+
+/* woven tags: indigo label, stitched inset border */
+.tag { position: relative; display: inline-flex; align-items: center; gap: 12px; background: var(--ai); color: var(--ivory);
+  background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 3px, rgba(0,0,0,0.05) 3px 6px); }
+.tag::before { content: ''; position: absolute; inset: 4px; border: 1px dashed rgba(246,241,230,0.42); pointer-events: none; }
+.tag-s { height: 34px; padding: 0 16px; font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.hd.dark .tag { background-color: var(--ivory); color: var(--ai); background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0 3px, rgba(0,0,0,0.06) 3px 6px); }
+.hd.dark .tag::before { border-color: rgba(24,35,74,0.38); }
+.tag-l { height: 56px; padding: 0 22px 0 24px; font: 500 17px/1 var(--text); letter-spacing: 0.005em; }
+.arr { width: 12px; height: 12px; color: var(--saffron); shape-rendering: crispEdges; }
+
+/* selvedge index */
+.selv { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 6px; display: flex; flex-direction: column; gap: 0; }
+.selv a { display: block; height: 22px; width: 6px; position: relative; background: repeating-linear-gradient(180deg, rgba(24,35,74,0.5) 0 2px, rgba(24,35,74,0.2) 2px 4px); }
+.selv a::after { content: ''; position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: var(--ivory); opacity: 0.9; }
+.selv a.on::before { content: ''; position: absolute; left: -3px; top: 6px; width: 12px; height: 10px; border-radius: 50%; background: var(--shu); z-index: 1; box-shadow: 0 0 0 2px var(--silk); }
+[data-scene='jidoka'] .selv a { background: repeating-linear-gradient(180deg, rgba(246,241,230,0.42) 0 2px, rgba(246,241,230,0.16) 2px 4px); }
+[data-scene='jidoka'] .selv a.on::before { box-shadow: 0 0 0 2px var(--ai-deep); }
+
+/* ---------- hero */
+.tate { position: absolute; left: 1374px; top: 130px; writing-mode: vertical-rl; font: 500 15px/1 var(--jp); letter-spacing: 0.32em; color: rgba(24,35,74,0.72); }
+.lower { position: absolute; left: var(--m); }
+.sub { font: 500 26px/1.15 var(--text); letter-spacing: -0.01em; }
+.svc { margin-top: 14px; font: 500 12px/1 var(--mono); letter-spacing: 0.09em; opacity: 0.78; }
+.lower .tag-l { margin-top: 26px; }
+.fr { position: absolute; font: 500 11px/1 var(--mono); letter-spacing: 0.12em; color: rgba(246,241,230,0.62); }
+.fr-l { left: var(--m); }
+.fr-r { right: var(--m); display: flex; align-items: center; gap: 14px; }
+.fr .ya { width: 14px; height: 27px; }
+.fr b { font-weight: 500; color: var(--saffron); }
+.fr b.red { color: var(--shu); }
+
+/* ---------- phone */
+html.m { --m: 16px; }
+html.m .hd { height: 56px; }
+html.m .wm { font-size: 20px; }
+html.m .wm i { height: 22px; width: 4px; margin: 0 2px; }
+html.m .wm i::after { top: 8px; height: 6px; }
+html.m .wm i.t2::after { top: 4px; }
+.lang1 { display: inline-flex; align-items: center; gap: 6px; }
+.lang1 .dd { width: 8px; height: 5px; }
+.menu { width: 26px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; background: none; border: 0; }
+.menu i { display: block; height: 2px; background: var(--ai); }
+.menu i:nth-child(2) { background: var(--atlas); width: 70%; }
+.lower.m .sub { font-size: 18px; line-height: 1.25; }
+.lower.m .tag-l { margin-top: 18px; width: 100%; height: 50px; justify-content: space-between; font-size: 16px; }
+.lower.m .svc { margin-top: 16px; font-size: 10px; line-height: 1.6; letter-spacing: 0.08em; }
+.fr.m { font: 500 11px/1 var(--jp); letter-spacing: 0.18em; }
+.fr.m .ya { width: 12px; height: 23px; }
+
+/* ---------- stripes */
+.strip { position: absolute; top: 64px; left: var(--m); right: var(--m); height: 32px; display: flex; align-items: center; justify-content: space-between; font: 500 12px/1 var(--mono); letter-spacing: 0.1em; }
+.strip h2 { font: inherit; }
+.strip span { opacity: 0.6; }
+.desc { position: absolute; left: 1000px; height: 94px; display: flex; align-items: center; font: 500 12px/1 var(--mono); letter-spacing: 0.1em; }
+.desc.hide { display: none; }
+
+/* ---------- jidoka */
+.jd { position: absolute; left: var(--m); top: 380px; color: var(--ivory); }
+.jd .lbl { font: 500 12px/1 var(--mono); letter-spacing: 0.1em; color: var(--saffron); }
+.jd h2 { margin-top: 28px; font: 400 64px/1.06 var(--dela); letter-spacing: 0; }
+.jd .p { margin-top: 30px; font: 400 20px/1.45 var(--text); color: rgba(246,241,230,0.82); max-width: 520px; }
+
+.cur { position: absolute; overflow: visible; }
