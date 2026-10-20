@@ -1,0 +1,57 @@
+{
+  "_readme": [
+    "Company facts for qilich.com, read by the build (scripts/site.mjs): the About, Contact, Press and Privacy pages,",
+    "the Organization node of every page's JSON-LD, llms.txt and the analytics loaders.",
+    "Fill in only what is true and public. An empty string or an empty list is hidden everywhere: no placeholder is ever",
+    "shown to visitors and nothing empty goes into the structured data. After editing, run: npm run build",
+    "Telephone numbers are written as visitors see them (+998 97 270 70 07); the build derives the tel: form.",
+    "foundingDate is a year (2026) or a date (2026-10-01). sameAs lists full profile URLs (LinkedIn, GitHub, Clutch, Google Business Profile...).",
+    "analytics: a GA4 measurement ID (G-XXXXXXXXXX) and a Yandex Metrika counter number. Both empty = no analytics code, no cookie banner.",
+    "lead.api: true once POST /api/lead exists in the Worker; until then the contact form opens the visitor's mail app."
+  ],
+  "brand": "Qilich",
+  "brandKana": "キリチ",
+  "url": "https://qilich.com",
+  "legalName": "",
+  "foundingDate": "",
+  "email": "inbox@qilich.com",
+  "telephone": "+998 97 270 70 07",
+  "description": {
+    "uz": "Qilich Toshkentda ishlaydigan yapon IT agenstvasi boʻlib, mobil ilovalar, saytlar, Telegram-botlar, backend tizimlar va AI integratsiyalarini yapon standartlarida quradi.",
+    "ru": "Qilich — японское IT-агентство в Ташкенте, которое разрабатывает мобильные приложения, сайты, Telegram-ботов, бэкенд-системы и интеграции с ИИ по японским стандартам.",
+    "en": "Qilich is a Japanese IT agency in Tashkent that builds mobile apps, websites, Telegram bots, backend systems and AI integrations to Japanese standards.",
+    "ja": "Qilich（キリチ）は、ウズベキスタンのタシケントに開発チームを置き、モバイルアプリ、Webシステム、業務システム、AI連携を日本の品質基準で開発するIT企業です。"
+  },
+  "contact": {
+    "availableLanguage": ["uz", "ru", "en", "ja"],
+    "hours": "",
+    "timeZone": "Asia/Tashkent"
+  },
+  "address": {
+    "country": "UZ",
+    "locality": { "uz": "Toshkent", "ru": "Ташкент", "en": "Tashkent", "ja": "タシケント" },
+    "streetAddress": "",
+    "postalCode": ""
+  },
+  "japan": {
+    "legalName": "",
+    "streetAddress": "",
+    "locality": "",
+    "postalCode": "",
+    "telephone": "",
+    "contacts": []
+  },
+  "people": [],
+  "certifications": [],
+  "sameAs": [],
+  "analytics": {
+    "ga4": "",
+    "yandexMetrika": ""
+  },
+  "lead": {
+    "api": false
+  },
+  "indexnow": {
+    "key": "f4820029eb659e70052d5bb38ff4eb80"
+  }
+}

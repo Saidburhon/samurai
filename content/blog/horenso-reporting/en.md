@@ -5,15 +5,15 @@ title: "Hōrensō: how your software team should report to you"
 description: "The Japanese practice of hōrensō: report, inform, consult. What to expect from a development team, how often and in what form, so there are no surprises."
 date: 2026-10-21
 tags: [hōrensō, reporting, project management, outsourcing, process]
-related: [mobile, web, telegram, backend]
+related: [mobile, web, telegram, support]
 reading_minutes: 7
 ---
 
-You found a developer, paid the advance, and for the first few days the chat was lively. Then the replies got shorter: "all on track", "almost done". A month later you see the result for the first time, it isn't quite what you agreed, and the deadline has already slipped. Usually the code isn't the problem. The team simply had no habit of telling the client, regularly and in plain facts, what was going on. Japanese companies call that habit hōrensō. Below: its three parts, what a good report in Telegram looks like, what the team needs from you in return, the signs that a contractor is keeping you in the dark, and the questions to ask before you sign.
+You found a developer, paid the deposit, and for the first few days the chat was lively. Then the replies got shorter: "all on track", "almost done". A month later you see the result for the first time: it isn't quite what you agreed, and the deadline has already slipped. Usually the code isn't the problem. The team simply had no habit of telling the client, regularly and in plain facts, what was going on. Japanese companies call that habit hōrensō. Below: its three parts, what a good report in Telegram looks like, what the team needs from you in return, the signs that a contractor is keeping you in the dark, and the questions to ask before you sign.
 
 ## Where the word comes from
 
-Hōrensō (報連相) is built from the first syllables of three Japanese words:
+Hōrensō (報連相) is built from the first character of three Japanese words:
 
 - **hōkoku** (報告): report on progress and results;
 - **renraku** (連絡): pass on facts other people need to know, especially changes;
@@ -25,7 +25,7 @@ When you work with a contractor, you're the one being reported to. The team repo
 
 ## Hōkoku: regular reports with facts
 
-A report isn't a "how's it going?" call, and it isn't the team's reply to your worried messages. It arrives on its own, on the same day, in the same shape.
+A report isn't a "how's it going?" call, and it isn't the team's reply to your worried messages. It arrives on its own, on the same day each week, in the same format.
 
 What goes in it:
 
@@ -36,7 +36,7 @@ What goes in it:
 
 What separates a good report from a bad one:
 
-- **Facts, not adjectives.** "Worked on payments" tells you nothing. "Click payments work in the test bot; we checked a successful payment, a declined payment and a retry" is something you can verify.
+- **Facts, not generalities.** "Worked on payments" tells you nothing. "Click payments work in the test bot; we checked a successful payment, a declined payment and a retry" is something you can verify.
 - **Status per feature, not a percentage.** "80% done" can last a month in software. A feature list marked done, in review, in progress or not started tells you far more.
 - **Short.** Readable on a phone in a couple of minutes. Details sit behind a link.
 - **The same format every time.** If the format changes each week, you can't compare one week with the next.
@@ -44,7 +44,7 @@ What separates a good report from a bad one:
 Here's what such a report could look like in Telegram. The project is hypothetical: say, an ordering bot and an operator panel for a chain of three cafés.
 
 ```
-Report, week 3 (14–18 October)
+Report, week 3 (12–16 October)
 
 Done:
 1. Menu and cart work in the test bot (link)
@@ -57,7 +57,7 @@ Next week:
 3. Daily sales by branch for the owner
 
 Needed from you:
-1. Access to the Payme merchant account by 22 October, otherwise Payme moves to week 5
+1. Access to the Payme merchant account by 20 October, otherwise Payme moves to week 5
 2. Prices for the second branch's menu
 
 Timeline and budget: on track.
@@ -66,7 +66,7 @@ Risk: no description of the 1C exchange yet, so we can't estimate sending orders
 
 ## Renraku: bad news early
 
-A delay, a serious bug, a change in a third-party service, an app store rejection, a key developer falling ill: the team tells you the same day it finds out. Not in Friday's report, and not after "we'll have it fixed by then".
+A delay, a serious bug, a change in a third-party service, an app store rejection, a key developer falling ill: the team tells you the same day it finds out. Not in Friday's report, and not once it's "already fixed".
 
 A good problem message answers four questions:
 
@@ -88,18 +88,18 @@ Not every decision should come to you. Picking a library or structuring the data
 - anything that changes scope, cost or timeline;
 - anything users see: the order flow, texts, design;
 - paid third-party services such as SMS, maps, hosting or AI models, because they become your monthly costs;
-- where and how customers' personal data is stored. Uzbek law requires the personal data of Uzbek citizens to be stored on servers located in Uzbekistan, which affects your choice of hosting. More in [Storing personal data in Uzbekistan](/en/blog/personal-data-in-uzbekistan/).
+- where and how customers' personal data is stored. Uzbekistan's Law on Personal Data requires the personal data of Uzbek citizens to be stored on servers physically located in Uzbekistan, which affects your choice of hosting. More in [Storing personal data in Uzbekistan](/en/blog/personal-data-in-uzbekistan/).
 
 A proper question has this shape: the problem, two or three options with cost, time and consequences, the team's recommendation, and the date by which an answer is needed. "How should we do it?" with no options isn't sōdan. It's handing the team's work to you.
 
 Example. Halfway through the project it turns out café customers want to repeat a past order with one tap. The team writes:
 
-- **A. Full version now:** a "repeat" button that checks the dishes are still on the menu. Plus 3–4 days; launch moves.
+- **A. Full version now:** a "repeat" button that checks the dishes are still on the menu. Plus 3–4 days; launch moves back.
 - **B. Simple version now:** order history, and the customer adds the dishes again by hand. Plus 1 day.
 - **C. After launch:** the full version in the first round of improvements. The date doesn't change.
 - **We recommend C:** it's worth seeing first how often people really reorder. We need an answer by Thursday.
 
-Once a decision is made, it gets written down: the date, what was decided, who decided, and how it changes time and cost. A Telegram chat history isn't a log. Two months later nobody will find who approved "repeat order", or when. Keep the decision log as a separate document or a section on the task board.
+Once a decision is made, it gets written down: the date, what was decided, who decided, and how it changes time and cost. A Telegram chat history isn't a decision log: two months later nobody will find who approved "repeat order", or when. Keep the log as a separate document or a section on the task board.
 
 ## What it looks like week to week
 
@@ -112,7 +112,7 @@ Once a decision is made, it gets written down: the date, what was decided, who d
 | End of each stage | summary: what's done, what's been spent, what changed in scope | 30 minutes |
 | Always | a task board you can open | whenever you like |
 
-Take a hypothetical 8 to 10 week project: a Telegram bot with a mini app for booking appointments at a clinic. The rhythm might go like this:
+Take a hypothetical 8–10 week project: a Telegram bot with a mini app for booking appointments at a clinic. The rhythm might go like this:
 
 - **Week 1:** kickoff. Agree who the contact is on each side, and which day and in which chat reports arrive.
 - **Weeks 2–3:** first demo, a clickable mock-up of the booking screens. Changes made before coding starts are the cheapest you'll ever get.
@@ -130,7 +130,7 @@ Hōrensō works both ways. If reports keep coming and answers don't, the project
 
 - **One decision-maker**, or one contact who can get decisions quickly. Three partners giving contradictory instructions in a group chat is a common reason deadlines slip.
 - **Answers within an agreed time.** For instance, questions within one working day, and decisions with options within two or three days. If your answer is late, the deadline moves too, and the team is right to say so in the report.
-- **Access.** Click, Payme or Uzum merchant accounts, 1C, hosting, the domain, App Store and Google Play developer accounts. All of them registered to your company, with access given to the team.
+- **Access.** Click, Payme or Uzum merchant accounts, 1C, hosting, the domain, App Store and Google Play developer accounts. All of them should be registered to your company; you give the team access.
 - **Materials.** Texts, prices, photos, in both languages if the interface is in Uzbek and Russian.
 - **Specific feedback.** "The payment button doesn't respond on a Samsung, screenshot attached", not "something feels off".
 - **Your own news.** The process changed, the budget was cut, a branch opening was postponed: that's renraku too, and the team needs to hear it right away.

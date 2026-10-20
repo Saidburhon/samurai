@@ -24,7 +24,10 @@ export const SOURCES = {
 };
 const FALLBACK = { sans: '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf', mono: '/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf' };
 const LIM = { geologica: { CRSV: 0, slnt: 0, wght: [200, 600], SHRP: [0, 100] }, martian: { wght: [300, 500] } };
-const PAGES = { uz: 'public/index.html', ru: 'public/ru/index.html', en: 'public/en/index.html', 404: 'public/404.html' };
+const PAGES = { uz: 'public/index.html', ru: 'public/ru/index.html', en: 'public/en/index.html', ja: 'public/ja/index.html', 404: 'public/404.html' };
+// the language names of the switch (scripts/site.mjs) on every page: their Cyrillic letters get a tiny Martian subset
+// declared after the cyrl one, so a uz/en/ja page never downloads the whole Cyrillic subset for «Русский»
+const NAMES_CYR = 'Русский';
 
 const sha = (buf) => createHash('sha256').update(buf).digest('hex');
 
@@ -59,22 +62,33 @@ function ranges(set) {
   return out.join(',');
 }
 
-export async function buildFonts() {
+// extra: the generated pages (scripts/build-pages.mjs), [{ lang, file }]
+export async function buildFonts(extra = []) {
   await ensureSources();
-  const html = Object.fromEntries(Object.entries(PAGES).filter(([, f]) => existsSync(f)).map(([k, f]) => [k, readFileSync(f, 'utf8')]));
+  const files = { ...PAGES };
+  for (const e of extra) files[e.file] = e.file;
+  const html = Object.fromEntries(Object.entries(files).filter(([, f]) => existsSync(f)).map(([k, f]) => [k, readFileSync(f, 'utf8')]));
+  // Japanese pages are set in the system Japanese gothic; Zen Old Mincho is subset only to the Japanese elements,
+  // which every other page carries too (mei, hakogaki, part labels, 日本語 in the switch)
+  const isJa = Object.fromEntries(Object.entries(html).map(([k, h]) => [k, /<html lang="ja"/.test(h)]));
   const text = Object.fromEntries(Object.entries(html).map(([k, h]) => [k, pageText(h)]));
   const always = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('') + ' ·—–’“”«»…';
   // text-transform makes capitals (and lowercase) the HTML never contains: every character comes with its other
   // case, and the whole Russian alphabet ships in the cyrl subsets, so no UI label can fall back to a platform face
   const ruAlphabet = String.fromCodePoint(0x401, 0x451, ...Array.from({ length: 64 }, (_, i) => 0x410 + i));
   const lat = new Set(), cyr = new Set(), jp = new Set();
-  for (const ch0 of [...Object.values(text).join(''), ...always, ...ruAlphabet]) {
-    for (const ch of new Set([ch0, ...ch0.toUpperCase(), ...ch0.toLowerCase()])) {
-      const c = ch.codePointAt(0);
-      if (c < 32 || c === 0x2bb || (c >= 0xfe00 && c <= 0xfe0f)) continue;
-      (JP(c) ? jp : CYR(c) ? cyr : lat).add(ch);
+  const add = (str, ja) => {
+    for (const ch0 of str) {
+      for (const ch of new Set([ch0, ...ch0.toUpperCase(), ...ch0.toLowerCase()])) {
+        const c = ch.codePointAt(0);
+        if (c < 32 || c === 0x2bb || (c >= 0xfe00 && c <= 0xfe0f)) continue;
+        if (JP(c) && ja) continue;
+        (JP(c) ? jp : CYR(c) ? cyr : lat).add(ch);
+      }
     }
-  }
+  };
+  for (const [k, t] of Object.entries(text)) add(t, isJa[k]);
+  add(always + ruAlphabet, false);
   // the reflected words, for GeologicaSign
   const words = new Set();
   for (const h of Object.values(html)) for (const m of h.matchAll(/<p class="words"[^>]*>([\s\S]*?)<\/p>/g)) for (const w of m[1].matchAll(/>([^<]+)</g)) for (const ch of decode(w[1])) words.add(ch);
@@ -85,6 +99,7 @@ export async function buildFonts() {
     { name: 'geologica-cyrl', kind: 'subset', src: S.geologica.path, text: C, limits: LIM.geologica },
     { name: 'martian-latn', kind: 'subset', src: S.martian.path, text: L, limits: LIM.martian },
     { name: 'martian-cyrl', kind: 'subset', src: S.martian.path, text: C, limits: LIM.martian },
+    { name: 'martian-names', kind: 'subset', src: S.martian.path, text: NAMES_CYR, limits: LIM.martian },
     { name: 'mincho-500', kind: 'subset', src: S.mincho500.path, text: J },
     { name: 'mincho-900', kind: 'subset', src: S.mincho900.path, text: J },
     { name: 'qokina', kind: 'qokina', src: S.geologica.path, family: 'QOkina', limits: LIM.geologica },
@@ -130,13 +145,14 @@ export async function buildFonts() {
     `@font-face{font-family:Geologica;src:url(${U('geologica-cyrl')}) format('woff2');font-weight:200 600;font-display:swap;unicode-range:${ranges(cyr)}}`,
     `@font-face{font-family:'Martian Mono';src:url(${U('martian-latn')}) format('woff2');font-weight:300 500;font-stretch:75% 112.5%;font-display:swap;unicode-range:${ranges(lat)}}`,
     `@font-face{font-family:'Martian Mono';src:url(${U('martian-cyrl')}) format('woff2');font-weight:300 500;font-stretch:75% 112.5%;font-display:swap;unicode-range:${ranges(cyr)}}`,
+    `@font-face{font-family:'Martian Mono';src:url(${U('martian-names')}) format('woff2');font-weight:300 500;font-stretch:75% 112.5%;font-display:swap;unicode-range:${ranges(new Set(NAMES_CYR))}}`,
     `@font-face{font-family:'Zen Old Mincho';src:url(${U('mincho-500')}) format('woff2');font-weight:500;font-display:block;unicode-range:${ranges(jp)}}`,
     `@font-face{font-family:'Zen Old Mincho';src:url(${U('mincho-900')}) format('woff2');font-weight:900;font-display:block;unicode-range:${ranges(jp)}}`,
     `@font-face{font-family:GeologicaSign;src:url(${U('geologica-sign')}) format('woff2');font-weight:280;font-display:block}`,
     fb('Geologica Fallback', ms, ['Arial', 'Liberation Sans', 'Helvetica Neue', 'Helvetica']),
     fb('Martian Fallback', mm, ['Courier New', 'Liberation Mono', 'Menlo']),
   ].join('');
-  for (const [k, f] of Object.entries(PAGES)) {
+  for (const [k, f] of Object.entries(files)) {
     if (!html[k]) continue;
     const out = readFileSync(f, 'utf8').replace(/<style data-gen="fonts">[\s\S]*?<\/style>/, `<style data-gen="fonts">${css}</style>`);
     writeFileSync(f, out);
@@ -146,10 +162,18 @@ export async function buildFonts() {
     uz: ['geologica-latn', 'qokina', 'martian-latn', 'mincho-500'],
     en: ['geologica-latn', 'martian-latn', 'mincho-500'],
     ru: ['geologica-latn', 'geologica-cyrl', 'martian-latn', 'martian-cyrl', 'mincho-500'],
+    ja: ['geologica-latn', 'martian-latn', 'mincho-500'],
+  };
+  // the generated pages: their text faces only (the hakogaki's Mincho is not needed for the first paint)
+  const pagePreload = {
+    uz: ['geologica-latn', 'qokina', 'martian-latn'],
+    ru: ['geologica-latn', 'geologica-cyrl', 'martian-latn', 'martian-cyrl'],
+    en: ['geologica-latn', 'martian-latn'],
+    ja: ['geologica-latn', 'martian-latn'],
   };
   const kb = (n) => (n / 1024).toFixed(1);
   console.log(`fonts: ${have ? 'cached' : 'built'}; ${Object.entries(man.sizes).map(([k, v]) => `${k} ${kb(v)} KB`).join(', ')}`);
-  return { files: Object.fromEntries(Object.entries(man.files).map(([k, f]) => [k, `/assets/fonts/${f}`])), preload, css };
+  return { files: Object.fromEntries(Object.entries(man.files).map(([k, f]) => [k, `/assets/fonts/${f}`])), preload, pagePreload, css };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) await buildFonts();

@@ -2,6 +2,7 @@
    Flow mode is the base: a printed sword catalogue, one plate per scene, the same text as the cinema.
    Cinema mode (html.cinema, from G1/G3) overrides it under its own selectors. */
 @import './gen/hamon.css';
+@import './site.css';
 
 /* ---------------- grounds ---------------- */
 [data-g=washi] { --bg: var(--washi); }

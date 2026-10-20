@@ -5,11 +5,11 @@ title: "MVP: what to leave out of the first version"
 description: "The first version doesn't need everything. How to choose MVP features, what to drop without regret, and how to know when it's time for the next step."
 date: 2026-10-21
 tags: [MVP, startup, mobile app, Telegram Mini App, backend]
-related: [mobile, telegram, web, backend]
+related: [mobile, telegram, web, cloud]
 reading_minutes: 8
 ---
 
-The feature list for a new product grows faster than the budget: customer accounts, loyalty points, chat with a manager, three languages, recommendations, a separate app for couriers. Every item feels essential because "the competitors have it". The result is a first version that ships months late, money that runs out around launch, and the one question that matters, whether customers will use this and pay for it, still unanswered. An MVP exists to get that answer sooner and for less. Below is how to decide what goes into version one, what waits, and how to agree with yourself in advance on what happens after launch. It applies to a startup in Tashkent and equally to a business moving online something that has run for years on phone calls and the receptionist's notebook.
+The feature list for a new product grows faster than the budget: customer accounts, loyalty points, chat with a manager, three languages, recommendations, a separate app for couriers. Every item feels essential because "the competitors have it". The result is a first version that ships months late, money that runs out around launch, and the one question that matters still unanswered: will customers use it and pay for it? An MVP exists to get that answer sooner and for less. Here is how to decide what goes into version one, what waits, and how to settle in advance what you will do after launch. This applies as much to a startup in Tashkent as to an established business that has run for years on phone calls and an administrator's notebook and is now moving online.
 
 ## What MVP means and what it doesn't
 
@@ -33,18 +33,18 @@ Usually it is one of three:
 2. **Payment.** They will pay in advance through Click, Payme or Uzum, at your price.
 3. **Staff.** Your team will work the new way instead of keeping the old notebook going on the side.
 
-The riskiest assumption is the one you are least sure of and that the most depends on. The MVP tests that one first. If customers already message you on Telegram every day, demand is not in doubt, but whether they will pay up front is unknown. So the first version has to go all the way to a real payment. If the doubt is about staff, launch in one branch and watch whether the administrators keep records in the system without being reminded.
+The riskiest assumption is the one you are least sure of and on which the most depends. The MVP tests that one first. If customers already message you on Telegram every day, demand is not in doubt, but whether they will pay up front is unknown. So the first version has to go all the way to a real payment. If the doubt is about staff, launch in one branch and watch whether the administrators keep records in the system without being reminded.
 
 A useful question to ask yourself: what do I need to see two months from now to put the same amount of money in again? The answer is the goal of the MVP.
 
 ## Cut by journey, never by quality
 
-A journey is the path a customer takes from first contact to the result: saw it, chose, filled in the order, paid, got a confirmation. A good first version contains one such journey from start to finish, with no gaps. A bad one contains a piece of five: you can register, browse the catalogue and leave a review, but you can't pay.
+A journey is the path a customer takes from first contact to the result: saw it, chose, placed the order, paid, got a confirmation. A good first version contains one such journey from start to finish, with no gaps. A bad one has a piece of each of five: you can register, browse the catalogue and leave a review, but you can't pay.
 
-How to cut:
+How to cut scope when building an MVP:
 
 1. List every journey that comes to mind: order, repeat order, cancellation, refund, loyalty points, review, inviting a friend, the courier's work, the owner's report.
-2. Mark the one you can't test the main assumption without. Sometimes there are two: the customer's path and the shortest path for the staff member who handles that order.
+2. Mark the one without which you can't test the main assumption. Sometimes there are two: the customer's path and the shortest path for the staff member who handles that order.
 3. For the rest, decide: drop it entirely, replace it with manual work, or postpone it.
 4. Inside the chosen journey, keep only the steps that are needed. Registration with a password is often unnecessary: in Telegram the customer is already known, and on a website a phone number with an SMS code is enough.
 
@@ -54,21 +54,21 @@ What you never cut, even in the smallest version:
 - security: personal logins for the admin panel, HTTPS, database backups;
 - money: the "paid" status comes from the payment provider, not from a staff member looking at a screenshot;
 - the law: customers' personal data is stored on a server in Uzbekistan;
-- clear error messages and a way to reach a person;
+- clear error messages and a way to reach a real person;
 - basic analytics: how many people started the journey and at which step they left. Without it the MVP doesn't test anything.
 
 ## Manual work behind the scenes is fine
 
-Customers don't care how an order is handled inside. They care that they get an answer quickly and that nothing goes wrong. So a lot of what will later be automatic can be done by a person in the first version.
+Customers don't care how an order is handled internally. They care that they get an answer quickly and that nothing goes wrong. So a lot of what will later be automatic can be done by a person in the first version.
 
-A hypothetical example: a learning centre with English and programming courses for school pupils, two branches, everything currently done by phone and Instagram. The wish list is an app with accounts, timetables, homework, payment and a bonus for bringing a friend. But the real question is just one: will parents enrol their children and pay for a month online, without coming to reception?
+A hypothetical example: a learning centre with English and programming courses for school pupils, two branches, everything currently done by phone and Instagram. The wish list is an app with accounts, timetables, homework, payment and a bonus for bringing a friend. But there is really only one question: will parents enrol their children and pay for a month online, without coming to reception?
 
 The first version could look like this:
 
 - a Telegram bot in Uzbek and Russian: choose a course and a branch, see group times and the price, tap "Enrol", share a phone number with one button;
 - the application is saved to a database on a server in Uzbekistan and appears at once in the administrators' work group;
 - an administrator calls, checks the child's level and confirms the place with a button in the bot;
-- after confirmation the bot sends a Payme or Click payment link tied to that application, and the status changes to "paid" by itself;
+- after confirmation the bot sends a Payme or Click payment link tied to that application, and once the parent pays, the status changes to "paid" automatically;
 - courses, timetables, prices and free places are kept in a Google Sheet that the administrator edits and the bot reads. That sheet is the first admin panel.
 
 What's missing: accounts, attendance records, homework, an app for teachers, bonuses. The level check still happens over the phone.
@@ -88,18 +88,18 @@ A button-based bot is enough when the choice is small: a course, a service, a ti
 | Button-based bot | bookings, simple orders, a short list | 2–4 weeks | payment, 1C, several branches |
 | Telegram Mini App | catalogue with photos, cart, payment | 4–7 weeks | catalogue size, 1C or iiko, delivery zones |
 | Web platform | customers come from search, desktop work, B2B | 6–10 weeks | roles and permissions, integrations, custom design |
-| iOS and Android app | frequent use, push, camera, location, offline | 2–3 months plus about a week for publishing | store accounts, review, integrations |
+| iOS and Android app | frequent use, push notifications, camera, location, offline | 2–3 months plus about a week for publishing | store accounts, review, integrations |
 
-These timelines assume everything on your side is ready on time: texts, prices, access, the contract with Click, Payme or Uzum. The business signs that contract, and it's best started in the first week of the project. Dates slip more often from waiting than from programming.
+These timelines assume everything on your side is ready on time: texts, prices, access, the contract with Click, Payme or Uzum. The business signs that contract itself, and it's best to start on it in the first week of the project. Deadlines slip more often because of waiting than because of programming.
 
 When Telegram stops being enough:
 
 - new customers come from Google and Yandex search, not from chat;
-- the product needs background work, offline mode, the camera or precise location, as couriers do;
+- the product needs background work, offline mode, the camera or precise location, as a courier app does;
 - people use it every day, and an icon on the home screen really matters;
-- you need complex screens for desktop work: tables, reports, accounts for companies.
+- you need complex screens for desktop work: tables, reports, accounts for corporate clients.
 
-Even then the work isn't lost if the backend is built separately from the bot: a website or an app connects to the same database and the same rules. More on the choice in [App, website or Telegram Mini App: which one your business needs](/en/blog/app-website-or-mini-app/).
+Even then the work isn't lost if the backend is built separately from the bot: a website or an app connects to the same database and follows the same rules. More on the choice in [App, website or Telegram Mini App: which one your business needs](/en/blog/app-website-or-mini-app/).
 
 ## Features to postpone
 
@@ -112,14 +112,14 @@ These are the features most often requested for version one, and they can almost
 - **In-app chat.** A good chat is a project of its own: message delivery, notifications, history, files, and the question of who answers at night. A "Message us on Telegram" button does the same job today.
 - **Reviews, ratings, referral schemes, dark mode, elaborate animations.** All useful once people are actually using the product.
 
-Every feature you postpone saves not only development but also testing and support after launch. Keep the postponed items on a separate list. When it's time for version two, that list is your first draft, and customers will tell you the order.
+Every feature you postpone saves money not only on development but also on testing and on support after launch. Keep the postponed items on a separate list. When it's time for version two, that list is your first draft, and customers will tell you the order.
 
 ## Set the numbers before launch
 
-The most common mistake after an MVP goes live is judging it by feel: friends liked it, the first orders came in, "it seems to be working". To avoid that, write one page before the first customer arrives:
+The most common mistake after an MVP goes live is judging it by feel: friends liked it, the first orders came in, "it seems to be working". To avoid that, write the following on one page before the first customer arrives:
 
 1. **What we are testing.** One sentence: "Parents are willing to enrol their children and pay for a month online."
-2. **How long the test runs.** Usually 4–8 weeks. Shorter gives too little data; longer and the test drifts on without a decision.
+2. **How long the test runs.** Usually 4–8 weeks. Shorter, and there's too little data; longer, and the test drifts on without a decision.
 3. **Where people will come from.** A post in your channel, a QR code at reception, a message to your existing customers, a small ad budget. Without people coming in, an MVP shows nothing: the product may be good and simply unknown.
 4. **Which numbers we watch.** How many people opened the bot, started an application, reached payment, came back a second time.
 5. **Decision thresholds.**
@@ -127,9 +127,9 @@ The most common mistake after an MVP goes live is judging it by feel: friends li
    - **Change:** people arrive but most drop out at one step, payment for example. Fix that step and test for another 2–4 weeks, without adding features.
    - **Stop:** people don't come even once they know about it. The assumption is wrong, not the code, and it's better to find out now.
 
-You set the thresholds yourself, from your own economics. A hypothetical example: "If at least 40 applications come through the bot in six weeks and at least a third of them are paid online, we continue." The numbers here are only an illustration. What matters is that they are written down in advance and everyone who makes the decision agrees with them.
+You set the thresholds yourself, based on your own economics. A hypothetical example: "If at least 40 applications come through the bot in six weeks and at least a third of them are paid online, we continue." The numbers here are only an illustration. What matters is that they are written down in advance and everyone who makes the decision agrees with them.
 
-If you work with a contractor, agree on a short weekly report: what was done, what's blocking, which decisions they need from you. In Japanese practice this is called hōrensō, and at the MVP stage it is especially useful because decisions have to be made quickly.
+If you work with a contractor, agree on a short weekly report: what was done, what's blocking, which decisions they need from you. In Japanese practice this habit of reporting, informing and consulting is called hōrensō. At the MVP stage it is especially useful, because decisions have to be made quickly. More in [Hōrensō: how your software team should report to you](/en/blog/horenso-reporting/).
 
 ## Build it so it can grow
 
@@ -141,10 +141,10 @@ What to get right from the start:
 - **A backend separate from the interface.** The bot, Mini App, website and app are different windows onto one system through an API. A new channel then doesn't need a second database.
 - **Statuses and history.** An order has statuses and a record of who changed them and when. You'll need it for reports and for disputes with customers.
 - **Tidy data from day one.** Phone numbers in one format (+998…), prices and texts in the database or the sheet, not in the code.
-- **Everything in the business's name.** The domain, the server, the bot in BotFather, developer accounts in the app stores, the payment provider dashboard, the code repository. If the contractor changes, the product should stay with you.
+- **Everything registered to the business.** The domain, the server, the bot in BotFather, developer accounts in the app stores, the payment provider dashboard, the code repository. If the contractor changes, the product should stay with you.
 
-An honest word about builders. Putting the first version together on a bot builder or a no-code platform is sometimes faster and cheaper, and for testing demand it's a reasonable choice. Just know in advance that if it works, part of it will be rewritten and the customers and data moved. The problem isn't the choice; it's discovering it in year two.
+A frank word about no-code builders. Putting the first version together on a bot builder or a no-code platform is sometimes faster and cheaper, and for testing demand it's a reasonable choice. Just know in advance that if it works, part of it will have to be rewritten and the customers and data moved. The problem isn't the choice itself; it's finding that out in year two.
 
-What moves the budget of a first version most: the number of journeys and roles, the number of platforms (Telegram, web, iOS, Android), integrations (each payment provider is connected separately, and 1C is its own piece of work), custom design instead of a template, how complex the admin panel is, and how ready your own materials are. More on app budgets in [What a mobile app costs in Tashkent: where the budget goes](/en/blog/mobile-app-cost/).
+What drives the budget of a first version most: the number of journeys and roles, the number of platforms (Telegram, web, iOS, Android), integrations (each payment provider is connected separately, and 1C is its own piece of work), custom design instead of a template, how complex the admin panel is, and how ready your own materials are. More on app budgets in [What a mobile app costs in Tashkent: where the budget goes](/en/blog/mobile-app-cost/).
 
 Describe your product idea to SamurAI on qilich.com and ask what the smallest useful first version would be.

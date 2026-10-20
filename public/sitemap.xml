@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>https://qilich.com/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <xhtml:link rel="alternate" hreflang="uz" href="https://qilich.com/"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://qilich.com/ru/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://qilich.com/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://qilich.com/"/>
-  </url>
-  <url>
-    <loc>https://qilich.com/ru/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <xhtml:link rel="alternate" hreflang="uz" href="https://qilich.com/"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://qilich.com/ru/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://qilich.com/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://qilich.com/"/>
-  </url>
-  <url>
-    <loc>https://qilich.com/en/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <xhtml:link rel="alternate" hreflang="uz" href="https://qilich.com/"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://qilich.com/ru/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://qilich.com/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://qilich.com/"/>
-  </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://qilich.com/sitemaps/uz.xml</loc>
+    <lastmod>2026-10-21</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://qilich.com/sitemaps/ru.xml</loc>
+    <lastmod>2026-10-21</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://qilich.com/sitemaps/en.xml</loc>
+    <lastmod>2026-10-21</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://qilich.com/sitemaps/ja.xml</loc>
+    <lastmod>2026-10-21</lastmod>
+  </sitemap>
+</sitemapindex>

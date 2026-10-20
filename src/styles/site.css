@@ -1,0 +1,24 @@
+/* Site-wide additions to the landing (imported by main.css): the footer row of links to the generated pages
+   (about, contact, press, privacy; every page within three clicks of home) and the Japanese page's scene sizes. */
+.foot-links { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.foot-links a { font-size: 13px; font-weight: 560; letter-spacing: .08em; text-transform: uppercase; font-variation-settings: "SHRP" 60; padding: 6px 0; background: var(--hamon-k) no-repeat 0 100% / 0 5px; transition: background-size .45s var(--ui), font-variation-settings .45s var(--ui); }
+.foot-links a:hover { background-size: 100% 5px; font-variation-settings: "SHRP" 100; }
+.colophon .lang { flex-wrap: wrap; }
+.m-row { flex-wrap: wrap; }
+
+/* 日本語: the scene statements sized for full-width characters (a Japanese line is about twice as wide per
+   character as a Latin one), so each poster keeps its two-line shape */
+html[lang=ja] .b-promise .st { font-size: clamp(30px, calc(58 * var(--fit)), 58px); }
+html[lang=ja] .s-tsuba .st.big { font-size: clamp(30px, calc(60 * var(--fit)), 60px); }
+html[lang=ja] .s-tsuba .b-carpet .st { font-size: clamp(26px, calc(44 * var(--fit)), 44px); }
+html[lang=ja] .s-tsuba .st.xl { font-size: clamp(30px, calc(72 * var(--fit)), 72px); white-space: normal; }
+html[lang=ja] .s-togi .st, html[lang=ja] .s-noto .st { font-size: clamp(30px, calc(52 * var(--fit)), 52px); }
+html[lang=ja] .s-yaki .big { font-size: clamp(40px, calc(80 * var(--fit)), 80px); }
+html[lang=ja] .foot-links a, html[lang=ja] .colophon .top { letter-spacing: .06em; font-weight: 500; }
+@media (aspect-ratio < 1.2), (max-width: 760px) {
+  html[lang=ja] .b-promise .st, html[lang=ja] .s-togi .st, html[lang=ja] .s-noto .st, html[lang=ja] .s-utsuri .h2 { font-size: 28px; }
+  html[lang=ja] .s-tsuba .st.big { font-size: min(30px, 7.6vw); }
+  html[lang=ja] .s-tsuba .b-carpet .st { font-size: 22px; }
+  html[lang=ja] .s-tsuba .st.xl { font-size: 28px; }
+  html[lang=ja] .s-yaki .big { font-size: min(40px, 10vw); }
+}

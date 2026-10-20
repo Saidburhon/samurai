@@ -5,15 +5,15 @@ title: "How to write a brief for an IT agency and get an accurate quote"
 description: "A good brief makes the estimate sharper and the deadline more reliable. What to put on one or two pages: goal, users, features, limits, budget."
 date: 2026-10-21
 tags: [brief, specification, project estimate, timeline, process]
-related: [web, mobile, telegram, backend]
+related: [web, mobile, telegram, support]
 reading_minutes: 9
 ---
 
-You sent the same message to three companies: "We need a website that takes orders online, how much?" The three prices that came back differ several times over. Usually nobody is cheating. Each company pictured a different product. One priced a single page with a form that sends the order to a manager's Telegram. Another priced a catalogue pulled from 1C, payment through Click and customer accounts. A brief closes that gap. The good news is that you don't need to know programming or write a technical specification to produce one. You need to describe the business problem, the people and the limits honestly. Below: what to put in each section, the questions a good agency should ask you back, and a one-page template you can copy and fill in.
+You sent the same message to three companies: "We need a website that takes orders online, how much?" The three prices that came back differ several times over. Usually nobody is cheating. Each company pictured a different product. One priced a single page with a form that sends the order to a manager's Telegram. Another priced a catalogue pulled from 1C, payment through Click and customer accounts. A brief closes that gap. The good news is that you don't need to know programming or write a technical specification to produce one. You need to describe, honestly, the business problem, the people who will use the system and the limits you work within. Below: what to put in each section, the questions a good agency should ask you back, and a one-page template you can copy and fill in.
 
 ## A brief is not a technical specification
 
-A technical specification describes how the system will be built: screens, roles, fields, statuses, integrations, and what has to work for the job to count as accepted. The agency writes it. An analyst works from your brief and one or two meetings with you. A brief answers a different question: why the business needs this. What the problem is, who suffers from it, how the work is done today, what can't change, how much money and time there is. One or two pages in plain language.
+A technical specification describes how the system will be built: screens, roles, fields, statuses, integrations, and what has to work for the job to count as accepted. The agency writes it: an analyst works from your brief and one or two meetings with you. A brief answers a different question: why the business needs this. What the problem is, who suffers from it, how the work is done today, what can't change, how much money and time there is. One or two pages in plain language.
 
 Responsibility splits like this:
 
@@ -28,15 +28,15 @@ Japanese teams plan first and build second. A decision is cheapest to change on 
 
 ## The goal in one sentence you can check
 
-The formula: who will be able to do what, without which current pain, and how you'll know it worked.
+The formula: who will be able to do what, which current problem goes away, and how you'll know it worked.
 
 - Weak: "We need a modern website." "An app like the big marketplaces have." "Automate everything."
-- Strong: "Customers order delivery without calling, and operators stop retyping orders from Telegram into 1C. A month after launch, calls with orders should be noticeably down."
+- Strong: "Customers order delivery without calling, and operators no longer retype orders from Telegram into 1C. A month after launch, phone orders should be at least halved."
 - Strong: "Patients book a doctor themselves at any hour, and the receptionist no longer keeps appointments in a notebook."
 
-The check is something you can count before and after: calls per day, minutes per order, mistakes on invoices, requests nobody answered. Count the "before" now, while you remember how things were. Without that number, a month after launch nobody can say whether the project worked.
+The check is something you can count before and after: calls per day, minutes per order, mistakes on invoices, requests nobody answered. Count the "before" now, while you still work the old way. Without that number, a month after launch nobody can say whether the project worked.
 
-If you have two goals, put them in order. The first one shapes version one; the second goes to the next stage.
+If you have two goals, rank them. The first one shapes version one; the second goes to the next stage.
 
 ## Who will use it
 
@@ -54,7 +54,7 @@ For example, a café chain with three branches and its own delivery might descri
 Why this changes the estimate:
 
 - each role is its own set of screens and permissions, and the staff panel often turns out bigger than the customer side;
-- two languages means translation plus checking that long Uzbek words still fit on buttons. Say whether you need Uzbek in Cyrillic as well;
+- two languages means translation plus checking that long Uzbek words still fit on buttons. Say whether you also need Uzbek in Cyrillic;
 - budget phones and weak mobile internet in the regions call for light pages and screens;
 - if many customers or staff are older and haven't used apps much, plan for fewer screens and more clearly labelled buttons.
 
@@ -67,7 +67,7 @@ Describe the current process step by step as it really runs, not as it was meant
 Attach what you already have:
 
 - screenshots of the Excel file you work from;
-- the Telegram work chat where orders come in;
+- screenshots of the Telegram work chat where orders come in;
 - photos of the paper form, the logbook, the delivery note;
 - a sample invoice or a 1C export;
 - the report the owner looks at every week.
@@ -96,21 +96,21 @@ List everything the new system has to exchange data with, and who on your side i
 
 - **1C**: which configuration, standard or customised, where the database runs (your own server or the cloud), who your 1C programmer is. A customised configuration almost always means more integration work.
 - **CRM**: amoCRM or Bitrix24, which plan, who the administrator is.
-- **Payments**: Click, Payme, Uzum. Is there a contract yet, do you need fiscal receipts, are product codes (IKPU) filled in for the catalogue? The business signs the contract, and it's best to start it in the first week of the project.
-- **E-invoicing**: Didox or Faktura.uz, and who signs with the digital signature.
+- **Payments**: Click, Payme, Uzum. Is there a contract yet, do you need fiscal receipts, are the product codes (IKPU) filled in for the catalogue? The business signs the contract, and it's best to start the paperwork in the first week of the project.
+- **E-invoicing**: Didox or Faktura.uz, and who holds the digital signature the invoices are signed with.
 - **The current website**: where the domain is registered, where it's hosted, who has the passwords.
 - **The Telegram bot**, if there is one: whose account it's registered to.
 - **Developer accounts** on the App Store and Google Play, if this is an app.
 
-Give a separate line to who holds the access and admin rights. A common story: the domain is in a former employee's name, the bot belongs to a freelancer who no longer replies, and nobody remembers the hosting password. Recovering access can take longer than the development itself, so start finding out now.
+Give a separate line to who holds the access and admin rights. A common story: the domain is in a former employee's name, the bot belongs to a freelancer who no longer replies, and nobody remembers the hosting password. Recovering access sometimes takes longer than the work itself, so start finding out now.
 
-One more limit belongs in the brief. If the system will store customer data, Uzbekistan's law on personal data requires Uzbek citizens' personal data to be stored on servers in Uzbekistan. That affects the choice of hosting and sometimes the price.
+One more limit belongs in the brief. If the system will store customer data, Uzbekistan's law on personal data requires Uzbek citizens' personal data to be stored on servers in Uzbekistan. That affects the choice of hosting and sometimes the price. More in [Storing personal data in Uzbekistan](/en/blog/personal-data-in-uzbekistan/).
 
 ## Budget range and deadline, honestly
 
 Many owners keep the budget to themselves, worried the agency will simply price up to it. In practice, leaving it out works against you. The same goal can be met several ways: a bot with a spreadsheet, a Telegram mini app, a website or a mobile app. An agency that doesn't know your limits will either quote the full, expensive version or cut features at random. Give it a range and it will propose what fits, or tell you plainly that nothing sensible fits.
 
-To avoid overpaying, ask for the estimate broken into parts: what's included, what isn't, what each stage costs and how long it takes. Quotes in that form can be compared line by line. Also be clear about what your own budget covers: development only, or design, texts and photos, servers, payment provider fees, app store accounts and first-year support as well.
+To avoid overpaying, ask for the estimate broken into parts: what's included, what isn't, what each stage costs and how long it takes. Quotes in that form can be compared line by line. Also be clear about what your own budget covers: development only, or design, texts and photos, servers, payment provider fees, App Store and Google Play accounts and first-year support as well.
 
 What moves the estimate most:
 
@@ -119,7 +119,7 @@ What moves the estimate most:
 - payments and fiscal receipts;
 - a two-language interface;
 - the admin panel and reports, where each new report is a separate task;
-- platforms: Telegram only, web, iOS and Android;
+- platforms: Telegram only, or web, iOS and Android too;
 - moving data over from an old system or from Excel;
 - hosting in Uzbekistan;
 - support after launch.
@@ -128,7 +128,7 @@ What moves the estimate most:
 
 Count your own time as well. Schedules slip more often from waiting than from programming: waiting for answers, for access to 1C, for the payment contract, for texts. Name one person who answers questions within a day and can make decisions.
 
-For orientation: from a good brief, an agency can usually give a preliminary range within a few days. A firm price and a stage-by-stage plan come after a short analysis stage in which the specification is written, typically one to three weeks depending on the number of roles and integrations. Every "don't know" in the brief turns into a buffer in the estimate. Writing "don't know" is still fine, and more honest than guessing; a good agency will ask.
+For orientation: from a good brief, an agency can usually give a preliminary range within a few days. A firm price and a stage-by-stage plan come after a short analysis stage in which the specification is written. That stage usually takes one to two weeks, longer when there are many roles and integrations. Every "don't know" in the brief turns into a buffer in the estimate. Writing "don't know" is still fine, and more honest than guessing; a good agency will ask.
 
 How to set up the contract while the scope may still change: [Fixed price or hourly: how to set up a software development contract](/en/blog/fixed-price-or-hourly/).
 
@@ -141,7 +141,7 @@ A brief starts a conversation; it isn't an order. The questions you get back sho
 - What happens on a cancellation, a return, a failed payment?
 - What can wait for the second stage?
 - Is there a simpler route: configuring the CRM you already pay for, a bot instead of an app?
-- Whose name will the domain, the bot and the store accounts be registered in? Do you get the source code?
+- Whose name will the domain, the bot and the App Store and Google Play accounts be registered in? Do you get the source code?
 - Where will customer data be stored?
 - Who on your side tests and accepts the work?
 - What happens after launch: who fixes bugs, how does support work?
@@ -162,7 +162,7 @@ Agree on regular reporting up front as well: what's done, what's blocking, which
 Copy it, fill it in and send it. Where you don't know the answer, write "don't know".
 
 1. **About the company.** What you do, how many branches and staff, a link to your site or Telegram channel.
-2. **Goal.** One sentence: who will be able to do what, without which current pain. Which number will show it worked, and what it is today.
+2. **Goal.** One sentence: who will be able to do what, and which current problem goes away. Which number will show it worked, and what it is today.
 3. **Users.** Who (customers, staff, managers), how many, on which devices, in which language: Uzbek in Latin or Cyrillic, Russian.
 4. **How it works today.** The steps, the workarounds, the exceptions (cancellation, return, out of stock). Volumes: orders per day, items, branches, peak hours. Attachments: screenshots of spreadsheets and chats, photos of forms, with customer data removed.
 5. **Features.** Must have. Nice to have. Not now.

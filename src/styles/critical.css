@@ -1,6 +1,7 @@
 /* Critical CSS: inlined whole into <style data-gen="critical">. Tokens, the stage, the nav, the hero poster
    (B0 = the flow-mode hero), the ruler, the grain, and the drawing's intro. Everything else is in main.css. */
 @import './gen/osh.css';
+@import './lang.css';
 
 :root {
   --washi: #ECE6DA; --togi: #F3F0EA; --sumi: #0F0E0C; --kurogane: #2A2724; --hagane: #9AA3A8;
