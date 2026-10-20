@@ -100,12 +100,13 @@ html.js #osh .hamon { display: none; }
   font: 500 20px/1 var(--jp); writing-mode: vertical-rl; text-orientation: upright; letter-spacing: .16em; color: var(--sumi);
   display: flex; gap: .55em;
 }
-.hanko { position: absolute; right: calc(var(--m) - 1px); top: calc(var(--sh) * .689); width: 28px; height: 28px; rotate: -3deg; }
+.hanko { position: absolute; right: calc(var(--m) - 1px); top: calc(var(--sh) * .42 + 242px); width: 28px; height: 28px; rotate: -3deg; } /* under the mei, whatever the height */
 .hanko svg, .hanko-s svg { width: 100%; height: 100%; filter: url(#inked); }
 .hanko rect, .hanko-s rect { fill: var(--shu); }
 .hanko .m, .hanko-s .m { fill: var(--washi); }
 .cue { position: absolute; right: var(--m); bottom: 58px; display: flex; align-items: flex-end; gap: 10px; color: var(--fg2); }
-.cue i { display: block; width: 1px; height: 38px; background: linear-gradient(var(--sumi), transparent 92%); transform-origin: top; }
+.cue i { display: block; width: 1px; height: 38px; background: linear-gradient(var(--sumi), transparent 92%); transform-origin: top; animation: cue 2.4s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes cue { 0% { transform: scaleY(0); opacity: 1; } 55% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
 
 /* ---------------- the ruler ---------------- */
 .ruler { position: absolute; z-index: 9; left: 0; right: 0; top: calc(var(--sh) - 40px); height: 40px; padding: 0 var(--m); color: var(--fg); }
@@ -157,6 +158,9 @@ html.intro .cue { animation: tick .4s linear 8s both; }
   .call { display: grid; place-items: center; width: 44px; height: 44px; }
   .call svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linejoin: round; }
   .menu { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 0 0 6px; }
+  /* without JS the menu cannot open: the top bar shows all three languages instead */
+  html.no-js .menu { display: none; }
+  html.no-js .nav > .lang a:not([aria-current]) { display: inline-block; }
 }
 @media (aspect-ratio < 1.2) {
   .h1 { top: 92px; bottom: auto; left: var(--m); max-width: min(330px, calc(100vw - 2 * var(--m))); font-size: var(--h1); line-height: 1.0; }
@@ -167,7 +171,7 @@ html.intro .cue { animation: tick .4s linear 8s both; }
   .sub p { font-size: 15px; }
   .cta { margin-top: 18px; }
   .mei { left: calc(var(--m) - 2px); right: auto; top: calc(var(--sh) * .39); font-size: 17px; }
-  .hanko { left: calc(var(--m) + 1px); right: auto; top: calc(var(--sh) * .65); width: 22px; height: 22px; }
+  .hanko { left: calc(var(--m) + 1px); right: auto; top: calc(var(--sh) * .39 + 218px); width: 22px; height: 22px; }
   .cue, .ruler { display: none; }
 }
 @media (aspect-ratio < 1.2) and (min-width: 600px) { .h1 { max-width: 60vw; --h1: clamp(40px, 6.4vw, 64px); } }

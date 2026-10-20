@@ -1,6 +1,7 @@
 /* The rest of the site's CSS (app_css, loaded without blocking the first paint).
    Flow mode is the base: a printed sword catalogue, one plate per scene, the same text as the cinema.
    Cinema mode (html.cinema, from G1/G3) overrides it under its own selectors. */
+@import './gen/hamon.css';
 
 /* ---------------- grounds ---------------- */
 [data-g=washi] { --bg: var(--washi); }
@@ -76,7 +77,7 @@ html:not(.cinema) .s-yaki { padding: 0; background: var(--ro); }
 /* 研 kaizen */
 .s-togi .st { grid-column: 1 / span 8; font-size: clamp(40px, calc(64 * var(--fit)), 64px); }
 .s-togi .plate { grid-column: 1 / -1; margin-top: 64px; }
-.s-togi .stone { position: absolute; left: 41%; top: 6%; display: flex; align-items: baseline; padding-left: 14px; border-left: 1px solid var(--line); color: var(--fg); }
+.s-togi .stone { position: absolute; left: 41%; top: 6%; display: flex; align-items: baseline; padding-left: 14px; border-left: 1px solid var(--line); color: var(--fg); white-space: nowrap; }
 .s-togi .after { grid-column: 7 / span 6; margin-top: 40px; font-size: clamp(24px, calc(32 * var(--fit)), 32px); font-weight: 280; letter-spacing: -.02em; line-height: 1.1; font-variation-settings: "SHRP" 100; }
 
 /* 鍔 Japanese blade, Uzbek grip */
@@ -220,7 +221,7 @@ html.menu-open .nav::after { display: none; }
   .s-yaki .hako b { font-size: 26px; }
   .s-togi .st { grid-column: 1 / -1; font-size: 34px; max-width: 9em; }
   .s-togi .plate { grid-column: 1 / -1; margin: 48px calc(-1 * var(--m)) 0; }
-  .s-togi .stone { left: 38%; top: -8px; padding-left: 10px; }
+  .s-togi .stone { position: static; margin: 20px 0 0 calc(var(--m) + 38%); padding-left: 10px; }
   .s-togi .after { grid-column: 1 / -1; font-size: 24px; margin-top: 32px; }
   .s-tsuba .b-guard { grid-column: 1 / -1; grid-row: 1; }
   .s-tsuba .st.big { font-size: 40px; }

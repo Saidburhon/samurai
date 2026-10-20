@@ -49,6 +49,12 @@ function measure() {
       boxes.push({ ...box, text: n.textContent.trim().slice(0, 40), sel, fs, fixed: !!el.closest('.nav, .ruler'), inSvg: !!el.closest('svg'), stage: !!el.closest('#stage'), labels: !!el.closest('.osh-labels'), gid: [...document.querySelectorAll('*')].indexOf(group), eid: [...document.querySelectorAll('*')].indexOf(el) });
     }
   }
+  // objects that sit among the text: the hanko
+  for (const el of document.querySelectorAll('.hanko')) {
+    if (!vis(el)) continue;
+    const q = el.getBoundingClientRect();
+    boxes.push({ l: q.left, r: q.right, t: q.top + scrollY, b: q.bottom + scrollY, vt: q.top, vb: q.bottom, text: 'hanko', sel: 'div.hanko', fs: 99, fixed: false, inSvg: false, stage: false, labels: false, gid: -2, eid: -2 });
+  }
   // .ln lines that wrap (a line mask must hold exactly one line on desktop)
   const wraps = [];
   for (const s of document.querySelectorAll('.ln > span')) {

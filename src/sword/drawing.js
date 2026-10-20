@@ -84,10 +84,10 @@ function bladeParts(F, sigma, { s0 = 0.006, s1 = 1, mune = true, hamon = true, c
     out.push(P(poly(o.slice(0, h)) + poly(o.slice(h)), cls.outline || 'k1'));
   } else out.push(P(poly(bladeOutline(F, sigma, s0, s1), true), cls.outline || 'k1'));
   const shEnd = Math.min(s1, 1);
-  out.push(P(poly(lineAlong(F, sigma, 0.28, s0, shEnd, 90)), cls.shinogi || 'k3'));
+  out.push(P(poly(lineAlong(F, sigma, 0.28, s0, shEnd, 64)), cls.shinogi || 'k3'));
   if (s1 >= G.B.yk && s0 <= G.B.yk) out.push(P(poly([F(G.bp2(G.B.yk, 0.28, sigma)), F(G.bp2(G.B.yk, 1, sigma))]), cls.yokote || 'k3'));
-  if (mune) out.push(P(poly(lineAlong(F, sigma, 0.035, s0, s1, 70)), cls.mune || 'k5'));
-  if (hamon) out.push(P(poly(lineAlong(F, sigma, (s) => G.hamonV(s), Math.max(s0, 0.012), Math.min(s1, 0.985), 220)), cls.hamon || 'k4 hamon'));
+  if (mune) out.push(P(poly(lineAlong(F, sigma, 0.035, s0, s1, 48)), cls.mune || 'k5'));
+  if (hamon) out.push(P(poly(lineAlong(F, sigma, (s) => G.hamonV(s), Math.max(s0, 0.012), Math.min(s1, 0.985), 180)), cls.hamon || 'k4 hamon'));
   return out;
 }
 
@@ -168,14 +168,28 @@ function stippleDots(F, sigma, opt) {
   return pts;
 }
 
+// ---------- polygon simplification (Ramer–Douglas–Peucker on a closed loop) ----------
+export function rdpClosed(pts, eps) {
+  const rdp = (p) => {
+    if (p.length < 3) return p;
+    let dmax = 0, idx = 0; const a = p[0], b = p[p.length - 1];
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1e-9;
+    for (let i = 1; i < p.length - 1; i++) { const d = Math.abs((p[i][0] - a[0]) * dy - (p[i][1] - a[1]) * dx) / L; if (d > dmax) { dmax = d; idx = i; } }
+    return dmax > eps ? rdp(p.slice(0, idx + 1)).slice(0, -1).concat(rdp(p.slice(idx))) : [a, b];
+  };
+  const h = pts.length >> 1;
+  return rdp(pts.slice(0, h + 1)).slice(0, -1).concat(rdp(pts.slice(h).concat([pts[0]])).slice(0, -1));
+}
+
 // ---------- the face-on tsuba ----------
-function tsubaFace(holes, tp, { fillHoles = '', ink = '' } = {}) {
+// eps: the drawing tolerance in svg units (the traced holes carry raster-level detail a small drawing does not need)
+function tsubaFace(holes, tp, { fillHoles = '', eps = 0 } = {}) {
   const out = [];
   const circ = (rr, sx = 1.03, n = 128) => { const pts = []; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; pts.push(tp([Math.cos(a) * rr * sx, Math.sin(a) * rr])); } return poly(pts, true); };
   out.push(P(circ(G.TSUBA_R), 'k1'));
   out.push(P(circ(0.372, 1.0, 96), 'k6'));
   let d = '';
-  for (const h of holes) d += poly(h.map(tp), true);
+  for (const h of holes) { const s = h.map(tp); d += poly(eps ? rdpClosed(s, eps) : s, true); }
   d += poly(nakagoAna().map(tp), true);
   if (fillHoles) out.push(P(d, '', fillHoles + ' stroke="none"'));
   out.push(P(d, 'k3 holes'));
@@ -296,7 +310,7 @@ export function hero(holes) {
   const dc = toSvg([292, 232]), dr = 86 / ref.k;
   const kk = dr / (G.TSUBA_R * 1.03);
   const tp = ([u, v]) => [dc[0] + u * kk, dc[1] - v * kk];
-  const det = tsubaFace(holes, tp);
+  const det = tsubaFace(holes, tp, { eps: 0.45 });
   // the leader runs from the circle towards the drawn tsuba
   const tR = G.TSUBA_R * 1.03;
   const tsMid = F(G.hp2((G.H.tsuba[0] + G.H.tsuba[1]) / 2, -tR, sigma));

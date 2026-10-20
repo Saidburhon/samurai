@@ -36,7 +36,8 @@ const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i
     page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`${m.type()}: ${m.text().slice(0, 160)}`); });
     page.on('pageerror', (e) => errors.push('pageerror: ' + e.message.slice(0, 160)));
     page.on('response', (r) => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
-    page.on('requestfailed', (r) => errors.push(`failed ${r.url()} ${r.failure()?.errorText || ''}`));
+    // with JavaScript off the browser refuses the module script itself (reported as "csp"): that is the point, not an error
+    page.on('requestfailed', (r) => { if (!(js === false && r.resourceType() === 'script')) errors.push(`failed ${r.url()} ${r.failure()?.errorText || ''}`); });
     await page.goto(`${base}${p}${js ? '?tier=0' : ''}`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(1500);
@@ -79,6 +80,7 @@ const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i
       for (const [label, sel] of Object.entries(targets)) {
         const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: sel });
         if (!nodeId) { bad('okina', `${sel} not found`); continue; }
+        if (!(await page.$eval(sel, (e) => !!(e.offsetWidth || e.getClientRects().length)))) { run.okina[label] = 'not shown in this layout'; continue; }
         const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId });
         run.okina[label] = fonts.map((f) => `${f.familyName}×${f.glyphCount}`).join(', ');
         const text = await page.$eval(sel, (e) => e.textContent);
@@ -87,32 +89,27 @@ const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i
           if (!fonts.some((f) => f.familyName === want)) bad('okina', `${label}: drawn with ${run.okina[label]}, not ${want}`);
         }
       }
-      // zoomed crops of each okina in the first screen and in the caption
-      const shots = await page.evaluate((sels) => {
-        const out = [];
-        for (const sel of sels) {
-          const el = document.querySelector(sel); if (!el) continue;
+      // zoomed crops of each okina (the element scrolled into view, the glyph measured in the viewport)
+      let ci = 0;
+      for (const sel of Object.values(targets)) {
+        const box = await page.evaluate((sel) => {
+          const el = document.querySelector(sel); if (!el || !el.getClientRects().length) return null;
           el.scrollIntoView({ block: 'center' });
           const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
           for (let n = w.nextNode(); n; n = w.nextNode()) {
-            const i = n.textContent.indexOf('ʻ'); if (i < 0) continue;
+            const i = n.textContent.indexOf('\u02bb'); if (i < 0) continue;
             const r = document.createRange(); r.setStart(n, Math.max(0, i - 2)); r.setEnd(n, Math.min(n.textContent.length, i + 3));
             const b = r.getBoundingClientRect();
-            out.push({ sel, x: b.left + scrollX, y: b.top + scrollY, w: b.width, h: b.height });
-            break;
+            return { x: b.left, y: b.top, w: b.width, h: b.height };
           }
-        }
-        scrollTo(0, 0);
-        return out;
-      }, Object.values(targets));
-      for (const [i, s] of shots.entries()) {
-        await page.evaluate((y) => scrollTo(0, Math.max(0, y - 300)), s.y);
-        await page.waitForTimeout(250);
-        const top = await page.evaluate(() => scrollY);
-        await page.screenshot({ path: path.join(out, `okina-${tag}-${i}.png`), clip: { x: Math.max(0, s.x - 8), y: Math.max(0, s.y - top - 8), width: s.w + 16, height: s.h + 16 } });
+          return null;
+        }, sel);
+        if (!box) continue;
+        await page.waitForTimeout(js ? 1000 : 100);
+        await page.screenshot({ path: path.join(out, `okina-${tag}-${ci++}.png`), clip: { x: Math.max(0, box.x - 8), y: Math.max(0, box.y - 8), width: box.w + 16, height: box.h + 16 } });
       }
       await page.evaluate(() => scrollTo(0, 0));
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(js ? 600 : 100);
     }
 
     // the hero drawing on its diagonal (no JS: placed by the build-emitted CSS alone)

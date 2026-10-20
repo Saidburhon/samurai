@@ -3,7 +3,7 @@
 // Pure: the build writes it into the HTML (gen:dial), so the ring names are data-i18n text translated with the page.
 // Units: 1000 = the viewport height in cinema mode; the centre is (0, 0); 12 is at the top, clockwise 15° per hour.
 import * as G from './geom-core.js';
-import { frame, poly, SC } from './drawing.js';
+import { frame, poly, rdpClosed, SC } from './drawing.js';
 
 export const DIAL = { rIn: 400, rOut: 480, frieze: [300, 360], numIn: 378, numOut: 446, offsetH: 4, shared: [9, 14] };
 const deg = Math.PI / 180;
@@ -17,17 +17,6 @@ function arc(r, a0, a1) {
 }
 
 // the frieze: the tsuba's own girih openwork, small, 16 times around the dial, cut into the plaster
-function rdpClosed(pts, eps) {
-  const rdp = (p) => {
-    if (p.length < 3) return p;
-    let dmax = 0, idx = 0; const a = p[0], b = p[p.length - 1];
-    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1e-9;
-    for (let i = 1; i < p.length - 1; i++) { const d = Math.abs((p[i][0] - a[0]) * dy - (p[i][1] - a[1]) * dx) / L; if (d > dmax) { dmax = d; idx = i; } }
-    return dmax > eps ? rdp(p.slice(0, idx + 1)).slice(0, -1).concat(rdp(p.slice(idx))) : [a, b];
-  };
-  const h = pts.length >> 1;
-  return rdp(pts.slice(0, h + 1)).slice(0, -1).concat(rdp(pts.slice(h).concat([pts[0]])).slice(0, -1));
-}
 export const FRIEZE = { r: 330, size: 27, n: 16 };
 function rosette(holes) {
   const k = FRIEZE.size / 0.352;

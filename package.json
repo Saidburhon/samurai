@@ -2,9 +2,13 @@
   "name": "qilich-site",
   "private": true,
   "scripts": {
-    "build": "node scripts/build-langs.mjs",
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "lint": "node scripts/lint-copy.mjs --built",
+    "qa:fit": "node scripts/qa/fit-check.cjs",
+    "qa:flow": "node scripts/qa/flow-probe.cjs",
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "npm run build && wrangler deploy",
     "deploy:www": "wrangler deploy -c workers/www-redirect/wrangler.json"
   },
   "devDependencies": {
