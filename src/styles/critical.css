@@ -180,6 +180,9 @@ html.intro .cue { animation: tick .4s linear 8s both; }
   .cue, .ruler { display: none; }
 }
 @media (aspect-ratio < 1.2) and (min-width: 600px) { .h1 { max-width: 60vw; --h1: clamp(40px, 6.4vw, 64px); } }
+/* RU on a narrow phone: "IT-агентство" never breaks at its hyphen, so "IT-агентство теперь" would run into the blade;
+   four lines instead, all left of it */
+@media (aspect-ratio < 1.2) and (max-width: 380px) { html[lang=ru] .h1 { max-width: calc(78vw - var(--m)); } }
 
 /* ?og=1: the share image (scripts/og.mjs) is the hero poster without the furniture */
 html.og .nav > :not(.brand), html.og .ruler, html.og .cue, html.og .b-hero .sub, html.og .grain, html.og .skip { display: none; }

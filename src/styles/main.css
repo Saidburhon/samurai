@@ -148,7 +148,7 @@ html[lang=ru] .s-tsuba .st.big { font-size: clamp(38px, calc(64 * var(--fit)), 6
 .foot .annot { display: flex; flex-wrap: wrap; gap: 10px 18px; color: var(--kurogane); }
 .foot .annot a { color: var(--sumi); }
 .colophon { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 28px; padding-top: 24px; border-top: 1px solid rgba(15, 14, 12, .22); font-size: 13px; }
-.mei-s { font: 500 15px/1 var(--jp); letter-spacing: .16em; }
+.mei-s { display: inline-flex; gap: .55em; font: 500 15px/1 var(--jp); letter-spacing: .16em; } /* the two words apart by a gap, not a space: Mincho's subset has no space, so a space would be the platform serif's */
 .hanko-s { width: 22px; height: 22px; rotate: -3deg; margin-left: -16px; }
 .colophon .copy-r { color: var(--kurogane); font: 400 13px/1 var(--mono); font-stretch: 87.5%; }
 .colophon .top { margin-left: auto; font-size: 13px; font-weight: 560; letter-spacing: .08em; text-transform: uppercase; font-variation-settings: "SHRP" 60; }

@@ -75,8 +75,6 @@ export async function buildFonts() {
       (JP(c) ? jp : CYR(c) ? cyr : lat).add(ch);
     }
   }
-  // Japanese runs carry a space now and then (the mei タシケント住 キリチ作): Mincho draws it, not the platform serif
-  jp.add(' ');
   // the reflected words, for GeologicaSign
   const words = new Set();
   for (const h of Object.values(html)) for (const m of h.matchAll(/<p class="words"[^>]*>([\s\S]*?)<\/p>/g)) for (const w of m[1].matchAll(/>([^<]+)</g)) for (const ch of decode(w[1])) words.add(ch);
