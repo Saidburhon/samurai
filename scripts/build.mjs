@@ -2,7 +2,8 @@
 //   1. lint-copy                 the copy rules (yarat-, product names, okina, Russian dashes, handles)
 //   2. build-osh                 every drawing from the one generator; the dial; the no-JS placement CSS; the plates
 //   3. boot + critical           src/boot/head.js, src/boot/boot.js and src/styles/critical.css, written as WHOLE
-//                                <script data-gen> / <style data-gen> elements (never comment markers inside them)
+//                                <script data-gen> / <style data-gen> elements (never comment markers inside them);
+//                                src/boot/paper.js into public/404.html as <script data-gen="paper">
 //   4. app                       esbuild: src/main.js and src/styles/main.css, split ESM chunks, hashed, metafile
 //   5. build-langs               /ru/ and /en/ from the Uzbek page; META, JSON-LD, hreflang, sitemap
 //   6. fonts                     subsets from the BUILT pages; <style data-gen="fonts"> in every page
@@ -41,6 +42,10 @@ src = src.replace(/<script data-gen="head">[\s\S]*?<\/script>/, () => `<script d
   .replace(/<script data-gen="boot">[\s\S]*?<\/script>/, () => `<script data-gen="boot">${safe(bootJs)}</script>`)
   .replace(/<style data-gen="critical">[\s\S]*?<\/style>/, () => `<style data-gen="critical">${safe(critical)}</style>`);
 writeFileSync(PAGES.uz, src);
+// the 404 has no boot script; it gets only the washi tile (src/boot/paper.js)
+const paperJs = await iife('src/boot/paper.js');
+const P404 = 'public/404.html';
+writeFileSync(P404, readFileSync(P404, 'utf8').replace(/<script data-gen="paper">[\s\S]*?<\/script>/, () => `<script data-gen="paper">${safe(paperJs)}</script>`));
 
 // 4
 const options = {

@@ -3,6 +3,7 @@
   "name": "qilich-com",
   "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["enable_request_signal"],
   "workers_dev": false,
   "preview_urls": false,
   "assets": {

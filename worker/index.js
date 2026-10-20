@@ -69,7 +69,7 @@ const PROD_ORIGIN = 'https://qilich.com';
 const PROD_HOST = 'qilich.com';
 const API_TIMEOUT_MS = 45_000; // until the response headers arrive; with one retry, at most 90 s
 const DEADLINE_MS = 90_000; // the whole answer, headers to the last token
-const PING_MS = 5_000; // also how soon a closed tab is noticed and the generation stopped
+const PING_MS = 5_000; // keeps the connection open through proxies while the model thinks
 const TURNSTILE_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const TURNSTILE_ACTION = 'samurai';
 
@@ -459,14 +459,14 @@ async function samurai(request, env, ctx, url) {
     }));
 
   try {
-    return await answer({ env, ctx, lang, input, history, dropped, body, devTools, mkey, settle });
+    return await answer({ request, env, ctx, lang, input, history, dropped, body, devTools, mkey, settle });
   } catch (err) {
     ctx.waitUntil(settle(undefined));
     throw err;
   }
 }
 
-async function answer({ env, ctx, lang, input, history, dropped, body, devTools, mkey, settle }) {
+async function answer({ request, env, ctx, lang, input, history, dropped, body, devTools, mkey, settle }) {
   const today = tashkentToday();
   const ratePromise = getRate(ctx);
   let rate = null;
@@ -488,13 +488,18 @@ async function answer({ env, ctx, lang, input, history, dropped, body, devTools,
   // The SSE response. Events are queued on the writer from the moment the stream connects.
   const { readable, writable } = new TransformStream();
   const writer = writable.getWriter();
+  // The visitor closed the page: stop generating. workerd reports it on request.signal (the enable_request_signal
+  // compatibility flag); a write to a closed response only stalls, it does not fail.
   let gone = false;
+  const leave = () => {
+    if (gone) return;
+    gone = true;
+    stream.abort();
+  };
+  request.signal?.addEventListener?.('abort', leave);
   const write = (chunk) => {
     if (gone) return;
-    writer.write(enc.encode(chunk)).catch(() => {
-      gone = true; // the visitor closed the page: stop generating
-      stream.abort();
-    });
+    writer.write(enc.encode(chunk)).catch(leave);
   };
   const send = (event, data) => write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 

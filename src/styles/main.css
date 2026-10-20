@@ -256,6 +256,8 @@ html.menu-open .nav::after { display: none; }
   .contact .btn { justify-content: center; width: 100%; }
   .s-noto .plate { margin: 64px calc(-1 * var(--m)) 0; }
   .foot { padding: 56px var(--m) 48px; }
+  /* label and value never part: two rows, the labels one column, the values aligned beside them */
+  .foot .annot { display: grid; grid-template-columns: max-content 1fr; justify-items: start; gap: 10px 16px; }
   .colophon .top { margin-left: 0; }
 }
 @media (max-width: 860px) { html.js:not(.cinema) .ruler { display: none; } }
