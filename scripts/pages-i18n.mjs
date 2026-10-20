@@ -4,6 +4,7 @@
 // Russian: a non-breaking space before every dash. Uzbek: the okina is ʻ (U+02BB), the tutuq belgisi ʼ (U+02BC).
 export const T = {
   uz: {
+    team: 'Jamoa', logoAlt: 'Qilich belgisi (mon)', logoPng: 'PNG, 512 × 512', logoSvg: 'SVG, vektor',
     skip: 'Asosiy matnga oʻtish', home: 'Bosh sahifa', homeLabel: 'Qilich — bosh sahifa', sections: 'Boʻlimlar',
     svc: 'Xizmatlar', about: 'Biz haqimizda', contact: 'Aloqa', press: 'Matbuot uchun', privacy: 'Maxfiylik siyosati',
     cta: 'Bogʻlanish', call: 'Qoʻngʻiroq qilish', menu: 'Menyu', crumbs: 'Siz shu yerdasiz', pages: 'Sahifalar',
@@ -27,6 +28,7 @@ export const T = {
     ckMore: 'Batafsil', ckYes: 'Ruxsat beraman', ckNo: 'Kerak emas', ckLabel: 'Cookie fayllari',
   },
   ru: {
+    team: 'Команда', logoAlt: 'Знак Qilich (мон)', logoPng: 'PNG, 512 × 512', logoSvg: 'SVG, вектор',
     skip: 'Перейти к основному тексту', home: 'Главная', homeLabel: 'Qilich — главная', sections: 'Разделы',
     svc: 'Услуги', about: 'О компании', contact: 'Контакты', press: 'Для прессы', privacy: 'Политика конфиденциальности',
     cta: 'Связаться', call: 'Позвонить', menu: 'Меню', crumbs: 'Вы здесь', pages: 'Страницы',
@@ -47,6 +49,7 @@ export const T = {
     ckMore: 'Подробнее', ckYes: 'Разрешить', ckNo: 'Не нужно', ckLabel: 'Файлы cookie',
   },
   en: {
+    team: 'Team', logoAlt: 'The Qilich mark (mon)', logoPng: 'PNG, 512 × 512', logoSvg: 'SVG, vector',
     skip: 'Skip to content', home: 'Home', homeLabel: 'Qilich — home', sections: 'Sections',
     svc: 'Services', about: 'About', contact: 'Contact', press: 'Press', privacy: 'Privacy policy',
     cta: 'Get in touch', call: 'Call', menu: 'Menu', crumbs: 'You are here', pages: 'Pages',
@@ -67,6 +70,7 @@ export const T = {
     ckMore: 'Details', ckYes: 'Allow', ckNo: 'No, thanks', ckLabel: 'Cookies',
   },
   ja: {
+    team: 'チーム', logoAlt: 'Qilichのシンボルマーク（紋）', logoPng: 'PNG（512 × 512）', logoSvg: 'SVG（ベクター）',
     skip: '本文へ移動', home: 'ホーム', homeLabel: 'Qilich ホーム', sections: 'セクション',
     svc: 'サービス', about: '会社概要', contact: 'お問い合わせ', press: 'プレス向け情報', privacy: 'プライバシーポリシー',
     cta: 'お問い合わせ', call: '電話をかける', menu: 'メニュー', crumbs: '現在のページ', pages: 'ページ',

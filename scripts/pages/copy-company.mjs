@@ -28,7 +28,7 @@ export const PAGES = {
         { id: 'xizmatlar', h2: 'Nima quramiz', services: true },
         { id: 'joy', h2: 'Qayerda ishlaymiz', p: ['Jamoa Toshkentda ishlaydi (UTC+5). Tokio bilan farq 4 soat, ish kunining 5 soati umumiy, shuning uchun Yaponiyadagi hamkorlar bilan har kuni bir vaqtda ishlaymiz.'] },
         { id: 'portfolio', h2: 'Nega portfolio yoʻq', p: ['Qilich Oʻzbekistonda yangi. Shuning uchun bu yerda portfolio ham, oʻylab topilgan raqamlar ham yoʻq. Birinchi loyihalarimizni siz bilan qilamiz.'] },
-        { id: 'maʼlumot', h2: 'Kompaniya maʼlumotlari', facts: 'about', p: ['Jurnalistlar va hamkorlar uchun qisqa matn va logotiplar: <a href="{press}">Matbuot uchun</a>. Loyiha haqida gaplashish uchun: <a href="{contact}">Aloqa</a>.'] },
+        { id: 'malumot', h2: 'Kompaniya maʼlumotlari', facts: 'about', p: ['Jurnalistlar va hamkorlar uchun qisqa matn va logotiplar: <a href="{press}">Matbuot uchun</a>. Loyiha haqida gaplashish uchun: <a href="{contact}">Aloqa</a>.'] },
       ],
     },
     ru: {
@@ -246,7 +246,7 @@ export const PAGES = {
         { id: 'jumla', h2: 'Bir jumlada', quote: true },
         { id: 'matn', h2: 'Qisqa matn', p: ['Qilich Toshkentda ishlaydigan yapon IT agenstvasi. Kompaniya Oʻzbekiston bizneslari va Yaponiya kompaniyalari uchun iOS va Android ilovalar, saytlar va veb-platformalar, Telegram-botlar, backend va integratsiyalar, desktop ilovalar, IoT va AI integratsiyasini ishlab chiqadi.', 'Qilich yapon ish uslubiga amal qiladi: ishdan oldin yozma reja, har kungi hisobot (hōrensō), sinovdan oʻtmagan kod ishga tushmaydi, ishga tushgandan keyin esa doimiy yaxshilash (kaizen). Jamoa Toshkentda ishlaydi, Tokio bilan vaqt farqi 4 soat.'] },
         { id: 'faktlar', h2: 'Faktlar', facts: 'press' },
-        { id: 'logo', h2: 'Logotip', logo: true, p: ['Belgi (mon) — yapon qilichining tsubasi, yaʼni dasta va tigʻ orasidagi himoya halqasi, oldidan koʻrinishda, undan tigʻ oʻtib turibdi. U Q harfiga ham oʻxshaydi.'] },
+        { id: 'logo', h2: 'Logotip', logo: true, p: ['Belgi (mon)\u00a0— yapon qilichining tsubasi, yaʼni dasta va tigʻ orasidagi himoya halqasi, oldidan koʻrinishda, undan tigʻ oʻtib turibdi. U Q harfiga ham oʻxshaydi.'] },
         { id: 'aloqa', h2: 'Matbuot uchun aloqa', p: ['Savollar va intervyu uchun: <a href="mailto:inbox@qilich.com">inbox@qilich.com</a>, <a href="tel:+998972707007">+998&nbsp;97&nbsp;270&nbsp;70&nbsp;07</a>. Kompaniya haqida batafsil: <a href="{about}">Biz haqimizda</a>.'] },
       ],
     },
