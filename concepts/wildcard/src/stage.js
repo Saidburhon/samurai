@@ -195,6 +195,7 @@ export function createStage(L, host) {
   let distDirty = false;
   function render() {
     if (distDirty) { distTex.needsUpdate = true; distDirty = false; }
+    cu.uDistOn.value = distEnergy ? 1 : 0;
     renderer.render(scene, camera);
     frames++;
   }

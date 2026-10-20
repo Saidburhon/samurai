@@ -199,7 +199,7 @@ async function boot() {
   // ---- one loop: Lenis → ScrollTrigger → state → DOM → render only when something changed
   const sync = makeSync(L, el);
   const BENCH = /bench/.test(location.search);
-  const GAP = +(new URLSearchParams(location.search).get('gap') ?? (stage.software ? 320 : 0));
+  const GAP = +(new URLSearchParams(location.search).get('gap') ?? (stage.software ? 400 : 0));
   let pending = false, lastRender = 0;
   const ft = [];
   let vel = 0, cueOn = true, lastY = 0, vSm = 0;
@@ -227,7 +227,7 @@ async function boot() {
     const changed = stage.apply(Sx, sk);
     if (cursor) cursor.step(dt, html.dataset.ctone);
     if (changed) pending = true;
-    if ((pending || BENCH) && !document.hidden && now - lastRender >= GAP) {
+    if ((pending || BENCH) && !document.hidden && !window.__pause && now - lastRender >= GAP) {
       pending = false;
       lastRender = now;
       sync(Sx, kNow); // the DOM text moves in the same frame as the cloth

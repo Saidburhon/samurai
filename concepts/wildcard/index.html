@@ -31,7 +31,7 @@ if(!rm&&ok&&'scrollRestoration' in history)history.scrollRestoration='manual';})
 <div class="fr cnt" id="cnt" aria-hidden="true"><span lang="ja">経糸</span> · TANDA · <b id="cntn">001</b> → <span id="cntT">200</span></div>
 <script>
 /* first act before WebGL is up: the warp drops (Canvas2D, no bundle needed); the loom takes over on its first frame */
-(function(){var D=document.documentElement;if(!D.classList.contains('loom'))return;
+(function(){var D=document.documentElement;if(!D.classList.contains('loom')||/no2d/.test(location.search))return;
 var c=document.getElementById('intro');if(!c)return;var x=c.getContext('2d');var W=innerWidth,H=innerHeight,d=Math.min(devicePixelRatio||1,1.5);
 c.width=Math.round(W*d);c.height=Math.round(H*d);x.scale(d,d);
 var ph=W<760,T=ph?80:Math.max(120,Math.min(200,Math.round(W/7.2))),P=W/T,c0=Math.floor(T/2);

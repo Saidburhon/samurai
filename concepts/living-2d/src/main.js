@@ -107,7 +107,7 @@ function theatre(S, scenes, TOTAL) {
   const now = () => performance.now() / 1000 - shift;
   // phone: one finger-flick per poster (key beats); desktop: one wheel step (3 x 160 px) per beat
   const KEYS = phone ? [0, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 20].filter((k) => k <= TOTAL) : Array.from({ length: TOTAL + 1 }, (_, i) => i);
-  const STEP = phone ? Math.round(H * 1.14) : Math.round(H * 0.5333);
+  const STEP = phone ? Math.round(H * 1.14) : Math.round(H * 0.7111);
   const NST = KEYS.length - 1;
   const keyB = (s) => { const i = Math.min(NST - 1, Math.floor(s)); const f = s - i; return KEYS[i] + (KEYS[i + 1] - KEYS[i]) * clamp(f); };
   const beatToStep = (b) => { for (let i = 0; i < NST; i++) if (b <= KEYS[i + 1]) return i + (b - KEYS[i]) / (KEYS[i + 1] - KEYS[i]); return NST; };
@@ -123,25 +123,39 @@ function theatre(S, scenes, TOTAL) {
   const scrub = gsap.to(proxy, { s: NST, duration: NST, ease: 'none', paused: true, onUpdate: () => { master.seek(keyB(proxy.s)); } });
 
   const theatreEl = document.getElementById('theatre');
+  // Desktop: the document itself never scrolls. A hidden full-viewport scroller carries the scroll length; Lenis drives it
+  // from wheel events on the window, and ScrollTrigger scrubs against it. The stage stays put, so no frame can tear.
+  // Phones: native touch scroll on the document, with a ScrollTrigger pin and snapping.
+  const VS = !phone && !qs.has('winscroll');
+  let scroller = window, spacer = null;
+  if (VS) {
+    html.classList.add('vscroll');
+    scroller = document.createElement('div'); scroller.id = 'scroller'; scroller.setAttribute('aria-hidden', 'true');
+    spacer = document.createElement('div'); spacer.style.height = (NST * STEP + H) + 'px';
+    scroller.appendChild(spacer); document.body.appendChild(scroller);
+    ScrollTrigger.defaults({ scroller });
+  }
   let lenis = null;
-  if (!phone && !matchMedia('(pointer: coarse)').matches) {
-    lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false });
+  if (!phone && !matchMedia('(pointer: coarse)').matches && !qs.has('nolenis')) {
+    lenis = new Lenis(VS ? { wrapper: scroller, content: spacer, eventsTarget: window, lerp: 0.085, smoothWheel: true, wheelMultiplier: 1, syncTouch: false } : { lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
   }
+  const curScroll = () => (VS ? scroller.scrollTop : scrollY);
   gsap.ticker.lagSmoothing(0);
   ScrollTrigger.config({ ignoreMobileResize: true });
   const trig = ScrollTrigger.create({
-    trigger: theatreEl, start: 'top top', end: '+=' + NST * STEP, pin: true, pinSpacing: true, scrub: true, animation: scrub,
+    scroller, trigger: VS ? spacer : theatreEl, start: 'top top', end: '+=' + NST * STEP, pin: !VS, pinSpacing: true, scrub: VS ? 0.55 : true, animation: scrub,
     snap: phone ? { snapTo: 1 / NST, duration: { min: 0.2, max: 0.45 }, delay: 0.05, ease: 'power1.inOut', inertia: false } : false,
   });
   const scrollToBeat = (b, instant) => {
     const y = trig.start + beatToStep(b) * STEP + 1;
-    if (lenis) lenis.scrollTo(y, instant ? { immediate: true } : { duration: Math.min(3.2, 1 + Math.abs(y - scrollY) / 5000), easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) });
-    else window.scrollTo({ top: y, behavior: instant ? 'auto' : 'smooth' });
+    if (lenis) lenis.scrollTo(y, instant ? { immediate: true, force: true } : { force: true, duration: Math.min(3.2, 1 + Math.abs(y - curScroll()) / 5000), easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) });
+    else (VS ? scroller : window).scrollTo({ top: y, behavior: instant ? 'auto' : 'smooth' });
   };
   if (DEBUG_B != null) { requestAnimationFrame(() => { scrollToBeat(DEBUG_B, true); ScrollTrigger.update(); master.seek(DEBUG_B); dirty = true; }); }
   window.__seek = (b) => { scrollToBeat(b, true); ScrollTrigger.update(); };
+  window.__scrollPos = curScroll;
   window.__state = state;
 
   // hold scrolling until the cut has opened (about 3 s), so the load sequence is never skipped
@@ -169,7 +183,16 @@ function theatre(S, scenes, TOTAL) {
   mbtn.addEventListener('click', () => (menu.hidden ? openMenu() : closeMenu()));
   menu.querySelector('.menu-close').addEventListener('click', closeMenu);
   menu.addEventListener('click', (e) => { if (e.target === menu) closeMenu(); });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+    if (!VS || !lenis || !menu.hidden || e.target.closest('input,textarea,select')) return;
+    const k = { ArrowDown: 0.25, ArrowUp: -0.25, PageDown: 1, PageUp: -1, ' ': e.shiftKey ? -1 : 1, Home: -1e3, End: 1e3 }[e.key];
+    if (k == null) return;
+    e.preventDefault();
+    const cur = curScroll(), max = NST * STEP;
+    const tgt = Math.abs(k) >= 1e3 ? (k > 0 ? max : 0) : Math.round((cur + k * STEP * (Math.abs(k) < 1 ? 1 : 1)) / (Math.abs(k) < 1 ? 1 : STEP)) * (Math.abs(k) < 1 ? 1 : STEP);
+    lenis.scrollTo(Math.max(0, Math.min(max, tgt)), { duration: 0.9 });
+  });
 
   // cut name label
   const cn = document.getElementById('cutname');

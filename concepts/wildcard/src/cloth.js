@@ -48,6 +48,7 @@ uniform float uTies;
 uniform vec4 uDrop;         // t, centre thread, generation step, fall duration (t < 0: off)
 uniform vec2 uIntro;        // registration progress (0..1, staggered), max amplitude
 uniform sampler2D tDist;
+uniform float uDistOn;
 uniform float uDim;
 varying vec2 vC;
 
@@ -82,7 +83,7 @@ void main(){
   bool woven = (cy >= uWTop && cy < uWBot && !inPick) || pickWoven;
 
   vec2 dv = vec2(cx / uRes.x, cy / uRes.y);
-  float dis = (dv.x > 0.0 && dv.x < 1.0 && dv.y > 0.0 && dv.y < 1.0) ? texture2D(tDist, dv).r * 24.0 : 0.0;
+  float dis = (uDistOn > 0.5 && dv.x > 0.0 && dv.x < 1.0 && dv.y > 0.0 && dv.y < 1.0) ? texture2D(tDist, dv).r * 24.0 : 0.0;
 
   vec3 col;
   if (woven) {
@@ -115,12 +116,12 @@ void main(){
     float rowY = Y / rowPx;
     float row = floor(rowY);
     float wr = fract(rowY);
-    float jt = Y - (uJiyak.x - 6.0 * rowPx);
+    float jt = Y - (uJiyak.x - 9.0 * rowPx);
     if (uJiyak.y > 0.0 && jt >= 0.0 && jt < uJiyak.y) {
       float jrow = floor(jt / rowPx);
-      float band = floor(jrow / 2.0);
+      float band = floor(jrow / 3.0);
       vec3 wc = band < 0.5 ? vec3(0.82, 0.078, 0.353) : (band < 1.5 ? vec3(0.949, 0.694, 0.106) : vec3(0.039, 0.498, 0.333));
-      dye = mod(jrow, 2.0) > 0.5 ? mix(dye, uIvory, 0.75) : wc;
+      dye = mod(jrow, 3.0) > 1.5 ? mix(dye, uIvory, 0.8) : wc;
     }
 
     // shot weave: Tokyo warp x Tashkent weft, a third changeant colour
@@ -293,7 +294,7 @@ export function makeCloth({ W, H, chunks, scale }) {
     uTies: { value: 0 },
     uDrop: { value: new THREE.Vector4(-1, 0, 0.12, 0.45) },
     uIntro: { value: new THREE.Vector2(1, 0) },
-    tDist: { value: null },
+    tDist: { value: null }, uDistOn: { value: 0 },
     uDim: { value: 1 },
   };
   if (!chunks[1]) { u.tB.value = u.tA.value; u.tRB.value = u.tRA.value; }

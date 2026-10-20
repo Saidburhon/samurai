@@ -55,14 +55,14 @@ export function buildIntro(L, Ui, U0, el, fx) {
     tl.to(Ui, { bladeLift: 10, duration: 0.08, ease: 'power4.in' }, t + 0.66);
     tl.to(Ui, { bladeLift: 0, duration: 0.3, ease: 'elastic.out(1, 0.4)' }, t + 0.74);
   };
-  throwJ(6.6, -260, rest, 2);
+  throwJ(6.6, -260, rest, 3);
   tl.to(Ui, { glint: W * 0.95, duration: 2.2, ease: 'power1.inOut' }, 7.6);
-  throwJ(10.4, rest, phone ? 52 : 120, 4);
+  throwJ(10.4, rest, phone ? 52 : 120, 6);
   tl.to(Ui, { sweep: -500, duration: 0.01 }, 11.0);
   tl.to(Ui, { sweep: W * 1.05, duration: 3.2, ease: 'sine.inOut' }, 12.2);
   tl.to(Ui, { glint: W * 0.08, duration: 0.01 }, 11.9);
   tl.to(Ui, { glint: U0.glint, duration: 1.6, ease: 'power1.inOut' }, 12.0);
-  throwJ(13.2, phone ? 52 : 120, rest, 6);
+  throwJ(13.2, phone ? 52 : 120, rest, 9);
   tl.set({}, {}, 16.2);
   return tl;
 }

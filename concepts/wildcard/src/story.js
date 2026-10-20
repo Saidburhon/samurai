@@ -13,7 +13,7 @@ export function initialState(L) {
     ampL: phone ? 40 : 60, ampTop: 2, looseScale: phone ? 2.6 : 2.4, looseOff: 30, fade: phone ? 60 : 70, topLit: 1, recede: 0.7, nearW: 0.27, nearD: 110,
     sweep: W * 1.05, glint: W * 0.62,
     pull: 0, pickTop: F, pickX: -200, pickDir: 0,
-    jiyak: 6 * L.pitch * 0.5,
+    jiyak: 9 * L.pitch * 0.5,
     shear: 0, shotFront: 0,
     sigOn: 0, bow: 0, brk: 0, rejoin: 0, knot: 0, andon: 0, andonMix: 0, andonDy: -620,
     safe: L.danSafe, safeK: 1, ties: 0,

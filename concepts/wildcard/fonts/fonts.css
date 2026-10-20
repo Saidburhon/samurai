@@ -4,3 +4,5 @@
 @font-face{font-family:'Onest';font-style:normal;font-weight:400 600;font-display:swap;src:url(onest-400.woff2) format('woff2');}
 @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(plex-500.woff2) format('woff2');}
 @font-face{font-family:'Zen Kaku Gothic New';font-style:normal;font-weight:500;font-display:swap;src:url(zen-500.woff2) format('woff2');}
+@font-face{font-family:'Dela Gothic One';font-style:normal;font-weight:400;font-display:block;src:url(dela-x.woff2) format('woff2');unicode-range:U+5200,U+6A2A,U+6587,U+5B57;}
+@font-face{font-family:'Zen Kaku Gothic New';font-style:normal;font-weight:500;font-display:swap;src:url(zen-x.woff2) format('woff2');unicode-range:U+5200,U+6A2A,U+6587,U+5B57;}

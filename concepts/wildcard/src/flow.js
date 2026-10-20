@@ -14,6 +14,13 @@ export function runFlow(L) {
     Object.assign(c.style, { position: 'absolute', left: 0, top: p.y0 + 'px', width: '100%', height: p.h + 'px' });
     layer.insertBefore(c, layer.firstChild);
   }
+  // the time scene shows its settled state: Tokyo four hours ahead, aligned by one instant
+  const t = L.time, span = t.x1 - t.x0;
+  document.querySelectorAll('#nums-tk span').forEach((sp) => {
+    const x = (((+sp.dataset.h * t.hw - 4 * t.hw) % span) + span) % span;
+    sp.style.left = (t.x0 + x).toFixed(1) + 'px';
+    sp.style.visibility = x < 6 || x > span - 6 ? 'hidden' : 'visible';
+  });
   const vis = (id) => { const e = document.getElementById(id); if (e) e.style.visibility = 'visible'; };
   ['needle', 'hanko', 'mei'].forEach(vis);
   document.getElementById('hdr').dataset.tl = 'light';
