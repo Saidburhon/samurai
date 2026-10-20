@@ -104,7 +104,11 @@ html[lang=ru] .s-tsuba .st.big { font-size: clamp(38px, calc(64 * var(--fit)), 6
 .s-toki .lines .beat:last-child .line { color: var(--fg2); }
 .dial-plate { grid-column: 6 / span 7; grid-row: 1 / span 4; align-self: center; justify-self: center; position: relative; aspect-ratio: 1; width: min(100%, 72svh); }
 .s-toki .hako { top: 128px; }
-.s-toki .hako.hrs { top: auto; bottom: 128px; }
+/* 報連相 lives in its own beat. In flow it stands with the line it names, right of it, top-aligned, so the strip holds 時
+   alone. In cinema (html.cinema, G3/G4) the beat is not positioned and .hako places it in the strip at B19 instead of 時. */
+html:not(.cinema) .s-toki .lines .beat:last-child { display: flex; align-items: flex-start; gap: 20px; }
+html:not(.cinema) .s-toki .hako.hrs { position: static; flex: none; margin-top: 3px; }
+html:not(.cinema) .s-toki .hako.hrs b { font-size: 30px; }
 
 /* the dial: carved ganch */
 .dial { width: 100%; height: 100%; overflow: visible; --sun: 135deg; }
@@ -134,7 +138,7 @@ html[lang=ru] .s-tsuba .st.big { font-size: clamp(38px, calc(64 * var(--fit)), 6
 .contact .row { display: flex; align-items: center; gap: 14px; }
 .contact .tel { font-weight: 220; font-size: clamp(56px, 8.33vw, 120px); line-height: 1; letter-spacing: -.035em; font-variation-settings: "SHRP" 100; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .contact .mail { font-weight: 280; font-size: clamp(24px, 2.78vw, 40px); letter-spacing: -.02em; font-variation-settings: "SHRP" 60; padding-bottom: 6px; }
-.copy { width: 32px; height: 32px; display: grid; place-items: center; color: var(--fg2); border-radius: 0; }
+.copy { flex: none; width: 32px; height: 32px; display: grid; place-items: center; color: var(--fg2); border-radius: 0; }
 .copy svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.2; }
 .copy:hover { color: var(--fg); }
 .contact .btns { display: flex; gap: 12px; margin-top: 26px; }
@@ -227,8 +231,9 @@ html.menu-open .nav::after { display: none; }
   .s-togi .stone b { white-space: nowrap; }
   .s-togi .after { grid-column: 1 / -1; font-size: 24px; margin-top: 32px; }
   .s-tsuba .b-guard { grid-column: 1 / -1; grid-row: 1; }
-  .s-tsuba .st.big { font-size: 40px; }
+  .s-tsuba .st.big { font-size: min(40px, 10.4vw); } /* one sentence a line down to 320 px (the longest, 7.03 em) */
   .s-tsuba .cap { margin-top: 18px; }
+  .s-tsuba .hako { top: 76px; } /* top-right, as on every phone page: its gloss ends above the caption's line */
   .s-tsuba .plate { grid-column: 1 / -1; grid-row: 2; margin: 40px auto 0; width: min(100%, 360px); }
   .s-tsuba .b-carpet { grid-column: 1 / -1; grid-row: 3; margin-top: 40px; }
   .s-tsuba .b-carpet .st { font-size: 26px; }
@@ -244,7 +249,10 @@ html.menu-open .nav::after { display: none; }
   .dial .odd { display: none; } /* even hours only: twelve numerals a ring at a readable size */
   .s-toki .lines { grid-row: 4; margin-top: 32px; }
   .s-toki .lines .line { font-size: 17px; }
-  .s-toki .hako.hrs { top: 76px; bottom: auto; right: calc(var(--m) + 34px); }
+  /* 報連相 under its line, at the left, the strip's 時 far above it at top-right */
+  html:not(.cinema) .s-toki .lines .beat:last-child { flex-direction: column; gap: 12px; }
+  html:not(.cinema) .s-toki .hako.hrs { margin-top: 0; }
+  html:not(.cinema) .s-toki .hako.hrs b { font-size: 26px; }
   .s-noto .pre, .s-noto .st { grid-column: 1 / -1; }
   .s-noto .pre { font-size: 17px; }
   .s-noto .st { font-size: 34px; }
@@ -252,6 +260,7 @@ html.menu-open .nav::after { display: none; }
   .contact .tel { font-size: 56px; white-space: normal; max-width: 6.2em; }
   .contact .mail { font-size: 22px; }
   .contact .row { justify-content: space-between; align-items: flex-end; }
+  .contact .copy { margin-right: -11px; } /* the drawn icon, not its 32 px button, ends on the margin, as the buttons below do */
   .contact .btns { flex-direction: column; margin-top: 18px; }
   .contact .btn { justify-content: center; width: 100%; }
   .s-noto .plate { margin: 64px calc(-1 * var(--m)) 0; }
@@ -261,6 +270,8 @@ html.menu-open .nav::after { display: none; }
   .colophon .top { margin-left: 0; }
 }
 @media (max-width: 860px) { html.js:not(.cinema) .ruler { display: none; } }
+/* the tsuba caption on one line down to 360 px (each separator is bound to the word after it, so none ends a line) */
+@media (max-width: 370px) { .s-tsuba .cap { letter-spacing: .015em; } }
 
 /* ---------------- reduced motion ---------------- */
 @media (prefers-reduced-motion: reduce) {

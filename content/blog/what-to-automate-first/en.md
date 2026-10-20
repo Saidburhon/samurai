@@ -14,9 +14,9 @@ Orders come in through Telegram, Instagram and phone calls. Only the owner reall
 ## Signs the business has outgrown manual work
 
 - **Orders get lost in chats.** A customer wrote in the evening; by morning the message was buried and nobody had answered.
-- **One person knows the stock.** When they're off sick, purchasing is guesswork.
+- **One person knows the stock.** When they're off sick or on holiday, purchasing is guesswork.
 - **Evening reconciliation takes an hour or more**, and being a few tens of thousands of sum off has become normal.
-- **The same invoice mistakes keep coming back:** an old price, the wrong tax ID, the wrong quantity.
+- **The same invoice mistakes keep coming back:** an old price, the wrong tax ID, a mixed-up quantity.
 - **A new hire spends a week learning "how we do things here"**, because none of it is written down.
 - **The owner can't take three days off** without the phone ringing every hour.
 
@@ -35,7 +35,7 @@ A shared table with six columns is enough:
 - where it happens: a chat, Excel, a notebook, 1C, the phone;
 - what breaks when it goes wrong, and whether that happened this week.
 
-Pick an ordinary week, not a holiday or a sale. Also check what the software you already pay for can do: 1C, Bitrix24 or amoCRM may already have the feature, and nobody has switched it on.
+Pick an ordinary week, not a holiday or a sale. Also check what the software you already pay for can do: 1C, Bitrix24 or amoCRM may already have the feature, and nobody has switched it on yet.
 
 ## Score each task: frequency, time, cost of a mistake
 
@@ -61,18 +61,18 @@ The rule: boring, frequent work with an expensive mistake goes first.
 
 ## Usually first: every order and request in one place
 
-In Uzbekistan, automation almost always starts with Telegram, because that's where customers write. Requests typically arrive through three or four channels: Telegram, Instagram, calls, sometimes a website. Each employee has their own chat, and the handover between shifts depends on memory. Step one: every request becomes a record with a number, channel, customer, status (new, accepted, in progress, done, cancelled) and an owner.
+In Uzbekistan, automation most often starts with Telegram, because that's where customers write. Requests typically arrive through three or four channels: Telegram, Instagram, calls, sometimes a website. Each employee has their own chat, and the handover between shifts depends on memory. Step one: every request becomes a record with a number, channel, customer, status (new, accepted, in progress, done, cancelled) and an assignee.
 
 Two common routes:
 
 1. **A Telegram bot plus a table or simple database.** The customer orders in the bot in Uzbek or Russian; the order gets a number and lands in the table and in the right branch's work group. The administrator enters phone and Instagram orders into the same bot by hand: an extra minute, but the order can't get lost.
-2. **A CRM with messengers connected.** amoCRM and Bitrix24 can pull Telegram and Instagram conversations into one window, with an owner and a stage for each request. This fits better when a sale is a conversation: questions, a quote, a follow-up call a week later.
+2. **A CRM with messengers connected.** amoCRM and Bitrix24 can pull Telegram and Instagram conversations into one window, with an assignee and a stage for each request. This fits better when a sale is a conversation: questions, a quote, a follow-up call a week later.
 
 Whatever the tool:
 
 - If a request isn't in the system, it doesn't exist. Close the old group chat for orders, or within a month you'll have two parallel streams.
-- Every shift reads the statuses the same way, and there's a rule for cancellations, substitutions and refunds.
-- Store the customer base where the law allows. Under Uzbekistan's personal data law, Uzbek citizens' personal data has to be stored on servers in Uzbekistan. As the base grows, that's one reason to move from a foreign online spreadsheet to your own system.
+- Every shift reads the statuses the same way, and there's a clear rule for cancellations, substitutions and refunds.
+- Store the customer base where the law requires. Under Uzbekistan's personal data law, Uzbek citizens' personal data has to be stored on servers in Uzbekistan. A customer's name and phone number count as personal data, so a customer list in a foreign online spreadsheet doesn't meet that requirement. Plan for a server in Uzbekistan from the start.
 
 A bot plus a table for one process usually takes one to three weeks. More branches, a bigger menu or catalogue, payment inside the bot and a link to 1C all add time. Configuring an off-the-shelf CRM takes a few days to a couple of weeks, plus staff training, which nearly everyone underestimates.
 
@@ -94,9 +94,9 @@ Expect two to six weeks. Often the timeline is set by the merchant contract rath
 
 These automate well, but each has a condition. Without it, you get noise instead of help.
 
-**Low-stock alerts.** Many 1C configurations let you set a minimum level per item, and a Telegram alert to whoever does purchasing is a small integration. The condition: stock in 1C must be true. Deliveries are entered the same day, write-offs are posted, and a café keeps recipe cards so that selling a dish writes off its ingredients. If the books run a week behind, the alerts will be wrong and within a month nobody will read them. Fixing the books costs only discipline; do it before any integration.
+**Low-stock alerts.** Many 1C configurations let you set a minimum level per item, and a Telegram alert to whoever does purchasing is a small integration. The condition: stock in 1C has to match what's actually on the shelves. Deliveries are entered the same day, write-offs are posted, and a café keeps recipe cards so that selling a dish writes off its ingredients. If the books run a week behind, the alerts will be wrong and within a month nobody will read them. Fixing the books costs only discipline; do it before any integration.
 
-**Appointment reminders** for clinics, learning centres and salons. The condition: every booking goes into one schedule, not "the administrator's notebook and partly her phone", and phone numbers are stored in one format (+998…). Reminders go out a day before and a couple of hours before, with "I'll come" and "Cancel" buttons, and a freed slot shows up in the schedule at once. Mind a Telegram limit: a bot can only message people who have started it themselves. So bring customers into the bot when they book, and send SMS to those who don't use Telegram.
+**Appointment reminders** for clinics, learning centres and salons. The condition: every booking goes into one schedule, not "the administrator's notebook and partly their phone", and phone numbers are stored in one format (+998…). Reminders go out a day before and a couple of hours before, with "I'll come" and "Cancel" buttons, and a freed slot shows up in the schedule at once. Mind a Telegram limit: a bot can only message people who have started it themselves. So bring customers into the bot when they book, and send SMS to those who don't use Telegram.
 
 **Staff shifts.** A shared table is often enough. A bot that sends each person tomorrow's shift in the evening and records swaps pays off when there are several branches and the schedule changes often.
 
@@ -111,11 +111,11 @@ The same goes for AI. It helps once the data is in one place: sorting incoming m
 
 ## Ready-made, configured or custom
 
-**A shared spreadsheet.** Fine when one to three people use it, nothing needs integrating and the process is simple. It breaks down when several people edit at once, rows get deleted by accident, and you need access rights.
+**A shared spreadsheet.** Fine when one to three people use it, nothing needs integrating and the process is simple. It breaks down when several people edit at once, rows get deleted by accident, or you need access rights.
 
-**Configuring a ready-made tool: amoCRM, Bitrix24, 1C.** A fit when your process looks standard: request, deal, payment, shipment. Costs are per-user monthly licences, setup and training; the timeline is a few days to a few weeks. The common mistake is buying a CRM, never shaping it around your process, and deciding two months later that "the CRM doesn't work".
+**Configuring a ready-made tool: amoCRM, Bitrix24, 1C.** A fit when your process looks standard: request, deal, payment, shipment. Costs are a licence or subscription, setup and training; the timeline is a few days to a few weeks. The common mistake is buying a CRM, never shaping it around your process, and deciding two months later that "the CRM doesn't work".
 
-**A small custom piece: a bot or an integration.** Justified when the gap is between systems: Telegram and 1C, payments and orders, a website and the warehouse. Or when the customer side has to live in Telegram in two languages and the CRM is awkward for that. Usually two to eight weeks.
+**A small custom piece: a bot or an integration.** Justified when the gap is between systems: Telegram and 1C, payments and orders, a website and the warehouse. Or when the customer side has to live in Telegram in two languages and an off-the-shelf CRM is awkward for that. Usually two to eight weeks.
 
 **A custom system.** Justified when the process is what sets you apart, when there are many roles and branches, when the off-the-shelf tool needs daily workarounds, or when you need full control over your data and where it's stored. Months, not weeks, plus an ongoing support budget.
 

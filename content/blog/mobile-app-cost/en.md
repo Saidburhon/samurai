@@ -2,14 +2,14 @@
 slug: mobile-app-cost
 lang: en
 title: "What a mobile app costs in Tashkent: where the budget goes"
-description: "What sets the price of an iOS and Android app: screens, backend, payments, integrations, store publishing, and the costs that start after launch."
+description: "What sets the price of an iOS and Android app: user journeys, backend, payments, integrations, store publishing, and the costs that start after launch."
 date: 2026-10-21
 tags: [mobile app, cost, iOS, Android, backend]
-related: [mobile, backend, web]
+related: [mobile, cloud, web]
 reading_minutes: 10
 ---
 
-You want an app for delivery, bookings, a loyalty programme or wholesale orders, and the first question is what it will cost. Ask a few companies in Tashkent and the figures differ several times over, and half the lines in each estimate are about things you never see on the phone: the server, the admin panel, integrations, testing. This article walks through where the money in an app actually goes, which decisions move the budget most, and which costs begin after launch, so that you plan for the app's first year and not only for release day.
+You want an app for delivery, bookings, a loyalty programme or wholesale orders, and the first question is what it will cost. Ask a few companies in Tashkent and the highest quote can be several times the lowest, and much of each estimate covers things you never see on the phone: the server, the admin panel, integrations, testing. This article walks through where the money in an app goes, which decisions move the budget most, and which costs begin after launch, so that you plan for the app's first year and not only for release day.
 
 ## An app is three products, not one
 
@@ -19,7 +19,7 @@ What customers download from the App Store and Google Play is only the visible p
 - **The admin panel** for your staff, usually a web page behind a login. This is where they change products and prices, see orders and move them through statuses, send push campaigns, set banners and promo codes, and give staff their access rights.
 - **The server (backend)** between the two. It stores users and orders, receives confirmations from payment providers, sends notifications and exchanges data with 1C or your CRM.
 
-Take a hypothetical chain of three cafés with delivery. The customer sees a menu and a "Pay" button. An operator sees the new order in the panel and sends it to the right branch's kitchen. Meanwhile the server checks that the address is inside the delivery zone, gets the payment confirmation from Payme and sends the customer a "Your courier is on the way" push. If couriers need their own app with routes and statuses, that is a fourth product.
+Take a hypothetical chain of three cafés with delivery. The customer sees a menu and a "Pay" button. An operator sees the new order in the panel and sends it to the right branch's kitchen. Meanwhile the server checks that the address is inside the delivery zone and gets the payment confirmation from Payme; later it sends the customer a "Your courier is on the way" push. If couriers need their own app with routes and statuses, that is a fourth product.
 
 When a proposal describes only the customer app's screens, ask where the other parts are and who builds them. Without a panel, every price change goes through a programmer. Without a proper server, a good-looking app shows stale data.
 
@@ -32,7 +32,7 @@ The number of screens is a poor predictor of price. A "Thank you for your order"
 3. cart and checkout: address, delivery zone, time, comment;
 4. payment;
 5. order status and notifications;
-6. profile: addresses, history, language, account deletion;
+6. profile: addresses, order history, language, account deletion;
 7. contacting support.
 
 Every journey has edge cases, and that is where most of the build and test time goes. The SMS code never arrives. An item sells out while it sits in the cart. The money is taken but the provider's confirmation is late. The address turns out to be outside the zone. The connection drops on the payment step, or a call comes in and the app goes to the background. The customer switches language halfway through checkout.
@@ -43,7 +43,7 @@ A practical way to prepare: write each journey as one line ("the customer wants 
 
 There are two main ways to build for iOS and Android.
 
-**Cross-platform** (Flutter, React Native): one codebase for both platforms, one team, each feature written once. For most business apps this is enough. Catalogues, orders, bookings, loyalty and wholesale ordering work the same way, and customers won't notice the difference.
+**Cross-platform** (Flutter, React Native): one codebase for both platforms, one team, each feature written once. For most business apps this is enough. Catalogues, orders, bookings, loyalty and wholesale ordering work the same way as in a native app, and customers won't notice the difference.
 
 **Native** (Swift for iOS, Kotlin for Android): two separate apps. Every feature is written twice, tested twice and maintained twice. It costs noticeably more, though not double, because the server, the admin panel and the design are shared.
 
@@ -64,13 +64,13 @@ The server and the integrations often take as much work as the app itself, and s
 
 What it usually includes:
 
-- **Accounts and sign-in.** In Uzbekistan most apps sign people in with a phone number and an SMS code. An SMS provider such as Eskiz or Play Mobile sends the codes, and every message costs money.
-- **Orders, statuses, push notifications.** Delivering pushes through Firebase Cloud Messaging and Apple's service is free. The work is in the server that decides who gets what, and when.
-- **Payment through Click, Payme or Uzum.** The business signs the merchant contract, not the developer, and it's best started in the first week of the project. Each provider is a separate integration with its own protocol. Plan for fiscal receipts as well: they need a product code (IKPU) and a VAT rate for every item, and filling those into the catalogue is your accountant's job. Saved Humo and Uzcard cards for one-tap payment depend on what the provider supports.
-- **Integrations.** Stock and prices from 1C, customers and deals in amoCRM or Bitrix24, menus from iiko or R-Keeper in restaurants. The price depends on whether the other system has an API, which way the data flows, how often it has to be synchronised and how clean your reference data is. If your 1C configuration has been customised, you will almost certainly need your own 1C programmer involved.
-- **Data storage.** If the app stores names, phone numbers and addresses of Uzbek citizens, the law requires that data to be kept on servers in Uzbekistan. Choose hosting with this in mind from the start, because moving later costs more.
+- **Accounts and sign-in.** In Uzbekistan most apps sign people in with a phone number and an SMS code. An SMS provider (Eskiz or Play Mobile, for example) sends the codes, and every message costs money.
+- **Orders, statuses, push notifications.** Delivering pushes through Firebase Cloud Messaging and Apple's push service is free. The real work is in the server that decides who gets what, and when.
+- **Payment through Click, Payme or Uzum.** The business signs the merchant contract, not the developer, and it is best to start on it in the first week of the project. Each provider is a separate integration with its own protocol. Plan for fiscal receipts as well: they need a product code (IKPU) and a VAT rate for every item, and picking the right codes is a job for your accountant, not the developer. Saved Humo and Uzcard cards for one-tap payment depend on what the provider supports.
+- **Integrations.** Stock and prices from 1C, customers and deals in amoCRM or Bitrix24, menus from iiko or R-Keeper in restaurants. The price depends on whether the other system has an API, which way the data flows, how often it has to be synchronised and how well your reference data is kept. If your 1C configuration has been customised, you will almost certainly need your own 1C programmer involved.
+- **Data storage.** If the app stores names, phone numbers and addresses of Uzbek citizens, the Law "On Personal Data" requires that data to be kept on servers in Uzbekistan. Choose hosting with this in mind from the start, because moving later costs more.
 
-A separate point about store rules. Physical goods and services (food, delivery, a haircut booking, a wholesale shipment) can be paid for through Click or Payme. Digital goods used inside the app, such as courses, subscriptions or paid features, generally have to be sold through Apple's and Google's own in-app payment, which takes a 15–30% commission. For an online school's app this changes the economics, so settle it before design starts.
+A separate point about store rules. Physical goods and services (food, delivery, a haircut booking, a wholesale shipment) can be paid for through Click or Payme. Digital goods used inside the app, such as courses, subscriptions or paid features, generally have to be sold through Apple's and Google's own in-app payment, which takes a 15–30% commission. For an online school's app this changes the whole calculation, so settle it before design starts.
 
 Ask for the estimate split into four lines: customer app, admin panel, server, integrations. It makes clear what you are paying for, and it makes two proposals comparable.
 
@@ -78,7 +78,7 @@ Ask for the estimate split into four lines: customer app, admin panel, server, i
 
 **Design starts before code.** A sound order is: a map of the journeys, then a clickable prototype in Figma, then the final screens. Show the prototype to five or six real customers; moving a button in a prototype is cheaper than moving it in a finished app. Standard components on a tidy grid cost less than custom illustration and elaborate animation, which are worth it when the app is your main shop window.
 
-**Two languages on every screen.** Almost every business in Tashkent needs Uzbek and Russian, sometimes Uzbek Cyrillic as well. That means notifications, SMS texts, error messages, store descriptions and screenshots, not just buttons. Uzbek and Russian words run longer than English ones, so designs are checked against the longest version: a button that fitted in the mock-up wraps onto two lines on a real phone. Keep the texts separate from the code, so a new language is a translation job rather than a rebuild.
+**Two languages on every screen.** Almost every business in Tashkent needs Uzbek and Russian, sometimes Uzbek Cyrillic as well. That means notifications, SMS texts, error messages, store descriptions and screenshots, not just buttons. Uzbek and Russian words run longer than English ones, so designs are checked against the longest version: a button that fitted in the mock-up can wrap onto two lines on a real phone. Keep the texts separate from the code, so a new language is a translation job rather than a rebuild.
 
 **Testing on the phones your customers carry.** Most customers in Uzbekistan use Android, and many of them have a budget or mid-range phone with little memory and an older system version rather than a flagship. An app that flies on the developer's new iPhone can be slow to open on such a phone and crash at checkout. A minimum set of checks:
 
@@ -96,18 +96,18 @@ Publishing is a stage of its own, with its own lead times and fees.
 
 - **Apple Developer Program**: $99 a year; at sign-up the price may be shown in local currency. If the membership lapses, the app is removed from the App Store.
 - **Google Play**: a one-time $25 fee for the developer account.
-- **D-U-N-S number.** Both stores require one for an organisation account. It is free, but Google warns that getting one can take up to 30 days, so request it in the first week of the project.
-- **Register the accounts to your company, not to the developer.** Otherwise someone else's name appears as the seller, and transferring the app later takes time. If a new Google Play account is registered as a personal one, Google requires a closed test with at least 12 testers for 14 days in a row before the app can go public.
+- **D-U-N-S number.** Both stores require one for an organisation account. It is free, but Google warns that getting one can take up to 30 days, so request it in the very first week of the project.
+- **Register the accounts in your company's name, not the developer's.** Otherwise someone else's name appears as the seller, and transferring the app later takes time. If a new Google Play account is registered as a personal one, Google requires a closed test with at least 12 testers for 14 days in a row before the app can go public.
 
 Apple reviews every version, usually within a few hours to a couple of days. Google reviews apps too, and for new accounts it can take a week or longer. Allow about a week for the first release, because the first submission often comes back with remarks.
 
 Common reasons for rejection that are easy to prevent:
 
 - the reviewer has no test login and can't get past the SMS code;
-- the app lets people register but not delete their account, which Apple requires;
+- the app lets people register but not delete their account, which both stores require;
 - there is no privacy policy link, or it doesn't match what the app collects;
-- the app looks like a wrapper around a website and does little on its own;
-- crashes on the reviewer's device, placeholder content;
+- the app is just a wrapper around a website and does little on its own;
+- the app crashes on the reviewer's device, or shows placeholder content;
 - asking for location or camera access without explaining why.
 
 Both stores require a data questionnaire: the App Store's privacy section (what data is collected, why, and whether it is linked to the user) and Google Play's Data safety section. You also need an age rating, descriptions in the right languages and screenshots in the required sizes. The developer usually prepares all this, but the answers are a statement by your company, so check them yourself.
@@ -130,7 +130,7 @@ An app keeps costing money after release, so work out the first year's budget no
 
 What else to plan for:
 
-- **Yearly system updates.** Apple ships a new iOS every autumn and Google a new Android. The stores regularly require apps to be built for recent versions: every year Google Play raises the Android version that updates must target. An app nobody has touched for a year will at some point be impossible to update until it is brought up to date.
+- **Yearly system updates.** Apple ships a new iOS every autumn, and Google a new Android every year. The stores regularly require apps to be built for recent versions: every year Google Play raises the Android version that updates must target. An app nobody has touched for a year will at some point be impossible to update until it is brought up to date.
 - **Libraries and payment SDKs** change too, sometimes in ways that break older versions.
 - **Bug fixes.** Some bugs only show up with real users on less common phones.
 - **Analytics without personal data.** Popular analytics tools store data abroad. Don't send them names or phone numbers, and check the details for your case with a lawyer.
@@ -149,7 +149,7 @@ Don't save on payment testing, the admin panel, backups or error alerts: each of
 
 ## What to prepare before you talk to developers
 
-Timelines, assuming everything on your side is ready on time: an MVP with one core journey, an admin panel and one payment provider usually takes 2–3 months. A fuller version with loyalty, several integrations and a separate courier app takes 4–7 months. What usually moves the date is not the programming but the waiting: the merchant contract, the D-U-N-S number and store accounts, access to 1C, texts and photos, the first store review.
+Timelines, assuming everything on your side is ready on time: an MVP with one core journey, an admin panel and one payment provider usually takes 2–3 months. A fuller version with loyalty and several integrations takes 4–7 months, and a separate courier app adds to that. What usually moves the date is not the programming but the waiting: the merchant contract, the D-U-N-S number and store accounts, access to 1C, texts and photos, the first store review.
 
 To get estimates you can compare, prepare:
 
@@ -159,7 +159,7 @@ To get estimates you can compare, prepare:
 - whether couriers, technicians or sales reps need an app of their own;
 - how customers will pay, and whether you already have a contract with Click, Payme or Uzum;
 - which systems to connect: 1C (which configuration), amoCRM, Bitrix24, iiko;
-- languages: Uzbek in Latin, in Cyrillic, Russian;
+- languages: Uzbek (Latin and Cyrillic), Russian;
 - whether there is a fixed launch date, and who prepares texts and photos;
 - what budget you can set aside for the first year, support included.
 

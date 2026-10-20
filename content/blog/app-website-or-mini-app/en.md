@@ -5,8 +5,8 @@ title: "App, website or Telegram Mini App: which one your business needs"
 description: "How a mobile app, a website and a Telegram Mini App differ in cost, reach, payments and upkeep, and a simple way to choose for your own case."
 date: 2026-10-21
 tags: [telegram-mini-app, website, mobile-app, backend, payments]
-related: [telegram, web, mobile, backend]
-reading_minutes: 7
+related: [telegram, web, mobile, cloud]
+reading_minutes: 9
 ---
 
 Your customers already message you on Telegram, a competitor has just launched an app, and a friend says you need a "proper website" first. That is three pieces of advice, three different budgets, and timelines from a couple of weeks to several months. You can get it wrong in either direction: pay for an app that hardly anyone installs, or go years without a website while new customers look for you on the map and find the place next door. Here is how to choose using two facts about your business: where your customers already are, and how often they come back.
@@ -19,7 +19,7 @@ Three questions settle most cases.
 2. **How often does one customer buy?** Every week (water, groceries, coffee), once a month (salon, car service), or once a year or less (a clinic for a specific problem, furniture, renovation).
 3. **What phone do they use, and where do they already spend their time?** Almost all your customers have Telegram. The real question is whether they will install one more app for you, and whether their phone has room for it.
 
-Don't answer from memory. Take last month's orders and count: how many came through Telegram, by phone, from Instagram, through delivery aggregators; how many customers ordered more than once. Ask your front-desk staff what customers ask about most. That is usually enough to see the picture.
+Don't answer from memory. Take last month's orders and count: how many came through Telegram, by phone, from Instagram, through delivery aggregators; how many customers ordered more than once. Ask your front-desk staff what customers most often want to know. That is usually enough to see the picture.
 
 A short rule: if first contact happens through search, you need a website; if customers already write to you on Telegram, a Mini App or a bot; if a customer comes back every week, an app is worth considering. Most small businesses end up needing two of the three, and not at the same time.
 
@@ -59,28 +59,28 @@ The limits to know up front:
 
 - **You depend on Telegram.** Its rules and API change, and you adapt. For example, digital goods sold inside Telegram can only be paid for in Telegram Stars. Keep your customer list with phone numbers in your own database, not only in Telegram.
 - **Less screen space.** The interface lives inside Telegram's window. A catalogue and cart fit well; long forms and a ten-section account area feel cramped.
-- **No storefront.** New people won't find you through search or an app store. A Mini App serves people who already know you.
+- **No storefront.** New people will rarely find you through Google, Yandex or an app store. A Mini App serves people who already know you.
 - **Limited access to the phone.** Location and QR scanning are available. Working offline and background tasks such as courier tracking are not.
 - **Limited broadcasts.** You can only message people who started the bot, and frequent promotional blasts get the bot blocked.
 
 ## Mobile app: for frequent, repeat customers
 
-Does your business need a mobile app? First look at what it gives that a website and a Mini App can't:
+Does your business need a mobile app? First look at what it gives that a website and a Mini App can't, or can't do as well:
 
 - push notifications with your name on the lock screen, if the customer allows them;
 - a loyalty card with a QR code, points and personal offers, always on the phone;
 - the catalogue, order history and customer card working on a poor connection;
-- full access to the phone: camera, background location for couriers, fingerprint sign-in;
+- full access to the phone: background location for couriers, the camera, Bluetooth and NFC;
 - reordering in one tap with a saved address.
 
 The cost isn't only the build:
 
 - **Two platforms.** iOS and Android can share one codebase (Flutter, React Native), but you still test on both.
-- **App stores.** An Apple developer account costs $99 a year and Google Play $25 once; a company account needs a D-U-N-S number. Every version is reviewed, and the first release, including fixes after review feedback, takes about a week.
+- **App stores.** An Apple developer account costs $99 a year and Google Play $25 once; a company account needs a D-U-N-S number. Every version is reviewed, and the first submission often comes back with remarks, so allow about a week for the first release.
 - **Installs.** Nobody downloads an app on their own. You need a cashier who offers it, a discount on the first in-app order, ads. On a cheap phone with little storage, your app is the first thing to be deleted.
-- **Upkeep.** New iOS and Android versions come out every year, store requirements change, and old versions of your app stay on customers' phones, so the server has to keep supporting them. Budget monthly, not once.
+- **Upkeep.** New iOS and Android versions come out every year, store requirements change, and old versions of your app stay on customers' phones, so the server has to keep supporting them. Budget for it monthly, not as a one-off.
 
-A first version for iOS and Android with a catalogue, payment, push and an admin panel takes about two to three months, plus a week for publishing. Loyalty, till integration and courier tracking add time.
+A first version for iOS and Android with a catalogue, payment, push and an admin panel takes about two to three months, plus about a week for publishing. Loyalty, till integration and courier tracking add time.
 
 An app pays off when:
 
@@ -103,7 +103,7 @@ If a customer buys once a year, you almost never need one.
 | Notifications | weak | bot messages | push on the lock screen |
 | Phone features | minimal | partial | full, including offline |
 | Upkeep | hosting, domain, prices | server, Telegram changes | server, new iOS and Android versions, store reviews |
-| Whose rules | only yours | Telegram's | Apple's and Google's |
+| Whose rules | yours | Telegram's | Apple's and Google's |
 
 ## Typical paths
 
@@ -111,7 +111,7 @@ These examples are hypothetical.
 
 **A café with delivery.** Say, a café with two branches in Yunusabad that already takes orders on Telegram. Start with a bot and a Mini App: menu, payment via Click or Payme, order alerts to the kitchen. The website is one page with the menu, address and a link to the Mini App, so people find the café on maps and in search. An app comes later, and only if you build up a group of guests who order several times a week and you want a loyalty card.
 
-**A clinic.** Patients come once or twice a year and first find the clinic through a search like "ultrasound Mirzo-Ulugbek". The website does the main work here: doctors, services, prices and booking. Next to it, a Telegram bot confirms the appointment, sends a reminder the day before and delivers test results. Nobody installs an app for two visits a year.
+**A clinic.** Patients come once or twice a year and first find the clinic through a search like "ultrasound Mirzo-Ulugbek". The website does the main work here: doctors, services, prices and booking. Next to it, a Telegram bot confirms the appointment, sends a reminder the day before and lets the patient know when test results are ready. Nobody installs an app for two visits a year.
 
 **Water or grocery delivery.** Customers order every week. Start with a bot or a Mini App: quick, cheaper, and demand gets tested on real orders. Once a noticeable share of customers order regularly, ask for reminders and want to see the courier on a map, it's time for an app on the same server. The Mini App stays for those who don't want to install anything.
 
@@ -124,7 +124,7 @@ What to avoid:
 
 ## One backend for all three
 
-A website, a Mini App and an app are different shop windows. Behind each one sits the same thing: catalogue and prices, customers, orders, payments, an admin panel, the exchange with 1C, iiko or amoCRM. Build each window as a separate project and you pay for that twice, prices drift apart, and points earned in the app don't show up in the Mini App.
+A website, a Mini App and an app are different shop windows. Behind each one sits the same thing: catalogue and prices, customers, orders, payments, an admin panel, the exchange with 1C, iiko or amoCRM. Build each window as a separate project and you pay for the same thing twice, prices drift apart, and points earned in the app don't show up in the Mini App.
 
 What to ask your developer for from day one:
 
