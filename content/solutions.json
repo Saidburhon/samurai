@@ -369,10 +369,10 @@
         "delivery"
       ],
       "scope": {
-        "mvp": "An official Telegram Business connected bot on your company account (or a regular bot); AI answers from your FAQ, price list and policies; handover to an operator with the full conversation; daily summary of chats.",
+        "mvp": "An official Telegram Business connected bot on your company account (or a regular bot); AI answers from your FAQ, price list and policies; handover to an operator with the full conversation; daily summary of chats; for foreign customers, a WhatsApp Business Platform number next to or instead of Telegram.",
         "full": "Order and booking status lookups from your CRM or 1C; complaint logging; voice messages understood (speech-to-text); Uzbek Latin and Cyrillic plus Russian; operator panel; per-topic tone and escalation rules; weekly quality report."
       },
-      "notes": "Telegram Business connected bots need Telegram Premium on the business account. No unofficial userbots: they break Telegram rules and get accounts banned. The AI never promises refunds, discounts or prices outside the rules you approve.",
+      "notes": "Telegram Business connected bots need Telegram Premium on the business account. No unofficial userbots: they break Telegram rules and get accounts banned. The AI never promises refunds, discounts or prices outside the rules you approve. WhatsApp conversations are billed by Meta.",
       "billing": "project",
       "timeline_weeks": {
         "mvp": {
@@ -401,6 +401,7 @@
       "integrations": [
         "Telegram Business",
         "Telegram Bot API",
+        "WhatsApp Business Platform",
         "amoCRM",
         "Bitrix24",
         "1C",
@@ -1629,9 +1630,9 @@
         "en": "Private AI on your own servers: data stays in Uzbekistan"
       },
       "value": {
-        "uz": "Bank, klinika va davlat tashkilotlari AIdan maxfiy maʼlumotni chet elga yubormasdan foydalanadi.",
-        "ru": "Банки, клиники и госорганизации пользуются ИИ, не отправляя конфиденциальные данные за рубеж.",
-        "en": "Banks, clinics and public bodies use AI without sending confidential data abroad."
+        "en": "Staff ask AI about contracts, letters and internal rules, and the model runs on servers in Uzbekistan, so confidential data never leaves the country.",
+        "uz": "Xodimlar shartnomalar, xatlar va ichki qoidalar haqida AIdan soʻraydi, model esa Oʻzbekistondagi serverlarda ishlaydi, shuning uchun maxfiy maʼlumot mamlakatdan chiqmaydi.",
+        "ru": "Сотрудники спрашивают ИИ о договорах, письмах и внутренних правилах, а модель работает на серверах в Узбекистане, поэтому конфиденциальные данные не покидают страну."
       },
       "for": [
         "banks",
@@ -1644,7 +1645,7 @@
         "mvp": "Open-weight model deployed on your servers or in a data centre in Uzbekistan; one use case (for example an internal knowledge base); access control and logs; quality comparison with cloud models.",
         "full": "Several use cases; fine-tuning on your data where it helps; GPU capacity planning; monitoring; red-team tests; documentation for auditors."
       },
-      "notes": "GPU servers are bought or rented separately; we help size them.",
+      "notes": "GPU servers are bought or rented separately and usually cost more than the software; we size them with you first. The running costs shown do not include GPU servers.",
       "billing": "project",
       "timeline_weeks": {
         "mvp": {
@@ -1739,6 +1740,180 @@
       ]
     },
     {
+      "id": "ai-exam-grading",
+      "group": "ai",
+      "featured": false,
+      "title": {
+        "uz": "Writing va speakingni AI bilan dastlabki baholash",
+        "ru": "ИИ-предпроверка writing и speaking",
+        "en": "AI pre-marking of writing and speaking for exam prep"
+      },
+      "value": {
+        "uz": "Mock IELTS yoki CEFR insholari va speaking yozuvlari bir necha daqiqada taxminiy ball va izoh bilan qaytadi, oʻqituvchi faqat tekshirib tasdiqlaydi.",
+        "ru": "Эссе и записи speaking с пробных IELTS или CEFR за несколько минут получают ориентировочный балл и комментарии, преподавателю остаётся проверить и подтвердить.",
+        "en": "Mock IELTS or CEFR essays and speaking recordings come back with a band estimate and comments in minutes, and the teacher only checks and signs off."
+      },
+      "for": [
+        "education"
+      ],
+      "scope": {
+        "mvp": "Writing Task 1 and 2 and speaking Parts 1 to 3 marked against the public band descriptors; speech-to-text for recordings; teacher review screen with edits; result card to the student in Telegram; calibration on 50 to 100 scripts your teachers already marked.",
+        "full": "Handwritten scripts read from photos; national certificate and CEFR formats; progress per student and group; homework mode with instant feedback; report on teacher hours saved; parent view."
+      },
+      "notes": "AI marks are estimates and the teacher sets the final mark. Accuracy is measured against your teachers' marks before launch. It is not an official IELTS result.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 4,
+          "max": 7
+        },
+        "full": {
+          "min": 10,
+          "max": 16
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 5000,
+          "max": 10000
+        },
+        "full": {
+          "min": 14000,
+          "max": 30000
+        }
+      },
+      "running_usd_month": {
+        "min": 80,
+        "max": 600
+      },
+      "integrations": [
+        "Claude API",
+        "Speech-to-text",
+        "Telegram Bot API",
+        "Google Sheets"
+      ]
+    },
+    {
+      "id": "ai-reviews-reputation",
+      "group": "ai",
+      "featured": false,
+      "title": {
+        "uz": "Sharhlar va reyting: Yandex Maps, Google Maps, 2GIS",
+        "ru": "Отзывы и рейтинг: Яндекс Карты, Google Maps, 2GIS",
+        "en": "Reviews and ratings: Yandex Maps, Google Maps, 2GIS"
+      },
+      "value": {
+        "uz": "Har bir filial haqidagi har bir sharh Telegramga keladi, salbiy sharh bir soatda javob loyihasi bilan menejerga yetadi, tashrifdan keyin har bir mijozdan fikri soʻraladi.",
+        "ru": "Каждый отзыв о каждом филиале приходит в Telegram, плохой за час доходит до менеджера с черновиком ответа, а после визита каждого клиента спрашивают о впечатлениях.",
+        "en": "Every review of every branch arrives in Telegram, a bad one reaches the manager within the hour with a drafted reply, and every customer is asked for feedback after the visit."
+      },
+      "for": [
+        "restaurants",
+        "clinics",
+        "hospitality",
+        "retail",
+        "beauty",
+        "auto",
+        "fitness"
+      ],
+      "scope": {
+        "mvp": "Business profiles checked and completed on Yandex Maps, Google Maps and 2GIS; reviews gathered into one Telegram feed per branch; AI-drafted replies in Uzbek and Russian for approval; post-visit feedback bot that asks every customer for a score and a comment and gives everyone the review links.",
+        "full": "Rating trends per branch and topic; mentions of staff and dishes; link to ai-complaints-desk; monthly report; reply time per branch."
+      },
+      "notes": "We never write, buy or filter reviews. Where a platform offers no reply API, your staff post the prepared replies.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 2,
+          "max": 4
+        },
+        "full": {
+          "min": 6,
+          "max": 10
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 2000,
+          "max": 4500
+        },
+        "full": {
+          "min": 6000,
+          "max": 14000
+        }
+      },
+      "running_usd_month": {
+        "min": 20,
+        "max": 150
+      },
+      "integrations": [
+        "Yandex Business",
+        "Google Business Profile",
+        "2GIS",
+        "Telegram Bot API",
+        "Claude API"
+      ]
+    },
+    {
+      "id": "ai-product-photos",
+      "group": "ai",
+      "featured": false,
+      "title": {
+        "uz": "Marketpleys uchun AI mahsulot fotolari va kartochkalari",
+        "ru": "ИИ-фото и карточки товаров для маркетплейсов",
+        "en": "AI product photos and cards for marketplaces"
+      },
+      "value": {
+        "uz": "Telefonda olingan bitta foto bir necha daqiqada studiya surati, interyerdagi sahna va Uzum Market uchun kartochka matniga aylanadi; yuzlab tovar fotosessiyasiz sotuvga chiqadi.",
+        "ru": "Одно фото с телефона за несколько минут превращается в студийный снимок, сцену в интерьере и текст карточки для Uzum Market; сотни товаров выходят в продажу без съёмки.",
+        "en": "One phone photo becomes a studio shot, a lifestyle scene and a card text for Uzum Market in minutes, so hundreds of items go on sale without a shoot."
+      },
+      "for": [
+        "ecommerce",
+        "retail",
+        "brands",
+        "textile",
+        "manufacturing"
+      ],
+      "scope": {
+        "mvp": "Pipeline for one product category: background removal and studio backgrounds, lifestyle scenes, image sizes for each marketplace, card titles and descriptions in Uzbek and Russian; approval screen; bulk export.",
+        "full": "Clothing on synthetic models with consistent looks; short video clips; tests of main photos; link to biz-marketplace-sync; brand style rules."
+      },
+      "notes": "Images show the real product: no changes to colour, shape or details that would mislead buyers. Models are synthetic; no real person's face without written consent.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 2,
+          "max": 4
+        },
+        "full": {
+          "min": 6,
+          "max": 10
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 2500,
+          "max": 5000
+        },
+        "full": {
+          "min": 7000,
+          "max": 16000
+        }
+      },
+      "running_usd_month": {
+        "min": 50,
+        "max": 400
+      },
+      "integrations": [
+        "Uzum Market",
+        "Wildberries",
+        "Yandex Market",
+        "Claude API",
+        "Image generation API"
+      ]
+    },
+    {
       "id": "tg-order-bot",
       "group": "telegram",
       "featured": true,
@@ -1797,6 +1972,11 @@
         "1C",
         "iiko",
         "R-Keeper"
+      ],
+      "next": [
+        "tg-mini-app-store",
+        "ind-restaurant",
+        "mob-customer-app"
       ]
     },
     {
@@ -1918,6 +2098,10 @@
         "Payme",
         "Google Calendar",
         "Eskiz"
+      ],
+      "next": [
+        "mob-booking-app",
+        "ind-clinic"
       ]
     },
     {
@@ -2037,6 +2221,9 @@
         "Click",
         "Payme",
         "Google Sheets"
+      ],
+      "next": [
+        "biz-crm"
       ]
     },
     {
@@ -2179,7 +2366,7 @@
         "fitness"
       ],
       "scope": {
-        "mvp": "Sign-up with phone number; QR card in the bot; cashback or points added by the cashier or POS; balance and history; broadcast messages.",
+        "mvp": "Sign-up with phone number; QR card in the bot; cashback or points added by the cashier scanning the QR in the bot (POS link is in the full version); balance and history; broadcast messages.",
         "full": "POS integration (iiko, R-Keeper or 1C); levels and birthday offers; referral bonuses; segments by visit frequency; campaign results report; Mini App card."
       },
       "notes": null,
@@ -2215,6 +2402,9 @@
         "R-Keeper",
         "1C",
         "Eskiz"
+      ],
+      "next": [
+        "mob-loyalty-platform"
       ]
     },
     {
@@ -2334,6 +2524,9 @@
         "Bitrix24",
         "1C",
         "Claude API"
+      ],
+      "next": [
+        "ai-telegram-support-account"
       ]
     },
     {
@@ -2391,6 +2584,10 @@
         "Click",
         "Payme",
         "Google Sheets"
+      ],
+      "next": [
+        "web-lms",
+        "mob-education-app"
       ]
     },
     {
@@ -2509,6 +2706,64 @@
         "Didox",
         "Click",
         "Payme"
+      ]
+    },
+    {
+      "id": "tg-freight-board",
+      "group": "telegram",
+      "featured": false,
+      "title": {
+        "uz": "Hamkor tashuvchilar uchun yuk birjasi boti",
+        "ru": "Бот-биржа грузов для партнёрских перевозчиков",
+        "en": "Load board bot for partner carriers"
+      },
+      "value": {
+        "uz": "Yangi yuklar tekshirilgan hamkor tashuvchilarga Telegramda boradi, ular bir bosishda narx taklif qiladi yoki qabul qiladi, dispetcher qoʻngʻiroqlarsiz mashina tanlaydi.",
+        "ru": "Новые грузы уходят проверенным перевозчикам в Telegram, они одним нажатием предлагают цену или берут рейс, диспетчер выбирает машину без обзвона.",
+        "en": "New loads go to your vetted partner carriers in Telegram, they bid or accept in one tap, and the dispatcher picks a truck without calling around."
+      },
+      "for": [
+        "logistics",
+        "transport",
+        "distribution",
+        "agriculture"
+      ],
+      "scope": {
+        "mvp": "Carrier registry with documents and truck types; load posting by the dispatcher; offers and acceptance in the bot; assignment and trip statuses; carrier rating; export to Google Sheets or your TMS.",
+        "full": "Route and price history; matching by truck type and location; contracts and acts signed with E-IMZO; carrier payments; link to ind-logistics-tms."
+      },
+      "notes": "Only carriers who joined your bot get loads: no mass posting to Telegram groups.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 3,
+          "max": 5
+        },
+        "full": {
+          "min": 8,
+          "max": 12
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 3000,
+          "max": 6000
+        },
+        "full": {
+          "min": 9000,
+          "max": 20000
+        }
+      },
+      "running_usd_month": {
+        "min": 20,
+        "max": 100
+      },
+      "integrations": [
+        "Telegram Bot API",
+        "Google Sheets",
+        "E-IMZO",
+        "Didox",
+        "Wialon"
       ]
     },
     {
@@ -3246,9 +3501,9 @@
         "en": "3D mobile games"
       },
       "value": {
-        "uz": "iOS va Android uchun 3D oʻyin: gʻoyadan sinov chiqarilishigacha; daromad reklama va oʻyin ichidagi xaridlardan.",
-        "ru": "3D-игра для iOS и Android от идеи до тестового запуска; доход от рекламы и внутриигровых покупок.",
-        "en": "A 3D game for iOS and Android, from idea to test launch, earning from ads and in-app purchases."
+        "en": "A 3D game for iOS and Android taken from idea to a soft launch in test markets, with ads, purchases and analytics in place before you spend on marketing.",
+        "uz": "iOS va Android uchun 3D oʻyin gʻoyadan test bozorlardagi sinov chiqarilishigacha: marketingga pul sarflashdan oldin reklama, xaridlar va analitika tayyor.",
+        "ru": "3D-игра для iOS и Android от идеи до тестового запуска на пробных рынках: реклама, покупки и аналитика готовы до трат на маркетинг."
       },
       "for": [
         "startups",
@@ -3305,9 +3560,9 @@
         "en": "Casual and hyper-casual games"
       },
       "value": {
-        "uz": "Tez oʻrganiladigan oddiy oʻyin bir necha oyda chiqadi va reklamadan daromad keltiradi.",
-        "ru": "Простая игра, которую легко освоить, выходит за несколько месяцев и зарабатывает на рекламе.",
-        "en": "A simple game that is quick to learn, shipped in a few months and earning from ads."
+        "en": "A simple game that is quick to learn, shipped in a few months with ads and in-app purchases set up and retention measured on real players.",
+        "uz": "Tez oʻrganiladigan oddiy oʻyin bir necha oyda chiqadi: reklama va oʻyin ichidagi xaridlar sozlangan, oʻyinchilar qaytib kelishi haqiqiy oʻyinchilarda oʻlchanadi.",
+        "ru": "Простая игра, которую легко освоить, выходит за несколько месяцев: реклама и покупки настроены, удержание измерено на реальных игроках."
       },
       "for": [
         "startups",
@@ -4478,9 +4733,9 @@
         "en": "SEO and site speed"
       },
       "value": {
-        "uz": "Saytingiz Google va Yandexda oʻzbekcha va ruscha soʻrovlar boʻyicha yuqoriga chiqadi va telefonlarda tez ochiladi.",
-        "ru": "Сайт поднимается в Google и Яндексе по узбекским и русским запросам и быстро открывается на телефонах.",
-        "en": "Your site climbs on Google and Yandex for Uzbek and Russian searches and opens fast on phones."
+        "en": "Your site gets fixed for speed and indexing and prepared for Uzbek and Russian searches, and every month you see traffic, positions and enquiries.",
+        "uz": "Sayt tezligi va indeksatsiyasi tuzatiladi, oʻzbekcha va ruscha qidiruvlarga tayyorlanadi; har oy trafik, pozitsiyalar va arizalarni koʻrasiz.",
+        "ru": "Сайт исправляется по скорости и индексации и готовится к узбекским и русским запросам; каждый месяц вы видите трафик, позиции и заявки."
       },
       "for": [
         "any",
@@ -4491,7 +4746,7 @@
       ],
       "scope": {
         "mvp": "Technical audit; keyword research in Uzbek (Latin and Cyrillic) and Russian; fixes for speed, indexing, structure and hreflang; Search Console and Yandex Webmaster set up.",
-        "full": "Three to six months of work: content plan and page templates; structured data; Google Business Profile and Yandex Maps listings; monthly report on traffic and leads."
+        "full": "Three to six months of ongoing work, planned and reported per month (the full price is the total for that period): content plan and page templates; structured data; Google Business Profile and Yandex Maps listings; monthly report on traffic and leads."
       },
       "notes": "Nobody can honestly guarantee search positions; we report on traffic and leads.",
       "billing": "project",
@@ -4594,9 +4849,9 @@
         "en": "SaaS product development"
       },
       "value": {
-        "uz": "Gʻoyangiz obunali onlayn xizmatga aylanadi: koʻp mijozli arxitektura, tariflar va toʻlov bilan; birinchi pullik foydalanuvchilar bir necha oyda.",
-        "ru": "Ваша идея становится онлайн-сервисом по подписке с мультиклиентской архитектурой, тарифами и оплатой; первые платящие пользователи через несколько месяцев.",
-        "en": "Your idea becomes a subscription online service with multi-tenant architecture, plans and billing, and first paying users within months."
+        "en": "Your idea becomes a subscription online service with multi-tenant architecture, plans and billing, ready to take its first paying customers.",
+        "uz": "Gʻoyangiz obunali onlayn xizmatga aylanadi: koʻp mijozli arxitektura, tariflar va toʻlov bilan; birinchi pullik mijozlarni qabul qilishga tayyor.",
+        "ru": "Ваша идея становится онлайн-сервисом по подписке с мультиклиентской архитектурой, тарифами и оплатой, готовым принять первых платящих клиентов."
       },
       "for": [
         "startups",
@@ -4944,24 +5199,25 @@
       "group": "business",
       "featured": true,
       "title": {
-        "uz": "1C integratsiyasi: sayt, bot, marketpleys, bank",
-        "ru": "Интеграция 1С: сайт, бот, маркетплейсы, банк",
-        "en": "1C integration with websites, bots, marketplaces and banks"
+        "uz": "1C, iiko va R-Keeper integratsiyasi: sayt, bot, bank",
+        "ru": "Интеграция 1С, iiko и R-Keeper с сайтом, ботом и банком",
+        "en": "1C, iiko and R-Keeper integration with sites, bots and banks"
       },
       "value": {
-        "uz": "Qoldiq, narx, buyurtma va toʻlovlar 1C bilan oʻzi almashinadi; xodimlar maʼlumotni bir dasturdan boshqasiga koʻchirmaydi.",
-        "ru": "Остатки, цены, заказы и оплаты сами синхронизируются с 1С; сотрудники не переносят данные из программы в программу.",
-        "en": "Stock, prices, orders and payments sync with 1C on their own, so staff stop copying data between programs."
+        "uz": "Qoldiq, narx, buyurtma va toʻlovlar 1C, iiko, R-Keeper yoki MoySklad bilan oʻzi almashinadi; xodimlar maʼlumotni bir dasturdan boshqasiga koʻchirmaydi.",
+        "ru": "Остатки, цены, заказы и оплаты сами синхронизируются с 1С, iiko, R-Keeper или МойСклад; сотрудники не переносят данные из программы в программу.",
+        "en": "Stock, prices, orders and payments sync with 1C, iiko, R-Keeper or MoySklad on their own, so staff stop copying data between programs."
       },
       "for": [
         "retail",
         "distribution",
         "ecommerce",
         "manufacturing",
-        "pharmacy"
+        "pharmacy",
+        "restaurants"
       ],
       "scope": {
-        "mvp": "One integration flow (for example stock and prices to the website or bot, orders back into 1C); exchange log; error alerts.",
+        "mvp": "One integration flow with 1C, iiko, R-Keeper or MoySklad (for example stock, prices or the menu to the website or bot, orders back into the system); exchange log; error alerts.",
         "full": "Several systems connected through one integration service; Click and Payme payments matched to orders; marketplaces; bank statements; monitoring dashboard."
       },
       "notes": null,
@@ -4997,7 +5253,14 @@
         "Payme",
         "Didox",
         "Bank APIs",
-        "Telegram Bot API"
+        "Telegram Bot API",
+        "iiko",
+        "R-Keeper",
+        "MoySklad",
+        "Poster",
+        "Wialon",
+        "amoCRM",
+        "Bitrix24"
       ]
     },
     {
@@ -5365,6 +5628,10 @@
         "Power BI",
         "Telegram Bot API",
         "ClickHouse"
+      ],
+      "next": [
+        "ai-data-assistant",
+        "cloud-data-platform"
       ]
     },
     {
@@ -5675,9 +5942,9 @@
         "en": "Marketplace seller automation"
       },
       "value": {
-        "uz": "Uzum Market va Yandex Marketdagi qoldiq, narx va buyurtmalar 1C bilan oʻzi yangilanadi; ortiqcha sotuv va qoʻlda yuklash yoʻq.",
-        "ru": "Остатки, цены и заказы на Uzum Market и Яндекс Маркете обновляются вместе с 1С сами; без перепродаж и ручных выгрузок.",
-        "en": "Stock, prices and orders on Uzum Market and Yandex Market update with 1C automatically, with no overselling or manual uploads."
+        "uz": "Uzum Market, Yandex Market va Wildberriesdagi qoldiq, narx va buyurtmalar 1C bilan oʻzi yangilanadi; ortiqcha sotuv va qoʻlda yuklash yoʻq.",
+        "ru": "Остатки, цены и заказы на Uzum Market, Яндекс Маркете и Wildberries обновляются вместе с 1С сами; без перепродаж и ручных выгрузок.",
+        "en": "Stock, prices and orders on Uzum Market, Yandex Market and Wildberries update with 1C automatically, with no overselling or manual uploads."
       },
       "for": [
         "ecommerce",
@@ -6027,6 +6294,188 @@
       ]
     },
     {
+      "id": "biz-call-centre",
+      "group": "business",
+      "featured": false,
+      "title": {
+        "uz": "Call-markaz va IP-telefoniya, CRM bilan",
+        "ru": "Колл-центр и IP-телефония со связкой с CRM",
+        "en": "Call centre and IP telephony linked to your CRM"
+      },
+      "value": {
+        "uz": "Har bir qoʻngʻiroq boʻsh operatorga va yozuvi bilan CRMga tushadi, oʻtkazib yuborilganlarga qayta qoʻngʻiroq qilinadi, rahbar kim javob berganini koʻradi.",
+        "ru": "Каждый звонок попадает к свободному оператору и в CRM вместе с записью, на пропущенные перезванивают, руководитель видит, кто ответил.",
+        "en": "Every call reaches a free operator and lands in the CRM with its recording, missed calls get a call back, and the owner sees who answered."
+      },
+      "for": [
+        "restaurants",
+        "clinics",
+        "delivery",
+        "retail",
+        "real-estate",
+        "auto",
+        "education",
+        "services"
+      ],
+      "scope": {
+        "mvp": "Cloud PBX or Asterisk on a local SIP trunk; your existing numbers or one short number; voice menu in Uzbek and Russian; queues and call distribution; call recording with a recorded notice; caller card and call log in amoCRM, Bitrix24 or your system; missed-call list with call-back.",
+        "full": "Several branches on one number; operator screen for order entry into iiko, R-Keeper or 1C; call tracking by ad source; live supervisor board; links to ai-call-quality and to ai-voice-agent for night hours; reports per operator."
+      },
+      "notes": "Lines, numbers and minutes are paid to the telecom operator.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 2,
+          "max": 4
+        },
+        "full": {
+          "min": 6,
+          "max": 10
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 2500,
+          "max": 6000
+        },
+        "full": {
+          "min": 8000,
+          "max": 20000
+        }
+      },
+      "running_usd_month": {
+        "min": 50,
+        "max": 400
+      },
+      "integrations": [
+        "Asterisk/SIP",
+        "SIP trunks of local operators",
+        "amoCRM",
+        "Bitrix24",
+        "iiko",
+        "1C",
+        "Telegram Bot API"
+      ]
+    },
+    {
+      "id": "biz-delivery-routing",
+      "group": "business",
+      "featured": false,
+      "title": {
+        "uz": "Yetkazishni rejalashtirish: reyslar va haydovchiga marshrut",
+        "ru": "Планирование доставки: рейсы и маршрут водителю",
+        "en": "Delivery planning: trips by load, routes to drivers"
+      },
+      "value": {
+        "uz": "1Cdagi buyurtmalar mashina sigʻimi va hudud boʻyicha reyslarga boʻlinadi, haydovchi marshrutni Telegramda oladi, yetkazish foto bilan tasdiqlanadi.",
+        "ru": "Заказы из 1С собираются в рейсы по грузоподъёмности и районам, водитель получает маршрут в Telegram, доставка подтверждается фото.",
+        "en": "Orders from 1C are grouped into trips by truck capacity and area, each driver gets the route in Telegram, and every delivery is confirmed with a photo."
+      },
+      "for": [
+        "distribution",
+        "manufacturing",
+        "retail",
+        "construction",
+        "ecommerce"
+      ],
+      "scope": {
+        "mvp": "Orders pulled from 1C with weight and volume; trip planning board for the dispatcher with suggestions; stop order on Yandex Maps; driver Telegram bot with stops, navigation link, photo proof of delivery and payment or debt notes; statuses back into 1C.",
+        "full": "Automatic route optimisation with time windows and several warehouses; GPS from Wialon or trackers matched to the plan; delivery cost per trip and client; ETA messages to customers; returns and reloads."
+      },
+      "notes": null,
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 4,
+          "max": 7
+        },
+        "full": {
+          "min": 10,
+          "max": 16
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 5000,
+          "max": 10000
+        },
+        "full": {
+          "min": 15000,
+          "max": 35000
+        }
+      },
+      "running_usd_month": {
+        "min": 30,
+        "max": 200
+      },
+      "integrations": [
+        "1C",
+        "Yandex Maps",
+        "Wialon",
+        "Telegram Bot API"
+      ]
+    },
+    {
+      "id": "biz-management-accounting",
+      "group": "business",
+      "featured": false,
+      "title": {
+        "uz": "Boshqaruv hisobi: pul oqimi va filiallar foydasi",
+        "ru": "Управленческий учёт: деньги и прибыль по филиалам",
+        "en": "Management accounting: cash flow and profit per branch"
+      },
+      "value": {
+        "uz": "Rahbar har bir hisob va kassadagi pulni, kelgusi haftalar toʻlov kalendarini va har bir filialning haqiqiy foydasini oy yopilishini kutmasdan koʻradi.",
+        "ru": "Владелец видит деньги на каждом счёте и в кассе, платёжный календарь на ближайшие недели и реальную прибыль каждого филиала, не дожидаясь закрытия месяца.",
+        "en": "The owner sees the cash in every account and till, a payment calendar for the coming weeks and the real profit of each branch, without waiting for month-end."
+      },
+      "for": [
+        "any",
+        "retail",
+        "distribution",
+        "restaurants",
+        "construction",
+        "manufacturing"
+      ],
+      "scope": {
+        "mvp": "Cash-flow statement and profit and loss by branch from 1C and bank statements; your own list of management items; payment calendar with planned payments approved in Telegram; daily cash summary in Telegram.",
+        "full": "Budgets against actuals; several legal entities consolidated; bank APIs where banks offer them; profit per project or contract; forecasts; access by role."
+      },
+      "notes": "Management accounting sits next to tax accounting in 1C and does not replace your accountant.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 4,
+          "max": 7
+        },
+        "full": {
+          "min": 10,
+          "max": 18
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 5000,
+          "max": 10000
+        },
+        "full": {
+          "min": 15000,
+          "max": 35000
+        }
+      },
+      "running_usd_month": {
+        "min": 30,
+        "max": 200
+      },
+      "integrations": [
+        "1C",
+        "Bank statements",
+        "Telegram Bot API",
+        "Google Sheets",
+        "Metabase"
+      ]
+    },
+    {
       "id": "iot-fleet-gps",
       "group": "iot",
       "featured": true,
@@ -6051,7 +6500,7 @@
         "mvp": "GPS trackers installed or reused; live map; trips and stops; geofences; fuel level sensors on key vehicles; Telegram alerts.",
         "full": "Driver behaviour scores; maintenance schedules; planned against actual routes; links to waybills and 1C; driver app; reports per vehicle and driver."
       },
-      "notes": "Trackers cost roughly $40–150 each and fuel sensors more; hardware is quoted separately.",
+      "notes": "Trackers cost roughly $40–150 each and fuel sensors more; hardware is quoted separately. If you already use Wialon we keep it and connect to it; extra trackers come through your Wialon dealer, and the work is an integration, not a new platform.",
       "billing": "project",
       "timeline_weeks": {
         "mvp": {
@@ -6873,7 +7322,7 @@
         "mvp": "Choice of a local data centre or cloud; server setup; domain, SSL and firewall; deployment of your app; basic monitoring.",
         "full": "High-availability setup across two locations; CDN for static files; backups; central logs; a written runbook; handover or ongoing management."
       },
-      "notes": null,
+      "notes": "Hosting set-up is inside the price of every new build; quote it on its own only to move existing systems or data to Uzbekistan.",
       "billing": "project",
       "timeline_weeks": {
         "mvp": {
@@ -6887,8 +7336,8 @@
       },
       "price_usd": {
         "mvp": {
-          "min": 1000,
-          "max": 3000
+          "min": 500,
+          "max": 2000
         },
         "full": {
           "min": 3000,
@@ -7862,9 +8311,9 @@
         "en": "Dedicated team"
       },
       "value": {
-        "uz": "Oʻz IT boʻlimingizni yigʻmasdan, Toshkentdagi tayyor jamoa mahsulotingiz ustida har kuni ishlaydi.",
-        "ru": "Без найма своего IT-отдела: готовая команда в Ташкенте каждый день работает над вашим продуктом.",
-        "en": "No need to hire an IT department: a ready team in Tashkent works on your product every day."
+        "en": "From one dedicated developer with team-lead review to a full team in Tashkent, working on your product every day without you hiring an IT department.",
+        "uz": "Bitta ajratilgan dasturchidan toʻliq jamoagacha: Toshkentdagi mutaxassislar IT boʻlim yigʻmasdan mahsulotingiz ustida har kuni ishlaydi.",
+        "ru": "От одного выделенного разработчика с ревью тимлида до полной команды в Ташкенте: каждый день работают над вашим продуктом без найма IT-отдела."
       },
       "for": [
         "startups",
@@ -8068,18 +8517,18 @@
         "en": "Clinic management system"
       },
       "value": {
-        "uz": "Yozilish, elektron tibbiy karta, kassa va tahlil natijalari bitta tizimda; bemor natijani Telegramda oladi, shifokor qogʻozga vaqt sarflamaydi.",
-        "ru": "Запись, электронная медкарта, касса и результаты анализов в одной системе; пациент получает результат в Telegram, врач не тратит время на бумаги.",
-        "en": "Booking, electronic medical records, payments and lab results in one system; patients get results in Telegram and doctors spend less time on paperwork."
+        "uz": "Yozilish, elektron tibbiy karta, kassa va tahlil natijalari bitta tizimda; bemor natija tayyorligi haqida Telegramda xabar oladi va uni xavfsiz havola orqali ochadi, shifokor qogʻozga vaqt sarflamaydi.",
+        "ru": "Запись, электронная медкарта, касса и результаты анализов в одной системе; пациент получает уведомление в Telegram и открывает результат по защищённой ссылке, врач не тратит время на бумаги.",
+        "en": "Booking, electronic medical records, payments and lab results in one system; patients get a Telegram notice and open their results by a secure link, and doctors spend less time on paperwork."
       },
       "for": [
         "clinics"
       ],
       "scope": {
-        "mvp": "Schedules and online booking (web and Telegram); patient records; visit notes with templates; cashier with fiscal receipts; lab results to Telegram; data hosted in Uzbekistan.",
+        "mvp": "Schedules and online booking (web and Telegram); patient records; visit notes with templates; cashier with fiscal receipts; a Telegram notice when results are ready, with a one-time link to results hosted in Uzbekistan; data hosted in Uzbekistan.",
         "full": "Lab analyser and equipment integration; medicine stock; doctor pay by services; insurance and corporate clients; patient app; analytics by doctor and service; AI call reminders."
       },
-      "notes": null,
+      "notes": "Medical data is sensitive: results stay on servers in Uzbekistan and are never sent as files in Telegram.",
       "billing": "project",
       "timeline_weeks": {
         "mvp": {
@@ -8232,18 +8681,82 @@
       ]
     },
     {
+      "id": "ind-hotel-kit",
+      "group": "industry",
+      "featured": false,
+      "title": {
+        "uz": "Kichik mehmonxona uchun: kanal menejeri, bron va mehmon chati",
+        "ru": "Для небольшого отеля: каналы, прямые брони, чат с гостями",
+        "en": "Small hotel kit: channel manager, direct booking, guest chat"
+      },
+      "value": {
+        "uz": "Booking.com va boshqa kanallar bitta kalendarga ulanadi va ikki marta sotilgan xona boʻlmaydi, mehmon saytingizda toʻgʻridan-toʻgʻri bron qiladi, WhatsApp, Telegram va pochtadagi xabarlar bitta oynaga tushadi.",
+        "ru": "Booking.com и другие каналы работают с одним календарём, овербукингов нет, гости бронируют напрямую на вашем сайте, а сообщения из WhatsApp, Telegram и почты приходят в одно окно.",
+        "en": "Booking.com and other channels share one calendar so rooms are never sold twice, guests book directly on your site, and WhatsApp, Telegram and email messages land in one inbox."
+      },
+      "for": [
+        "hospitality",
+        "tourism"
+      ],
+      "scope": {
+        "mvp": "Choice and set-up of a certified PMS and channel manager the hotel subscribes to; rooms, rates and Booking.com mapping; booking engine on your website with card prepayment; WhatsApp Business Platform, Telegram and email in one inbox with AI answers from your FAQ in the guests' languages and handover to reception; guest data export for E-mehmon.",
+        "full": "QR page in each room for tours, transfers and the restaurant; pre-arrival messages; review requests; owner report on direct against OTA share; E-mehmon integration where access allows; restaurant charges to the room."
+      },
+      "notes": "Two-way sync with Booking.com runs through a certified channel manager; we connect it and do not build our own. WhatsApp conversations are billed by Meta. For chains or unusual processes see ind-hotel.",
+      "billing": "project",
+      "timeline_weeks": {
+        "mvp": {
+          "min": 3,
+          "max": 6
+        },
+        "full": {
+          "min": 8,
+          "max": 14
+        }
+      },
+      "price_usd": {
+        "mvp": {
+          "min": 4000,
+          "max": 9000
+        },
+        "full": {
+          "min": 12000,
+          "max": 28000
+        }
+      },
+      "running_usd_month": {
+        "min": 100,
+        "max": 500
+      },
+      "integrations": [
+        "Booking.com",
+        "Expedia",
+        "Airbnb",
+        "WhatsApp Business Platform",
+        "Telegram Bot API",
+        "E-mehmon",
+        "Visa/Mastercard",
+        "Click",
+        "Payme",
+        "Claude API"
+      ],
+      "next": [
+        "ind-hotel"
+      ]
+    },
+    {
       "id": "ind-hotel",
       "group": "industry",
       "featured": false,
       "title": {
-        "uz": "Mehmonxona boshqaruvi (PMS) va kanal menejeri",
-        "ru": "Управление гостиницей (PMS) и менеджер каналов",
-        "en": "Hotel management (PMS) and channel manager"
+        "uz": "Katta mehmonxona va tarmoqlar uchun boshqaruv tizimi (PMS)",
+        "ru": "Система управления отелем (PMS) для крупных отелей и сетей",
+        "en": "Hotel management system (PMS) for larger hotels and chains"
       },
       "value": {
-        "uz": "Xonalar, bronlar va toʻlovlar Booking.com bilan avtomatik bogʻlangan bitta tizimda; xorijiy mehmonlarni roʻyxatga olish tezlashadi.",
-        "ru": "Номера, брони и оплаты в одной системе, связанной с Booking.com; регистрация иностранных гостей быстрее.",
-        "en": "Rooms, bookings and payments in one system linked to Booking.com, with faster registration of foreign guests."
+        "en": "Rooms, bookings, payments and housekeeping in one system for a larger hotel or a chain, with guest data ready for E-mehmon and channels connected through a certified channel manager.",
+        "uz": "Katta mehmonxona yoki tarmoq uchun xonalar, bronlar, toʻlovlar va tozalash bitta tizimda; mehmon maʼlumoti E-mehmon uchun tayyor, kanallar sertifikatlangan kanal menejeri orqali ulanadi.",
+        "ru": "Номера, брони, оплаты и уборка в одной системе для крупного отеля или сети; данные гостей готовы для E-mehmon, каналы подключаются через сертифицированный менеджер каналов."
       },
       "for": [
         "hospitality",
@@ -8251,9 +8764,9 @@
       ],
       "scope": {
         "mvp": "Room inventory and calendar; bookings from the front desk and the website; check-in and check-out; payments and invoices; guest data ready for E-mehmon registration; housekeeping statuses.",
-        "full": "Channel manager (Booking.com, Airbnb, Expedia); dynamic rates; restaurant and minibar charges to the room; Telegram concierge for guests; owner reports; several properties."
+        "full": "Connection to a certified channel manager (Booking.com, Airbnb, Expedia); dynamic rates; restaurant and minibar charges to the room; Telegram concierge for guests; owner reports; several properties."
       },
-      "notes": "Direct E-mehmon integration depends on the access the system grants; otherwise we prepare the data for quick manual entry.",
+      "notes": "Two-way sync with Booking.com, Expedia and Airbnb runs through a certified channel manager; we connect it and do not build our own. For a single hotel under about 50 rooms start with ind-hotel-kit. Direct E-mehmon integration depends on the access the system grants; otherwise we prepare the data for quick manual entry.",
       "billing": "project",
       "timeline_weeks": {
         "mvp": {

@@ -12,6 +12,9 @@
     "not_found_handling": "404-page"
   },
   "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
-  "ratelimits": [{ "name": "SAMURAI_LIMITER", "namespace_id": "7001", "simple": { "limit": 4, "period": 60 } }],
+  "vars": { "SAMURAI_DAILY_USD": "15" },
+  "ratelimits": [{ "name": "SAMURAI_LIMITER", "namespace_id": "7001", "simple": { "limit": 10, "period": 60 } }],
+  "durable_objects": { "bindings": [{ "name": "SAMURAI_GUARD", "class_name": "SamuraiGuard" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SamuraiGuard"] }],
   "routes": [{ "pattern": "qilich.com", "custom_domain": true }]
 }
