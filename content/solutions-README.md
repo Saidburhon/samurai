@@ -1,7 +1,7 @@
 # Solutions catalogue
 
 `solutions.json` is the single source for the **Solutions** page ("Yechimlar" / "Решения" / "Solutions") and for the
-**SamurAI** advisor. It lists 150 solutions in 10 groups, with titles and one-line values in Uzbek, Russian and English,
+**SamurAI** advisor. It lists 158 solutions in 10 groups, with titles and one-line values in Uzbek, Russian and English,
 and timelines and USD price ranges for an MVP and a full version. You can edit it by hand: it is plain JSON.
 
 | File | What it is |
@@ -40,9 +40,10 @@ Each solution:
 | `price_usd` | `{mvp: {min, max}, full: {min, max}}` | whole US dollars |
 | `running_usd_month` | `{min, max}` or `null` | the client's own monthly running costs (hosting, AI usage, SMS, telephony, licences), not Qilich's fee |
 | `integrations` | list of strings | the systems it connects to; names as the market knows them (Click, Payme, 1C, Didox, E-IMZO…) |
+| `next` | list of ids, optional | the bigger solutions this one grows into (`tg-loyalty-bot` → `mob-loyalty-platform`). SamurAI never proposes two solutions where one grows into the other as the same first step |
 
-Solutions per group: AI and agents 23, Telegram 13, mobile 12, games/AR/VR 11, web 16, business systems 20,
-IoT and hardware 14, cloud/data/security 12, support and design 10, industry solutions 19.
+Solutions per group: AI and agents 26, Telegram 14, mobile 12, games/AR/VR 11, web 16, business systems 23,
+IoT and hardware 14, cloud/data/security 12, support and design 10, industry solutions 20.
 
 ## Editing prices
 
@@ -137,23 +138,29 @@ These are not stated anywhere yet, and SamurAI is told to defer them to the call
 
 ## For SamurAI
 
-The whole file is about 95k tokens, too big for every request. Send SamurAI a compact English projection instead
-(about 18k tokens, which caches well):
+The whole file is about 100k tokens. SamurAI (`worker/samurai.js`) sends a compact English projection instead, one line
+per solution, in the cached part of its system prompt; with the briefing and the site rules that prompt is about 56k
+tokens. The line holds everything SamurAI needs to scope and price honestly: the MVP scope, what the full version adds
+(so a feature from the full version is never sold at the MVP price), the systems it works with, what it grows into,
+and the note:
 
 ```js
-const d = JSON.parse(fs.readFileSync('content/solutions.json', 'utf8'));
 const r = (x) => `${x.min}-${x.max}`;
-const catalogue = d.solutions.map((s) =>
+const line = (s) =>
   `${s.id} [${s.group}] ${s.title.en}: ${s.value.en} | for: ${s.for.join(',')}` +
   ` | MVP ${r(s.timeline_weeks.mvp)}w $${r(s.price_usd.mvp)}; full ${r(s.timeline_weeks.full)}w $${r(s.price_usd.full)}` +
   (s.billing === 'monthly' ? ' per month' : '') +
   (s.running_usd_month ? ` | running $${r(s.running_usd_month)}/mo` : '') +
-  ` | MVP: ${s.scope.mvp}` + (s.notes ? ` | note: ${s.notes}` : '')
-).join('\n');
+  ` | MVP: ${s.scope.mvp} | full adds: ${s.scope.full}` +
+  (s.integrations?.length ? ` | works with: ${s.integrations.join(', ')}` : '') +
+  (s.next?.length ? ` | grows into: ${s.next.join(',')}` : '') +
+  (s.notes ? ` | note: ${s.notes}` : '');
 ```
 
-Add `samurai-knowledge.md`, today's date and the day's rate to the same system prompt. When SamurAI answers in Uzbek or
-Russian, it takes the solution title from `title.uz` or `title.ru` by id.
+Every edit here changes that prompt, so the first SamurAI answer after a deploy writes the cache again (about $0.45).
+When SamurAI answers in Uzbek or Russian, the site takes the solution title from `title.uz` or `title.ru` by id. The
+price floor of a solution is the MVP minimum of its main (first non-helper) item, and its ceiling 1.5 times the
+largest full price among its items, so keep `price_usd` realistic: SamurAI's numbers are clamped to it.
 
 ## Copy rules for any text you add
 

@@ -69,7 +69,7 @@ You answer by filling a JSON form that the qilich.com page renders. The site its
    - "title": the solution's name for this business, in the answer language, up to about 70 characters.
    - "why": 1-2 sentences: what changes for this business and why it pays off (fewer lost orders, less manual work, faster answers). No invented statistics.
    - "includes": 3-6 short items, only what the MVP scope of its ids contains. A feature listed under "full adds" (a POS or channel-manager link, several branches, another marketplace) raises the price within or above the range; say so in "note".
-   - "note": the one caveat specific to this solution (the catalogue note, a third-party wait, an accuracy test, hardware), or "". Mention hosting in Uzbekistan once, in the note of the first solution that holds personal data.
+   - "note": the one caveat specific to this solution (the catalogue note, a third-party wait, an accuracy test, hardware) in one or two short sentences, or "". Mention hosting in Uzbekistan once, in the note of the first solution that holds personal data.
    - Medical results, passport scans and contracts never travel as files in Telegram, WhatsApp or email: the message carries a notice and a one-time link to a page hosted in Uzbekistan.
    - "total.summary": 1-3 sentences: what to start with, what comes next, and what the solutions share.
    - "questions": in a proposal, 0-2 short questions, only when the answer would change the scope or price; in "clarify", up to 3; in "decline", none.
@@ -262,10 +262,14 @@ export function sanitize(text, lang) {
   return s;
 }
 
-/** Cuts a string to n characters at a word boundary, with an ellipsis. */
+/** Cuts a string to n characters: at the end of a sentence when one falls in the second half, else at a word. */
 const cut = (s, n) => {
   const a = [...s];
-  return a.length > n ? `${a.slice(0, n - 1).join('').replace(/\s+\S*$/, '').replace(/[\s,;:.–—-]+$/, '')}…` : s;
+  if (a.length <= n) return s;
+  const head = a.slice(0, n - 1).join('');
+  const sentence = /^[\s\S]*[.!?](?=\s)/.exec(head)?.[0];
+  if (sentence && [...sentence].length >= n / 2) return sentence;
+  return `${head.replace(/\s+\S*$/, '').replace(/[\s,;:.–—-]+$/, '')}…`;
 };
 // the longest each model-written field may be on the page, in characters
 export const LIMITS = {

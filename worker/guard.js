@@ -11,7 +11,7 @@ import { DurableObject } from 'cloudflare:workers';
 
 export const GUARD = {
   DAILY_USD: 15,
-  RESERVE_USD: 0.5, // about the worst cold request: a fresh 1-hour cache write plus 6k output tokens
+  RESERVE_USD: 0.6, // the worst cold request: a 1-hour cache write of the ~56k-token prompt ($0.45) + 6k output ($0.12)
   PER_KEY_WINDOW: 15,
   WINDOW_S: 600,
   PER_KEY_DAY: 30,
