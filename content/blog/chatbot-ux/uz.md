@@ -71,7 +71,7 @@ Odamga chiqib boʻlmaydigan botdan koʻra koʻproq jahlni chiqaradigan narsa kam
 
 ## Bloklanmaydigan rassilkalar
 
-Rassilka obunachini yoʻqotishning eng tez yoʻli. Botni ikki bosishda bloklash mumkin, odamni qaytarish esa deyarli imkonsiz: bot uni bloklagan odamga yoza olmaydi. Teskari cheklov ham bor: bot faqat oʻzini ishga tushirgan odamlarga yoza oladi, ya'ni raqamlar bazasini sotib olib, unga xabar tarqatib boʻlmaydi.
+Rassilka obunachini yoʻqotishning eng tez yoʻli. Botni ikki bosishda bloklash mumkin, odamni qaytarish esa deyarli imkonsiz: bot uni bloklagan odamga yoza olmaydi. Teskari cheklov ham bor: bot faqat oʻzini ishga tushirgan odamlarga yoza oladi, yaʼni raqamlar bazasini sotib olib, unga xabar tarqatib boʻlmaydi.
 
 - **Xohlaganingizdan kamroq.** Kam yuborishdan boshlang va har bir rassilkadan keyin necha kishi botni bloklaganini kuzating: yuborish paytida Telegram bu haqda xabar beradi. Rassilkadan keyin bloklashlar odatdagidan sezilarli koʻp boʻlsa, chastota yoki mazmun toʻgʻri kelmagan.
 - **Foydali boʻlsin.** Xabar aynan shu odamga kerak boʻlishi lozim: joriy kursini tugatayotgan oʻquvchiga keyingi daraja, uyiga yaqin filialdagi aksiya, tish tozalatganiga olti oy boʻlganda koʻrikka eslatma.
