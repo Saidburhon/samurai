@@ -6,7 +6,7 @@ description: "Ilova ishga tushdi, lekin ish tugamadi. Yangilanishlar, server, xa
 date: 2026-10-21
 tags: [ilovani qoʻllab-quvvatlash, saytni qoʻllab-quvvatlash, texnik qoʻllab-quvvatlash, IT autsorsing, jarayon]
 related: [mobile, web, telegram, backend]
-reading_minutes: 8
+reading_minutes: 11
 ---
 
 Ilova doʻkonga chiqdi, sayt ochilyapti, bot buyurtma qabul qilyapti. Oxirgi dalolatnoma imzolandi, dasturlashga pul sarflash ortda qolgandek. Olti oydan keyin esa shanba kuni kechqurun bot birdan javob bermay qoʻyadi, Google Playdan yangi talablar haqida xat keladi, loyihani qilgan dasturchi esa boshqa ish bilan band va ikki kundan keyin javob beradi. Qoʻllab-quvvatlash oldindan kelishilmagan boʻlsa, deyarli har doim shunday boʻladi. Quyida: sayt, ilova va botni texnik qoʻllab-quvvatlashga nimalar kiradi, xatoni tuzatish yangi vazifadan nimasi bilan farq qiladi, shartnomaga qanday javob muddatlarini yozish kerak, birinchi yilga qancha ajratish kerak va kerak boʻlsa loyihani boshqa jamoa qabul qila olishi uchun nima qilish kerak.
@@ -105,7 +105,7 @@ Nimalarni aniqlashtirish kerak:
 - **Bayramlar.** Navroʻz, Ramazon hayiti, Qurbon hayiti, Mustaqillik kuni, Yangi yil. Yetkazib berish va chakana savdo uchun bular koʻpincha eng qizgʻin kunlar. Kim aloqada boʻlishini oldindan kelishib oling va bayram arafasida katta yangilanish chiqarmang.
 - **Murojaatlar uchun bitta kanal.** Vazifalar trekeri yoki Telegramdagi alohida chat, jiddiy holatda esa navbatchi raqamga qoʻngʻiroq. Turli dasturchilarga shaxsiy xabarda yozilgan murojaatlar yoʻqolib ketadi.
 
-Yaxshi yozilgan murojaat soatlarni tejaydi. Unda nima boʻlgani, qayerda (sayt, bot yoki ilova; telefon modeli va versiya; interfeys tili), qachon, buyurtma yoki akkaunt raqami, skrinshot yoki ekran yozuvi boʻladi. Tafsilotsiz «bizda hech narsa ishlamayapti» bir soatlik yozishmaga aylanadi.
+Yaxshi murojaatda nima boʻlgani, qayerda (sayt, bot yoki ilova; telefon modeli va versiya; interfeys tili), qachon, buyurtma raqami va skrinshot boʻladi. Tafsilotsiz «bizda hech narsa ishlamayapti» bir soatlik yozishmaga aylanadi.
 
 ## Qoʻllab-quvvatlash byudjeti
 
@@ -127,15 +127,7 @@ Parallel ravishda muntazam yaxshilanishlar ham kerak boʻlsa, hajm [Dasturiy ta�
 
 Hajm quyidagi hollarda oshadi: platformalar bir nechta boʻlsa, integratsiyalar koʻp boʻlsa (har biri buzilishi mumkin boʻlgan alohida nuqta), avtomatik testlar boʻlmasa, kodni boshqa jamoa yozgan va hujjat yoʻq boʻlsa, kecha-kunduz javob kerak boʻlsa.
 
-Jamoa soatlaridan tashqari birinchi yil byudjetiga quyidagilar kiradi:
-
-- server, maʼlumotlar bazasi va zaxira nusxalar uchun joy;
-- domen;
-- Apple Developer Program (yiliga $99) va Google Play (bir marta $25);
-- kirish kodlari uchun SMS;
-- litsenziyalar: 1C, har bir foydalanuvchi uchun toʻlanadigan CRM;
-- mahsulotda AI boʻlsa, AI servislari uchun toʻlov;
-- oldindan bilib boʻlmaydigan tashqi oʻzgarishlar uchun zaxira.
+Jamoa soatlaridan tashqari birinchi yil byudjetiga server, maʼlumotlar bazasi va zaxira nusxalar uchun joy, domen, Apple Developer Program (yiliga $99) va Google Play (bir marta $25), kirish kodlari uchun SMS, 1C va CRM litsenziyalari, mahsulotda AI boʻlsa uning toʻlovi hamda oldindan bilib boʻlmaydigan tashqi oʻzgarishlar uchun zaxira kiradi.
 
 Koʻp uchraydigan xatolar:
 
@@ -160,9 +152,7 @@ Oddiy tekshiruv: bu loyihani yozmagan dasturchidan uni hujjatlar boʻyicha test 
 
 ## Qoʻllab-quvvatlash vaqtidan unumli foydalanish
 
-Qoʻllab-quvvatlash soatlari faqat yongʻin oʻchirishga ketishi shart emas. Yapon kaizen tamoyili bu yerda juda amaliy ishlaydi: tuzatishlar kichik yaxshilanishlar bilan birga qilinadi. Dasturchi xato tufayli baribir buyurtma rasmiylashtirish kodini koʻrib chiqyaptimi, ortiqcha maydonni olib tashlash yoki sekin qadamni tezlashtirish uchun yaxshi payt. Bu oʻsha kodga uch oydan keyin alohida vazifa bilan qaytishdan arzonroq.
-
-Oy uchun yaxshi tartib: soatlarning bir qismi rejali yangilanish va tekshiruvlarga, bir qismi tuzatishlarga, qolgani esa jamoa bilan birga umumiy roʻyxatdan tanlagan bir-ikkita yaxshilanishga.
+Qoʻllab-quvvatlash soatlari faqat yongʻin oʻchirishga ketishi shart emas. Yapon kaizen tamoyili bu yerda juda amaliy ishlaydi: tuzatishlar kichik yaxshilanishlar bilan birga qilinadi. Dasturchi xato tufayli baribir buyurtma rasmiylashtirish kodini koʻrib chiqyaptimi, ortiqcha maydonni olib tashlash yoki sekin qadamni tezlashtirish uchun yaxshi payt. Bu oʻsha kodga uch oydan keyin alohida vazifa bilan qaytishdan arzonroq. Oy uchun oqilona taqsimot: soatlarning bir qismi rejali yangilanish va tekshiruvlarga, bir qismi tuzatishlarga, qolgani jamoa bilan birga tanlagan bir-ikkita yaxshilanishga.
 
 Oyda bir marta pudratchi qisqa hisobot yuboradi. Unda:
 
@@ -173,6 +163,6 @@ Oyda bir marta pudratchi qisqa hisobot yuboradi. Unda:
 - yaqinlashib kelayotgan muddatlar: domenni uzaytirish, Google Playning navbatdagi chegarasi, Apple talablari, litsenziyalar tugashi;
 - keyingi oy uchun tavsiyalar va nima uchun aynan ular.
 
-Bunday hisobotdan nima uchun pul toʻlayotganingiz va mahsulot qayoqqa ketayotgani besh daqiqada koʻrinadi. Muntazam hisobot qanday boʻlishi haqida batafsil: [Hōrensō: IT jamoa sizga qanday hisobot berishi kerak](/blog/horenso-reporting/).
+Bunday hisobotdan nima uchun pul toʻlayotganingiz besh daqiqada koʻrinadi. Muntazam hisobot haqida batafsil: [Hōrensō: IT jamoa sizga qanday hisobot berishi kerak](/blog/horenso-reporting/).
 
 Hozir nimalar ishlayotganini (sayt, bot, ilova, 1C va toʻlov tizimlari bilan integratsiyalar) qilich.com saytidagi SamurAIga yozing va aynan shu toʻplamni qoʻllab-quvvatlashga nimalar kirishi kerakligini soʻrang.
