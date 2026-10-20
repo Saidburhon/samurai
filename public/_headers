@@ -5,6 +5,13 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000
 
-# CSS, JS and images are not fingerprinted, so keep their cache short
-/assets/*
+# Icons and share images keep their names, so they cache briefly. Everything else under /assets/ has a content hash
+# in its name and never changes. No two rules overlap (Cloudflare would join their values with commas).
+/assets/img/*
   Cache-Control: public, max-age=3600
+/assets/build/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/osh/*
+  Cache-Control: public, max-age=31536000, immutable
