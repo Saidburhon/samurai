@@ -38,7 +38,8 @@ try {
     await page.goto(`http://127.0.0.1:${port}${lang === 'uz' ? '/' : `/${lang}/`}?og=1`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(600);
-    await page.screenshot({ path: `public/assets/img/og-${lang}.png` });
+    // a palette PNG keeps the paper and the hairlines at about a third of the size
+    await sharp(await page.screenshot()).png({ palette: true, quality: 92, effort: 10, dither: 0.5 }).toFile(`public/assets/img/og-${lang}.png`);
     await page.close();
   }
 } finally {

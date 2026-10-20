@@ -62,9 +62,9 @@ html:not(.cinema) .beat[data-beat] + .beat[data-beat] { margin-top: 0; }
 
 /* 焼 the process: four plates, two on the forge table and two in the water */
 html:not(.cinema) .s-yaki { padding: 0; background: var(--ro); }
-.s-yaki > .kick { padding: 128px var(--m) 0; background: radial-gradient(60% 120% at 50% 0%, #3A1206 0%, var(--ro) 70%); }
+.s-yaki > .kick { padding: 112px var(--m) 0; } /* the flat ro ground (the grain lies over it); the 土 plate follows at once */
 .s-yaki .beat { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); padding: 48px var(--m) 72px; background: var(--bg); align-items: end; }
-.s-yaki .beat[data-beat="yaki.plan"] { padding-top: 40px; }
+.s-yaki .beat[data-beat="yaki.plan"] { padding-top: 4px; }
 .s-yaki .beat[data-beat="yaki.quench"] { border-top: 1px solid rgba(233, 226, 211, .28); background: linear-gradient(var(--mizu), #0d2132); padding-top: 96px; }
 .s-yaki .beat[data-beat="yaki.launch"] { background: #0d2132; padding-bottom: 128px; }
 .s-yaki .plate { grid-column: 1 / -1; margin-bottom: 40px; }
@@ -85,7 +85,7 @@ html:not(.cinema) .s-yaki { padding: 0; background: var(--ro); }
 .s-tsuba .st.big { font-size: clamp(42px, calc(72 * var(--fit)), 72px); line-height: 1.02; color: var(--washi); }
 html[lang=ru] .s-tsuba .st.big { font-size: clamp(38px, calc(64 * var(--fit)), 64px); }
 .s-tsuba .cap { margin-top: 32px; color: var(--hagane); }
-.s-tsuba .plate { grid-column: 8 / span 4; grid-row: 1 / span 2; filter: drop-shadow(0 0 40px rgba(255, 214, 160, .18)); }
+.s-tsuba .plate { grid-column: 8 / span 4; grid-row: 1 / span 2; }
 .s-tsuba .b-carpet { grid-column: 1 / span 6; grid-row: 2; align-self: end; margin-top: 64px; }
 .s-tsuba .b-carpet .st { font-size: clamp(32px, calc(54 * var(--fit)), 54px); color: var(--washi); }
 .s-tsuba .b-team { grid-column: 1 / -1; margin-top: 120px; padding-top: 48px; border-top: 1px solid var(--line); }
@@ -111,10 +111,12 @@ html[lang=ru] .s-tsuba .st.big { font-size: clamp(38px, calc(64 * var(--fit)), 6
 .dial circle, .dial path { fill: none; }
 .dial .rings { stroke: #6E5638; stroke-width: 1.4; opacity: .75; }
 .dial .rings .out { opacity: .8; }
-.dial text { font: 300 24px/1 var(--mono); font-stretch: 87.5%; font-variant-numeric: tabular-nums; text-anchor: middle; dominant-baseline: central; fill: #5C4630; }
+/* the numerals and ring names are sized in dial units per layout (dial.js: the radial budget): 27 units render
+   at 13–17.5 px on desktops (the dial is 500–650 px wide), 34 units at 12–13 px on 360–390 px phones */
+.dial text { font: 300 27px/1 var(--mono); font-stretch: 87.5%; font-variant-numeric: tabular-nums; text-anchor: middle; dominant-baseline: central; fill: #5C4630; }
 .dial .nums .lo { fill: #8A6F4E; opacity: .45; transform: translate(calc(cos(var(--sun)) * -.4px), calc(sin(var(--sun)) * -.4px)); }
 .dial .nums .hi { fill: #F7EEDD; transform: translate(calc(cos(var(--sun)) * .6px), calc(sin(var(--sun)) * .6px)); }
-.dial .names text { font-size: 22px; letter-spacing: .1em; fill: #5C4630; }
+.dial .names text { font-size: 27px; letter-spacing: .08em; fill: #5C4630; }
 .dial .carve .cut { fill: rgba(92, 64, 36, .1); stroke: rgba(92, 64, 36, .35); stroke-width: 1; }
 .dial .carve .lo { fill: none; stroke: #8A6F4E; stroke-width: 2.4; opacity: .4; transform: translate(calc(cos(var(--sun)) * -1.2px), calc(sin(var(--sun)) * -1.2px)); }
 .dial .carve .hi { fill: none; stroke: #F7EEDD; stroke-width: 1.6; opacity: .85; transform: translate(calc(cos(var(--sun)) * .8px), calc(sin(var(--sun)) * .8px)); }
@@ -208,7 +210,7 @@ html.menu-open .nav::after { display: none; }
   .svc li { break-inside: avoid; padding: 10px 0 10px 22px; border-bottom: 1px solid var(--line); border-top: 0; }
   .svc li::before { width: 12px; }
   .s-utsuri .hako { top: 76px; bottom: auto; }
-  .s-yaki > .kick { padding: 104px var(--m) 0; }
+  .s-yaki > .kick { padding: 88px var(--m) 0; }
   .s-yaki .beat { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 12px; padding: 40px var(--m) 56px; }
   .s-yaki .beat[data-beat="yaki.quench"] { padding-top: 72px; }
   .s-yaki .plate, .s-yaki .beat[data-beat="yaki.quench"] .plate { grid-column: 1 / -1; margin: 0 calc(-1 * var(--m)) 28px; }
@@ -221,7 +223,8 @@ html.menu-open .nav::after { display: none; }
   .s-yaki .hako b { font-size: 26px; }
   .s-togi .st { grid-column: 1 / -1; font-size: 34px; max-width: 9em; }
   .s-togi .plate { grid-column: 1 / -1; margin: 48px calc(-1 * var(--m)) 0; }
-  .s-togi .stone { position: static; margin: 20px 0 0 calc(var(--m) + 38%); padding-left: 10px; }
+  .s-togi .stone { position: static; margin: 20px var(--m) 0 calc(var(--m) + 30%); padding-left: 10px; white-space: normal; flex-wrap: wrap; row-gap: 6px; }
+  .s-togi .stone b { white-space: nowrap; }
   .s-togi .after { grid-column: 1 / -1; font-size: 24px; margin-top: 32px; }
   .s-tsuba .b-guard { grid-column: 1 / -1; grid-row: 1; }
   .s-tsuba .st.big { font-size: 40px; }
@@ -237,6 +240,8 @@ html.menu-open .nav::after { display: none; }
   .clocks-big { margin-top: 24px; }
   .clocks-big time { font-size: 48px; }
   .dial-plate { grid-column: 1 / -1; grid-row: 3; margin: 40px calc(-1 * var(--m)) 0; width: calc(100% + 2 * var(--m)); }
+  .dial text, .dial .names text { font-size: 34px; }
+  .dial .odd { display: none; } /* even hours only: twelve numerals a ring at a readable size */
   .s-toki .lines { grid-row: 4; margin-top: 32px; }
   .s-toki .lines .line { font-size: 17px; }
   .s-toki .hako.hrs { top: 76px; bottom: auto; right: calc(var(--m) + 34px); }

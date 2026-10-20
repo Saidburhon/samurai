@@ -64,12 +64,19 @@ export async function buildFonts() {
   const html = Object.fromEntries(Object.entries(PAGES).filter(([, f]) => existsSync(f)).map(([k, f]) => [k, readFileSync(f, 'utf8')]));
   const text = Object.fromEntries(Object.entries(html).map(([k, h]) => [k, pageText(h)]));
   const always = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('') + ' ·—–’“”«»…';
+  // text-transform makes capitals (and lowercase) the HTML never contains: every character comes with its other
+  // case, and the whole Russian alphabet ships in the cyrl subsets, so no UI label can fall back to a platform face
+  const ruAlphabet = String.fromCodePoint(0x401, 0x451, ...Array.from({ length: 64 }, (_, i) => 0x410 + i));
   const lat = new Set(), cyr = new Set(), jp = new Set();
-  for (const ch of [...Object.values(text).join(''), ...always]) {
-    const c = ch.codePointAt(0);
-    if (c < 32 || c === 0x2bb || (c >= 0xfe00 && c <= 0xfe0f)) continue;
-    (JP(c) ? jp : CYR(c) ? cyr : lat).add(ch);
+  for (const ch0 of [...Object.values(text).join(''), ...always, ...ruAlphabet]) {
+    for (const ch of new Set([ch0, ...ch0.toUpperCase(), ...ch0.toLowerCase()])) {
+      const c = ch.codePointAt(0);
+      if (c < 32 || c === 0x2bb || (c >= 0xfe00 && c <= 0xfe0f)) continue;
+      (JP(c) ? jp : CYR(c) ? cyr : lat).add(ch);
+    }
   }
+  // Japanese runs carry a space now and then (the mei タシケント住 キリチ作): Mincho draws it, not the platform serif
+  jp.add(' ');
   // the reflected words, for GeologicaSign
   const words = new Set();
   for (const h of Object.values(html)) for (const m of h.matchAll(/<p class="words"[^>]*>([\s\S]*?)<\/p>/g)) for (const w of m[1].matchAll(/>([^<]+)</g)) for (const ch of decode(w[1])) words.add(ch);

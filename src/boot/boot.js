@@ -25,15 +25,29 @@ const LKT = Math.hypot(T[0] - K[0], T[1] - K[1]) * SC;
 const pts = order.map((i) => F(bp2(st.s[i], st.v[i], 1)));
 let drawn = 0, place = null;
 
-function layout() {
-  const r = stageEl.getBoundingClientRect();
-  const W = window.innerWidth, Hs = r.height;
+// The stipple is placed by the drawing itself: the CTM of svg#osh (K is its origin, +u runs to the tip) maps the
+// dot list onto the canvas, so the dots sit on the blade whatever the viewport, the zoom or the CSS fallback did.
+// Without a CTM (the svg not rendered) the anchors are used, on the stage's own width (never innerWidth: on a
+// phone that is the visual viewport, which zooms out while anything overflows).
+const oshEl = document.getElementById('osh');
+function placement(r) {
+  const m = oshEl && oshEl.getScreenCTM && oshEl.getScreenCTM();
+  if (m && Math.hypot(m.a, m.b) > 1e-3) return { a: m.a, b: m.b, c: m.c, d: m.d, e: m.e - r.left, f: m.f - r.top, k: Math.hypot(m.a, m.b) };
+  const W = r.width, Hs = r.height;
   const A = ANCHORS[matchMedia('(aspect-ratio < 1.2)').matches ? 'port' : 'land'];
   const Ks = [A.K[0] * W, A.K[1] * Hs], Ts = [A.T[0] * W, A.T[1] * Hs];
   const ang = Math.atan2(Ts[1] - Ks[1], Ts[0] - Ks[0]), k = Math.hypot(Ts[0] - Ks[0], Ts[1] - Ks[1]) / LKT;
+  const c = Math.cos(ang) * k, s = Math.sin(ang) * k;
+  return { a: c, b: s, c: -s, d: c, e: Ks[0], f: Ks[1], k };
+}
+let sig = '';
+function layout() {
+  const r = stageEl.getBoundingClientRect();
+  const p = placement(r);
   const dpr = Math.min(3, Math.max(1.5, (window.devicePixelRatio || 1) * 1.5));
-  cv.width = Math.round(r.width * dpr); cv.height = Math.round(Hs * dpr);
-  place = { Ks, c: Math.cos(ang) * k, s: Math.sin(ang) * k, k, dpr };
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  place = { ...p, dpr };
+  sig = [r.width, r.height, p.a, p.b, p.e, p.f].map((v) => v.toFixed(1)).join();
   drawn = 0;
   const ctx = cv.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -41,15 +55,16 @@ function layout() {
 }
 function drawTo(n) {
   if (!place || n <= drawn) return;
-  const ctx = cv.getContext('2d'), { Ks, c, s, k } = place, rk = Math.min(1.6, Math.max(0.7, k));
+  const ctx = cv.getContext('2d'), { a, b, c, d, e, f, k } = place, rk = Math.min(1.6, Math.max(0.7, k));
   ctx.fillStyle = '#0F0E0C';
   for (let j = drawn; j < n; j++) {
     const i = order[j], [u, v] = pts[j];
     ctx.globalAlpha = st.a[i];
-    ctx.beginPath(); ctx.arc(Ks[0] + u * c - v * s, Ks[1] + u * s + v * c, Math.max(0.35, st.r[i] * rk), 0, 6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(e + u * a + v * c, f + u * b + v * d, Math.max(0.35, st.r[i] * rk), 0, 6.2832); ctx.fill();
   }
   ctx.globalAlpha = 1;
   drawn = n;
+  Q.boot.stipN = drawn;
 }
 if (cv && stageEl) {
   layout();
@@ -65,16 +80,21 @@ if (cv && stageEl) {
     };
     tick();
   } else drawTo(order.length);
-  let rt = 0, lastW = window.innerWidth, lastH = stageEl.getBoundingClientRect().height;
-  addEventListener('resize', () => {
+  // re-place on any change of the stage or of the drawing's placement (rotation, a visual-viewport zoom, the
+  // overflow that zoomed it out going away): debounced, and only when the placement really moved
+  let rt = 0;
+  const relayout = () => {
     clearTimeout(rt);
     rt = setTimeout(() => {
-      const h = stageEl.getBoundingClientRect().height;
-      if (window.innerWidth === lastW && Math.abs(h - lastH) < 1) return;
-      lastW = window.innerWidth; lastH = h;
+      const r = stageEl.getBoundingClientRect(), p = placement(r);
+      if ([r.width, r.height, p.a, p.b, p.e, p.f].map((v) => v.toFixed(1)).join() === sig) return;
       const n = drawn; layout(); drawTo(Math.max(n, Q.intro ? 0 : order.length) || order.length);
     }, 120);
-  });
+  };
+  addEventListener('resize', relayout);
+  addEventListener('orientationchange', relayout);
+  if (window.visualViewport) visualViewport.addEventListener('resize', relayout);
+  addEventListener('load', relayout);
 }
 
 // ---------- clocks ----------

@@ -33,6 +33,10 @@ body {
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 img, svg { display: block; }
+/* nothing may be wider than the viewport before app_css arrives (it loads async): an <img> at its intrinsic width
+   would widen the page, and a phone browser zooms the whole page out to show it */
+img { max-width: 100%; height: auto; }
+.nw { white-space: nowrap; }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .mono { font-family: var(--mono); font-stretch: 87.5%; font-weight: 400; letter-spacing: .04em; font-size: 13px; font-variation-settings: normal; }
@@ -69,6 +73,7 @@ html.js #osh .hamon { display: none; }
 .nav .clocks { position: absolute; left: calc(var(--m) + 2 * (var(--col) + var(--g))); display: flex; gap: 8px; align-items: baseline; white-space: nowrap; }
 .nav .clocks span, .nav .clocks i { opacity: .55; font-style: normal; }
 .nav .clocks i { opacity: .35; }
+html.no-js .clocks, html.no-js .city time { display: none; } /* without JS no clock may pretend to be live */
 .links { display: flex; gap: 26px; }
 .links a, .btn span, .cta span, .menu span { font-size: 13px; font-weight: 560; letter-spacing: .08em; text-transform: uppercase; font-variation-settings: "SHRP" 60; }
 .lang { display: flex; gap: 2px; font: 400 13px/1 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; }

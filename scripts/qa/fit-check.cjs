@@ -3,6 +3,9 @@
 // G0 checks flow mode (the catalogue); from G3 it also checks every cinema hold (?beat=k).
 // Usage: node scripts/qa/fit-check.cjs [baseUrl=http://localhost:8800] [outDir=.cache/qa/fit]
 // Writes <outDir>/fit.json, one annotated screenshot per page and viewport (violations boxed in red), and exits 1 on failure.
+// The dial (svg text, so its size is the font size times the svg's scale): every numeral and ring name renders at
+// 13 px or more on desktop, 12 px or more on phones; no numeral touches a ring line, its ticks or the frieze; and the
+// drawn hand, turned through the day in half hours, never crosses a numeral or a ring name.
 const path = require('path');
 const fs = require('fs');
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
@@ -76,7 +79,50 @@ function measure() {
   }
   const m = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 0;
   const navH = document.querySelector('.nav')?.getBoundingClientRect().height || 0;
-  return { W, H, docW: document.documentElement.scrollWidth, docH: document.documentElement.scrollHeight, boxes, wraps, polys, navH, lang: document.documentElement.lang, margin: getComputedStyle(document.body).getPropertyValue('--m') || m };
+  return { W, H, docW: document.documentElement.scrollWidth, docH: document.documentElement.scrollHeight, boxes, wraps, polys, navH, lang: document.documentElement.lang, margin: getComputedStyle(document.body).getPropertyValue('--m') || m, dial: dialAudit() };
+
+  // the dial, in its own units (viewBox -500 -500 1000 1000, centre 0 0)
+  function dialAudit() {
+    const dial = document.querySelector('svg.dial');
+    if (!dial || !vis(dial)) return null;
+    const texts = [...dial.querySelectorAll('#dial-num text, .names text')].filter((t) => vis(t) && t.getComputedTextLength() > 0);
+    const sizes = [], rings = [];
+    // ring lines and their ticks, and the frieze band: [from, to] radii a numeral must keep clear of
+    const keep = [[388, 402], [478, 494], [238, 302]];
+    for (const t of texts) {
+      const ctm = t.getScreenCTM(), fs = parseFloat(getComputedStyle(t).fontSize);
+      sizes.push({ text: t.textContent, px: +(fs * Math.hypot(ctm.a, ctm.b)).toFixed(2) });
+      if (t.closest('.names')) continue;
+      const b = t.getBBox();
+      const cx = Math.max(b.x, Math.min(0, b.x + b.width)), cy = Math.max(b.y, Math.min(0, b.y + b.height));
+      const rMin = Math.hypot(cx, cy), rMax = Math.max(...[[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]].map(([x, y]) => Math.hypot(x, y)));
+      for (const [a, z] of keep) if (rMin < z && rMax > a) rings.push({ text: t.textContent, r: [Math.round(rMin), Math.round(rMax)], band: [a, z] });
+    }
+    // the hand through the day: its outlines against every glyph cell
+    const hand = dial.querySelector('.hand'), hits = [];
+    const cells = [];
+    for (const t of texts) { const n = t.getNumberOfChars(); for (let i = 0; i < n; i++) { const e = t.getExtentOfChar(i); if (e.width > 0) cells.push({ t: t.textContent, x0: e.x, y0: e.y, x1: e.x + e.width, y1: e.y + e.height }); } }
+    const outlines = [...hand.querySelectorAll('path')].filter((p) => p.getTotalLength() > 0);
+    const prev = hand.style.cssText;
+    hand.style.transition = 'none';
+    for (let h = 0; h < 24; h += 0.5) {
+      hand.style.setProperty('--hand', `${(h - 12) * 15}deg`);
+      const toDial = dial.getScreenCTM().inverse();
+      let hit = null;
+      for (const p of outlines) {
+        const M = toDial.multiply(p.getScreenCTM()), L = p.getTotalLength();
+        for (let i = 0; i <= 120 && !hit; i++) {
+          const q = p.getPointAtLength(L * i / 120), x = M.a * q.x + M.c * q.y + M.e, y = M.b * q.x + M.d * q.y + M.f;
+          const c = cells.find((c) => x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1);
+          if (c) hit = c.t;
+        }
+        if (hit) break;
+      }
+      if (hit) hits.push({ hour: h, text: hit });
+    }
+    hand.style.cssText = prev;
+    return { sizes, rings, hits, cells: cells.length };
+  }
 }
 
 const overlap = (a, b, tol = 1) => a.l < b.r - tol && b.l < a.r - tol && a.t < b.b - tol && b.t < a.b - tol;
@@ -128,6 +174,14 @@ function rectHitsPoly(b, poly) {
       if (!b.stage) for (const poly of m.polys) if (rectHitsPoly(b, poly)) { issues.push({ kind: 'blade-band', box: b }); break; }
     }
     for (const t of m.wraps) if (!v.phone) issues.push({ kind: 'line-wraps', detail: t });
+    if (m.dial) {
+      const min = v.phone ? 12 : 13;
+      for (const z of m.dial.sizes) if (z.px < min - 0.05) issues.push({ kind: 'dial-small', detail: `"${z.text}" at ${z.px}px` });
+      for (const r of m.dial.rings) issues.push({ kind: 'dial-ring', detail: `"${r.text}" spans r ${r.r.join('–')} across ${r.band.join('–')}` });
+      for (const h of m.dial.hits) issues.push({ kind: 'dial-hand', detail: `at ${String(Math.floor(h.hour)).padStart(2, '0')}:${h.hour % 1 ? '30' : '00'} the hand crosses "${h.text}"` });
+      const px = m.dial.sizes.map((z) => z.px);
+      console.log(`     dial: ${m.dial.sizes.length} texts at ${Math.min(...px).toFixed(1)}–${Math.max(...px).toFixed(1)} px, ${m.dial.cells} glyph cells, hand checked at 48 half hours`);
+    }
     const name = `${lang}-${v.name}`;
     // annotate a screenshot of the hero and the whole page's violations
     await page.evaluate((iss) => {

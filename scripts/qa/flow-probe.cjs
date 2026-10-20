@@ -7,6 +7,12 @@
 //   - the okina (U+02BB) renders through QOkina / QOkinaMono (CDP platform fonts), with zoomed crops to look at
 //   - no JS: the hero drawing lies on its diagonal (K and T within 1.5 px of the anchors), the page is complete
 //   - no horizontal overflow
+//   - with JS: the hero's hamon stipple (canvas#stip) is fully inked and its dots lie inside the drawn blade outline
+//   - every visible text node on every page (404 included, the phone menu opened) is drawn with the site's own faces
+//     (CDP platform fonts): any platform fallback (Liberation, Arial, DejaVu, ...) fails, e.g. a capital that
+//     text-transform made and the font subset lacks
+//   - before app_css arrives (it loads async; here it is held back): no overflow, no visual-viewport zoom-out, and
+//     the stipple still on the blade (a phone zooms the page out when anything is wider than the viewport)
 //   - screenshots down the page, as contact sheets, for the "printed catalogue" review
 // Usage: node scripts/qa/flow-probe.cjs [baseUrl=http://localhost:8800] [outDir=.cache/qa/flow]
 const path = require('path');
@@ -21,6 +27,63 @@ const PAGES = { uz: '/', ru: '/ru/', en: '/en/' };
 const VIEWS = { desktop: { width: 1440, height: 900, dpr: 0.75, phone: false }, phone: { width: 390, height: 844, dpr: 1.5, phone: true } };
 const ANCH = { land: { K: [0.072, 0.698], T: [0.921, 0.258] }, port: { K: [0.626, 0.955], T: [0.856, 0.123] } };
 const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i];
+// CDP names the instance it drew with ("Geologica Thin", "Martian Mono SemiExpanded", "Zen Old Mincho Black")
+const OWN_FONTS = ['Geologica', 'Martian Mono', 'Zen Old Mincho', 'QOkina', 'QOkinaMono', 'GeologicaSign'];
+const own = (name) => OWN_FONTS.some((f) => name === f || name.startsWith(f + ' '));
+
+// every element with its own visible text, through CDP: the platform fonts that drew it; anything not ours is a fallback
+async function fontAudit(page, ctx, scope = 'body') {
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(150);
+  const n = await page.evaluate((scope) => {
+    for (const e of document.querySelectorAll('[data-fc]')) e.removeAttribute('data-fc');
+    let i = 0;
+    for (const el of document.querySelectorAll(`${scope} *`)) {
+      if (el.closest('script, style, #strings, defs, .sprite')) continue;
+      if (![...el.childNodes].some((c) => c.nodeType === 3 && c.textContent.trim())) continue;
+      if (!el.getClientRects().length || getComputedStyle(el).visibility === 'hidden') continue;
+      el.setAttribute('data-fc', String(i++));
+    }
+    return i;
+  }, scope);
+  const cdp = await ctx.newCDPSession(page);
+  await cdp.send('DOM.enable'); await cdp.send('CSS.enable');
+  const { root } = await cdp.send('DOM.getDocument', { depth: -1, pierce: true });
+  const { nodeIds } = await cdp.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector: '[data-fc]' });
+  const off = [], used = {};
+  for (const id of nodeIds) {
+    const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId: id });
+    for (const f of fonts) used[f.familyName] = (used[f.familyName] || 0) + f.glyphCount;
+    const alien = fonts.filter((f) => !own(f.familyName));
+    if (!alien.length) continue;
+    const { attributes } = await cdp.send('DOM.getAttributes', { nodeId: id });
+    const k = attributes[attributes.indexOf('data-fc') + 1];
+    const what = await page.evaluate((k) => { const e = document.querySelector(`[data-fc="${k}"]`); return `<${e.tagName.toLowerCase()}${e.className && typeof e.className === 'string' ? '.' + e.className.split(' ').join('.') : ''}> "${e.textContent.trim().slice(0, 40)}"`; }, k);
+    off.push(`${what}: ${alien.map((f) => `${f.familyName}×${f.glyphCount}`).join(', ')}`);
+  }
+  await cdp.detach();
+  return { elements: n, used, off };
+}
+
+// the hamon stipple on canvas#stip: inked, and on the blade (every painted pixel tested against the outline's fill)
+async function stippleAudit(page) {
+  return page.evaluate(() => {
+    const cv = document.getElementById('stip'), blade = document.querySelector('#osh-hero .o-blade path.k1'), svg = document.getElementById('osh');
+    if (!cv || !blade || !svg || !cv.width) return { error: 'no canvas or no blade outline' };
+    const { width: w, height: h } = cv, d = cv.getContext('2d').getImageData(0, 0, w, h).data;
+    const inv = svg.getScreenCTM().inverse(), st = cv.getBoundingClientRect(), sx = st.width / w, sy = st.height / h;
+    let painted = 0, sampled = 0, inside = 0;
+    for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) {
+      if (d[(y * w + x) * 4 + 3] < 40) continue;
+      if (painted++ % 3) continue;
+      sampled++;
+      const p = new DOMPoint(st.left + (x + 0.5) * sx, st.top + (y + 0.5) * sy).matrixTransform(inv);
+      if (blade.isPointInFill(p) || blade.isPointInStroke(p)) inside++;
+    }
+    return { painted, sampled, inside: sampled ? +(inside / sampled).toFixed(3) : 0, dots: (window.__qilich.boot || {}).stipN || 0, canvas: [w, h], iw: innerWidth, cw: document.documentElement.clientWidth };
+  });
+}
+const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 9000 dots inked` : s.painted < 1500 ? `only ${s.painted} painted pixels` : s.inside < 0.9 ? `${(s.inside * 100).toFixed(1)} % of the dots on the blade` : null);
 
 (async () => {
   const { RU, EN } = await import(path.resolve('scripts/i18n.mjs'));
@@ -112,6 +175,12 @@ const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i
       await page.waitForTimeout(js ? 600 : 100);
     }
 
+    // the hamon stipple (JS): fully inked and on the blade
+    if (js) {
+      run.stipple = await stippleAudit(page);
+      const sb = stippleBad(run.stipple); if (sb) bad('stipple', sb);
+    }
+
     // the hero drawing on its diagonal (no JS: placed by the build-emitted CSS alone)
     const geo = await page.evaluate(() => {
       const svg = document.getElementById('osh'), m = svg.getScreenCTM();
@@ -140,10 +209,73 @@ const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i
       if (y + v.height >= H) break;
     }
     run.frames = i;
+    // every text drawn with our own faces (the phone menu opened too)
+    const fa = await fontAudit(page, ctx);
+    run.fonts = { elements: fa.elements, used: fa.used };
+    for (const o of fa.off) bad('font', o);
+    if (js && v.phone) {
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.click('.menu'); await page.waitForTimeout(900);
+      await page.screenshot({ path: path.join(out, `menu-${tag}.png`) });
+      const fm = await fontAudit(page, ctx, '#menu');
+      for (const o of fm.off) bad('font', 'menu ' + o);
+      run.fonts.menu = fm.elements;
+      await page.click('.menu'); await page.waitForTimeout(600);
+    }
     run.errors = errors;
     for (const e of errors) bad('console', e);
     fails += run.issues.length;
-    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: lang ${info.lang}, h1 ${info.h1.length}, ${run.keys} i18n keys, diagonal ±${Math.max(run.diagonal.errK, run.diagonal.errT)} px at ${run.diagonal.angle}°, ${i} frames${run.okina ? ', okina ' + JSON.stringify(run.okina) : ''}${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
+    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: lang ${info.lang}, h1 ${info.h1.length}, ${run.keys} i18n keys, diagonal ±${Math.max(run.diagonal.errK, run.diagonal.errT)} px at ${run.diagonal.angle}°, ${i} frames, fonts ${JSON.stringify(run.fonts.used)} in ${run.fonts.elements} elements${run.stipple ? `, stipple ${run.stipple.dots} dots ${run.stipple.painted} px ${(run.stipple.inside * 100).toFixed(1)} % on the blade` : ''}${run.okina ? ', okina ' + JSON.stringify(run.okina) : ''}${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
+    report.runs.push(run);
+    await ctx.close();
+  }
+  // the 404 page: one h1, no overflow, no console errors, our own faces only (its nav sets RU in uppercase)
+  for (const [vname, v] of Object.entries(VIEWS)) for (const js of [true, false]) {
+    const tag = `404-${vname}-${js ? 'js' : 'nojs'}`;
+    const ctx = await browser.newContext({ viewport: { width: v.width, height: v.height }, deviceScaleFactor: v.dpr, isMobile: v.phone, hasTouch: v.phone, javaScriptEnabled: js });
+    const page = await ctx.newPage();
+    const errors = [];
+    page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`${m.type()}: ${m.text().slice(0, 160)}`); });
+    page.on('response', (r) => { if (r.status() >= 400 && !/\/no-such-page\/?$/.test(r.url())) errors.push(`${r.status()} ${r.url()}`); });
+    await page.goto(`${base}/404.html`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(800);
+    const run = { tag, issues: [] };
+    const info = await page.evaluate(() => {
+      const h1 = document.querySelector('h1'), img = document.querySelector('.plate img');
+      const a = h1.getBoundingClientRect(), b = img.getBoundingClientRect();
+      // the drawing's ink starts at the image's own padding (26 of its viewBox units)
+      const pad = 26 * b.width / img.naturalWidth;
+      return { h1: document.querySelectorAll('h1').length, sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth, h1Right: a.right, inkLeft: b.left + pad, sameRow: b.top < a.bottom && b.bottom > a.top };
+    });
+    if (info.h1 !== 1) run.issues.push(`h1: ${info.h1}`);
+    if (info.sw > info.cw) run.issues.push(`overflow-x: ${info.sw} > ${info.cw}`);
+    if (info.sameRow && info.inkLeft < info.h1Right + 8) run.issues.push(`the drawing starts at ${info.inkLeft.toFixed(0)} px, on the numeral (ends ${info.h1Right.toFixed(0)} px)`);
+    const fa = await fontAudit(page, ctx);
+    for (const o of fa.off) run.issues.push('font: ' + o);
+    for (const e of errors) run.issues.push('console: ' + e);
+    await page.screenshot({ path: path.join(out, `${tag}.png`) });
+    fails += run.issues.length;
+    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: fonts ${JSON.stringify(fa.used)}, drawing at ${info.inkLeft.toFixed(0)} px after the numeral at ${info.h1Right.toFixed(0)} px${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
+    report.runs.push(run);
+    await ctx.close();
+  }
+  // before app_css arrives: the page as the critical CSS alone lays it out (app_css held back for good)
+  for (const [lang, p] of Object.entries(PAGES)) for (const [vname, v] of Object.entries(VIEWS)) {
+    const tag = `${lang}-${vname}-critical`;
+    const ctx = await browser.newContext({ viewport: { width: v.width, height: v.height }, deviceScaleFactor: v.dpr, isMobile: v.phone, hasTouch: v.phone });
+    const page = await ctx.newPage();
+    await page.route(/app_css-\w+\.css/, (r) => r.fulfill({ status: 200, contentType: 'text/css', body: '/* held back */' }));
+    await page.goto(`${base}${p}?tier=0`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(1500);
+    const run = { tag, issues: [] };
+    const st = await stippleAudit(page);
+    const sb = stippleBad(st); if (sb) run.issues.push('stipple: ' + sb);
+    if (st.iw > st.cw + 1) run.issues.push(`the visual viewport zoomed out: innerWidth ${st.iw} > ${st.cw}`);
+    const sw = await page.evaluate(() => document.documentElement.scrollWidth);
+    if (sw > st.cw) run.issues.push(`overflow-x: ${sw} > ${st.cw}`);
+    await page.screenshot({ path: path.join(out, `${tag}.png`) });
+    fails += run.issues.length;
+    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: innerWidth ${st.iw}, clientWidth ${st.cw}, scrollWidth ${sw}, stipple ${st.dots} dots ${st.painted} px ${(st.inside * 100).toFixed(1)} % on the blade${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
     report.runs.push(run);
     await ctx.close();
   }

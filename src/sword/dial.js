@@ -1,11 +1,18 @@
 // The Toki dial: a 24-hour dial carved in ganch plaster, two rings (Toshkent inside, Tokio outside, 4 hours = 60°
 // apart), a girih frieze cut from the tsuba's own polygons, and the shared-hours arcs in shu.
+// Radial budget (units; numerals measured at the phone size, 34 units = 2 × 0.65 em wide, 0.8 em high, so at most
+// 26 units from their centre along any radius): the outer ring's ticks point out (480–492), the Tokio numerals sit
+// between the rings at 440 (414–466, 14 clear of both lines), the inner ring's ticks point in (390–400), the
+// Toshkent numerals sit at 350 (324–376), the frieze inside at 242–298. The drawn hand ends at 312, inside the
+// numerals, so it never crosses a numeral or a ring name (both stand at the numeral radii).
+// Numerals are sized per layout in CSS (main.css: 27 units on desktop, 34 on phones, where odd hours are left out),
+// so they render at 13 px or more on a 1280 × 720 desktop and 12 px or more on a 360 px phone.
 // Pure: the build writes it into the HTML (gen:dial), so the ring names are data-i18n text translated with the page.
 // Units: 1000 = the viewport height in cinema mode; the centre is (0, 0); 12 is at the top, clockwise 15° per hour.
 import * as G from './geom-core.js';
 import { frame, poly, rdpClosed, SC } from './drawing.js';
 
-export const DIAL = { rIn: 400, rOut: 480, frieze: [300, 360], numIn: 378, numOut: 446, offsetH: 4, shared: [9, 14] };
+export const DIAL = { rIn: 400, rOut: 480, frieze: [242, 298], numIn: 350, numOut: 440, offsetH: 4, shared: [9, 14], hand: 312 };
 const deg = Math.PI / 180;
 export const hourAngle = (h) => (h - 12) * 15; // degrees clockwise from the top
 const at = (r, a) => [r * Math.sin(a * deg), -r * Math.cos(a * deg)];
@@ -17,19 +24,19 @@ function arc(r, a0, a1) {
 }
 
 // the frieze: the tsuba's own girih openwork, small, 16 times around the dial, cut into the plaster
-export const FRIEZE = { r: 330, size: 27, n: 16 };
+export const FRIEZE = { r: 270, size: 24, n: 16 };
 function rosette(holes) {
   const k = FRIEZE.size / 0.352;
   return holes.filter((h) => Math.min(...h.map(([x, y]) => Math.hypot(x, y))) > 0.19)
     .map((h) => poly(rdpClosed(h, 0.35 / k).map(([x, y]) => [x * k, y * k]), true)).join('');
 }
 
-// the hand for flow mode: the sword drawn in ink, tsuba on the hub, the blade 0.44 H long pointing to 12
+// the hand for flow mode: the sword drawn in ink, tsuba on the hub, the blade DIAL.hand long pointing to 12
 function hand() {
   const sigma = 1;
   const tsubaC = G.hp2((G.H.tsuba[0] + G.H.tsuba[1]) / 2, 0, sigma);
   const tip = G.spine(1, sigma);
-  const sc = 440 / Math.hypot(tip.x - tsubaC[0], tip.z - tsubaC[1]);
+  const sc = DIAL.hand / Math.hypot(tip.x - tsubaC[0], tip.z - tsubaC[1]);
   // the axis from the tsuba to the tip points up (−v)
   const F0 = frame(tsubaC, [tip.x, tip.z], { sc });
   const F = (p) => { const [u, v] = F0(p); return [v, -u]; };
@@ -56,22 +63,23 @@ export function dial(holes, labels = { tas: 'Toshkent', tok: 'Tokio' }) {
   const { rIn, rOut, numIn, numOut, offsetH, shared } = DIAL;
   const parts = [];
   // ring lines and quarter-hour ticks (as dashed thick strokes: one dash per tick)
-  const tick = (r, len, n, w) => { const c = 2 * Math.PI * (r - len / 2); return `<circle r="${f1(r - len / 2)}" stroke-width="${len}" stroke-dasharray="${w} ${f1(c / n - w)}" transform="rotate(${-90 - (w / c) * 180})"/>`; };
+  // out: the ticks stand outside the ring line (the outer ring), else inside (the inner ring)
+  const tick = (r, len, n, w, out = false) => { const rc = out ? r + len / 2 : r - len / 2, c = 2 * Math.PI * rc; return `<circle r="${f1(rc)}" stroke-width="${len}" stroke-dasharray="${w} ${f1(c / n - w)}" transform="rotate(${f1(-90 - (w / c) * 180)})"/>`; };
   const rings = `<circle r="${rIn}"/><circle r="${rOut}"/>` +
-    tick(rIn, 7, 96, 1.2) + tick(rIn, 14, 24, 1.6) + `<g class="out">${tick(rOut, 7, 96, 1.2).replace('<circle r="', `<circle r="`)}${tick(rOut, 14, 24, 1.6)}</g>`;
+    tick(rIn, 5, 96, 1.2) + tick(rIn, 10, 24, 1.6) + `<g class="out">${tick(rOut, 6, 96, 1.2, true)}${tick(rOut, 12, 24, 1.6, true)}</g>`;
   // numerals: Toshkent 0–23 inside, Tokio 0–23 outside (Tokio hour h stands where Toshkent hour h − 4 does)
   let nums = '';
   const night = (a) => Math.abs(((a % 360) + 360) % 360 - 180) < 20; // the ring names stand there
   for (let h = 0; h < 24; h++) {
     const a = hourAngle(h), p = at(numIn, a);
     if (night(a)) continue;
-    nums += `<text x="${f1(p[0])}" y="${f1(p[1])}">${String(h).padStart(2, '0')}</text>`;
+    nums += `<text x="${f1(p[0])}" y="${f1(p[1])}"${h % 2 ? ' class="odd"' : ''}>${String(h).padStart(2, '0')}</text>`;
   }
   let numsO = '';
   for (let h = 0; h < 24; h++) {
     const a = hourAngle(h - offsetH), p = at(numOut, a);
     if (night(a)) continue;
-    numsO += `<text x="${f1(p[0])}" y="${f1(p[1])}">${String(h).padStart(2, '0')}</text>`;
+    numsO += `<text x="${f1(p[0])}" y="${f1(p[1])}"${h % 2 ? ' class="odd"' : ''}>${String(h).padStart(2, '0')}</text>`;
   }
   const engraved = `<g id="dial-num">${nums}${numsO}</g>`;
   const ro = rosette(holes);

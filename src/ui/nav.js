@@ -26,7 +26,8 @@ export function initNav() {
   let queued = false;
   const update = () => {
     queued = false;
-    const W = window.innerWidth, H = window.innerHeight, y = window.scrollY;
+    // the layout viewport (clientWidth), never innerWidth: on a phone that is the visual viewport, which zooms
+    const W = document.documentElement.clientWidth, H = window.innerHeight, y = window.scrollY;
     nav.classList.toggle('band', y > 8);
     paint(nav, groundAt(W / 2, Math.min(36, H / 2)), '--nav-bg');
     if (getComputedStyle(ruler).display !== 'none') paint(ruler, groundAt(W / 2, H - 20), '--ruler-bg');
@@ -43,5 +44,6 @@ export function initNav() {
   const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
   addEventListener('scroll', queue, { passive: true });
   addEventListener('resize', queue);
+  if (window.visualViewport) visualViewport.addEventListener('resize', queue);
   update();
 }

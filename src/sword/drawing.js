@@ -556,15 +556,61 @@ export function plateTogi() {
   return plateSvg(parts, { stroke: INK.sumi, pad: 26 });
 }
 
-// 鍔 the girih face-on, with light through the holes
+// 鍔 the guard as iron, face-on, lit from behind: a kurogane plate with its ishime (stone-hammered) surface and a
+// worn, brighter mimi rim with a gilt inlay line; the lamp shows only through the girih openwork. The nakago-ana
+// stays a hole (the ground shows through it), and the seppa-dai around it is iron, as on the real guard.
+// The girih's centre opening is a ring: the traced polygon is its outer loop, the iron disc of rI is its inner one.
+export const GIRIH_DISC = 0.155 + 0.0165 / 2; // rI plus half a strap (scripts/girih.mjs)
 export function plateTsuba(holes) {
   const k = 520, tp = ([u, v]) => [u * k, -v * k];
-  const grad = '<radialGradient id="g" cx="0" cy="0" r="210" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3E0"/><stop offset=".5" stop-color="#FFD6A0"/><stop offset="1" stop-color="#E39A55"/></radialGradient>';
-  const parts = tsubaFace(holes, tp, { fillHoles: ' fill="url(#g)" fill-rule="evenodd"' });
-  // the rim: a second ring, the worn edge of the iron
-  const pts = []; for (let i = 0; i < 128; i++) { const a = i / 128 * Math.PI * 2; pts.push(tp([Math.cos(a) * G.TSUBA_R * 0.985 * 1.03, Math.sin(a) * G.TSUBA_R * 0.985])); }
-  parts.push(P(poly(pts, true), 'k5'));
-  return plateSvg(parts, { stroke: INK.washi, pad: 20, defs: grad });
+  const R = G.TSUBA_R, SX = 1.03;
+  const ell = (rr, sx = SX, n = 160) => { const pts = []; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; pts.push(tp([Math.cos(a) * rr * sx, Math.sin(a) * rr])); } return poly(pts, true); };
+  const holeD = holes.map((h) => poly(rdpClosed(h.map(tp), 0.3), true)).join('');
+  const disc = ell(GIRIH_DISC, 1, 96), ana = poly(nakagoAna().map(tp), true);
+  const rnd = G.mulberry(1418);
+  const f2 = (v) => (Math.round(v * 100) / 100).toString().replace(/^(-?)0\./, '$1.');
+  // ishime: two dot tiles of coprime sizes laid over each other, so the hammering never shows a repeat
+  const tile = (id, size, n) => {
+    let c = '';
+    for (let i = 0; i < n; i++) {
+      const x = rnd() * size, y = rnd() * size, r = 0.4 + rnd() * rnd() * 1.25, lit = rnd() < 0.36;
+      const fill = lit ? '#BFA27A' : '#070605', op = lit ? 0.12 + rnd() * 0.3 : 0.3 + rnd() * 0.4;
+      // a dot over a tile edge is drawn again on the opposite edge, so the tiles join without a cut
+      const wx = x < r ? size : x > size - r ? -size : 0, wy = y < r ? size : y > size - r ? -size : 0;
+      for (const ox of wx ? [0, wx] : [0]) for (const oy of wy ? [0, wy] : [0]) c += `<circle cx="${f2(x + ox)}" cy="${f2(y + oy)}" r="${f2(r)}" fill="${fill}" fill-opacity="${f2(op)}"/>`;
+    }
+    return `<pattern id="${id}" width="${size}" height="${size}" patternUnits="userSpaceOnUse">${c}</pattern>`;
+  };
+  // each outline once, in <defs>; the layers <use> them with their own paint
+  const ironD = ell(R) + holeD + disc + ana, rimD = ell(R) + ell(0.366);
+  const shapes = `<path id="tL" d="${holeD + disc}" fill-rule="evenodd"/><path id="tI" d="${ironD}" fill-rule="evenodd"/><path id="tR" d="${rimD}" fill-rule="evenodd"/><path id="tA" d="${ana}"/>`;
+  const defs =
+    // the lamp behind the guard, seen through the openwork: warm white at the centre, amber at the outer piercings
+    '<radialGradient id="lamp" cx="-14" cy="-22" r="225" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF7E8"/><stop offset=".55" stop-color="#FCE6C0"/><stop offset="1" stop-color="#EDB878"/></radialGradient>' +
+    // the iron: kurogane, a little lighter where the front light falls (top left)
+    '<radialGradient id="iron" cx="-90" cy="-110" r="330" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3A332C"/><stop offset=".55" stop-color="#2A2521"/><stop offset="1" stop-color="#191614"/></radialGradient>' +
+    // the mimi: the rim, polished by handling, brightest where the light falls
+    '<linearGradient id="mimi" x1="-160" y1="-190" x2="150" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9A8263"/><stop offset=".35" stop-color="#5E4F3F"/><stop offset=".7" stop-color="#352D26"/><stop offset="1" stop-color="#4E4134"/></linearGradient>' +
+    tile('ishA', 41, 84) + tile('ishB', 59, 170) + shapes;
+  const use = (id, attrs) => `<use href="#${id}"${attrs}/>`;
+  const parts = [];
+  // the light, only where the openwork is (the ring of the centre opening: its outer loop minus the iron disc)
+  parts.push(use('tL', ' fill="url(#lamp)" stroke="none"'));
+  // the iron plate: the disc minus the openwork; the centre disc back in; the nakago-ana out again
+  parts.push(use('tI', ' fill="url(#iron)" stroke="none"'), use('tI', ' fill="url(#ishA)" stroke="none"'), use('tI', ' fill="url(#ishB)" stroke="none"'));
+  // the mimi band and its gilt inlay line
+  parts.push(use('tR', ' fill="url(#mimi)" stroke="none"'), use('tR', ' fill="url(#ishB)" stroke="none"'));
+  parts.push(P(ell(0.3715, SX, 128), '', ' stroke="#C9A063" stroke-width="1.1" stroke-opacity=".55"'));
+  // the walls of the piercings, warmed by the light that passes them; the tang hole's edge in shadow
+  parts.push(use('tL', ' stroke="#F3CD92" stroke-width="1.3" stroke-opacity=".5"'));
+  parts.push(use('tA', ' stroke="#070605" stroke-width="1.4" stroke-opacity=".9"'));
+  // the seppa-dai (dashed, the drawing convention) and the centre marks outside the rim
+  const sp = []; for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; sp.push(tp([Math.cos(a) * 0.205, Math.sin(a) * 0.112])); }
+  parts.push(P(poly(sp, true), 'k6 dash2', ' stroke="#B49A76"'));
+  const cm = [[[-0.47, 0], [-0.41, 0]], [[0.41, 0], [0.47, 0]], [[0, -0.47], [0, -0.41]], [[0, 0.41], [0, 0.47]]];
+  parts.push(P(cm.map(([a, b]) => poly([tp(a), tp(b)])).join(''), 'k6'));
+  const e = 0.48 * k;
+  return plateSvg(parts, { stroke: INK.washi, pad: 0, defs, box: [-e, -e, e, e] });
 }
 
 // 納 the mounted sword in its saya, level
