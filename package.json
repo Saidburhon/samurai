@@ -18,5 +18,8 @@
     "three": "^0.186.1",
     "wrangler": "4.151.1"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.135.0"
+  }
 }

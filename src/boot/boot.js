@@ -48,6 +48,7 @@ function layout() {
   cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
   place = { ...p, dpr };
   sig = [r.width, r.height, p.a, p.b, p.e, p.f].map((v) => v.toFixed(1)).join();
+  Q.boot.place = sig; Q.boot.layouts = (Q.boot.layouts || 0) + 1; // for the probes
   drawn = 0;
   const ctx = cv.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

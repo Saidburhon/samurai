@@ -67,7 +67,7 @@ html:not(.cinema) .s-yaki { padding: 0; background: var(--ro); }
 .s-yaki .beat[data-beat="yaki.plan"] { padding-top: 4px; }
 .s-yaki .beat[data-beat="yaki.quench"] { border-top: 1px solid rgba(233, 226, 211, .28); background: linear-gradient(var(--mizu), #0d2132); padding-top: 96px; }
 .s-yaki .beat[data-beat="yaki.launch"] { background: #0d2132; padding-bottom: 128px; }
-.s-yaki .plate { grid-column: 1 / -1; margin-bottom: 40px; }
+.s-yaki .plate { grid-column: 1 / -1; margin: 0 48px 40px 0; } /* the kissaki stops short of the hakogaki strip */
 .s-yaki .beat[data-beat="yaki.quench"] .plate { grid-column: 3 / span 8; }
 .s-yaki .big { grid-column: 1 / span 6; font-size: clamp(48px, calc(96 * var(--fit)), 96px); color: var(--washi); }
 .s-yaki .line { grid-column: 7 / span 5; padding-bottom: .5em; }

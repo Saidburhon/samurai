@@ -1,0 +1,1827 @@
+[
+  {
+    "order": 1,
+    "slug": "what-to-automate-first",
+    "cluster": "automation",
+    "title": {
+      "uz": "Kichik biznesda birinchi navbatda nimani avtomatlashtirish kerak",
+      "ru": "Что автоматизировать в малом бизнесе в первую очередь",
+      "en": "What to automate first in a small business"
+    },
+    "description": {
+      "uz": "Avtomatlashtirishni qayerdan boshlash kerak: takroriy ishlarni topish, ularni muhimligiga qarab saralash va jadval yetadigan joyda pul sarflamaslik.",
+      "ru": "С чего начать автоматизацию: как найти повторяющуюся работу, расставить приоритеты и не платить за программу там, где хватит таблицы.",
+      "en": "Where to start with automation: find the repetitive work, rank it by cost and risk, and don't pay for software where a spreadsheet will do."
+    },
+    "targetPhrases": {
+      "uz": [
+        "biznesni avtomatlashtirish",
+        "kichik biznes uchun dastur",
+        "biznes jarayonlarini avtomatlashtirish",
+        "buyurtmalarni hisobga olish dasturi"
+      ],
+      "ru": [
+        "автоматизация бизнеса ташкент",
+        "автоматизация малого бизнеса",
+        "что автоматизировать в бизнесе",
+        "автоматизация бизнес-процессов узбекистан"
+      ]
+    },
+    "audience": "Owners and managers of small businesses (roughly 5 to 50 people) in Tashkent: shops, cafés, clinics, learning centres, service companies that run on Telegram chats, Excel and phone calls.",
+    "angle": "A practitioner's triage, not a product pitch: log one normal week of repeated tasks, score each by frequency, time and the cost of a mistake, and automate the boring high-frequency work first. Sometimes the honest answer is a shared spreadsheet or a 1C setting, not custom software.",
+    "outline": [
+      {
+        "h2": "Signs the business has outgrown manual work",
+        "says": "Concrete symptoms: orders lost in Telegram chats, only the owner knows the stock, end-of-day reconciliation takes hours, the same invoice mistakes repeat."
+      },
+      {
+        "h2": "Write down a normal week before buying anything",
+        "says": "How to log repeated tasks for one week: who does it, how often, how long it takes, what breaks when it goes wrong."
+      },
+      {
+        "h2": "Score each task: frequency, time, cost of a mistake",
+        "says": "A simple three-column score; walk through a hypothetical café with three branches and show which task wins."
+      },
+      {
+        "h2": "Usually first: every order and request in one place",
+        "says": "Collect Telegram, Instagram and phone requests into one list (a bot plus a table, or a CRM) so nothing is lost between shifts."
+      },
+      {
+        "h2": "Then: payments, receipts and reconciliation",
+        "says": "Match Click, Payme and Uzum payments to orders automatically and send the owner a daily summary in Telegram."
+      },
+      {
+        "h2": "Then: stock, schedules and reminders",
+        "says": "Low-stock alerts from 1C, appointment reminders, staff shifts; what each needs in order to be reliable."
+      },
+      {
+        "h2": "What not to automate yet",
+        "says": "Processes that change every month, tasks done once a quarter, anything nobody has written down: automating chaos only makes it faster."
+      },
+      {
+        "h2": "Ready-made, configured or custom",
+        "says": "When amoCRM, Bitrix24 or 1C settings are enough, when a small custom bot pays off, when custom software is justified."
+      },
+      {
+        "h2": "A first 30-day plan",
+        "says": "One process, one responsible person on the business side, a before-and-after measure (time, errors), then the next process: kaizen in practice."
+      }
+    ],
+    "relatedSolutions": [
+      "telegram",
+      "backend",
+      "ai"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Describe your business and the task that eats the most hours to SamurAI on qilich.com."
+  },
+  {
+    "order": 2,
+    "slug": "telegram-bot-cost",
+    "cluster": "cost",
+    "title": {
+      "uz": "Telegram-bot narxi Toshkentda: summa nimalarga bogʻliq",
+      "ru": "Сколько стоит Telegram-бот в Ташкенте и от чего зависит цена",
+      "en": "What a Telegram bot costs in Tashkent, and what drives the price"
+    },
+    "description": {
+      "uz": "Menyuli oddiy botdan toʻlov, CRM va AI bilan ishlaydigan botgacha: Telegram-bot narxini nima belgilaydi, qayerda tejash mumkin va qayerda yoʻq.",
+      "ru": "От бота с меню до бота с оплатой, CRM и ИИ: что на самом деле определяет цену Telegram-бота, где можно сэкономить и где нельзя.",
+      "en": "From a menu bot to one with payments, CRM sync and AI: what really sets the price of a Telegram bot, where you can save and where you shouldn't."
+    },
+    "targetPhrases": {
+      "uz": [
+        "telegram bot narxi",
+        "telegram bot ochish narxi",
+        "telegram bot yasash",
+        "telegram bot buyurtma qilish",
+        "telegram bot ishlab chiqish Toshkent"
+      ],
+      "ru": [
+        "разработка телеграм бота ташкент цена",
+        "сколько стоит телеграм бот",
+        "заказать телеграм бота ташкент",
+        "телеграм бот для бизнеса цена"
+      ]
+    },
+    "audience": "Owners of shops, cafés, delivery services, clinics and learning centres who have been quoted very different prices for 'a bot' and want to understand why.",
+    "angle": "Explain the price as a list of parts the owner can see and choose (flows, admin panel, payments, integrations, languages, AI, hosting, support), so two quotes can be compared line by line. No market or competitor prices; sums appear only if Qilich's own approved 'from' prices are supplied.",
+    "outline": [
+      {
+        "h2": "Why quotes for 'a bot' differ so much",
+        "says": "'A bot' can mean a menu with buttons or a full ordering system; the price follows the flows and integrations, not the word."
+      },
+      {
+        "h2": "The parts of a bot you pay for",
+        "says": "Conversation flows, admin panel, database, staff notifications, broadcasts; one plain line on what each one is."
+      },
+      {
+        "h2": "Payments: Click, Payme, Uzum and fiscal receipts",
+        "says": "What a payment integration adds: merchant contract, payment callbacks, refunds, fiscal receipts with product codes; why it is its own line in the quote."
+      },
+      {
+        "h2": "Integrations: 1C, amoCRM, Bitrix24, Google Sheets",
+        "says": "Syncing stock, prices and leads; why the cost depends on the other system's API and on how clean its data is."
+      },
+      {
+        "h2": "Two languages, AI answers and other add-ons",
+        "says": "Uzbek and Russian texts, Latin and Cyrillic, AI for free-text questions; what each adds to the build and to running costs."
+      },
+      {
+        "h2": "Running costs after launch",
+        "says": "Server, domain, AI usage fees, monitoring, small changes; hosting in Uzbekistan if the bot stores customers' personal data."
+      },
+      {
+        "h2": "Where saving is fine and where it isn't",
+        "says": "Cut extra screens and rare features; don't cut testing, the admin panel, backups or the payment edge cases."
+      },
+      {
+        "h2": "How to compare two quotes",
+        "says": "Ask for a list of parts, what support includes, who owns the code and the bot token, and the timeline by stage."
+      },
+      {
+        "h2": "Qilich prices",
+        "says": "A table of Qilich's approved 'from' prices by bot type. If no approved figures exist, replace it with a scope checklist the reader can send for a quote."
+      }
+    ],
+    "relatedSolutions": [
+      "telegram",
+      "backend",
+      "ai"
+    ],
+    "words": 1500,
+    "readingMinutes": 8,
+    "nextStep": "Describe the bot you have in mind to SamurAI on qilich.com, or send the checklist to inbox@qilich.com.",
+    "verify": [
+      "Use only prices Qilich has approved; no competitor or market figures."
+    ]
+  },
+  {
+    "order": 3,
+    "slug": "ai-to-cut-costs",
+    "cluster": "ai",
+    "title": {
+      "uz": "Sunʼiy intellekt xarajatlarni qayerda haqiqatan kamaytiradi, qayerda yoʻq",
+      "ru": "Где ИИ действительно снижает расходы бизнеса, а где нет",
+      "en": "Where AI actually lowers business costs, and where it doesn't"
+    },
+    "description": {
+      "uz": "AI qaysi ishlarda vaqt va pulni tejaydi: murojaatlarni saralash, hujjatlarni oʻqish, javob qoralamalari. Va qayerda u faqat xarajat va xavf qoʻshadi.",
+      "ru": "На каких задачах ИИ экономит время и деньги: сортировка обращений, чтение документов, черновики ответов. И где он только добавляет расходов и рисков.",
+      "en": "The jobs where AI saves time and money: sorting requests, reading documents, drafting replies. And the jobs where it only adds cost and risk."
+    },
+    "targetPhrases": {
+      "uz": [
+        "sunʼiy intellekt biznes uchun",
+        "AI biznesda",
+        "AI bot biznes uchun",
+        "biznesda xarajatlarni kamaytirish"
+      ],
+      "ru": [
+        "внедрение ИИ для бизнеса ташкент",
+        "искусственный интеллект для бизнеса",
+        "ИИ для снижения затрат",
+        "чат-бот с ИИ для бизнеса"
+      ]
+    },
+    "audience": "Owners and operations managers who hear about AI every day, have a limited budget, and want to know which tasks in their own company it can take over.",
+    "angle": "A sober task-by-task view: AI is good at reading, sorting and drafting text and weak wherever guaranteed accuracy is needed without a check. The saving comes from fewer human minutes per task, not from replacing the team; running costs, error handling and the personal-data rules are part of the sum.",
+    "outline": [
+      {
+        "h2": "What today's AI is good at, in plain terms",
+        "says": "Reading, classifying, summarising and drafting text, pulling fields out of documents; it predicts likely text and knows your business only from the data you give it."
+      },
+      {
+        "h2": "Task 1: sorting incoming messages",
+        "says": "Tag Telegram and email requests by topic and urgency and route them to the right person; a hypothetical clinic reception as the example."
+      },
+      {
+        "h2": "Task 2: drafting replies a person approves",
+        "says": "Operators answer faster when AI drafts the reply from the knowledge base; the person still sends it and stays responsible."
+      },
+      {
+        "h2": "Task 3: reading documents into your systems",
+        "says": "Invoices, waybills and contracts into 1C or a table; link to the document-processing article."
+      },
+      {
+        "h2": "Task 4: summaries for the owner",
+        "says": "A daily digest of orders, complaints and calls in Telegram instead of reading every chat."
+      },
+      {
+        "h2": "Where AI adds cost instead of saving it",
+        "says": "Rare tasks, tasks that are already fast, anything needing full accuracy (prices, legal terms, medical advice); made-up answers and the cost of checking them."
+      },
+      {
+        "h2": "What it costs to run",
+        "says": "Per-use API fees, setup, keeping prompts and the knowledge base current, monitoring; why a pilot on real data comes before rollout."
+      },
+      {
+        "h2": "Uzbek language and personal data",
+        "says": "Test quality on your own Uzbek and Russian messages; don't send customers' personal data to foreign services without checking the localisation law; anonymise where possible."
+      },
+      {
+        "h2": "How to run a two-week pilot",
+        "says": "One task, minutes per task measured before and after, a human check on every output, a decision made on the numbers."
+      }
+    ],
+    "relatedSolutions": [
+      "ai",
+      "telegram",
+      "backend"
+    ],
+    "words": 1500,
+    "readingMinutes": 8,
+    "nextStep": "Tell SamurAI on qilich.com which task your team repeats most; it is a good first candidate for a pilot."
+  },
+  {
+    "order": 4,
+    "slug": "mobile-app-cost",
+    "cluster": "cost",
+    "title": {
+      "uz": "Mobil ilova narxi: byudjet nimalardan tashkil topadi",
+      "ru": "Сколько стоит мобильное приложение в Ташкенте: из чего складывается бюджет",
+      "en": "What a mobile app costs in Tashkent: where the budget goes"
+    },
+    "description": {
+      "uz": "iOS va Android ilova narxi nimaga bogʻliq: ekranlar, backend, toʻlovlar, integratsiyalar, doʻkonlarga joylash va ishga tushirilgandan keyingi xarajatlar.",
+      "ru": "От чего зависит цена приложения для iOS и Android: экраны, бэкенд, оплата, интеграции, публикация в сторах и расходы после запуска.",
+      "en": "What sets the price of an iOS and Android app: screens, backend, payments, integrations, store publishing, and the costs that start after launch."
+    },
+    "targetPhrases": {
+      "uz": [
+        "mobil ilova narxi",
+        "ilova ishlab chiqish narxi",
+        "mobil ilova ishlab chiqish",
+        "ilova qilish narxi",
+        "ilova yasash Toshkent"
+      ],
+      "ru": [
+        "сколько стоит мобильное приложение",
+        "цена разработки приложения ташкент",
+        "разработка мобильных приложений ташкент",
+        "заказать мобильное приложение ташкент"
+      ]
+    },
+    "audience": "Business owners planning their first app (delivery, booking, loyalty, B2B ordering) who need a realistic budget before talking to agencies.",
+    "angle": "The app is the visible part; much of the work is in the backend, the admin panel, integrations and testing. Explain cross-platform versus native in business terms, store fees and review, and the yearly running cost, so the owner budgets for the first year, not only for launch day.",
+    "outline": [
+      {
+        "h2": "An app is three products, not one",
+        "says": "The app customers see, the admin panel staff use, and the server between them; all three are in the price."
+      },
+      {
+        "h2": "Journeys, not screens, drive the cost",
+        "says": "Count the user journeys (sign-up, catalogue, cart, payment, order status, profile) and their edge cases, not the number of screens."
+      },
+      {
+        "h2": "One codebase or two",
+        "says": "Cross-platform frameworks versus separate native apps; when native is worth paying for (heavy use of hardware, complex animation) and when it isn't."
+      },
+      {
+        "h2": "Backend, admin panel and integrations",
+        "says": "Orders, users, notifications, 1C or CRM sync, Click, Payme and Uzum; why this can be the larger part of the work."
+      },
+      {
+        "h2": "Design, testing and real devices",
+        "says": "Testing on the mid-range Android phones customers carry, not only on a flagship; two languages in every screen."
+      },
+      {
+        "h2": "Store accounts and review",
+        "says": "Apple's developer programme costs $99 a year and a Google Play account $25 once; review, rejections and the privacy forms both stores require."
+      },
+      {
+        "h2": "Costs after launch",
+        "says": "Hosting, yearly OS and store-rule updates, bug fixes, analytics; budget for year one, not only the release."
+      },
+      {
+        "h2": "How to cut the budget without hurting the product",
+        "says": "Launch an MVP with one core journey, consider a Telegram Mini App first, reuse the systems you already have."
+      },
+      {
+        "h2": "Qilich prices",
+        "says": "A table of Qilich's approved 'from' prices by app type; leave the section out if no approved figures exist."
+      }
+    ],
+    "relatedSolutions": [
+      "mobile",
+      "backend",
+      "web"
+    ],
+    "words": 1500,
+    "readingMinutes": 8,
+    "nextStep": "Describe your app idea to SamurAI on qilich.com, or write to inbox@qilich.com.",
+    "verify": [
+      "Apple Developer Program fee and Google Play registration fee on the day of publishing.",
+      "Use only prices Qilich has approved."
+    ]
+  },
+  {
+    "order": 5,
+    "slug": "app-website-or-mini-app",
+    "cluster": "apps",
+    "title": {
+      "uz": "Ilova, sayt yoki Telegram Mini App: biznesingizga qaysi biri kerak",
+      "ru": "Приложение, сайт или Telegram Mini App: что нужно вашему бизнесу",
+      "en": "App, website or Telegram Mini App: which one your business needs"
+    },
+    "description": {
+      "uz": "Mobil ilova, sayt va Telegram Mini App narx, mijozga yetib borish, toʻlov va qoʻllab-quvvatlash boʻyicha qanday farq qiladi va qaysi birini tanlash kerak.",
+      "ru": "Чем отличаются мобильное приложение, сайт и Telegram Mini App: цена, охват, оплата и поддержка. Как выбрать под свою задачу.",
+      "en": "How a mobile app, a website and a Telegram Mini App differ in cost, reach, payments and upkeep, and a simple way to choose for your own case."
+    },
+    "targetPhrases": {
+      "uz": [
+        "telegram mini app",
+        "mini app ishlab chiqish",
+        "sayt yoki ilova",
+        "biznes uchun mobil ilova kerakmi"
+      ],
+      "ru": [
+        "разработка telegram mini app",
+        "telegram mini app для бизнеса",
+        "сайт или приложение что выбрать",
+        "мини-приложение в телеграм для бизнеса"
+      ]
+    },
+    "audience": "Owners choosing their first digital product, often a restaurant, shop or service business whose customers already write to them in Telegram.",
+    "angle": "Decide by where customers already are and how often they come back: a website is for being found, a Mini App is for customers already in Telegram, an app is for frequent repeat use. Start with the cheapest option that fits and move up only when usage proves it.",
+    "outline": [
+      {
+        "h2": "Start from the customer, not the technology",
+        "says": "How customers find you, how often they buy, on what phone: three questions that settle most cases."
+      },
+      {
+        "h2": "Website: being found and trusted",
+        "says": "Search, Google and Yandex maps and ads all land on a site; it is the place for first contact, catalogue and prices."
+      },
+      {
+        "h2": "Telegram Mini App: no install, already in the chat",
+        "says": "Opens inside Telegram with the customer's Telegram account, quick to ship; limits: you depend on Telegram, have less screen space and no store listing."
+      },
+      {
+        "h2": "Mobile app: for frequent, repeat customers",
+        "says": "Push notifications, loyalty, offline features, camera and location; the cost of getting installs and keeping the app updated."
+      },
+      {
+        "h2": "Side-by-side comparison",
+        "says": "A table of build effort, time, how customers find it, payments, notifications and upkeep; qualitative ratings, no invented numbers."
+      },
+      {
+        "h2": "Typical paths",
+        "says": "Hypothetical examples: a café starting with a Mini App, a clinic with a site and a booking bot, a delivery business adding an app once repeat orders justify it."
+      },
+      {
+        "h2": "One backend for all three",
+        "says": "Build the server and admin panel so a site, a Mini App and an app can share it later, and you don't pay twice."
+      },
+      {
+        "h2": "Questions to answer before you decide",
+        "says": "A short checklist the owner fills in before talking to any agency."
+      }
+    ],
+    "relatedSolutions": [
+      "telegram",
+      "web",
+      "mobile",
+      "backend"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Describe your customers and how they order today to SamurAI on qilich.com."
+  },
+  {
+    "order": 6,
+    "slug": "ux-mistakes-that-lose-orders",
+    "cluster": "ux",
+    "title": {
+      "uz": "Buyurtmani yoʻqotadigan UX xatolari: savatdan toʻlovgacha",
+      "ru": "UX-ошибки, из-за которых теряются заказы: от корзины до оплаты",
+      "en": "UX mistakes that lose orders, from cart to payment"
+    },
+    "description": {
+      "uz": "Mijoz mahsulotni savatga qoʻshdi-yu, toʻlamay chiqib ketdi. Sayt, ilova va botlarda buyurtmani yoʻqotadigan xatolar va ularni topish yoʻllari.",
+      "ru": "Клиент положил товар в корзину и ушёл. Ошибки сайтов, приложений и ботов, из-за которых бизнес теряет заказы, и как их найти и исправить.",
+      "en": "The customer added to cart and left. The mistakes in websites, apps and bots that cost businesses orders, and how to find and fix them."
+    },
+    "targetPhrases": {
+      "uz": [
+        "UX dizayn",
+        "sayt dizayni xatolari",
+        "internet doʻkon dizayni",
+        "ilova dizayni"
+      ],
+      "ru": [
+        "ux ошибки интернет-магазина",
+        "почему клиенты не оформляют заказ",
+        "юзабилити сайта",
+        "ux дизайн ташкент"
+      ]
+    },
+    "audience": "Owners and marketers of online shops, delivery services and booking businesses who see visitors but fewer orders than they expected.",
+    "angle": "Local, concrete mistakes instead of generic UX theory: forced registration, a delivery price shown too late, address forms that ignore how Tashkent gives directions (street plus moʻljal, the landmark), no clear Uzbek and Russian switch, slow pages on cheap Android, unclear payment status. Each comes with a way to spot it in your own data or by watching a customer.",
+    "outline": [
+      {
+        "h2": "Sign-up before the order",
+        "says": "Ask for a phone number at the end, not an account at the start; a one-time code or Telegram login."
+      },
+      {
+        "h2": "Prices and delivery cost shown too late",
+        "says": "Show delivery cost, minimum order and delivery time before the cart, not on the last step."
+      },
+      {
+        "h2": "Address forms that ignore how Tashkent gives directions",
+        "says": "Street plus landmark, a map pin, entrance and floor; saved addresses for repeat orders."
+      },
+      {
+        "h2": "Payment that leaves the customer unsure",
+        "says": "A clear choice of Click, Payme, Uzum or cash, a clear screen after payment, an order status the customer can check."
+      },
+      {
+        "h2": "Language and script surprises",
+        "says": "The default language, a visible switch, no half-translated screens; search that accepts Uzbek Cyrillic."
+      },
+      {
+        "h2": "Slow screens on mid-range Android",
+        "says": "Heavy images and scripts; test on a typical customer phone over mobile data."
+      },
+      {
+        "h2": "Small buttons, faint text, unhelpful errors",
+        "says": "Tap targets, contrast, error messages that blame the user; how to write an error that helps."
+      },
+      {
+        "h2": "How to find your own leaks",
+        "says": "Step-by-step funnel analytics, session recordings, and watching a few real customers place an order."
+      },
+      {
+        "h2": "Fix the cheapest things first",
+        "says": "Text and settings changes before a redesign; measure each change before the next one."
+      }
+    ],
+    "relatedSolutions": [
+      "web",
+      "mobile",
+      "telegram"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Send the link to your site or bot to inbox@qilich.com and say where you think orders get lost."
+  },
+  {
+    "order": 7,
+    "slug": "ai-support-in-telegram",
+    "cluster": "ai",
+    "title": {
+      "uz": "Telegramda mijozlarga AI javob beradi: unga nimani ishonib topshirish mumkin",
+      "ru": "ИИ отвечает клиентам в Telegram: что можно доверить, а что нет",
+      "en": "AI answering customers in Telegram: what to trust it with"
+    },
+    "description": {
+      "uz": "AI yordamchi Telegramdagi savollarga kecha-yu kunduz javob bera oladi, lekin hammasiga emas. Uni qanday sozlash, qachon odamga uzatish va narxi.",
+      "ru": "ИИ-ассистент отвечает на вопросы в Telegram круглосуточно, но не на все. Как его настроить, когда передавать диалог человеку и сколько это стоит.",
+      "en": "An AI assistant can answer Telegram questions around the clock, but not all of them. How to set one up, when to hand over to a person, and the cost."
+    },
+    "targetPhrases": {
+      "uz": [
+        "AI bot",
+        "sunʼiy intellekt telegram bot",
+        "mijozlarni qoʻllab-quvvatlash boti",
+        "AI yordamchi biznes uchun"
+      ],
+      "ru": [
+        "чат-бот с ИИ для бизнеса",
+        "ИИ бот для телеграм",
+        "автоматизация поддержки клиентов",
+        "ИИ-ассистент для бизнеса"
+      ]
+    },
+    "audience": "Businesses that get the same questions in Telegram again and again (prices, hours, delivery, booking): clinics, learning centres, shops, service companies.",
+    "angle": "The AI is a first-line assistant with a written knowledge base and strict limits, not a replacement for the team. The real design work is deciding what it may answer, how it says 'I'll pass you to a colleague', and how staff take over in the same chat.",
+    "outline": [
+      {
+        "h2": "What AI support can and can't do",
+        "says": "It answers repeat questions from your own texts, collects details, books slots; it must not invent prices, promises or medical and legal advice."
+      },
+      {
+        "h2": "Start with your real questions",
+        "says": "Export recent chats, group the questions, write the correct answers; this becomes the knowledge base."
+      },
+      {
+        "h2": "Rules for the assistant",
+        "says": "Tone, languages (Uzbek Latin and Cyrillic, Russian), topics it must not touch, how it says 'I don't know'."
+      },
+      {
+        "h2": "Handing over to a person",
+        "says": "Triggers (complaint, payment problem, unknown question, the customer asks), staff get the chat with a short summary, the customer is told who will answer and when."
+      },
+      {
+        "h2": "Connecting it to your data",
+        "says": "Order status, free booking slots, stock from 1C or the CRM; read-only access wherever possible."
+      },
+      {
+        "h2": "Costs: build, AI usage and upkeep",
+        "says": "Usage-based AI fees, hosting, updating the knowledge base whenever prices or rules change."
+      },
+      {
+        "h2": "Personal data and privacy",
+        "says": "What the bot stores and where; the localisation law; passport numbers and diagnoses never go to an external AI service."
+      },
+      {
+        "h2": "How to tell whether it works",
+        "says": "Share of chats closed without staff, handover rate, complaints, reply time; read a sample of conversations every week."
+      }
+    ],
+    "relatedSolutions": [
+      "ai",
+      "telegram",
+      "backend"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Tell SamurAI on qilich.com which questions your customers ask most often."
+  },
+  {
+    "order": 8,
+    "slug": "website-cost",
+    "cluster": "cost",
+    "title": {
+      "uz": "Sayt ochish narxi: landing, korporativ sayt va internet-doʻkon",
+      "ru": "Сколько стоит сайт в Ташкенте: лендинг, корпоративный сайт, интернет-магазин",
+      "en": "What a website costs in Tashkent: landing page, company site, online shop"
+    },
+    "description": {
+      "uz": "Landing, korporativ sayt va internet-doʻkon narxi nimaga bogʻliq: dizayn, matnlar, boshqaruv paneli, toʻlovlar, 1C bilan bogʻlash va hosting.",
+      "ru": "От чего зависит цена лендинга, корпоративного сайта и интернет-магазина: дизайн, тексты, CMS, оплата, связь с 1С и хостинг.",
+      "en": "What drives the price of a landing page, a company website and an online shop: design, content, CMS, payments, 1C sync and hosting."
+    },
+    "targetPhrases": {
+      "uz": [
+        "sayt ochish narxi",
+        "sayt qilish narxi",
+        "veb sayt narxi Toshkent",
+        "internet doʻkon ochish",
+        "sayt ishlab chiqish"
+      ],
+      "ru": [
+        "сколько стоит сайт ташкент",
+        "заказать сайт ташкент цена",
+        "разработка сайтов ташкент",
+        "интернет-магазин под ключ ташкент"
+      ]
+    },
+    "audience": "Owners who need a site for the first time or are replacing an old one, and are comparing quotes from studios and freelancers.",
+    "angle": "Separate the three things people call 'a site', then show the cost drivers the owner controls (types of pages, who writes the texts and in how many languages, catalogue size, integrations) and the ones that are easy to forget (content, hosting, certificates, upkeep, basic SEO).",
+    "outline": [
+      {
+        "h2": "Three different products called 'a site'",
+        "says": "Landing page, company site, online shop: what each one is for and when it is enough."
+      },
+      {
+        "h2": "Design: template, adapted or custom",
+        "says": "What you get at each level and when a template is perfectly fine."
+      },
+      {
+        "h2": "Texts, photos and two languages",
+        "says": "Content is often the slowest part; Uzbek and Russian versions are two sets of texts, not a translate button."
+      },
+      {
+        "h2": "Who will edit the site",
+        "says": "Why your own team must be able to change prices and photos without calling a developer."
+      },
+      {
+        "h2": "What an online shop adds",
+        "says": "Catalogue and filters, cart, Click, Payme and Uzum, delivery zones, stock sync with 1C."
+      },
+      {
+        "h2": "Speed, basic SEO and analytics",
+        "says": "Mobile speed, page titles, map listings, Search Console and Yandex Webmaster: what should be done at launch."
+      },
+      {
+        "h2": "Domain, hosting and yearly costs",
+        "says": "A .uz domain, hosting, certificates, backups and small updates every year."
+      },
+      {
+        "h2": "How to compare quotes",
+        "says": "Questions to ask: page types, who writes content, which CMS, who owns the domain and the code, what support includes."
+      },
+      {
+        "h2": "Qilich prices",
+        "says": "A table of Qilich's approved 'from' prices by site type; leave the section out if no approved figures exist."
+      }
+    ],
+    "relatedSolutions": [
+      "web",
+      "backend"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Describe the site you need to SamurAI on qilich.com, or write to inbox@qilich.com.",
+    "verify": [
+      "Use only prices Qilich has approved."
+    ]
+  },
+  {
+    "order": 9,
+    "slug": "brief-for-it-agency",
+    "cluster": "process",
+    "title": {
+      "uz": "IT agentlikka brif qanday yoziladi: aniq narx va muddat olish uchun",
+      "ru": "Как написать бриф для IT-агентства, чтобы получить точную оценку",
+      "en": "How to write a brief for an IT agency and get an accurate quote"
+    },
+    "description": {
+      "uz": "Yaxshi brif narx va muddatni aniqroq hisoblashga yordam beradi. Brifga nima yoziladi: maqsad, foydalanuvchilar, funksiyalar, cheklovlar, byudjet.",
+      "ru": "Хороший бриф делает оценку точнее, а сроки надёжнее. Что написать на одной-двух страницах: цель, пользователи, функции, ограничения, бюджет.",
+      "en": "A good brief makes the estimate sharper and the deadline more reliable. What to put on one or two pages: goal, users, features, limits, budget."
+    },
+    "targetPhrases": {
+      "uz": [
+        "texnik topshiriq",
+        "texnik topshiriq namunasi",
+        "dastur buyurtma qilish",
+        "dastur yozdirish"
+      ],
+      "ru": [
+        "как написать техническое задание",
+        "бриф на разработку сайта",
+        "техническое задание на мобильное приложение",
+        "бриф для IT-агентства"
+      ]
+    },
+    "audience": "Owners and managers ordering a site, app or bot for the first time, with no technical background.",
+    "angle": "The owner doesn't have to write a technical specification; they have to describe the business problem, the people and the limits honestly. The agency turns that into the specification, which is the Japanese 'plan first' habit. Ends with a one-page template and the questions a good agency should ask back.",
+    "outline": [
+      {
+        "h2": "A brief is not a technical specification",
+        "says": "The owner describes the problem and the result; the agency writes the specification; who is responsible for what."
+      },
+      {
+        "h2": "The goal in one sentence you can check",
+        "says": "For example 'take orders without a phone call'; how you will know it worked."
+      },
+      {
+        "h2": "Who will use it",
+        "says": "Customers, staff, managers: their phones, languages and how comfortable they are with apps."
+      },
+      {
+        "h2": "How it works today",
+        "says": "The current process step by step, with the workarounds; attach screenshots of the Excel file, the chat, the paper form."
+      },
+      {
+        "h2": "Must have, nice to have, not now",
+        "says": "Three lists, and why the third one saves money."
+      },
+      {
+        "h2": "Systems it has to work with",
+        "says": "1C, CRM, Click, Payme, Uzum, Didox, the current site; who holds the access and admin rights."
+      },
+      {
+        "h2": "Budget range and deadline, honestly",
+        "says": "Why naming a range gets a better proposal; a real deadline versus a wished-for one."
+      },
+      {
+        "h2": "Questions a good agency asks back",
+        "says": "A short list; if nobody asks them, be careful."
+      },
+      {
+        "h2": "A one-page template",
+        "says": "A fill-in outline the reader can copy and send."
+      }
+    ],
+    "relatedSolutions": [
+      "web",
+      "mobile",
+      "telegram",
+      "backend"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Fill in the template and send it to inbox@qilich.com, or describe the project to SamurAI on qilich.com."
+  },
+  {
+    "order": 10,
+    "slug": "click-payme-uzum-payments",
+    "cluster": "integrations",
+    "title": {
+      "uz": "Click, Payme va Uzum toʻlovlarini ulash: biznes egasi uchun qoʻllanma",
+      "ru": "Подключение Click, Payme и Uzum: что нужно знать владельцу бизнеса",
+      "en": "Accepting Click, Payme and Uzum payments: a guide for business owners"
+    },
+    "description": {
+      "uz": "Sayt, ilova yoki Telegram-botga onlayn toʻlovni ulash: shartnoma, texnik qism, fiskal chek, pulni qaytarish va eng koʻp uchraydigan xatolar.",
+      "ru": "Как подключить онлайн-оплату на сайте, в приложении или Telegram-боте: договор, техническая часть, фискальный чек, возвраты и частые ошибки.",
+      "en": "How online payment gets connected to a website, app or Telegram bot: the contract, the technical part, fiscal receipts, refunds and common mistakes."
+    },
+    "targetPhrases": {
+      "uz": [
+        "click toʻlov ulash",
+        "payme ulash",
+        "onlayn toʻlov ulash",
+        "saytga toʻlov tizimini ulash"
+      ],
+      "ru": [
+        "подключение click к сайту",
+        "интеграция payme",
+        "прием онлайн-оплаты узбекистан",
+        "подключить оплату в телеграм боте"
+      ]
+    },
+    "audience": "Owners of shops, delivery services, learning centres and clinics who want customers to pay online instead of in cash or by transfer to someone's personal card.",
+    "angle": "Online payment is two projects: a business one (merchant contracts, fiscal receipts, who handles refunds) and a technical one (callbacks, order status, reconciliation). Explain both, and why 'send the money to my card number' is a habit the business outgrows.",
+    "outline": [
+      {
+        "h2": "Why card-to-card transfers stop working as you grow",
+        "says": "Manual checking, mistakes, no receipts, tax and trust questions."
+      },
+      {
+        "h2": "What you need before any code",
+        "says": "A registered business, a bank account and a merchant agreement with each provider; each provider sets its own requirements and timing."
+      },
+      {
+        "h2": "How a payment actually flows",
+        "says": "The customer pays on the provider's page or in its app, the provider notifies your server, your system confirms the order; a plain diagram."
+      },
+      {
+        "h2": "Fiscal receipts and product codes",
+        "says": "Each item needs its code from the national product catalogue (MXIK) and a fiscal receipt has to be issued; confirm current rules with the provider and your accountant."
+      },
+      {
+        "h2": "One provider or several",
+        "says": "Customers have their favourite apps; what it takes to support Click, Payme and Uzum together, plus Humo and Uzcard cards."
+      },
+      {
+        "h2": "Refunds, cancellations and partial payments",
+        "says": "The cases that break simple integrations, and who in the company presses the refund button."
+      },
+      {
+        "h2": "Reconciliation and reports",
+        "says": "Matching payments to orders every day, passing them to 1C, a Telegram summary for the owner."
+      },
+      {
+        "h2": "Testing before going live",
+        "says": "Sandbox and test cards; failure cases: double payment, timeout, an order cancelled after payment."
+      },
+      {
+        "h2": "Checklist before launch",
+        "says": "A short list to go through with the developer and the accountant."
+      }
+    ],
+    "relatedSolutions": [
+      "backend",
+      "web",
+      "telegram",
+      "mobile"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Describe how you take payments today to SamurAI on qilich.com.",
+    "verify": [
+      "Current merchant onboarding requirements of Click, Payme and Uzum.",
+      "Current fiscal receipt and MXIK code rules (tasnif.soliq.uz)."
+    ]
+  },
+  {
+    "order": 11,
+    "slug": "mvp-first-version",
+    "cluster": "apps",
+    "title": {
+      "uz": "MVP: birinchi versiyaga nimani kiritmaslik kerak",
+      "ru": "MVP: что не включать в первую версию продукта",
+      "en": "MVP: what to leave out of the first version"
+    },
+    "description": {
+      "uz": "Birinchi versiyada hamma narsa boʻlishi shart emas. MVP uchun funksiyalarni qanday tanlash, nimadan voz kechish va keyingi bosqichga qachon oʻtish kerak.",
+      "ru": "В первой версии не должно быть всего. Как выбрать функции для MVP, от чего отказаться без потерь и как понять, что пора делать следующий шаг.",
+      "en": "The first version doesn't need everything. How to choose MVP features, what to drop without regret, and how to know when it's time for the next step."
+    },
+    "targetPhrases": {
+      "uz": [
+        "MVP nima",
+        "MVP ishlab chiqish",
+        "startap uchun ilova",
+        "ilovaning birinchi versiyasi"
+      ],
+      "ru": [
+        "что такое mvp",
+        "разработка mvp",
+        "mvp мобильного приложения",
+        "mvp для стартапа ташкент"
+      ]
+    },
+    "audience": "Founders and owners launching a new digital product or service, including companies taking an offline business online.",
+    "angle": "MVP means the smallest product that tests the riskiest assumption with real customers, not a cheap bad app. Cut scope by user journey, use Telegram, spreadsheets or manual work behind the scenes, and set in advance the numbers that decide the next stage.",
+    "outline": [
+      {
+        "h2": "What MVP means and what it doesn't",
+        "says": "The smallest product that answers one business question; for that one job it still has to be reliable and pleasant."
+      },
+      {
+        "h2": "Find the riskiest assumption",
+        "says": "Will people order, will they pay, will staff use it; the MVP tests that first."
+      },
+      {
+        "h2": "Cut by journey, never by quality",
+        "says": "Keep one complete path from start to payment; drop secondary paths, never testing or security."
+      },
+      {
+        "h2": "Manual work behind the scenes is fine",
+        "says": "Staff confirming orders by hand, a Google Sheet as the first admin panel; a hypothetical learning centre as the example."
+      },
+      {
+        "h2": "A Telegram bot or Mini App as the MVP",
+        "says": "Testing demand where customers already are is cheaper; when it stops being enough."
+      },
+      {
+        "h2": "Features to postpone",
+        "says": "Loyalty points, complex roles and permissions, a third language, recommendations, in-app chat."
+      },
+      {
+        "h2": "Set the numbers before launch",
+        "says": "Which results mean continue, change or stop, written down before the first customer arrives."
+      },
+      {
+        "h2": "Build it so it can grow",
+        "says": "A clean data model and backend so that version two doesn't mean starting again."
+      }
+    ],
+    "relatedSolutions": [
+      "mobile",
+      "telegram",
+      "web",
+      "backend"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Describe your product idea to SamurAI on qilich.com and ask what the smallest useful first version would be."
+  },
+  {
+    "order": 12,
+    "slug": "horenso-reporting",
+    "cluster": "process",
+    "title": {
+      "uz": "Hōrensō: IT jamoa sizga qanday hisobot berishi kerak",
+      "ru": "Хорэнсо: как IT-подрядчик должен отчитываться перед клиентом",
+      "en": "Hōrensō: how your software team should report to you"
+    },
+    "description": {
+      "uz": "Yapon ish madaniyatidagi hōrensō: hisobot berish, xabardor qilish, maslahatlashish. Dasturchilar jamoasidan nimani, qachon va qanday shaklda kutish kerak.",
+      "ru": "Японский принцип хорэнсо: докладывать, сообщать, советоваться. Что, когда и в каком виде требовать от команды разработки, чтобы не было сюрпризов.",
+      "en": "The Japanese practice of hōrensō: report, inform, consult. What to expect from a development team, how often and in what form, so there are no surprises."
+    },
+    "targetPhrases": {
+      "uz": [
+        "IT loyihani boshqarish",
+        "dasturchilar bilan ishlash",
+        "IT autsorsing",
+        "loyiha hisoboti"
+      ],
+      "ru": [
+        "хорэнсо",
+        "отчётность подрядчика по разработке",
+        "как контролировать разработку",
+        "IT аутсорсинг узбекистан"
+      ]
+    },
+    "audience": "Owners and managers who worked with developers or freelancers before and were left guessing about progress, or who are hiring a team for the first time.",
+    "angle": "Hōrensō turns 'trust us' into a routine the client can see: short regular reports, immediate notice of problems, and consultation before any decision that changes cost or scope. Explain the three parts, what a good report looks like in Telegram, and the red flags.",
+    "outline": [
+      {
+        "h2": "Where the word comes from",
+        "says": "Hōkoku (report), renraku (inform), sōdan (consult): an everyday habit in Japanese companies; no myth-making."
+      },
+      {
+        "h2": "Hōkoku: regular reports with facts",
+        "says": "What was done, what's next, what is blocking us; the same format every time, short enough to read on a phone."
+      },
+      {
+        "h2": "Renraku: bad news early",
+        "says": "A delay, a bug or a change in a third-party API is reported the same day, with its impact and the plan."
+      },
+      {
+        "h2": "Sōdan: ask before deciding",
+        "says": "Decisions that change scope, cost or what users see go to the client with options, not after the fact."
+      },
+      {
+        "h2": "What it looks like week to week",
+        "says": "A sample rhythm: a written Telegram report, a short demo, a shared task board; shown on a hypothetical project."
+      },
+      {
+        "h2": "What the client owes the team",
+        "says": "One decision-maker, answers within an agreed time, access to the systems; hōrensō works both ways."
+      },
+      {
+        "h2": "Red flags in a contractor",
+        "says": "Weeks of silence, 'almost done' for a month, the first demo at the very end, no written decisions."
+      },
+      {
+        "h2": "Questions to ask before signing",
+        "says": "How and how often they report, who your contact is, where tasks and decisions are recorded."
+      }
+    ],
+    "relatedSolutions": [
+      "mobile",
+      "web",
+      "telegram",
+      "backend"
+    ],
+    "words": 1200,
+    "readingMinutes": 6,
+    "nextStep": "Write to inbox@qilich.com and ask to see what a weekly Qilich report looks like."
+  },
+  {
+    "order": 13,
+    "slug": "automation-roi",
+    "cluster": "automation",
+    "title": {
+      "uz": "Avtomatlashtirish oʻzini oqlaydimi: oddiy hisob-kitob usuli",
+      "ru": "Окупится ли автоматизация: как посчитать без консультантов",
+      "en": "Will automation pay for itself? A simple way to calculate it"
+    },
+    "description": {
+      "uz": "Dastur yoki botga sarflangan pul qachon qaytadi: tejalgan soatlar, kamaygan xatolar, yoʻqotilmagan buyurtmalar va doimiy xarajatlarni hisoblash.",
+      "ru": "Когда вернутся деньги, вложенные в программу или бота: как посчитать сэкономленные часы, ошибки, сохранённые заказы и расходы на поддержку.",
+      "en": "When the money spent on software or a bot comes back: how to count hours saved, fewer errors, orders not lost, and the running costs."
+    },
+    "targetPhrases": {
+      "uz": [
+        "avtomatlashtirish samaradorligi",
+        "biznesni avtomatlashtirish narxi",
+        "dastur oʻzini oqlaydimi",
+        "biznes jarayonlarini avtomatlashtirish"
+      ],
+      "ru": [
+        "окупаемость автоматизации",
+        "roi автоматизации бизнес-процессов",
+        "эффективность автоматизации бизнеса",
+        "автоматизация бизнеса ташкент"
+      ]
+    },
+    "audience": "Owners and finance people deciding whether a software project is worth it, and how to check afterwards.",
+    "angle": "A back-of-the-envelope method the owner can do in a spreadsheet: a baseline before, three sources of return (time, errors, revenue kept), every cost including first-year running costs, and a payback period. One fully hypothetical worked example, and an honest list of what the formula can't capture.",
+    "outline": [
+      {
+        "h2": "Measure before you build",
+        "says": "Without a baseline nothing can be proven; what to record for two weeks before the project starts."
+      },
+      {
+        "h2": "Return 1: hours saved",
+        "says": "Minutes per task × tasks per month × cost of an hour; count only time that is really used for other work."
+      },
+      {
+        "h2": "Return 2: fewer mistakes",
+        "says": "Wrong orders, lost payments, fines, write-offs: cost of one mistake × how often it happens."
+      },
+      {
+        "h2": "Return 3: revenue you stop losing",
+        "says": "Unanswered messages at night, abandoned orders, slow replies; estimate conservatively."
+      },
+      {
+        "h2": "All the costs, not only the build",
+        "says": "Build, licences, hosting, AI usage, staff training, first-year support."
+      },
+      {
+        "h2": "A worked example",
+        "says": "A hypothetical delivery business with round numbers clearly labelled as invented for the example; payback in months."
+      },
+      {
+        "h2": "What the formula can't capture",
+        "says": "The owner's time and peace of mind, data for decisions, less dependence on one employee; mention them, don't price them."
+      },
+      {
+        "h2": "Check after launch",
+        "says": "Compare with the baseline after an agreed period; improve or switch off what doesn't pay."
+      }
+    ],
+    "relatedSolutions": [
+      "backend",
+      "telegram",
+      "ai"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Describe the process you want to automate to SamurAI on qilich.com, with how long it takes today."
+  },
+  {
+    "order": 14,
+    "slug": "choosing-a-crm",
+    "cluster": "integrations",
+    "title": {
+      "uz": "CRM tanlash: amoCRM, Bitrix24 yoki oʻzingiz uchun ishlab chiqilgan tizim",
+      "ru": "Какую CRM выбрать: amoCRM, Bitrix24 или собственная разработка",
+      "en": "Choosing a CRM: amoCRM, Bitrix24 or a custom system"
+    },
+    "description": {
+      "uz": "amoCRM, Bitrix24 yoki maxsus CRM: sotuv boʻlimingizga qaysi biri mos, tanlashdan oldin nimani solishtirish kerak va oʻz tizimingiz qachon oʻzini oqlaydi.",
+      "ru": "amoCRM, Bitrix24 или CRM под заказ: что подходит вашим продажам, что сравнить перед выбором и когда собственная система действительно оправдана.",
+      "en": "amoCRM, Bitrix24 or a custom-built CRM: which fits your sales team, what to compare before choosing, and when building your own is worth it."
+    },
+    "targetPhrases": {
+      "uz": [
+        "CRM tizimi",
+        "CRM tizimi ishlab chiqish",
+        "amoCRM",
+        "Bitrix24",
+        "mijozlar bazasi dasturi"
+      ],
+      "ru": [
+        "какую crm выбрать",
+        "amocrm или битрикс24",
+        "разработка crm ташкент",
+        "crm для малого бизнеса"
+      ]
+    },
+    "audience": "Owners and sales managers whose leads live in Telegram chats, notebooks and Excel, or who already pay for a CRM the team doesn't really use.",
+    "angle": "Choose by the sales process, not by the feature list: amoCRM is built around a sales pipeline and messengers, Bitrix24 is a broader workspace with a CRM inside, and a custom system makes sense only when the process is unusual or the integrations are heavy. Whether the team actually uses it matters more than which one you pick.",
+    "outline": [
+      {
+        "h2": "What a CRM should do for you",
+        "says": "No lost leads, a clear next step for every client, numbers for the owner; if the team doesn't enter data, none of it works."
+      },
+      {
+        "h2": "Describe your sales process first",
+        "says": "Stages from the first message to payment and who does what; the CRM copies the process, not the other way round."
+      },
+      {
+        "h2": "amoCRM: a pipeline built around chats",
+        "says": "Its strengths for sales teams that work in messengers; what to check: the Telegram integration, interface languages, price per user."
+      },
+      {
+        "h2": "Bitrix24: a CRM inside a bigger workspace",
+        "says": "Tasks, documents, telephony; cloud or self-hosted; can feel heavy for a small team."
+      },
+      {
+        "h2": "A custom CRM: when it is justified",
+        "says": "An unusual process, many integrations (1C, payments, your own app), data that must stay on your servers in Uzbekistan; more upfront cost and ongoing support."
+      },
+      {
+        "h2": "The middle path: ready-made plus integrations",
+        "says": "Connect amoCRM or Bitrix24 to your bot, site, 1C and Click or Payme through their APIs."
+      },
+      {
+        "h2": "Where the data lives and who can take it",
+        "says": "Where customer data is physically stored, the localisation law, who can export it, what happens when a manager leaves."
+      },
+      {
+        "h2": "Getting the team to use it",
+        "says": "Start small, capture leads from Telegram and site forms automatically, make data entry part of the job, give the owner reports they actually read."
+      }
+    ],
+    "relatedSolutions": [
+      "backend",
+      "telegram",
+      "web"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Describe your sales process step by step to SamurAI on qilich.com.",
+    "verify": [
+      "Current amoCRM and Bitrix24 plans, interface languages and hosting options before naming any of them."
+    ]
+  },
+  {
+    "order": 15,
+    "slug": "uzbek-russian-interface",
+    "cluster": "ux",
+    "title": {
+      "uz": "Oʻzbek va rus tilida soʻzlashuvchi mijozlar uchun interfeys dizayni",
+      "ru": "Дизайн для двуязычных клиентов: узбекский и русский в одном интерфейсе",
+      "en": "Designing for Uzbek and Russian speakers in one interface"
+    },
+    "description": {
+      "uz": "Ikki tilli auditoriya uchun interfeys: til tanlash, lotin va kirill yozuvi, matn uzunligi, shriftlarda ʻ belgisi, sana va pul formatlari.",
+      "ru": "Интерфейс для двуязычной аудитории: выбор языка, латиница и кириллица, длина текстов, буква ʻ в шрифтах, форматы дат и денег.",
+      "en": "Interfaces for a bilingual audience: choosing the language, Latin and Cyrillic, text length, the ʻ letter in fonts, dates and money formats."
+    },
+    "targetPhrases": {
+      "uz": [
+        "ilova dizayni",
+        "sayt dizayni",
+        "ikki tilli sayt",
+        "UX dizayn Oʻzbekiston"
+      ],
+      "ru": [
+        "дизайн приложения узбекистан",
+        "двуязычный сайт",
+        "локализация приложения на узбекский",
+        "ux дизайн ташкент"
+      ]
+    },
+    "audience": "Owners, marketers and product managers launching a site, app or bot for customers in Uzbekistan.",
+    "angle": "Two languages are a design constraint from day one, not a translation at the end: Uzbek copy often runs longer, customers mix scripts, search has to handle Latin, Cyrillic and apostrophe variants, and the okina needs a font that actually has it. Practical rules that prevent broken layouts and half-translated screens.",
+    "outline": [
+      {
+        "h2": "Who reads what",
+        "says": "Uzbek Latin, Uzbek Cyrillic and Russian; many customers switch between them, so ask or detect, and always let them change it."
+      },
+      {
+        "h2": "The language switch",
+        "says": "Visible, remembered, on every screen and in the bot; the default language is a business decision, not a developer's."
+      },
+      {
+        "h2": "Write both versions; don't translate word for word",
+        "says": "Natural Uzbek and natural Russian, a glossary of product terms, one person who approves the texts."
+      },
+      {
+        "h2": "Text length and layout",
+        "says": "Buttons and menus must fit the longer version; test with real copy in both languages, never placeholder text."
+      },
+      {
+        "h2": "Letters, fonts and the okina",
+        "says": "Oʻ and gʻ with the correct ʻ; fonts that support it and Cyrillic; what users see when a font lacks the glyph."
+      },
+      {
+        "h2": "Search that understands both scripts",
+        "says": "Latin to Cyrillic transliteration, apostrophe variants, the Russian names of products."
+      },
+      {
+        "h2": "Numbers, dates, money and addresses",
+        "says": "UZS formatting and thousands separators, date formats, the +998 phone mask, district names in both languages."
+      },
+      {
+        "h2": "Notifications and support in the customer's language",
+        "says": "Push, SMS, bot messages and receipts follow the chosen language; staff can answer in both."
+      }
+    ],
+    "relatedSolutions": [
+      "web",
+      "mobile",
+      "telegram"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Send a screenshot of your site or app in both languages to inbox@qilich.com."
+  },
+  {
+    "order": 16,
+    "slug": "ai-document-processing",
+    "cluster": "ai",
+    "title": {
+      "uz": "AI yordamida hujjatlarni qayta ishlash: hisobvaraq-faktura, yuk xati, shartnoma",
+      "ru": "ИИ для обработки документов: счета-фактуры, накладные, договоры",
+      "en": "AI for document processing: invoices, waybills and contracts"
+    },
+    "description": {
+      "uz": "Qogʻoz va PDF hujjatlardagi maʼlumotni qoʻlda koʻchirish oʻrniga AI ularni oʻqib, 1C yoki jadvalga kiritadi. Qayerda ishlaydi, qayerda tekshiruv shart.",
+      "ru": "Вместо ручного переноса данных из бумаг и PDF ИИ читает документы и заносит их в 1С или таблицу. Где это работает и где без проверки нельзя.",
+      "en": "Instead of retyping data from paper and PDFs, AI reads documents and enters them into 1C or a spreadsheet. Where it works and where a check is a must."
+    },
+    "targetPhrases": {
+      "uz": [
+        "hujjatlarni avtomatlashtirish",
+        "elektron hujjat aylanishi",
+        "elektron hisobvaraq-faktura",
+        "sunʼiy intellekt hujjatlar bilan ishlash"
+      ],
+      "ru": [
+        "автоматизация документооборота",
+        "распознавание документов ии",
+        "обработка счетов-фактур",
+        "электронный документооборот узбекистан"
+      ]
+    },
+    "audience": "Accountants, office managers and owners of trading, wholesale, logistics and construction companies that handle many incoming documents.",
+    "angle": "First check what is already digital: e-invoices through Didox or Faktura.uz arrive as structured data and need an integration, not AI. AI earns its place on the rest (scans, photos, supplier PDFs, contracts), and the flow is designed around validation rules and a human review queue.",
+    "outline": [
+      {
+        "h2": "Which documents are already data",
+        "says": "E-invoices through Didox, Faktura.uz and other operators are structured; connect them to 1C instead of reading them."
+      },
+      {
+        "h2": "Where AI helps: scans, photos and PDFs",
+        "says": "Supplier price lists, waybills, receipts, contracts; AI reads the text and fields, handwriting less reliably."
+      },
+      {
+        "h2": "From a photo to a record",
+        "says": "The flow: capture (Telegram bot, email, scanner), extract, validate, review, write to 1C or a table."
+      },
+      {
+        "h2": "Checks that catch errors",
+        "says": "Line sums add up, the STIR (TIN) has the right format, the supplier exists, totals match the order; low-confidence fields are flagged."
+      },
+      {
+        "h2": "Human review is part of the design",
+        "says": "A review screen where the accountant fixes a field in seconds; manual review shrinks as the rules improve."
+      },
+      {
+        "h2": "Contracts: a summary, not a decision",
+        "says": "AI highlights dates, sums, penalties and unusual clauses; a lawyer or manager still decides."
+      },
+      {
+        "h2": "Costs and data protection",
+        "says": "Per-page AI cost, hosting, which documents hold personal data; keep data in Uzbekistan where the law requires it."
+      },
+      {
+        "h2": "A pilot on one document type",
+        "says": "Take the most frequent document; measure time per document and error rate before and after."
+      }
+    ],
+    "relatedSolutions": [
+      "ai",
+      "backend",
+      "telegram"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Tell SamurAI on qilich.com which documents your team retypes every week."
+  },
+  {
+    "order": 17,
+    "slug": "speed-on-android",
+    "cluster": "ux",
+    "title": {
+      "uz": "Sayt va ilova tezligi: oʻrta narxdagi Android telefonda tekshiring",
+      "ru": "Скорость сайта и приложения на недорогом Android: почему это деньги",
+      "en": "Speed on a mid-range Android phone: why it costs you orders"
+    },
+    "description": {
+      "uz": "Koʻp mijozlar saytni flagmandan emas, oʻrta narxdagi Android va mobil internet orqali ochadi. Tezlikni qanday tekshirish va nimani birinchi tuzatish kerak.",
+      "ru": "Многие клиенты открывают сайт не с флагмана, а с недорогого Android через мобильный интернет. Как проверить скорость и что исправить в первую очередь.",
+      "en": "Many customers open your site on a mid-range Android over mobile data, not a flagship on office Wi-Fi. How to test speed and what to fix first."
+    },
+    "targetPhrases": {
+      "uz": [
+        "sayt tezligi",
+        "sayt sekin ochilyapti",
+        "saytni tezlashtirish",
+        "mobil ilova tezligi"
+      ],
+      "ru": [
+        "скорость загрузки сайта",
+        "ускорение сайта",
+        "медленно грузится сайт на телефоне",
+        "оптимизация мобильного приложения"
+      ]
+    },
+    "audience": "Owners and marketers of online shops, delivery and booking businesses, and anyone signing off a new site design.",
+    "angle": "The owner's and the developer's flagship phones on office Wi-Fi hide the problem. Test on the phones customers actually carry, over mobile data, then fix the usual suspects: heavy images, third-party scripts, big fonts, chat widgets and slow app start-up.",
+    "outline": [
+      {
+        "h2": "The phone you test on is not your customer's",
+        "says": "A flagship on office Wi-Fi versus a mid-range Android with little free memory on mobile data, in a lift or a basement shop."
+      },
+      {
+        "h2": "Why speed is money",
+        "says": "People leave before the page loads, paid clicks never see the offer, search engines take page experience into account; no invented percentages."
+      },
+      {
+        "h2": "How to measure it for free",
+        "says": "PageSpeed Insights, Chrome DevTools throttling, an inexpensive test phone; Core Web Vitals (LCP, INP, CLS) in plain words."
+      },
+      {
+        "h2": "Usual suspects on websites",
+        "says": "Oversized photos, sliders, a pile of tracking pixels and chat widgets, heavy fonts, no caching."
+      },
+      {
+        "h2": "Usual suspects in apps",
+        "says": "Slow start-up, loading everything at once, a large download, too many animations; why size matters on phones with little free storage."
+      },
+      {
+        "h2": "Telegram bots and Mini Apps",
+        "says": "A slow server reply feels like a broken bot; Mini App bundle size and images."
+      },
+      {
+        "h2": "Put a speed budget in the contract",
+        "says": "A target load time and page weight on a named test device, checked before acceptance."
+      },
+      {
+        "h2": "What to fix first",
+        "says": "Images, then scripts, then everything else; measure after each change."
+      }
+    ],
+    "relatedSolutions": [
+      "web",
+      "mobile",
+      "telegram"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Send your site's address to inbox@qilich.com and ask for a check on a mid-range Android phone."
+  },
+  {
+    "order": 18,
+    "slug": "1c-integration",
+    "cluster": "integrations",
+    "title": {
+      "uz": "Sayt, ilova va Telegram-botni 1C bilan bogʻlash: qoldiqlar, narxlar, buyurtmalar",
+      "ru": "Интеграция 1С с сайтом, приложением и Telegram-ботом: остатки, цены, заказы",
+      "en": "Connecting 1C to your website, app and Telegram bot: stock, prices, orders"
+    },
+    "description": {
+      "uz": "Saytdagi qoldiq ombordagi bilan bir xil boʻlsin, buyurtma qoʻlda koʻchirilmasin. 1C integratsiyasi qanday ishlaydi, oldindan nimani tekshirish kerak.",
+      "ru": "Чтобы на сайте были реальные остатки, а заказы не переносились вручную. Как работает интеграция с 1С и что проверить до начала работ.",
+      "en": "So the site shows real stock and orders stop being retyped. How a 1C integration works and what to check before the work starts."
+    },
+    "targetPhrases": {
+      "uz": [
+        "1C integratsiya",
+        "1C bilan sayt",
+        "internet doʻkon 1C bilan",
+        "ombor hisobi dasturi"
+      ],
+      "ru": [
+        "интеграция 1с с сайтом",
+        "обмен 1с с интернет-магазином",
+        "интеграция 1с с телеграм ботом",
+        "интеграция 1с ташкент"
+      ]
+    },
+    "audience": "Owners and accountants of retail, wholesale and distribution businesses that keep stock and prices in 1C and sell through a site, a bot or sales reps.",
+    "angle": "An integration is only as good as the data in 1C: duplicate items, missing barcodes and unclear stock by warehouse cause more trouble than the code. Explain the exchange options, what flows in which direction and how often, and who is responsible on each side.",
+    "outline": [
+      {
+        "h2": "What should flow where",
+        "says": "Catalogue, prices and stock from 1C to the site; orders and payments from the site back to 1C; customer records both ways only if truly needed."
+      },
+      {
+        "h2": "Clean the data in 1C first",
+        "says": "Duplicates, item names customers understand, photos, units, warehouses; who fixes them and when."
+      },
+      {
+        "h2": "How the exchange works",
+        "says": "The standard CommerceML exchange for shops, 1C HTTP services or OData for custom work, or a separate service in between; pros and cons in plain words."
+      },
+      {
+        "h2": "How often to sync",
+        "says": "Instant, every few minutes or nightly; what customers see when an item sells out between syncs."
+      },
+      {
+        "h2": "Orders and payments back into 1C",
+        "says": "Creating the order document, marking it paid after Click, Payme or Uzum confirms, e-invoices through Didox or Faktura.uz."
+      },
+      {
+        "h2": "Your 1C setup and your 1C specialist",
+        "says": "Configuration, custom changes, where the base is hosted; the 1C specialist and the developer have to work together."
+      },
+      {
+        "h2": "When the exchange breaks",
+        "says": "Logs, alerts to a Telegram group, a manual fallback so sales don't stop."
+      },
+      {
+        "h2": "Checklist before starting",
+        "says": "Access, configuration and version, the list of fields, a test copy of the base, responsible people on both sides."
+      }
+    ],
+    "relatedSolutions": [
+      "backend",
+      "web",
+      "telegram",
+      "mobile"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Tell SamurAI on qilich.com which 1C configuration you use and where you sell."
+  },
+  {
+    "order": 19,
+    "slug": "chatbot-ux",
+    "cluster": "ux",
+    "title": {
+      "uz": "Mijozning joniga tegmaydigan chatbot: Telegram-bot dizayni qoidalari",
+      "ru": "Чат-бот, который не раздражает клиентов: правила дизайна Telegram-бота",
+      "en": "A chatbot customers don't hate: design rules for Telegram bots"
+    },
+    "description": {
+      "uz": "Cheksiz menyular, keraksiz xabarlar, operator bilan bogʻlanib boʻlmaydi. Mijozlarni botdan qochiradigan xatolar va qulay botning amaliy qoidalari.",
+      "ru": "Бесконечные меню, лишние рассылки, невозможно связаться с человеком. Ошибки, из-за которых клиенты уходят из бота, и правила удобного бота.",
+      "en": "Endless menus, unwanted broadcasts, no way to reach a person. The mistakes that drive customers out of a bot, and practical rules for a usable one."
+    },
+    "targetPhrases": {
+      "uz": [
+        "telegram bot",
+        "telegram bot dizayni",
+        "biznes uchun telegram bot",
+        "chatbot"
+      ],
+      "ru": [
+        "телеграм бот для бизнеса",
+        "как сделать удобного бота",
+        "чат-бот для клиентов",
+        "ux чат-бота"
+      ]
+    },
+    "audience": "Businesses that already have a Telegram bot or are ordering one: shops, restaurants, clinics, learning centres, service companies.",
+    "angle": "Treat a bot as a product with its own UX, not a menu tree: one clear main job, buttons that match how people talk, typed messages understood or politely redirected, a person always one tap away, and broadcasts that respect the customer. Applies with or without AI.",
+    "outline": [
+      {
+        "h2": "One bot, one main job",
+        "says": "Whatever most customers come for is the first button; everything else is secondary."
+      },
+      {
+        "h2": "Buttons, menus and depth",
+        "says": "Short labels in the customer's language, as few levels as possible, 'back' and 'home' on every step."
+      },
+      {
+        "h2": "When the customer types instead of tapping",
+        "says": "Understand common phrases or reply helpfully; never 'unknown command'."
+      },
+      {
+        "h2": "A person always one tap away",
+        "says": "A visible 'talk to an operator', working hours stated, the operator sees the whole conversation."
+      },
+      {
+        "h2": "Asking for data politely",
+        "says": "Ask only for what you need, when you need it; the phone number through Telegram's contact button; say why you ask."
+      },
+      {
+        "h2": "Broadcasts people don't block",
+        "says": "Frequency, relevance, segments by what the customer bought; an easy way to stop."
+      },
+      {
+        "h2": "Speed and errors",
+        "says": "Reply within seconds, show progress on long actions, honest error messages, monitoring for when the bot is down."
+      },
+      {
+        "h2": "Test with real customers",
+        "says": "Watch a few people complete the main job; read the logs to see where people drop off."
+      }
+    ],
+    "relatedSolutions": [
+      "telegram",
+      "ai"
+    ],
+    "words": 1200,
+    "readingMinutes": 6,
+    "nextStep": "Send your bot's name to inbox@qilich.com and say what customers most often come to it for."
+  },
+  {
+    "order": 20,
+    "slug": "personal-data-in-uzbekistan",
+    "cluster": "security",
+    "title": {
+      "uz": "Shaxsiy maʼlumotlarni Oʻzbekistonda saqlash: sayt, ilova va bot egalari uchun",
+      "ru": "Хранение персональных данных в Узбекистане: что это значит для сайта, приложения и бота",
+      "en": "Storing personal data in Uzbekistan: what it means for your site, app and bot"
+    },
+    "description": {
+      "uz": "Oʻzbekiston fuqarolarining shaxsiy maʼlumotlari mamlakatdagi serverlarda saqlanishi kerak. Bu sayt, ilova, bot va CRM uchun amalda nimani anglatadi.",
+      "ru": "Персональные данные граждан Узбекистана должны храниться на серверах в стране. Что это значит на практике для сайта, приложения, бота и CRM.",
+      "en": "Personal data of Uzbek citizens must be stored on servers in the country. What that means in practice for your website, app, bot and CRM."
+    },
+    "targetPhrases": {
+      "uz": [
+        "shaxsiy maʼlumotlar toʻgʻrisidagi qonun",
+        "shaxsiy maʼlumotlarni lokalizatsiya qilish",
+        "Oʻzbekistonda server",
+        "shaxsiy maʼlumotlar bazasini roʻyxatdan oʻtkazish"
+      ],
+      "ru": [
+        "закон о персональных данных узбекистан",
+        "локализация персональных данных узбекистан",
+        "хранение персональных данных на серверах в узбекистане",
+        "хостинг в узбекистане"
+      ]
+    },
+    "audience": "Owners and managers of any business that collects customers' names, phone numbers, addresses or other personal data through a site, app, bot or CRM.",
+    "angle": "A practical engineering view, not legal advice: what counts as personal data in a typical bot or app, where it actually ends up (hosting, CRM, analytics, backups, AI services, mailing tools), and how to design the system so the main copy lives in Uzbekistan. Cite the law, and send the reader to the current text on lex.uz and to a lawyer.",
+    "outline": [
+      {
+        "h2": "What the law says, briefly",
+        "says": "The Law 'On Personal Data' (2019) and the 2021 amendment requiring personal data of Uzbek citizens processed with IT to be stored on servers in Uzbekistan and the database registered; link lex.uz; not legal advice."
+      },
+      {
+        "h2": "What counts as personal data in your product",
+        "says": "Names, phone numbers, addresses, order history, photos, passport data in some sectors; usually more than owners expect."
+      },
+      {
+        "h2": "Map where your data goes",
+        "says": "Hosting, database, backups, CRM, email and SMS services, analytics, AI APIs, the payment provider; a simple table to fill in."
+      },
+      {
+        "h2": "Hosting in Uzbekistan",
+        "says": "Local data centres and cloud providers; what to ask about physical location, backups, availability and support."
+      },
+      {
+        "h2": "Foreign services: CRM, analytics, AI",
+        "says": "Keep the master copy at home, send only what each service needs, anonymise where possible, read each service's terms."
+      },
+      {
+        "h2": "Consent and the privacy notice",
+        "says": "Plain Uzbek and Russian: what you collect, why, how long you keep it and how a customer can ask for deletion."
+      },
+      {
+        "h2": "Design it in from the start",
+        "says": "Far cheaper than moving later; the architecture choices that make localisation easy."
+      },
+      {
+        "h2": "Questions to ask your developer",
+        "says": "Where each kind of data is stored, who has access, how long it is kept, where the backups go."
+      }
+    ],
+    "relatedSolutions": [
+      "backend",
+      "web",
+      "mobile",
+      "telegram"
+    ],
+    "words": 1400,
+    "readingMinutes": 7,
+    "nextStep": "Ask SamurAI on qilich.com where the data of a product like yours should live.",
+    "verify": [
+      "Current wording of the Law 'On Personal Data' and its localisation article on lex.uz.",
+      "Current database registration procedure and the authority responsible for it.",
+      "Have a lawyer read the article before publishing."
+    ]
+  },
+  {
+    "order": 21,
+    "slug": "kaizen-in-software",
+    "cluster": "process",
+    "title": {
+      "uz": "Dasturiy taʼminotda kaizen: kichik yaxshilanishlar nega katta relizdan foydaliroq",
+      "ru": "Кайдзен в разработке: почему маленькие улучшения выгоднее больших релизов",
+      "en": "Kaizen in software: why small improvements beat big releases"
+    },
+    "description": {
+      "uz": "Ishga tushirish loyihaning oxiri emas. Muntazam, kichik va oʻlchanadigan yaxshilanishlar qanday ishlaydi va nega ular biznes uchun foydaliroq.",
+      "ru": "Запуск — не конец проекта. Как работают небольшие регулярные улучшения, которые можно измерить, и почему они выгоднее редких больших релизов.",
+      "en": "Launch is not the end of the project. How small, measurable, regular improvements work, and why they serve a business better than rare big releases."
+    },
+    "targetPhrases": {
+      "uz": [
+        "kaizen",
+        "kaizen nima",
+        "ilovani yaxshilash",
+        "dasturni qoʻllab-quvvatlash"
+      ],
+      "ru": [
+        "кайдзен",
+        "кайдзен в IT",
+        "постоянное улучшение продукта",
+        "развитие приложения после запуска"
+      ]
+    },
+    "audience": "Owners who already have a working site, app or bot and want it to get better without an expensive rebuild every few years.",
+    "angle": "Kaizen applied to a product: measure one thing, change one thing, check, keep or roll back, repeat. Small changes are cheaper, less risky and easier to judge than big releases, and the client sees steady progress in reports instead of one big bang a year.",
+    "outline": [
+      {
+        "h2": "What kaizen means, without the myth",
+        "says": "Continuous small improvement, rooted in Japanese manufacturing practice; in software it is a steady working rhythm, not a slogan."
+      },
+      {
+        "h2": "Why big releases are risky",
+        "says": "Many changes at once, no way to tell what helped, long waits, bigger bugs."
+      },
+      {
+        "h2": "The small-change loop",
+        "says": "Choose a metric, make one change, measure, keep or roll back; a hypothetical example of shortening a booking form."
+      },
+      {
+        "h2": "Where improvement ideas come from",
+        "says": "Support chats, analytics, staff complaints, the owner's own use; one shared list ranked by value and effort."
+      },
+      {
+        "h2": "A monthly rhythm and budget",
+        "says": "A fixed monthly scope of improvements instead of a rebuild every few years; how to agree it with the contractor."
+      },
+      {
+        "h2": "Changing often without breaking things",
+        "says": "Automated tests, gradual rollout, fast rollback: what makes frequent change safe."
+      },
+      {
+        "h2": "What to measure",
+        "says": "Conversion, time per task, errors, support requests, speed; one or two numbers per area."
+      },
+      {
+        "h2": "Kaizen for the team, not only the product",
+        "says": "After every problem, fix the cause, not the person; a short written review."
+      }
+    ],
+    "relatedSolutions": [
+      "mobile",
+      "web",
+      "telegram",
+      "backend"
+    ],
+    "words": 1200,
+    "readingMinutes": 6,
+    "nextStep": "Describe what annoys you most in your current site or app to SamurAI on qilich.com."
+  },
+  {
+    "order": 22,
+    "slug": "security-basics",
+    "cluster": "security",
+    "title": {
+      "uz": "Sayt, ilova va bot xavfsizligi: kichik biznes uchun minimal choralar",
+      "ru": "Безопасность сайта, приложения и бота: минимум для малого бизнеса",
+      "en": "Security for your site, app and bot: the minimum for a small business"
+    },
+    "description": {
+      "uz": "Koʻp muammo murakkab hujumdan emas, oddiy xatodan boshlanadi: zaif parol, ochiq admin panel, ishdan ketgan xodimning akkaunti. Asosiy choralar.",
+      "ru": "Многие проблемы начинаются не со сложной атаки, а с простой ошибки: слабый пароль, открытая админка, доступ уволенного сотрудника. Базовые меры.",
+      "en": "Many problems start not with a clever attack but a simple slip: a weak password, an open admin panel, an ex-employee's access. The basic measures."
+    },
+    "targetPhrases": {
+      "uz": [
+        "sayt xavfsizligi",
+        "maʼlumotlar xavfsizligi",
+        "telegram bot xavfsizligi",
+        "kiberxavfsizlik biznes uchun"
+      ],
+      "ru": [
+        "безопасность сайта",
+        "защита данных клиентов",
+        "безопасность телеграм бота",
+        "кибербезопасность для малого бизнеса"
+      ]
+    },
+    "audience": "Owners and managers of small and medium businesses with a site, bot, app or CRM and no in-house security person.",
+    "angle": "A short, non-technical minimum the owner can check and demand from the developer: accounts registered to the company, two-factor login, access removed when people leave, backups that have actually been restored, updates, secrets (bot token, payment keys) kept out of chats, and alerts.",
+    "outline": [
+      {
+        "h2": "Own your accounts",
+        "says": "Domain, hosting, store accounts, the bot in BotFather, payment cabinets: registered to the company, not to a freelancer."
+      },
+      {
+        "h2": "Passwords and two-factor login",
+        "says": "A password manager; two-factor login on email, Telegram, hosting, the CRM and payment cabinets."
+      },
+      {
+        "h2": "Access for staff and contractors",
+        "says": "Personal accounts, the minimum rights each person needs, access removed the day someone leaves; one list of who has what."
+      },
+      {
+        "h2": "Secrets: bot tokens, API and payment keys",
+        "says": "Never in group chats or in the code repository; replace them when someone leaves or a leak is suspected."
+      },
+      {
+        "h2": "Backups you have actually restored",
+        "says": "Automatic, stored away from the main server, tested by restoring; how often depends on how much data you can afford to lose."
+      },
+      {
+        "h2": "Updates and the admin panel",
+        "says": "Keep the CMS, plugins and servers updated; hide and protect the admin panel; HTTPS everywhere."
+      },
+      {
+        "h2": "Logs and alerts",
+        "says": "Know when someone logs in, when payments fail, when the site goes down; alerts to a Telegram group."
+      },
+      {
+        "h2": "If something happens",
+        "says": "A one-page plan: who to call, how to lock accounts, what to tell customers, what the personal-data rules require."
+      }
+    ],
+    "relatedSolutions": [
+      "backend",
+      "web",
+      "telegram",
+      "mobile"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Go through the checklist, then write to inbox@qilich.com with the points you couldn't tick."
+  },
+  {
+    "order": 23,
+    "slug": "maintenance-after-launch",
+    "cluster": "process",
+    "title": {
+      "uz": "Ishga tushirilgandan keyin: ilova va saytni qoʻllab-quvvatlashga nima kiradi",
+      "ru": "Поддержка после запуска: что входит и почему на ней нельзя экономить",
+      "en": "After launch: what maintaining an app or website actually involves"
+    },
+    "description": {
+      "uz": "Ilova ishga tushdi, lekin ish tugamadi. Yangilanishlar, server, xavfsizlik, doʻkon talablari va kichik oʻzgarishlar: qoʻllab-quvvatlash va uning byudjeti.",
+      "ru": "Приложение запущено, но работа не закончена. Обновления, сервер, безопасность, требования сторов и мелкие доработки: что входит в поддержку.",
+      "en": "The app is live, but the work isn't over. Updates, servers, security, store rules and small changes: what maintenance covers and how to budget for it."
+    },
+    "targetPhrases": {
+      "uz": [
+        "ilovani qoʻllab-quvvatlash",
+        "saytni qoʻllab-quvvatlash",
+        "texnik qoʻllab-quvvatlash",
+        "saytga xizmat koʻrsatish narxi"
+      ],
+      "ru": [
+        "поддержка мобильного приложения",
+        "техническая поддержка сайта",
+        "сопровождение сайта цена",
+        "поддержка приложения после запуска"
+      ]
+    },
+    "audience": "Owners who have just launched, or are about to sign a development contract and need to plan for the time after release.",
+    "angle": "Software ages even when nobody touches it: phones update, stores raise their requirements, libraries get security fixes, certificates expire, Telegram, payment and 1C interfaces change. Explain what maintenance covers, what counts as a new feature instead, how to agree response times, and how to avoid being locked to one contractor.",
+    "outline": [
+      {
+        "h2": "Why software needs care when nothing changes",
+        "says": "OS updates, store rules, security fixes in libraries, API changes on the Telegram, payment and 1C side."
+      },
+      {
+        "h2": "Store requirements you can't skip",
+        "says": "Google Play's yearly target API level rule, Apple's SDK requirements, privacy forms; an outdated app can stop reaching new users on newer phones."
+      },
+      {
+        "h2": "Servers, domains and certificates",
+        "says": "Monitoring, backups, renewals; who gets the alert at night."
+      },
+      {
+        "h2": "Bug or new feature?",
+        "says": "What support covers and what is a change request; agree the difference in writing."
+      },
+      {
+        "h2": "Response times",
+        "says": "Critical (payments down), important, minor; agreed hours in Tashkent working time, and what happens at weekends."
+      },
+      {
+        "h2": "Budgeting for support",
+        "says": "A monthly retainer versus paying per task; what to plan for the first year."
+      },
+      {
+        "h2": "Not being locked in",
+        "says": "Code in your own repository, documentation, accounts in your name, so another team could take over."
+      },
+      {
+        "h2": "Using support time well",
+        "says": "Combine fixes with small improvements (kaizen) and get a monthly report on what was done."
+      }
+    ],
+    "relatedSolutions": [
+      "mobile",
+      "web",
+      "telegram",
+      "backend"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Describe what you have running today to SamurAI on qilich.com and ask what its upkeep should include.",
+    "verify": [
+      "Google Play target API level policy and Apple's current SDK requirement on the day of publishing."
+    ]
+  },
+  {
+    "order": 24,
+    "slug": "fixed-price-or-hourly",
+    "cluster": "process",
+    "title": {
+      "uz": "Qatʼiy narx yoki soatbay toʻlov: dasturlash shartnomasini qanday tuzish kerak",
+      "ru": "Фиксированная цена или почасовая оплата: как заключить договор на разработку",
+      "en": "Fixed price or hourly: how to set up a software development contract"
+    },
+    "description": {
+      "uz": "Ishlab chiqish shartnomasidagi asosiy savollar: toʻlov modeli, bosqichlar, qabul qilish mezonlari, kod va akkauntlar kimga tegishli, kafolat muddati.",
+      "ru": "Главные вопросы договора на разработку: модель оплаты, этапы, критерии приёмки, кому принадлежат код и аккаунты, гарантийный срок.",
+      "en": "The questions that matter in a development contract: payment model, stages, acceptance criteria, who owns the code and accounts, and the warranty."
+    },
+    "targetPhrases": {
+      "uz": [
+        "dastur buyurtma qilish",
+        "IT xizmatlar shartnomasi",
+        "dasturchi yollash",
+        "IT autsorsing Oʻzbekiston"
+      ],
+      "ru": [
+        "договор на разработку по",
+        "фиксированная цена или time and material",
+        "разработка программного обеспечения на заказ ташкент",
+        "заказать разработку приложения"
+      ]
+    },
+    "audience": "Owners and managers about to sign with an agency or a freelancer, especially those who have had a project run over budget or stall.",
+    "angle": "Neither model is good or bad in itself: fixed price suits a clear, stable scope, time-and-materials suits a product that will keep changing, and a common middle path is a paid planning stage followed by fixed-price stages. The clauses that protect the client matter more: acceptance criteria, ownership of code and accounts, payment by accepted stage, and a warranty.",
+    "outline": [
+      {
+        "h2": "Fixed price: when it works",
+        "says": "A clear, stable scope; the agency adds a margin for risk; every change goes through a change request."
+      },
+      {
+        "h2": "Hourly or time-and-materials: when it works",
+        "says": "A product that evolves, ongoing improvement; it needs transparent reporting and a budget ceiling."
+      },
+      {
+        "h2": "The middle path: plan first, then fixed stages",
+        "says": "A short paid planning stage produces the specification and estimate, then each stage gets its own price."
+      },
+      {
+        "h2": "Stages and payments",
+        "says": "Pay per accepted stage, not by the calendar; the size of the advance is a negotiation, so no invented percentages."
+      },
+      {
+        "h2": "Acceptance criteria",
+        "says": "What 'done' means in writing: features, devices, speed, languages, and a test period."
+      },
+      {
+        "h2": "Who owns what",
+        "says": "Source code, design files, domain, store and hosting accounts, the bot token: in the client's name, with a written transfer of rights."
+      },
+      {
+        "h2": "Warranty and support",
+        "says": "Bugs fixed free for an agreed period after acceptance; support as a separate agreement."
+      },
+      {
+        "h2": "Communication in the contract",
+        "says": "Reporting rhythm (hōrensō), contact people, how decisions are recorded, the language of the documents."
+      }
+    ],
+    "relatedSolutions": [
+      "mobile",
+      "web",
+      "telegram",
+      "backend"
+    ],
+    "words": 1300,
+    "readingMinutes": 6,
+    "nextStep": "Write to inbox@qilich.com to see how a Qilich contract splits a project into stages.",
+    "verify": [
+      "Have a lawyer check any statement about contract law or transfer of rights."
+    ]
+  }
+]
