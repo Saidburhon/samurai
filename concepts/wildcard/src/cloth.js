@@ -3,218 +3,251 @@ import { hex3, C } from './palette.js';
 
 const vert = /* glsl */ `
 uniform vec2 uRes;
-uniform float uBend;
+uniform float uFell;
 uniform float uRecede;
 uniform float uTime;
 uniform float uWind;
+uniform float uShock;   // beat shock wave travelling up the cloth (0..1 phase, <0 off)
+uniform float uShockA;
 varying vec2 vC;
-varying float vD;
 void main(){
   vec3 p = position;
   vec2 c = vec2(p.x + uRes.x * 0.5, uRes.y * 0.5 - p.y);
   vC = c;
-  p.z += uWind * sin(c.x * .004 + uTime * .6) * sin(c.y * .006 + uTime * .4);
-  float d = c.y - uBend;
-  if (d > 0.0) {
-    // loose warp recedes into the loom; a soft knee right under the blade
-    float k = d * uRecede;
-    p.z -= k + 0.0006 * d * d;
+  float d = c.y - uFell;
+  if (d > 0.0) p.z -= (d * 0.7 + 0.0006 * d * d) * uRecede;
+  else {
+    p.z += uWind * sin(c.x * .004 + uTime * .6) * sin(c.y * .006 + uTime * .4);
+    float s = uShock - (-d) / 700.0;
+    p.z += uShockA * exp(-s * s * 90.0);
   }
-  vD = max(d, 0.0);
   gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
 }
 `;
 
 const frag = /* glsl */ `
 precision highp float;
-uniform sampler2D tCart;
-uniform sampler2D tRole;
+uniform sampler2D tA; uniform sampler2D tB; uniform sampler2D tRA; uniform sampler2D tRB;
+uniform float uSplitY; uniform vec2 uSzA; uniform vec2 uSzB;
 uniform vec2 uRes;
-uniform vec2 uCart;
-uniform float uPitch;
-uniform float uFell;
-uniform float uBend;
-uniform float uAmpW;
-uniform float uAmpAbr;
-uniform float uAmpL;
-uniform float uLooseOrigin;
-uniform float uLooseScale;
-uniform float uLooseLen;
-uniform float uFade;
-uniform float uNearW;
-uniform float uNearD;
-uniform float uFresh;
-uniform float uTime;
-uniform vec3 uNight;
-uniform vec3 uGlow;
-uniform vec4 uPick;      // top, bottom, shuttleX, dir (0 = off)
-uniform vec3 uPickCol;
-uniform float uJiyak;    // px of tri-colour border woven above the fell
-uniform vec3 uLight;
-uniform vec2 uLightPos;
+uniform float uPitch, uClothY, uFell, uWTop, uWBot;
+uniform float uAmpW, uAmpVel, uVelSign, uFresh;
+uniform float uAmpL, uAmpTop, uLooseScale, uLooseOff, uFade, uNearW, uNearD, uLooseLen, uTopLit;
 uniform float uSweep;
-uniform vec4 uSignal;    // thread index, break y, unused, on
-uniform vec3 uSignalCol;
-uniform vec4 uAndon;     // x, y, strength, radius
-uniform vec3 uAndonCol;
-uniform vec4 uDisturb;   // x, y, radius, amp
-uniform vec4 uTrail[12]; // cursor sweep: x, y, radius, amp
+uniform vec3 uLight; uniform vec2 uLightPos;
+uniform vec3 uNight, uGlow, uIvory;
+uniform vec4 uPull; uniform vec3 uPullOld;
+uniform vec4 uPick;
+uniform vec2 uJiyak;        // strip Y of the band's lower edge, height
+uniform vec4 uShearR; uniform float uShear;
+uniform vec4 uShotR; uniform float uShotFront; uniform vec3 uShotA; uniform vec3 uShotB;
+uniform vec4 uSig;          // x, top, bottom, on
+uniform vec4 uAndon; uniform vec3 uAndonCol;
+uniform vec4 uSafe; uniform float uSafeK;
+uniform float uTies;
+uniform vec4 uDrop;         // t, centre thread, generation step, fall duration (t < 0: off)
+uniform vec2 uIntro;        // registration progress (0..1, staggered), max amplitude
+uniform sampler2D tDist;
 uniform float uDim;
 varying vec2 vC;
-varying float vD;
 
 #define PI 3.14159265
 float h1(float n){ return fract(sin(n * 127.1 + 1.7) * 43758.5453); }
-float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float n1(float x){ float i = floor(x), f = fract(x); float u = f*f*(3.-2.*f); return mix(h1(i), h1(i+1.), u); }
-float n2(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f*f*(3.-2.*f);
-  return mix(mix(h2(i), h2(i+vec2(1,0)), u.x), mix(h2(i+vec2(0,1)), h2(i+vec2(1,1)), u.x), u.y); }
 
-vec3 cart(vec2 p){ return texture2D(tCart, vec2(p.x / uCart.x, 1.0 - p.y / uCart.y)).rgb; }
-float roleAt(vec2 p){ return texture2D(tRole, vec2(p.x / uCart.x, 1.0 - p.y / uCart.y)).r; }
+vec3 dyeAt(float x, float Y){
+  if (Y < uSplitY) return texture2D(tA, vec2(x / uSzA.x, 1.0 - Y / uSzA.y)).rgb;
+  return texture2D(tB, vec2(x / uSzB.x, 1.0 - (Y - uSplitY) / uSzB.y)).rgb;
+}
+float roleAt(float x, float Y){
+  if (Y < uSplitY) return texture2D(tRA, vec2(x / uSzA.x, 1.0 - Y / uSzA.y)).r;
+  return texture2D(tRB, vec2(x / uSzB.x, 1.0 - (Y - uSplitY) / uSzB.y)).r;
+}
 
 void main(){
   float cx = vC.x, cy = vC.y;
   float fi = cx / uPitch;
-  float i = floor(fi);
-  float u = fract(fi);
+  float i = floor(fi), u = fract(fi);
+  float aa = max(fwidth(fi), 1e-4);
+  float detail = 1.0 - smoothstep(0.17, 0.32, aa);
   float r1 = h1(i + 0.13), r2 = h1(i + 91.7), r3 = h1(i + 47.3);
-  float bundle = n1(i / 9.0 + 3.1) * 2.0 - 1.0;
-  float bundleA = n1(i / 4.0 + 11.0) * 2.0 - 1.0;
+  float bun = h1(floor(i / 6.0) + 3.7) * 2.0 - 1.0;          // bundles of 6 threads share most of their offset
+  float base = 0.75 * bun + 0.25 * (r1 * 2.0 - 1.0);
   float xc = (i + 0.5) * uPitch;
   float rowPx = uPitch * 0.5;
-  float row = floor(cy / rowPx);
 
   bool inPick = uPick.w != 0.0 && cy >= uPick.x && cy < uPick.y;
-  float pj = (h1(row + 7.0) - 0.5) * 8.0 + (cy - uPick.x) * 0.0;
-  bool pickWoven = inPick && (uPick.w > 0.0 ? cx < uPick.z + pj : cx > uPick.z + pj);
-  bool woven = (cy < uFell && !inPick) || pickWoven;
+  float pj = (h1(floor(cy / rowPx) + 7.0) - 0.5) * 8.0;
+  bool pickWoven = inPick && (uPick.w > 0.0 ? cx < uPick.z + pj : cx > uPick.z - pj);
+  bool woven = (cy >= uWTop && cy < uWBot && !inPick) || pickWoven;
 
-  // cursor / velocity disturbance (gaussian)
-  float dist = length(vec2(cx, cy) - uDisturb.xy);
-  float dis = uDisturb.w * exp(-dist * dist / (2.0 * uDisturb.z * uDisturb.z));
-  for (int k = 0; k < 12; k++) {
-    vec4 tp = uTrail[k];
-    if (tp.w > 0.0) { vec2 dv = vec2(xc, cy) - tp.xy; dis += tp.w * exp(-dot(dv, dv) / (2.0 * tp.z * tp.z)); }
-  }
+  vec2 dv = vec2(cx / uRes.x, cy / uRes.y);
+  float dis = (dv.x > 0.0 && dv.x < 1.0 && dv.y > 0.0 && dv.y < 1.0) ? texture2D(tDist, dv).r * 24.0 : 0.0;
 
   vec3 col;
   if (woven) {
-    float rl = roleAt(vec2(xc, cy));
-    float kas = smoothstep(0.2, 0.42, rl) * (1.0 - smoothstep(0.62, 0.85, rl));
-    float abr = smoothstep(0.62, 0.85, rl);
-    float baseG = 0.55 * bundle + 0.45 * (r1 * 2.0 - 1.0);
-    float baseA = 0.78 * bundleA + 0.22 * (r1 * 2.0 - 1.0);
-    float amp = uAmpW * mix(1.0, 0.6, kas);
-    // a hand disturbance slides whole bundles of threads (flame-like), never per-pixel noise
-    float bundleD = n1(i / 5.0 + 23.0) * 2.0 - 1.0;
-    float offD = (0.8 * bundleD + 0.2 * (r2 * 2.0 - 1.0)) * dis;
-    // rows just beaten in are still settling (each kaizen beat halves this)
-    amp += uFresh * exp(-max(uFell - cy, 0.0) / 46.0);
-    float off = mix(baseG * amp, baseA * uAmpAbr, abr) + offD * mix(1.0, 1.25, abr);
-    if (pickWoven) off += baseG * 5.0 * exp(-abs(cx - uPick.z) / 160.0);
-    float bl = mix(1.5, 2.0, abr);
-    vec3 dye = 0.5 * (cart(vec2(xc, cy + off + bl)) + cart(vec2(xc, cy + off - bl)));
-
-    // signal thread (jidoka)
-    bool missing = false;
-    if (uSignal.w > 0.5 && abs(i - uSignal.x) < 0.5) {
-      if (cy < uSignal.y) dye = uSignalCol; else missing = true;
+    float Y = uClothY + cy;
+    float sx = cx;
+    if (uShear != 0.0 && Y >= uShearR.y && Y < uShearR.w && cx >= uShearR.x && cx < uShearR.z) {
+      float Lr = uShearR.z - uShearR.x;
+      sx = uShearR.x + mod(cx - uShearR.x + uShear, Lr);
     }
+    bool old = false;
+    if (uPull.w >= 0.0 && cx >= uPull.x && Y >= uPull.y && Y < uPull.y + uPull.z + 200.0) {
+      float s0 = floor(uPull.x / uPitch), s1 = floor(uRes.x / uPitch);
+      float ti = clamp((i - s0) / max(1.0, s1 - s0), 0.0, 1.0);   // 0 at the split, 1 at the right edge
+      float e = clamp((uPull.w - (1.0 - ti) * 0.55) / 0.45, 0.0, 1.0);
+      e = e * e * (3.0 - 2.0 * e);
+      Y -= (1.0 - e) * uPull.z;
+      if (Y < uPull.y) old = true;
+    }
+    float rl = old ? 0.0 : roleAt(sx, Y);
+    float abr = smoothstep(0.68, 0.85, rl);
+    float kas = smoothstep(0.25, 0.45, rl) * (1.0 - abr);
+    float amp = uAmpW * (1.0 + 1.0 * abr) * mix(1.0, 0.55, kas);
+    amp += uAmpVel * mix(1.0, 0.6, kas) + dis * mix(1.0, 1.25, abr);
+    amp += uFresh * exp(-max(uWBot - cy, 0.0) / 46.0);
+    float off = base * amp + uVelSign * uAmpVel * 0.35 * (r2 - 0.5);
+    float bl = mix(1.2, 1.8, abr);
+    vec3 dye = old ? uPullOld : 0.5 * (dyeAt(sx, Y + off + bl) + dyeAt(sx, Y + off - bl));
 
-    // jiyak: tri-colour weft border just above the fell (weft-faced rows)
-    float jy = uFell - cy;
-    float jrow = floor(jy / rowPx);
-    bool jiyak = uJiyak > 0.0 && jy > 0.0 && jy <= uJiyak && !inPick && mod(jrow, 2.0) < 0.5;
-
-    float prof = mix(0.9, 1.0, pow(sin(PI * u), 0.6));
-    float crown = pow(sin(PI * u), 2.5);
-    float bind = step(mod(row + 2.0 * i, 5.0), 0.5);
-    float fib = (h2(vec2(i, floor(cy / 2.0))) - 0.5) * 0.022;
-    float slub = (n1(cy / 37.0 + r2 * 40.0) - 0.5) * 0.05 * step(0.975, r3);
-    float grain = 1.0 + (r2 - 0.5) * 0.03 + fib + slub;
-    // large-scale silk tonal drift
-    grain *= 1.0 + (n2(vec2(cx, cy) / 380.0) - 0.5) * 0.035;
-
-    if (jiyak) {
+    // jiyak: a tri-colour weft border woven into the cloth just above where the blade sat (grows pick by pick)
+    float rowY = Y / rowPx;
+    float row = floor(rowY);
+    float wr = fract(rowY);
+    float jt = Y - (uJiyak.x - 6.0 * rowPx);
+    if (uJiyak.y > 0.0 && jt >= 0.0 && jt < uJiyak.y) {
+      float jrow = floor(jt / rowPx);
       float band = floor(jrow / 2.0);
-      vec3 wc = band < 0.5 ? vec3(0.039, 0.498, 0.333) : (band < 1.5 ? vec3(0.949, 0.694, 0.106) : vec3(0.82, 0.078, 0.353));
-      float wr = fract(cy / rowPx);
-      float wprof = mix(0.8, 1.0, pow(sin(PI * wr), 0.7));
-      // plain weave: warp shows through on alternating cells
-      float warpUp = step(0.5, mod(row + i, 2.0)) * step(0.35, abs(u - 0.5)) ;
-      dye = mix(wc, dye, 0.0);
-      col = wc * wprof * (1.0 - 0.10 * warpUp);
-      prof = 1.0;
+      vec3 wc = band < 0.5 ? vec3(0.82, 0.078, 0.353) : (band < 1.5 ? vec3(0.949, 0.694, 0.106) : vec3(0.039, 0.498, 0.333));
+      dye = mod(jrow, 2.0) > 0.5 ? mix(dye, uIvory, 0.75) : wc;
     }
 
-    // anisotropic (Kajiya-Kay) satin sheen; fibre tangent perturbed by soft cloth undulation
-    float s = 0.24 * sin(cx * 0.0019 + cy * 0.0031 + uTime * 0.15 + 0.6)
-            + 0.13 * sin(cx * 0.0047 - cy * 0.0017 + 1.7)
-            + 0.05 * sin(cy * 0.013 + cx * 0.002 + 0.4);
+    // shot weave: Tokyo warp x Tashkent weft, a third changeant colour
+    if (uShotFront > 0.0 && Y >= uShotR.y && Y < uShotR.w && cx >= uShotR.x && cx < min(uShotR.z, uShotFront)) {
+      float ch = 0.5 + 0.5 * sin(cx * 0.011 + cy * 0.017 + uSweep * 0.004);
+      vec3 shot = mix(uShotA, uShotB, 0.25 + 0.5 * ch);
+      float warpUp = step(0.5, fract(u + 0.25 * step(0.5, mod(row, 2.0))));
+      dye = mix(shot, mix(uShotA, uShotB, warpUp), 0.28 * detail);
+    }
+
+    // signal-thread channel (jidoka): the warp under the 3D thread is missing
+    if (uSig.w > 0.5 && abs(cx - uSig.x) < uPitch * 0.5 && Y >= uSig.y && Y < uSig.z) dye *= 0.38;
+
+    // satin: round warp threads, sparse binding points, rare slubs, static grain
+    float prof = mix(0.95, mix(0.88, 1.0, pow(sin(PI * u), 0.6)), detail);
+    float crown = pow(sin(PI * u), 2.5);
+    float bind = step(mod(row + 2.0 * i, 5.0), 0.5) * 0.045 * detail;
+    float wprof = mix(1.0, mix(0.965, 1.0, pow(sin(PI * wr), 0.7)), detail);
+    float slub = (n1(Y / 37.0 + r2 * 40.0) - 0.5) * 0.06 * step(0.975, r3);
+    float grain = 1.0 + (r2 - 0.5) * 0.03 + slub;
+    col = dye * prof * wprof * grain * (1.0 - bind * crown);
+
+    // Kajiya-Kay sheen along the warp, the cloth undulating softly
+    float s = 0.24 * sin(cx * 0.0019 + Y * 0.0031 + 0.6) + 0.13 * sin(cx * 0.0047 - Y * 0.0017 + 1.7);
     vec3 T = normalize(vec3(0.0, 1.0, s));
-    vec3 V = vec3(0.0, 0.0, 1.0);
-    vec3 L = normalize(uLight);
-    vec3 Hh = normalize(L + V);
+    vec3 Hh = normalize(normalize(uLight) + vec3(0.0, 0.0, 1.0));
     float th = dot(T, Hh);
     float kk = pow(max(0.0, 1.0 - th * th), 14.0);
     float lum = dot(dye, vec3(0.299, 0.587, 0.114));
     vec3 specCol = mix(vec3(1.0, 0.975, 0.93), dye * 1.6 + 0.15, 0.35);
-
-    if (!jiyak) col = dye * prof * grain * (1.0 - 0.03 * bind * crown);
-    col *= 0.955 + 0.06 * (0.5 + 0.5 * s * 2.0);
-    col += kk * (0.35 + 0.65 * crown) * specCol * mix(0.13, 0.26, 1.0 - lum) * (1.0 - 0.2 * bind);
-    // slow diagonal satin sweep
-    float sw = exp(-pow((cx * 0.8 + cy * 0.6 - uSweep) / 240.0, 2.0));
-    col += sw * (0.4 + 0.6 * crown) * specCol * 0.10;
-
-    if (missing) {
-      // the broken warp leaves a channel: weft shows, darker
-      float wr = fract(cy / rowPx);
-      col = dye * 0.42 * mix(0.7, 1.0, pow(sin(PI * wr), 0.7));
-      col += 0.06 * uSignalCol * exp(-(cy - uSignal.y) / 40.0);
-    }
+    col *= 0.955 + 0.06 * (0.5 + s);
+    col += kk * (0.35 + 0.65 * crown * detail) * specCol * mix(0.12, 0.24, 1.0 - lum);
+    float sw = exp(-pow((cx * 0.8 + cy * 0.6 - uSweep) / 300.0, 2.0));
+    col += sw * (0.4 + 0.6 * crown) * specCol * 0.15;
 
     // pressed by the blade: soft contact shade just above the fell
-    float fd = uBend - cy;
+    float fd = uWBot - cy;
     if (fd > 0.0) col *= 1.0 - 0.16 * exp(-fd / 3.0);
   } else {
-    bool flatZone = cy < uBend;
-    float d = max(cy - uBend, 0.0);
-    float lit = flatZone ? 1.0 : exp(-d / uFade) * (1.0 - smoothstep(0.75, 1.0, d / uLooseLen) * 0.5);
-    // a soft overhead light cone: centre of the loom brighter than its sides
-    if (!flatZone) lit *= 0.62 + 0.38 * exp(-pow((cx - uRes.x * 0.5) / (uRes.x * 0.42), 2.0));
-    float baseL = 0.6 * bundle + 0.4 * (r1 * 2.0 - 1.0);
-    float ampL = flatZone ? (inPick ? 3.0 : 8.0) : uAmpL;
-    float sy = flatZone ? cy + baseL * ampL : uLooseOrigin + d * uLooseScale + baseL * ampL + (r2 - 0.5) * 18.0;
-    vec3 dye = 0.5 * (cart(vec2(xc, sy + 2.0)) + cart(vec2(xc, sy - 2.0)));
-    if (uSignal.w > 0.5 && abs(i - uSignal.x) < 0.5) dye = uSignalCol;
+    bool above = cy < uFell;
+    float d = max(cy - uFell, 0.0);
+    float bunL = n1(i / 9.0 + 3.1) * 2.0 - 1.0;
+    float baseL = 0.6 * bunL + 0.4 * (r1 * 2.0 - 1.0);
+    float Y;
+    if (above) {
+      Y = uClothY + cy + baseL * uAmpTop;
+    } else {
+      float ia = 0.0, st = 1.0;
+      if (uIntro.y > 0.0) {
+        float e = clamp((uIntro.x - (i / max(1.0, uRes.x / uPitch)) * 0.45) / 0.55, 0.0, 1.0);
+        e = e * e * (3.0 - 2.0 * e);
+        ia = uIntro.y * (1.0 - e);
+        st = 1.0 + 2.0 * (1.0 - e);
+      }
+      float yy = d * uLooseScale;
+      yy = uRes.y * 0.45 + (yy - uRes.y * 0.45) / st;
+      Y = uClothY + uFell + uLooseOff + yy + baseL * (uAmpL + ia) + (r2 - 0.5) * (0.3 * uAmpL + 0.6 * ia);
+    }
+    vec3 dye;
+    bool oldL = false;
+    if (uPull.w >= 0.0 && cx >= uPull.x && Y >= uPull.y && Y < uPull.y + uPull.z + 200.0) {
+      float s0 = floor(uPull.x / uPitch), s1 = floor(uRes.x / uPitch);
+      float ti = clamp((i - s0) / max(1.0, s1 - s0), 0.0, 1.0);
+      float e = clamp((uPull.w - (1.0 - ti) * 0.55) / 0.45, 0.0, 1.0);
+      e = e * e * (3.0 - 2.0 * e);
+      float Yp = Y - (1.0 - e) * uPull.z;
+      if (Yp < uPull.y) oldL = true; else Y = Yp;
+    }
+    dye = oldL ? uPullOld : 0.5 * (dyeAt(xc, Y + 2.0) + dyeAt(xc, Y - 2.0));
     // strings hang with a faint lateral wander; each catches the light differently
     float wob = sin(cy * 0.011 + r1 * 40.0) * 0.55 + sin(cy * 0.027 + r2 * 17.0) * 0.25;
-    float uu = fract((cx + wob * (flatZone ? 0.2 : 1.0) + (flatZone ? 0.0 : (r1 - 0.5) * 0.3 * uPitch)) / uPitch);
-    float w = flatZone ? 0.21 : mix(0.15, uNearW, exp(-d / uNearD));
-    float fw = max(fwidth(fi), 1e-4);
+    float uu = fract((cx + wob * (above ? 0.25 : 1.0) + (above ? 0.0 : (r1 - 0.5) * 0.3 * uPitch)) / uPitch);
+    float w = above ? 0.23 : mix(0.15, uNearW, exp(-d / uNearD));
     float tu = (uu - 0.5) / w;
-    float cov = 1.0 - smoothstep(w - fw * 0.75, w + fw * 0.75, abs(uu - 0.5));
+    float cov = 1.0 - smoothstep(w - aa * 0.75, w + aa * 0.75, abs(uu - 0.5));
     float tube = sqrt(max(0.0, 1.0 - tu * tu));
+    // back shed: half a pitch over, dimmer, its own dye
+    float ub = fract(uu + 0.5);
+    float wb = w * 0.85;
+    float covB = (1.0 - smoothstep(wb - aa * 0.75, wb + aa * 0.75, abs(ub - 0.5))) * detail;
+    vec3 dyeB = oldL ? uPullOld : dyeAt(xc + uPitch * 0.5, Y + 23.0 + r3 * 20.0);
+    float lit = above ? uTopLit * (0.8 + 0.2 * exp(-pow((cx - uRes.x * 0.78) / (uRes.x * 0.5), 2.0))) : exp(-d / uFade) * (1.0 - smoothstep(0.75, 1.0, d / uLooseLen) * 0.5);
+    if (!above) lit *= (0.62 + 0.38 * exp(-pow((cx - uRes.x * 0.5) / (uRes.x * 0.42), 2.0))) * uTopLit;
+    // intro: threads falling into place
+    float tip = 1e5;
+    if (uDrop.x >= 0.0) {
+      float g = ceil(log2(abs(i - uDrop.y) + 1.0));
+      float p = clamp((uDrop.x - g * uDrop.z - r3 * 0.06) / uDrop.w, 0.0, 1.0);
+      float q = p - 1.0;
+      float e = 1.0 + 2.8 * q * q * q + 1.8 * q * q;
+      tip = mix(-60.0, uRes.y * 1.9, e);
+      if (cy > tip) { cov = 0.0; covB = 0.0; }
+      lit *= 1.0 + 0.6 * exp(-max(tip - cy, 0.0) / 50.0) * step(p, 0.999);
+    }
     float catchL = 0.78 + 0.44 * r3;
     vec3 thr = dye * (0.45 + 0.55 * tube) * (0.035 + 0.965 * lit) * catchL;
-    thr += pow(tube, 8.0) * 0.28 * lit * catchL * vec3(1.0, 0.96, 0.9);
-    // strings right under the blade are close to the lamp: they glow
-    if (!flatZone) thr *= 1.0 + 0.45 * exp(-d / 70.0);
-    float glow = flatZone ? 0.0 : exp(-d / 30.0);
+    thr += pow(tube, 8.0) * 0.26 * lit * catchL * vec3(1.0, 0.96, 0.9);
+    if (!above) thr *= 1.0 + 0.45 * exp(-d / 70.0);
+    float dB = cy - uWBot;
+    float glow = above ? (dB > 0.0 && uWTop < 0.0 ? exp(-dB / 36.0) * 0.8 : 0.0) : exp(-d / 30.0);
+    if (above && dB > 0.0 && uWTop < 0.0) lit = max(lit, 0.35 + 0.65 * exp(-dB / 140.0));
     thr += uGlow * glow * 0.4 * (0.6 + 0.4 * tube);
-    vec3 gap = uNight + uGlow * (flatZone ? 0.025 : exp(-d / 60.0) * 0.12);
-    col = mix(gap, thr, cov);
+    vec3 back = dyeB * 0.4 * (0.05 + 0.95 * lit);
+    vec3 gap = uNight + uGlow * (above ? 0.018 : exp(-d / 60.0) * 0.12);
+    col = mix(gap, back, covB * 0.9);
+    // resist ties at dye boundaries, in an ordered diagonal rhythm (abrband)
+    if (uTies > 0.0 && above) {
+      vec3 dn = dyeAt(xc, Y + 6.0);
+      float edge = step(0.18, distance(dye, dn));
+      float bi = floor(i / 6.0);
+      float onB = step(0.5, mod(bi + floor((Y) / 90.0), 2.0));
+      thr = mix(thr, uIvory * (0.75 + 0.25 * tube) * (0.6 + 0.4 * lit), edge * onB * uTies);
+    }
+    col = mix(col, thr, cov);
+    // calm field behind DOM text
+    if (uSafeK < 1.0) {
+      vec2 q = max(vec2(uSafe.x - cx, uSafe.y - cy), vec2(cx - uSafe.x - uSafe.z, cy - uSafe.y - uSafe.w));
+      float msk = 1.0 - smoothstep(-40.0, 120.0, max(q.x, q.y));
+      col *= mix(1.0, uSafeK, msk);
+    }
   }
 
-  // andon: vermilion wash from the lantern
+  // andon: lantern wash
   if (uAndon.z > 0.0) {
     float ad = length(vec2(cx, cy) - uAndon.xy);
-    col += uAndonCol * uAndon.z * exp(-ad * ad / (uAndon.w * uAndon.w)) * (woven ? 0.55 + 0.45 * pow(sin(PI * u), 2.0) : 0.6);
+    col += uAndonCol * uAndon.z * exp(-ad * ad / (uAndon.w * uAndon.w)) * (woven ? 0.5 + 0.5 * pow(sin(PI * u), 2.0) : 0.6);
   }
-
-  // key light falloff
   float lf = length((vec2(cx, cy) - uLightPos) / uRes.x);
   col *= 1.0 - 0.10 * smoothstep(0.25, 1.25, lf);
   col *= uDim;
@@ -222,61 +255,53 @@ void main(){
 }
 `;
 
-export function makeCloth({ W, H, cart, cfg }) {
-  const tex = new THREE.CanvasTexture(cart.canvas);
-  tex.colorSpace = THREE.NoColorSpace;
-  tex.minFilter = THREE.LinearFilter;
-  tex.magFilter = THREE.LinearFilter;
-  tex.generateMipmaps = false;
-  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-  const rtex = new THREE.CanvasTexture(cart.role);
-  rtex.colorSpace = THREE.NoColorSpace;
-  rtex.generateMipmaps = false;
-  rtex.minFilter = rtex.magFilter = THREE.LinearFilter;
+const v3 = (h) => new THREE.Vector3(...hex3(h));
 
-  const Wc = W * 2.4, Hc = H * 2.2;
-  const geo = new THREE.PlaneGeometry(Wc, Hc, 64, Math.round(Hc / 4));
-  geo.translate(0, H / 2 + 60 - Hc / 2, 0);
-
-  const u = {
-    tCart: { value: tex },
-    tRole: { value: rtex },
-    uRes: { value: new THREE.Vector2(W, H) },
-    uCart: { value: new THREE.Vector2(cart.W, cart.ch) },
-    uPitch: { value: cfg.pitch },
-    uFell: { value: cfg.fell },
-    uBend: { value: cfg.bend ?? cfg.fell },
-    uRecede: { value: cfg.recede ?? 1.2 },
-    uWind: { value: cfg.wind ?? 0.0 },
-    uAmpW: { value: cfg.ampW ?? 0.8 },
-    uAmpAbr: { value: cfg.ampAbr ?? 5.0 },
-    uAmpL: { value: cfg.ampL ?? 60 },
-    uLooseOrigin: { value: cfg.looseOrigin ?? cfg.fell },
-    uLooseScale: { value: cfg.looseScale ?? 1 / 2.2 },
-    uLooseLen: { value: cfg.looseLen ?? 300 },
-    uFade: { value: cfg.fade ?? 90 },
-    uNearW: { value: cfg.nearW ?? 0.27 },
-    uNearD: { value: cfg.nearD ?? 110 },
-    uFresh: { value: cfg.fresh ?? 0 },
-    uTime: { value: cfg.time ?? 9.0 },
-    uNight: { value: new THREE.Vector3(...hex3(C.loom)) },
-    uGlow: { value: new THREE.Vector3(...hex3('#F2A23A')) },
-    uPick: { value: new THREE.Vector4(...(cfg.pick ?? [0, 0, 0, 0])) },
-    uPickCol: { value: new THREE.Vector3(...hex3(cfg.pickCol ?? C.emerald)) },
-    uJiyak: { value: cfg.jiyak ?? 0 },
-    uLight: { value: new THREE.Vector3(...(cfg.light ?? [-0.35, 0.22, 1.0])) },
-    uLightPos: { value: new THREE.Vector2(...(cfg.lightPos ?? [W * 0.3, H * 0.25])) },
-    uSweep: { value: cfg.sweep ?? W * 0.9 },
-    uSignal: { value: new THREE.Vector4(...(cfg.signal ?? [0, 0, 0, 0])) },
-    uSignalCol: { value: new THREE.Vector3(...hex3(C.saffron)) },
-    uAndon: { value: new THREE.Vector4(...(cfg.andon ?? [0, 0, 0, 1])) },
-    uAndonCol: { value: new THREE.Vector3(...hex3(C.shu)) },
-    uDisturb: { value: new THREE.Vector4(...(cfg.disturb ?? [0, 0, 1, 0])) },
-    uTrail: { value: Array.from({ length: 12 }, (_, k) => new THREE.Vector4(...((cfg.trail && cfg.trail[k]) || [0, 0, 1, 0]))) },
-    uDim: { value: cfg.dim ?? 1.0 },
+export function makeCloth({ W, H, chunks, scale }) {
+  const tex = (cv, role) => {
+    const t = new THREE.CanvasTexture(cv);
+    t.colorSpace = THREE.NoColorSpace;
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
+    t.generateMipmaps = false;
+    t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+    return t;
   };
+  const A = chunks[0], B = chunks[1] || chunks[0];
+  const u = {
+    tA: { value: tex(A.canvas) }, tB: { value: chunks[1] ? tex(B.canvas) : null },
+    tRA: { value: tex(A.role) }, tRB: { value: chunks[1] ? tex(B.role) : null },
+    uSplitY: { value: chunks[1] ? B.y0 : 1e9 },
+    uSzA: { value: new THREE.Vector2(W, A.h) }, uSzB: { value: new THREE.Vector2(W, B.h) },
+    uRes: { value: new THREE.Vector2(W, H) },
+    uPitch: { value: 7.2 }, uClothY: { value: 0 }, uFell: { value: 0 }, uWTop: { value: -1 }, uWBot: { value: 0 },
+    uAmpW: { value: 0.8 }, uAmpVel: { value: 0 }, uVelSign: { value: 1 }, uFresh: { value: 0 },
+    uAmpL: { value: 60 }, uAmpTop: { value: 2 }, uLooseScale: { value: 2.4 }, uLooseOff: { value: 30 },
+    uFade: { value: 70 }, uNearW: { value: 0.27 }, uNearD: { value: 110 }, uLooseLen: { value: 300 }, uTopLit: { value: 1 },
+    uRecede: { value: 0.7 }, uTime: { value: 0 }, uWind: { value: 0 }, uShock: { value: -1 }, uShockA: { value: 0 },
+    uSweep: { value: W * 0.9 },
+    uLight: { value: new THREE.Vector3(-0.35, 0.22, 1.0) }, uLightPos: { value: new THREE.Vector2(W * 0.3, H * 0.25) },
+    uNight: { value: v3(C.loom) }, uGlow: { value: v3('#F2A23A') }, uIvory: { value: v3(C.ivory) },
+    uPull: { value: new THREE.Vector4(0, 0, 0, -1) }, uPullOld: { value: v3(C.ai) },
+    uPick: { value: new THREE.Vector4(0, 0, 0, 0) },
+    uJiyak: { value: new THREE.Vector2(0, 0) },
+    uShearR: { value: new THREE.Vector4(0, 0, 0, 0) }, uShear: { value: 0 },
+    uShotR: { value: new THREE.Vector4(0, 0, 0, 0) }, uShotFront: { value: 0 }, uShotA: { value: v3(C.shu) }, uShotB: { value: v3(C.emerald) },
+    uSig: { value: new THREE.Vector4(0, 0, 0, 0) },
+    uAndon: { value: new THREE.Vector4(0, 0, 0, 300) }, uAndonCol: { value: v3(C.shu) },
+    uSafe: { value: new THREE.Vector4(0, 0, 0, 0) }, uSafeK: { value: 1 },
+    uTies: { value: 0 },
+    uDrop: { value: new THREE.Vector4(-1, 0, 0.12, 0.45) },
+    uIntro: { value: new THREE.Vector2(1, 0) },
+    tDist: { value: null },
+    uDim: { value: 1 },
+  };
+  if (!chunks[1]) { u.tB.value = u.tA.value; u.tRB.value = u.tRA.value; }
   const mat = new THREE.ShaderMaterial({ uniforms: u, vertexShader: vert, fragmentShader: frag, toneMapped: false });
+  const Wc = W * 2.4, Hc = H * 2.4;
+  const geo = new THREE.PlaneGeometry(Wc, Hc, 48, Math.round(Hc / 6));
+  geo.translate(0, H / 2 + 60 - Hc / 2, 0);
   const mesh = new THREE.Mesh(geo, mat);
   mesh.frustumCulled = false;
-  return { mesh, uniforms: u, tex, rtex };
+  return { mesh, uniforms: u };
 }

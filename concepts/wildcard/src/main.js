@@ -1,192 +1,261 @@
-import * as THREE from 'three';
-import { studioEnv } from './env.js';
-import { C } from './palette.js';
-import { createCartoon, paintHeroDesktop, paintHeroPhone, paintStripes, paintJidoka, STRIPES } from './cartoon.js';
-import { makeCloth } from './cloth.js';
-import { makeBlade } from './blade.js';
-import { makeShuttle, makeAndon, makeThread } from './props.js';
-import { ui } from './ui.js';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+import { makeLayout, N, POSTERS } from './layout.js';
+import { createStage } from './stage.js';
+import { initialState, buildMaster } from './story.js';
+import { buildIntro } from './intro.js';
+import { place, collectEls, makeSync, startClocks, bindPicks, bindMenu, makeCursor, PLATEAU_OF } from './ui.js';
+import { runFlow } from './flow.js';
 
-const Q = new URLSearchParams(location.search);
-const SCENE = Q.get('scene') || 'hero';
-const T = parseFloat(Q.get('t') ?? '0.5');
+gsap.registerPlugin(ScrollTrigger);
+const html = document.documentElement;
+const $ = (id) => document.getElementById(id);
 
 async function fonts() {
-  const want = [
-    '112px "Dela Gothic One"',
-    '500 15px "Zen Kaku Gothic New"',
-    '700 15px "Zen Kaku Gothic New"',
-    '500 20px "Onest"',
-    '400 20px "Onest"',
-    '600 20px "Onest"',
-    '500 12px "IBM Plex Mono"',
-  ];
-  await Promise.all(want.map((f) => document.fonts.load(f, 'AOʻ絣止経日')));
-  await document.fonts.ready;
+  const want = ['112px "Dela Gothic One"', '300 40px "Noto Serif Display"', 'italic 300 40px "Noto Serif Display"', '500 13px "IBM Plex Mono"', '400 20px "Onest"', '600 20px "Onest"', '500 16px "Zen Kaku Gothic New"'];
+  const all = Promise.all(want.map((f) => document.fonts.load(f, 'AOʻaz絣止進日本')));
+  await Promise.race([all, new Promise((r) => setTimeout(r, 2500))]);
 }
 
-function looseLength(H, D, bend, k) {
-  const sy = (d) => {
-    const z = -(d * k + 0.0006 * d * d);
-    const Y = H / 2 - (bend + d);
-    return H / 2 - (Y * D) / (D - z);
-  };
-  let a = 0, b = 6000;
-  for (let n = 0; n < 50; n++) {
-    const m = (a + b) / 2;
-    sy(m) < H ? (a = m) : (b = m);
-  }
-  return a;
+function overlays(L) {
+  const pin = $('pin');
+  pin.insertAdjacentHTML(
+    'beforeend',
+    `<div class="fr cue wp" id="cue" aria-hidden="true"><svg class="yag" viewBox="0 0 18 34">${[0, 1, 2].map((k) => `<g transform="translate(0 ${k * 11})" opacity="${1 - k * 0.25}"><path d="M0 0L9 6V10L0 4Z" fill="#F2B11B"/><path d="M18 0L9 6V10L18 4Z" fill="#F6F1E6"/></g>`).join('')}</svg><span>PASTGA</span></div>
+     <div class="fr kz" id="kz" aria-hidden="true"><span lang="ja">改善</span> <b>1</b></div>`
+  );
+  const fy = L.F + Math.round((L.H - L.F) / 2);
+  Object.assign($('cnt').style, { left: L.m + 'px', top: fy - 8 + 'px' });
+  Object.assign($('cue').style, { right: L.m + 'px', top: fy - 17 + 'px' });
+  Object.assign($('kz').style, { right: (L.phone ? 16 : L.W * 0.08) + 'px', top: fy - 8 + 'px' });
+  $('cue').style.setProperty('--w', 0);
 }
 
+const MARK = (n) => (window.__marks = window.__marks || []).push([n, Math.round(performance.now())]);
 async function boot() {
+  MARK('boot');
   await fonts();
+  MARK('fonts');
   const W = innerWidth, H = innerHeight;
-  const mobile = W < 700;
-  const threads = mobile ? 96 : 240;
-  const pitch = W / threads;
-  const D = H / 2 / Math.tan(THREE.MathUtils.degToRad(15));
-
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(parseFloat(Q.get('pr') ?? '2'));
-  renderer.setSize(W, H);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.0;
-  document.getElementById('stage').appendChild(renderer.domElement);
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(C.loom);
-  const camera = new THREE.PerspectiveCamera(30, W / H, 10, D * 6);
-  camera.position.set(0, 0, D);
-  scene.environment = studioEnv(renderer);
-  const key = new THREE.DirectionalLight(0xfff2e0, 1.4);
-  key.position.set(-0.45, 0.75, 1.0);
-  scene.add(key);
-  scene.add(new THREE.HemisphereLight(0xf4ecdc, 0x16121c, 0.55));
-
-  const cart = createCartoon(W, H);
-  let cfg, extra = [], layout;
-
-  if (SCENE === 'hero' && !mobile) {
-    const fell = 756;
-    layout = paintHeroDesktop(cart, { p1At: fell });
-    cfg = { pitch, fell, bend: fell, jiyak: 15, ampAbr: 7, recede: 0.7, looseOrigin: fell + 30, looseScale: 2.4, ampL: 60, sweep: 1500, time: 9.4 };
-    const b = makeBlade({ W, H, fellY: fell });
-    b.glint.value = W * 0.58;
-    extra.push(b.group);
-    if (Q.get('hover')) {
-      // the visitor's hand: a sweep from upper left that ends resting on OʻZBEKISTONDA!
-      const mx = 792, my = 486;
-      const path = [];
-      for (let k = 0; k < 12; k++) {
-        const s = k / 11; // 0 = now (cursor), 1 = oldest
-        const x = mx - s * 560, y = my - 250 * Math.pow(s, 0.8) + Math.sin(s * 3.2) * 34;
-        const age = s * 1.05;
-        path.push([x, y, 64 + 30 * s, 26 * Math.exp(-age / 1.2) * (k === 0 ? 0.8 : 0.42)]);
-      }
-      cfg.trail = path;
-      cfg.light = [0.05, 0.12, 1.0];
-      cfg.lightPos = [mx, my];
-      cfg.sweep = mx + my * 0.75;
-      layout.cursor = [mx, my];
-    }
-  } else if (SCENE === 'hero' && mobile) {
-    const fell = 726;
-    layout = paintHeroPhone(cart, { p1At: fell });
-    cfg = { pitch, fell, bend: fell, jiyak: 10, ampAbr: 3.5, fade: 70, recede: 0.7, looseOrigin: fell + 30, looseScale: 2.6, ampL: 40, sweep: 700, time: 9.4, lightPos: [W * 0.25, H * 0.2] };
-    const b = makeBlade({ W, H, fellY: fell, scale: 0.75, tsubaX: 34, tipMargin: 14 });
-    b.glint.value = W * 0.6;
-    extra.push(b.group);
-  } else if (SCENE === 'weave') {
-    // load sequence, ~3.0s: the blade is beating the page into place
-    const fell = mobile ? 360 : Math.round((330 + ((Q.get('t') == null ? 1 : T) - 0.5) * 200) / 3) * 3;
-    layout = mobile ? paintHeroPhone(cart, { p1At: null }) : paintHeroDesktop(cart, { p1At: null });
-    cfg = { pitch, fell, bend: fell, jiyak: 0, recede: 0.55, looseOrigin: fell, looseScale: 1.0, ampL: 7, ampW: 1.2, sweep: -400, time: 3.0, fade: 330, nearW: 0.31, nearD: 260, fresh: 3.5 };
-    const b = mobile ? makeBlade({ W, H, fellY: fell, scale: 0.75, tsubaX: 34, tipMargin: 14 }) : makeBlade({ W, H, fellY: fell });
-    b.glint.value = W * 0.3;
-    extra.push(b.group);
-  } else if (SCENE === 'stripes') {
-    const top = 96, sh = 94;
-    layout = paintStripes(cart, { top, sh });
-    const k = 3; // stripes 0..2 woven, stripe 3 (BACKEND) being laid
-    const fell = top + k * sh, bend = top + (k + 1) * sh;
-    const shuttleX = Math.round(W * (0.3 + 0.4 * T));
-    cfg = { pitch, fell, bend, pick: [fell, bend, shuttleX, 1], jiyak: 0, recede: 0.6, looseOrigin: bend, looseScale: 0.5, ampL: 22, sweep: 1700, time: 5.4, fade: 150 };
-    const b = makeBlade({ W, H, fellY: bend + 2 });
-    b.glint.value = W * 0.8;
-    extra.push(b.group);
-    extra.push(makeShuttle({ x: shuttleX + 66 * 1.45, y: fell + sh / 2, W, H, bobbin: STRIPES[k].g, scale: 1.45 }));
-    layout.shuttleX = shuttleX;
-    layout.k = k;
-  } else if (SCENE === 'jidoka') {
-    const fell = 756, lift = 10;
-    paintJidoka(cart);
-    const ti = 149;
-    const tx = (ti + 0.5) * pitch;
-    const brk = Math.round(H * 0.42);
-    cfg = { pitch, fell, bend: fell + lift, jiyak: 0, ampW: 8, recede: 0.8, looseOrigin: fell, looseScale: 1.0, ampL: 28, signal: [ti, brk, 0, 1], andon: [1322, 200, 0.2, 300], sweep: 2200, time: 0, light: [-0.2, 0.3, 1.0], lightPos: [W * 0.85, H * 0.15] };
-    const b = makeBlade({ W, H, fellY: fell, lift });
-    b.glint.value = -200;
-    extra.push(b.group);
-    extra.push(makeAndon({ x: 1322, y: 200, W, H }));
-    // upper broken end: recoiled and curled out of the cloth
-    extra.push(
-      makeThread(
-        [
-          [tx, brk - 30, 0.5], [tx, brk - 8, 1.5], [tx + 1, brk + 6, 6], [tx + 7, brk + 18, 16], [tx + 19, brk + 21, 26],
-          [tx + 27, brk + 12, 32], [tx + 23, brk + 1, 38], [tx + 12, brk + 3, 42], [tx + 9, brk + 14, 46], [tx + 16, brk + 24, 49], [tx + 26, brk + 30, 50],
-        ],
-        { W, H }
-      )
-    );
-    // frayed fibres at the tip
-    for (const [dx, dy] of [[6, 7], [8, 2], [3, 9]])
-      extra.push(makeThread([[tx + 26, brk + 30, 50], [tx + 26 + dx * 0.5, brk + 30 + dy * 0.5, 50.5], [tx + 26 + dx, brk + 30 + dy, 51]], { W, H, radius: 0.55 }));
-    // lower end: slack, looped on the fell
-    extra.push(
-      makeThread(
-        [
-          [tx, fell + 40, 1], [tx, fell + 8, 6], [tx + 1, fell - 10, 12], [tx + 8, fell - 30, 22], [tx + 22, fell - 34, 30], [tx + 30, fell - 20, 34],
-          [tx + 22, fell - 6, 38], [tx + 6, fell - 8, 40], [tx - 4, fell - 22, 42], [tx - 10, fell - 40, 40], [tx - 6, fell - 58, 38], [tx + 2, fell - 64, 37],
-        ],
-        { W, H }
-      )
-    );
-    for (const [dx, dy] of [[5, -6], [-2, -8], [7, -2]])
-      extra.push(makeThread([[tx + 2, fell - 64, 37], [tx + 2 + dx * 0.5, fell - 64 + dy * 0.5, 37.2], [tx + 2 + dx, fell - 64 + dy, 37.4]], { W, H, radius: 0.55 }));
-    layout = { brk, tx };
+  const phone = W < 760;
+  html.classList.toggle('phone', phone);
+  bindMenu();
+  bindPicks();
+  if (html.classList.contains('flow')) {
+    const L = makeLayout(W, H, phone, true);
+    place(L);
+    startClocks(L);
+    return runFlow(L);
   }
-
-  cfg.looseLen = looseLength(H, D, cfg.bend ?? cfg.fell, cfg.recede ?? 1.2);
-  const cloth = makeCloth({ W, H, cart, cfg });
-  scene.add(cloth.mesh);
-  extra.forEach((o) => scene.add(o));
-
-  document.getElementById('ui').innerHTML = ui(SCENE, { W, H, mobile, cfg, layout });
-  document.documentElement.dataset.scene = SCENE;
-  document.documentElement.classList.toggle('m', mobile);
-
-  if (Q.get('debug') === 'cart') {
-    cart.canvas.style.cssText = 'position:fixed;inset:0;z-index:99;width:100%;opacity:.5';
-    document.body.appendChild(cart.canvas);
+  const L = makeLayout(W, H, phone, false);
+  place(L);
+  startClocks(L);
+  overlays(L);
+  const el = collectEls();
+  let stage;
+  try {
+    stage = createStage(L, $('stage'));
+  } catch (e) {
+    console.warn('WebGL unavailable, flow mode', e);
+    html.classList.replace('loom', 'flow');
+    const L2 = makeLayout(W, H, phone, true);
+    place(L2);
+    return runFlow(L2);
   }
+  MARK('stage');
+  const U = initialState(L);
+  const master = buildMaster(L, U, el);
+  const touch = html.classList.contains('touch');
+  const S = L.S;
+  const total = (N - 1) * S;
+  $('snaps').innerHTML = POSTERS.map((_, k) => `<i style="top:${k * S}px"></i>`).join('');
 
-  renderer.compile(scene, camera);
-  let frames = 0;
-  const live = Q.get('live') === '1';
-  const t0 = performance.now();
-  const tick = () => {
-    if (live) cloth.uniforms.uTime.value = cfg.time + (performance.now() - t0) / 1000;
-    renderer.render(scene, camera);
-    frames++;
-    if (live || frames < 3) requestAnimationFrame(tick);
-    else document.documentElement.dataset.ready = '1';
+  // ---- scroll: Lenis on desktop (wheel only), native touch scroll with CSS snap on phones
+  // Desktop scrolls a fixed wrapper (Lenis wrapper + ScrollTrigger scroller), so the document itself never moves;
+  // phones scroll the window natively, with CSS snap points.
+  let lenis = null;
+  const scroller = $('scroller');
+  if (!touch) {
+    lenis = new Lenis({ wrapper: scroller, content: $('track'), eventsTarget: window, autoRaf: false, smoothWheel: true, syncTouch: false, lerp: 0.05, wheelMultiplier: 1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    window.lenis = lenis;
+    ScrollTrigger.defaults({ scroller });
+  }
+  gsap.ticker.lagSmoothing(0);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const st = ScrollTrigger.create({ trigger: '#pin', start: 'top top', end: '+=' + total, pin: true, pinSpacing: true, pinType: 'fixed', scrub: true, animation: master });
+  // focus can make the browser scroll overflow:hidden boxes to reveal an element; the stage never scrolls
+  for (const id of ['dom', 'pin']) $(id).addEventListener('scroll', (e) => { e.target.scrollTop = 0; e.target.scrollLeft = 0; });
+
+  const goTo = (k) => {
+    k = Math.max(0, Math.min(N - 1, k));
+    const y = k * S;
+    if (lenis) lenis.scrollTo(y, { duration: Math.min(2.6, 0.7 + Math.abs(k - master.time()) * 0.16) });
+    else window.scrollTo({ top: y, behavior: 'smooth' });
   };
-  tick();
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-k]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    goTo(+a.dataset.k);
+  });
+  document.addEventListener('focusin', (e) => {
+    const sec = e.target.closest && e.target.closest('.pn');
+    if (!sec || e.target.closest('.hdr')) return;
+    const k = PLATEAU_OF[sec.id];
+    if (k != null && Math.abs(master.time() - k) > 0.05) goTo(k);
+  });
+  addEventListener('keydown', (e) => {
+    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
+    const onCtl = e.target.closest && e.target.closest('a, button');
+    const k = Math.round(master.time());
+    let n = null;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey && !onCtl)) n = k + 1;
+    if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey && !onCtl)) n = k - 1;
+    if (e.key === 'Home') n = 0;
+    if (e.key === 'End') n = N - 1;
+    if (n != null) { e.preventDefault(); skipIntro(); goTo(n); }
+  });
+
+  // ---- the load sequence
+  const Ui = {};
+  const fx = {
+    kaizen(n) {
+      const kz = $('kz');
+      kz.querySelector('b').textContent = n;
+      gsap.fromTo(kz, { '--w': 0 }, { '--w': 1, duration: 0.18, ease: 'power2.out', overwrite: true });
+      gsap.to(kz, { '--a': 1, duration: 0.2, delay: 0.32, ease: 'power2.in' });
+      gsap.set(kz, { '--a': 0 });
+    },
+    cue(on) { gsap.to('#cue', { '--w': on ? 1 : 0, duration: 0.5, ease: 'power2.inOut' }); },
+  };
+  $('kz').classList.add('wp');
+  $('kz').style.setProperty('--w', 0);
+  const intro = buildIntro(L, Ui, U, el, fx);
+  let introActive = true;
+  window.__intro = intro;
+  const cnt = $('cntn');
+  intro.eventCallback('onUpdate', () => {
+    const t = intro.time();
+    if (t < 1.7) cnt.textContent = String(Math.min(L.threads, Math.max(1, Math.round(Math.pow(2, Math.max(0, t - 0.0) / 0.12 / 1.0) )))).padStart(3, '0');
+  });
+  intro.eventCallback('onComplete', () => { introActive = false; });
+  $('cnt').classList.add('wp');
+  intro.call(() => gsap.to('#cnt', { '--a': 1, duration: 0.4, ease: 'power2.in' }), null, 2.5);
+  let skipped = false;
+  const skipIntro = () => {
+    if (skipped || !introActive) return;
+    skipped = true;
+    intro.timeScale(9);
+  };
+  addEventListener('wheel', skipIntro, { passive: true });
+  addEventListener('touchstart', skipIntro, { passive: true });
+  addEventListener('scroll', () => { if (scrollY > 4) skipIntro(); }, { passive: true });
+  if (lenis) lenis.on('scroll', () => { if (lenis.scroll > 4) skipIntro(); });
+
+  // restore the poster after a reload (resize)
+  let restore = null;
+  try { restore = sessionStorage.getItem('qilich.y'); sessionStorage.removeItem('qilich.y'); } catch (e) {}
+  MARK('built');
+  stage.compile();
+  MARK('compiled');
+  if (restore != null) {
+    intro.progress(1);
+    introActive = false;
+    window.scrollTo(0, +restore);
+    lenis && lenis.scrollTo(+restore, { immediate: true, force: true });
+  } else {
+    // the intro clock follows the wall clock from navigation start (the inline Canvas2D drew the first act)
+    gsap.ticker.tick();
+    const startAt = Math.min(1.75, Math.max(0, performance.now() / 1000 - 0.25));
+    intro.time(startAt).play();
+  }
+
+  // ---- the hand on the cloth: disturbance, sheen follows, and the beat-back
+  const hand = { lift: 0 };
+  let lastFast = 0, lastStamp = -1e9, beating = null;
+  const cursor = makeCursor((x0, y0, x1, y1, speed) => {
+    const now = performance.now();
+    U.lightX = Ui.lightX = x1;
+    U.lightY = Ui.lightY = y1;
+    if (y1 > L.F - 4 || speed < 80) return;
+    stage.stamp(x0, y0, x1, y1, Math.min(1, speed / 1400));
+    lastStamp = now;
+    if (speed > 300) lastFast = now;
+  });
+  const beatBack = () => {
+    beating = gsap.timeline({ onComplete: () => (beating = null) });
+    beating.to(hand, { lift: 18, duration: 0.15, ease: 'power2.out' });
+    [0, 1, 2].forEach((n) => {
+      const t = 0.15 + n * 0.25;
+      beating.to(hand, { lift: 0, duration: 0.08, ease: 'power4.in' }, t);
+      beating.call(() => { stage.decay(0, 0.45); fx.kaizen(n + 1); }, null, t + 0.08);
+      if (n < 2) beating.to(hand, { lift: 12, duration: 0.12, ease: 'power2.out' }, t + 0.1);
+    });
+  };
+
+  // ---- one loop: Lenis → ScrollTrigger → state → DOM → render only when something changed
+  const sync = makeSync(L, el);
+  const BENCH = /bench/.test(location.search);
+  const GAP = +(new URLSearchParams(location.search).get('gap') ?? (stage.software ? 320 : 0));
+  let pending = false, lastRender = 0;
+  const ft = [];
+  let vel = 0, cueOn = true, lastY = 0, vSm = 0;
+  const sk = { lift: 0 };
+  gsap.ticker.add((time, dtMs) => {
+    const dt = Math.min(0.25, dtMs / 1000);
+    const Sx = introActive ? Ui : U;
+    const yNow = lenis ? lenis.scroll : scrollY;
+    const vRaw = (yNow - lastY) / Math.max(dt, 1 / 120);
+    lastY = yNow;
+    vSm += (vRaw - vSm) * Math.min(1, dt * 12);
+    const v = Math.abs(vSm) < 4 ? 0 : vSm;
+    const target = Math.min(phone ? 12 : 16, Math.abs(v) / (phone ? 240 : 160));
+    vel += (target - vel) * Math.min(1, dt * 9);
+    if (vel < 0.08) vel = 0;
+    Sx.ampVel = Math.round(vel * 10) / 10;
+    Sx.velSign = v >= 0 ? 1 : -1;
+    const now = performance.now();
+    stage.decay(dt);
+    if (!beating && !introActive && stage.energy() > 0.035 && now - lastFast > 250 && now - lastStamp < 1500) beatBack();
+    const kNow = introActive ? 0 : master.time();
+    if (cueOn && kNow > 0.12) { cueOn = false; fx.cue(false); }
+    if (!cueOn && kNow < 0.05 && !introActive) { cueOn = true; fx.cue(true); }
+    sk.lift = hand.lift;
+    const changed = stage.apply(Sx, sk);
+    if (cursor) cursor.step(dt, html.dataset.ctone);
+    if (changed) pending = true;
+    if ((pending || BENCH) && !document.hidden && now - lastRender >= GAP) {
+      pending = false;
+      lastRender = now;
+      sync(Sx, kNow); // the DOM text moves in the same frame as the cloth
+      const t0 = performance.now();
+      stage.render();
+      if (BENCH) { stage.renderer.getContext().finish(); ft.push(performance.now() - t0); if (ft.length > 30) ft.shift(); window.__ft = ft.reduce((a, b) => a + b, 0) / ft.length; }
+      if (!window.__glOn) MARK('first-render');
+      window.__glOn = true;
+      window.__renders = (window.__renders || 0) + 1;
+    }
+  });
+  html.dataset.ready = '1';
+  window.__qilich = { get k() { return master.time(); }, master, U, L };
+
+  let rz = null;
+  addEventListener('resize', () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => {
+      if (Math.abs(innerWidth - W) > 2 || Math.abs(innerHeight - H) > 140) {
+        try { sessionStorage.setItem('qilich.y', String(Math.round(master.time()) * S)); } catch (e) {}
+        location.reload();
+      }
+    }, 350);
+  });
 }
 
 boot().catch((e) => {
   console.error(e);
-  document.body.insertAdjacentHTML('beforeend', `<pre style="position:fixed;bottom:0;left:0;color:#fff;z-index:999">${e.stack}</pre>`);
+  html.classList.remove('loom');
+  html.classList.add('flow');
 });

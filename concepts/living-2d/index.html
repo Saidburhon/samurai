@@ -2,31 +2,158 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qalam · Qilich 文武 — prototype</title>
-<style>html,body{background:#EEE6D4;margin:0}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qilich — Yapon IT agenstvasi endi Oʻzbekistonda!</title>
+<meta name="description" content="Yapon IT agenstvasi endi Oʻzbekistonda. iOS va Android ilovalar, saytlar, Telegram botlar, backend, IoT va AI — yapon sifati bilan, Toshkentda.">
+<meta name="theme-color" content="#EEE6D4">
+<link rel="preload" href="fonts/nsd-normal-100-900-latin-3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/nsd-italic-100-900-latin-1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/onest-normal-300-600-latin-1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/plex-normal-500-latin-3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="data/kanjivg.json" as="fetch" crossorigin>
+<style>html,body{background:#EEE6D4;margin:0}html.js #theatre{visibility:hidden}html.js.ready #theatre,html.js.nogl #theatre{visibility:visible}</style>
+<script>document.documentElement.classList.add('js',matchMedia('(max-width: 699px)').matches?'phone':'desk');if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('rm');</script>
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","ProfessionalService"],"name":"Qilich","url":"https://qilich.com/","description":"Yapon IT agenstvasi endi Oʻzbekistonda.","areaServed":["Toshkent","Oʻzbekiston"],"address":{"@type":"PostalAddress","addressLocality":"Toshkent","addressCountry":"UZ"},"email":"inbox@qilich.com","telephone":"+998972707007","knowsLanguage":["uz","ru","en","ja"]}</script>
 </head>
 <body>
-<div id="app">
-  <canvas id="cloth" aria-hidden="true"></canvas>
-  <div id="under"></div>
-  <canvas id="paper" aria-hidden="true"></canvas>
-  <div id="over"></div>
-  <canvas id="fx" aria-hidden="true"></canvas>
+<a class="skip" href="#asosiy">Asosiy matnga oʻtish</a>
+
+<header class="hdr" id="hdr">
+  <a class="brand" href="#boshi" aria-label="Qilich, boshiga"><span class="nseal" aria-hidden="true"></span><span class="word" aria-hidden="true">QILICH</span></a>
+  <nav class="toc" aria-label="Sahifa boʻlimlari">
+    <ol>
+      <li><a href="#boshi"><b lang="ja" aria-hidden="true">切</b><span>Boshi</span></a></li>
+      <li><a href="#sinov"><b lang="ja" aria-hidden="true">試</b><span>Qalam, qilich</span></a></li>
+      <li><a href="#qalam"><b lang="ja" aria-hidden="true">文</b><span>Qalam va qilich</span></a></li>
+      <li><a href="#yol"><b lang="ja" aria-hidden="true">道</b><span>Yoʻlimiz</span></a></li>
+      <li><a href="#xizmatlar"><b lang="ja" aria-hidden="true">技</b><span>Nimalar quramiz</span></a></li>
+      <li><a href="#vaqt"><b lang="ja" aria-hidden="true">時</b><span>Vaqt</span></a></li>
+      <li><a href="#aloqa"><b lang="ja" aria-hidden="true">印</b><span>Aloqa</span></a></li>
+    </ol>
+  </nav>
+  <div class="hdr-r">
+    <div class="langs" role="group" aria-label="Til">
+      <a href="./" aria-current="true" lang="uz">UZ</a><i aria-hidden="true">·</i><span title="Tez orada" lang="ru">RU</span><i aria-hidden="true">·</i><span title="Tez orada" lang="en">EN</span>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="sr">Menyu</span><svg viewBox="0 0 30 26" width="30" height="26" aria-hidden="true"><path d="M3 4.6c4.5-.9 15.4-1.6 21.6-.9"/><path d="M6 12.7c3.4-.6 11.3-.9 16.2-.6"/><path d="M1.6 21.6c6-1 19.4-1.6 26.6-.8"/></svg></button>
+  </div>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <div class="menu-sheet" role="dialog" aria-modal="true" aria-label="Menyu">
+    <button class="menu-close" type="button"><span class="sr">Yopish</span><span lang="ja" aria-hidden="true">乂</span></button>
+    <nav aria-label="Menyu">
+      <ol>
+        <li><a href="#boshi"><b lang="ja" aria-hidden="true">切</b>Boshi</a></li>
+        <li><a href="#sinov"><b lang="ja" aria-hidden="true">試</b>Sekin — qalam</a></li>
+        <li><a href="#qalam"><b lang="ja" aria-hidden="true">文武</b>Qalam va qilich</a></li>
+        <li><a href="#yol"><b lang="ja" aria-hidden="true">道</b>Yoʻlimiz</a></li>
+        <li><a href="#xizmatlar"><b lang="ja" aria-hidden="true">技</b>Nimalar quramiz</a></li>
+        <li><a href="#vaqt"><b lang="ja" aria-hidden="true">時</b>Vaqt</a></li>
+        <li><a href="#aloqa"><b lang="ja" aria-hidden="true">印</b>Aloqa</a></li>
+      </ol>
+    </nav>
+    <p class="menu-c"><a href="tel:+998972707007">+998 97 270 70 07</a><a href="mailto:inbox@qilich.com">inbox@qilich.com</a></p>
+    <p class="menu-g"><a href="../index.html">← Barcha konseptlar</a></p>
+  </div>
 </div>
-<script>
-/* concept viewer: scenes come from the #hash (also works where query strings are not allowed) */
-(function(){var h=location.hash.slice(1);if(h)window.__QS='?'+h;
-var S=[["scene=hero", "Hero"], ["scene=wedge&t=0.72", "The cut"], ["scene=bunbu&t=0.66", "文 and 武"], ["scene=bunbu&t=1", "Diptych"], ["scene=tanzaku", "Services"], ["scene=time", "Two cities"]];
-addEventListener('DOMContentLoaded',function(){var n=document.createElement('nav');n.className='qv';
-var cur=(window.__QS||location.search||'?scene=hero').slice(1);
-n.innerHTML='<a href="../index.html">&larr; All concepts</a>'+S.map(function(s){return '<a href="#'+s[0]+'"'+(s[0]===cur?' aria-current="true"':'')+'>'+s[1]+'</a>';}).join('');
-n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&a.getAttribute('href').charAt(0)==='#'){e.preventDefault();location.hash=a.getAttribute('href');location.reload();}});
-document.body.appendChild(n);});})();
-</script>
-<style>.qv{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483647;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(18,18,24,.82);backdrop-filter:blur(8px);font:500 12px/1 system-ui,sans-serif;max-width:calc(100vw - 20px);overflow-x:auto;white-space:nowrap}.qv a{color:#eee;text-decoration:none;padding:8px 11px;border-radius:999px}.qv a:hover{background:rgba(255,255,255,.12)}.qv a[aria-current]{background:#fff;color:#111}.qv a:first-child{opacity:.75}</style>
-<script type="module" src="bundle.js"></script>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<main id="asosiy">
+<div id="theatre">
+
+<section id="boshi" class="scene sc-hero" aria-labelledby="h1">
+  <div class="hero-gap"><div class="hg">
+    <h1 id="h1" class="h1"><span class="l">Yapon IT agenstvasi</span> <span class="l">endi <em>Oʻzbekistonda!</em></span></h1>
+    <p class="sub">Mobil ilovalar, saytlar, Telegram botlar va AI — yapon sifati bilan, Toshkentda.</p>
+  </div></div>
+  <div class="pu pu-top"><p class="clocks"><span>TOSHKENT</span> <b data-tz="Asia/Tashkent">--:--</b><i aria-hidden="true">·</i><span>TOKIO</span> <b data-tz="Asia/Tokyo">--:--</b></p></div>
+  <div class="pu pu-bot"><div class="signature" aria-hidden="true"><span lang="ja">タシケント</span><span lang="ja" class="k">剣</span></div><p class="cue" aria-hidden="true"><i></i><span>PASTGA</span></p></div>
+</section>
+
+<section id="sinov" class="scene sc-kz" aria-labelledby="h-sinov">
+  <h2 id="h-sinov" class="kz-h2"><span class="l1">Sekin — qalam.</span> <span class="l2">Tez — qilich.</span></h2>
+  <div class="spine kz-spine" aria-hidden="true"><span lang="ja">試し斬り</span><i>TAMESHIGIRI</i></div>
+</section>
+
+<section id="qalam" class="scene sc-bb" aria-labelledby="h-qalam">
+  <h2 id="h-qalam" class="bb-h2">Qalam va qilich</h2>
+  <p class="pair p1">Qalamdek toza kod.</p>
+  <p class="pair p2">Qilichdek aniq ish.</p>
+  <p class="bb-cap">Yaponlar buni <span lang="ja">文武両道</span> — bunbu ryōdō deydi.</p>
+  <div class="spine bb-spine" aria-hidden="true"><span lang="ja">文</span><i>QALAM</i><span lang="ja">武</span><i>QILICH</i></div>
+</section>
+
+<section id="yol" class="scene sc-yl" aria-labelledby="h-yol">
+  <h2 id="h-yol" class="yl-h2">Yoʻlimiz</h2>
+  <p class="yl-sub">Besh tamoyil</p>
+  <div class="daisen" aria-hidden="true"><span lang="ja">道</span></div>
+  <ol class="panels">
+    <li class="pn"><span class="pn-k" lang="ja" aria-hidden="true">一</span><p class="pn-r"><dfn>Kaizen</dfn><span class="sr" lang="ja"> 改善</span></p><p class="pn-t">Har kuni — bir oz yaxshiroq.</p></li>
+    <li class="pn"><span class="pn-k" lang="ja" aria-hidden="true">二</span><p class="pn-r"><dfn>Monozukuri</dfn><span class="sr" lang="ja"> ものづくり</span></p><p class="pn-t">Koʻrinmaydigan qismlari ham puxta quriladi.</p></li>
+    <li class="pn"><span class="pn-k" lang="ja" aria-hidden="true">三</span><p class="pn-r"><dfn>Shokunin</dfn><span class="sr" lang="ja"> 職人</span></p><p class="pn-t">Har bir dasturchi — oʻz ishining ustasi.</p></li>
+    <li class="pn"><span class="pn-k" lang="ja" aria-hidden="true">四</span><p class="pn-r"><dfn>Hōrensō</dfn><span class="sr" lang="ja"> 報連相</span></p><p class="pn-t">Xabar, aloqa, maslahat: loyihangiz qay holatda ekanini doim bilasiz.</p></li>
+    <li class="pn"><span class="pn-k" lang="ja" aria-hidden="true">五</span><p class="pn-r"><dfn>Omotenashi</dfn><span class="sr" lang="ja"> おもてなし</span></p><p class="pn-t">Siz soʻramasdan oldin oʻylab qoʻyamiz.</p></li>
+  </ol>
+</section>
+
+<section id="xizmatlar" class="scene sc-tz" aria-labelledby="h-tz">
+  <h2 id="h-tz" class="tz-h2">Nimalar quramiz</h2>
+  <ul class="strips">
+    <li class="strip"><span class="idx" aria-hidden="true">01</span><span class="name"><span>iOS va Android</span> <span>ilovalar</span></span><span class="ja" lang="ja" aria-hidden="true">アプリ</span></li>
+    <li class="strip"><span class="idx" aria-hidden="true">02</span><span class="name"><span>Veb-saytlar va</span> <span>veb-platformalar</span></span><span class="ja" lang="ja" aria-hidden="true">ウェブ</span></li>
+    <li class="strip"><span class="idx" aria-hidden="true">03</span><span class="name"><span>Telegram</span> <span>botlar</span></span><span class="ja" lang="ja" aria-hidden="true">ボット</span></li>
+    <li class="strip"><span class="idx" aria-hidden="true">04</span><span class="name"><span>Backend va</span> <span>integratsiyalar</span></span><span class="ja" lang="ja" aria-hidden="true">バックエンド</span></li>
+    <li class="strip"><span class="idx" aria-hidden="true">05</span><span class="name"><span>Desktop</span> <span>ilovalar</span></span><span class="ja" lang="ja" aria-hidden="true">デスクトップ</span></li>
+    <li class="strip"><span class="idx" aria-hidden="true">06</span><span class="name"><span>IoT</span></span><span class="ja" lang="ja" aria-hidden="true">IoT機器</span></li>
+    <li class="strip"><span class="idx" aria-hidden="true">07</span><span class="name"><span>Sunʼiy intellekt</span> <span>/ AI</span></span><span class="ja" lang="ja" aria-hidden="true">人工知能</span></li>
+  </ul>
+  <div class="spine tz-spine" aria-hidden="true"><span lang="ja">七つの技</span><i>07</i></div>
+</section>
+
+<section id="vaqt" class="scene sc-jk" aria-labelledby="h-jk">
+  <h2 id="h-jk" class="jk-h2"><span class="l">Tokio sifati.</span> <span class="l">Toshkent vaqti va narxi.</span></h2>
+  <div class="jk-times">
+    <p class="tm tm-t"><b data-tz="Asia/Tashkent">--:--</b><span><i class="dot feruza" aria-hidden="true"></i>Toshkent · UTC+5</span></p>
+    <p class="tm tm-k"><b data-tz="Asia/Tokyo">--:--</b><span><i class="dot shu" aria-hidden="true"></i>Tokio · UTC+9</span></p>
+  </div>
+  <p class="jk-shared">Umumiy ish soatlari: Toshkentda 09:00–14:00, Tokioda 13:00–18:00.</p>
+  <div class="jk-dial" aria-hidden="true"></div>
+  <p class="jk-sub">4 soat farq — har kuni 5 soat birga ishlaymiz.</p>
+</section>
+
+<section id="aloqa" class="scene sc-al" aria-labelledby="h-al">
+  <div class="al-grid" aria-hidden="true"></div>
+  <h2 id="h-al" class="al-h2">Toshkentdagi birinchi loyihalarimizdan biri — sizniki boʻlsin.</h2>
+  <address class="al-addr">
+    <a class="al-tel" href="tel:+998972707007">+998 97 270 70 07</a>
+    <a class="al-mail" href="mailto:inbox@qilich.com">inbox@qilich.com</a>
+  </address>
+  <div class="al-tate" lang="ja" aria-hidden="true">ご連絡ください</div>
+</section>
+
+<footer id="oxiri" class="scene sc-ft">
+  <div class="colophon">
+    <p class="ck"><b lang="ja">奥付</b><span>OKUZUKE</span></p>
+    <dl>
+      <div><dt>QILICH</dt><dd>Yapon IT agenstvasi. Toshkent, Oʻzbekiston.</dd></div>
+      <div><dt>QOGʻOZ</dt><dd>Tut poʻstlogʻidan: Samarqandda ham, Yaponiyada ham.</dd></div>
+      <div><dt>MATO</dt><dd>Abr: Margʻilonda ham, Kurumeda ham.</dd></div>
+      <div><dt>KANJI</dt><dd>Chiziqlar tartibi: KanjiVG (CC BY-SA 3.0)</dd></div>
+    </dl>
+    <p class="ft-l"><a href="tel:+998972707007">+998 97 270 70 07</a><a href="mailto:inbox@qilich.com">inbox@qilich.com</a><span>© 2026 Qilich</span><a href="#boshi">Yuqoriga ↑</a><a href="../index.html">← Barcha konseptlar</a></p>
+  </div>
+</footer>
+
+</div>
+</main>
+
+<p class="cutname" id="cutname" aria-hidden="true"><span lang="ja"></span><b></b></p>
+<a class="gallery" href="../index.html">← Barcha konseptlar</a>
+
+<script type="module" src="./bundle.js"></script>
 </body>
 </html>

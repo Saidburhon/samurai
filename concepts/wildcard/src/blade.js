@@ -145,11 +145,14 @@ function tsukaTexture() {
         g.lineTo(cxF - 70, y0 - dir * 40 + w / 2);
         g.closePath();
       }
-      g.fillStyle = '#1B2652';
+      const ik = ['#D1145A', '#F2B11B', '#0A7F55', '#F6F1E6'];
+      const gr = g.createLinearGradient(0, y0 - 60, 0, y0 + 60);
+      ik.forEach((c, n) => { gr.addColorStop(n / 4, c); gr.addColorStop((n + 1) / 4 - 0.02, c); });
+      g.fillStyle = gr;
       g.fill();
       g.clip();
       // silk braid ribs
-      g.strokeStyle = 'rgba(120,140,210,0.28)';
+      g.strokeStyle = 'rgba(40,20,30,0.22)';
       g.lineWidth = 1.2;
       for (let k = -40; k < 300; k += 4) {
         g.beginPath();
@@ -167,8 +170,10 @@ function tsukaTexture() {
   return t;
 }
 
-export function makeBlade({ W, H, fellY, scale = 1, tsubaX = 104, tipMargin = 44, lift = 0 }) {
+export function makeBlade({ W, H, fellY, scale = 1, tsubaX = 104, tipMargin = 44 }) {
+  const root = new THREE.Group();
   const group = new THREE.Group();
+  root.add(group);
   const glint = { value: W * 0.62 };
   const bladeStart = tsubaX + 22 * scale;
   const L = W - tipMargin - bladeStart;
@@ -188,21 +193,27 @@ export function makeBlade({ W, H, fellY, scale = 1, tsubaX = 104, tipMargin = 44
     group.add(m);
   });
 
-  // habaki (brass collar)
+  // habaki (copper collar)
   const habaki = new THREE.Mesh(
     new THREE.BoxGeometry(18 * scale, w0 + 3 * scale, 9 * scale),
-    new THREE.MeshPhysicalMaterial({ color: 0xc6974a, metalness: 1, roughness: 0.24 })
+    new THREE.MeshPhysicalMaterial({ color: 0xb87a4b, metalness: 1, roughness: 0.28 })
   );
   habaki.position.set(tsubaX + 13 * scale, -w0 / 2, 0);
   group.add(habaki);
-  // seppa (copper washers) + tsuba (iron guard), seen edge-on
-  const iron = new THREE.MeshPhysicalMaterial({ color: 0x2c2b30, metalness: 0.75, roughness: 0.42 });
+  // seppa (copper washers) + tsuba (iron guard), seen edge-on, with a gold rim
+  const iron = new THREE.MeshPhysicalMaterial({ color: 0x2e2a27, metalness: 0.6, roughness: 0.5 });
   const copper = new THREE.MeshPhysicalMaterial({ color: 0xb8754a, metalness: 1, roughness: 0.32 });
+  const gilt = new THREE.MeshPhysicalMaterial({ color: 0xc9a15a, metalness: 1, roughness: 0.3 });
   const tsuba = new THREE.Mesh(new THREE.CylinderGeometry(25 * scale, 25 * scale, 5.5 * scale, 48), iron);
   tsuba.rotation.z = Math.PI / 2;
   tsuba.scale.set(1, 1, 0.82);
   tsuba.position.set(tsubaX, -w0 / 2, 0);
   group.add(tsuba);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(25 * scale, 1.1 * scale, 8, 64), gilt);
+  rim.rotation.y = Math.PI / 2;
+  rim.scale.set(1, 1, 1);
+  rim.position.set(tsubaX + 2.9 * scale, -w0 / 2, 0);
+  group.add(rim);
   for (const dx of [-4.2, 4.2]) {
     const s = new THREE.Mesh(new THREE.CylinderGeometry(15 * scale, 15 * scale, 1.6 * scale, 32), copper);
     s.rotation.z = Math.PI / 2;
@@ -224,12 +235,14 @@ export function makeBlade({ W, H, fellY, scale = 1, tsubaX = 104, tipMargin = 44
     new THREE.MeshStandardMaterial({ map: tt, roughness: 0.62, metalness: 0.0 })
   );
   tsuka.rotation.z = Math.PI / 2;
-  tsuka.rotation.y = 0;
   tsuka.scale.set(1, 1, 0.8);
   tsuka.position.set(tsubaX - 13 * scale - tlen / 2, -w0 / 2, 0);
   group.add(tsuka);
 
-  // place: screen px -> world
-  group.position.set(-W / 2, H / 2 - fellY - lift, 7);
-  return { group, glint };
+  // spine up: mirror the blade so the blunt back meets the fell and the edge faces the loose warp
+  group.scale.y = -1;
+  group.position.y = -w0;
+  const setY = (y) => root.position.set(-W / 2, H / 2 - y, 7);
+  setY(fellY);
+  return { group: root, glint, setY, h: w0 };
 }

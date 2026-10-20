@@ -1,236 +1,338 @@
-// The "cartoon": the full-size design drawing the weave shader samples.
-// Woven type and motifs are painted here; the role map stores registration class.
+// The "cartoon": the full-size design drawing of the whole cloth strip, which the weave shader samples.
+// Woven type and motifs are painted here; the role map stores the registration class (kasuri / abr).
 import { C, ROLE } from './palette.js';
-import { drawIcon } from './motifs.js';
-
-export const DELA = '"Dela Gothic One"';
-
-export function createCartoon(W, H) {
-  const ch = Math.ceil(H * 2.4);
-  const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = ch;
-  const role = document.createElement('canvas');
-  role.width = W; role.height = ch;
-  const ctx = canvas.getContext('2d');
-  const rctx = role.getContext('2d');
-  rctx.fillStyle = '#000';
-  rctx.fillRect(0, 0, W, ch);
-  return { canvas, role, ctx, rctx, W, H, ch };
-}
-
-export const capHeight = (ctx, size) => {
-  ctx.font = `${size}px ${DELA}`;
-  return ctx.measureText('H').actualBoundingBoxAscent;
-};
-export const textWidth = (ctx, text, size) => {
-  ctx.font = `${size}px ${DELA}`;
-  return ctx.measureText(text).width;
-};
+import { DELA, capH, tw } from './layout.js';
 
 function rect(ctx, color, x, y, w, h) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, w, h);
 }
 
-export function wovenText(cart, text, x, base, size, color, role = 'kasuri') {
-  const { ctx, rctx } = cart;
-  ctx.font = rctx.font = `${size}px ${DELA}`;
-  ctx.fillStyle = color;
-  ctx.fillText(text, x, base);
-  rctx.fillStyle = rctx.strokeStyle = ROLE[role];
-  rctx.lineWidth = Math.max(6, size * 0.14);
+function wovenText(ctx, rctx, o) {
+  ctx.font = `${o.size}px ${DELA}`;
+  ctx.fillStyle = o.color;
+  ctx.fillText(o.text, o.x, o.base);
+  rctx.font = `${o.size}px ${DELA}`;
+  rctx.fillStyle = rctx.strokeStyle = ROLE.kasuri;
+  rctx.lineWidth = Math.max(6, o.size * 0.14);
   rctx.lineJoin = 'round';
-  rctx.strokeText(text, x, base);
-  rctx.fillText(text, x, base);
+  rctx.strokeText(o.text, o.x, o.base);
+  rctx.fillText(o.text, o.x, o.base);
 }
 
 // abr: saffron / magenta / emerald bands across the cap height, ivory resist lines between
-export function abrText(cart, text, x, base, size, resist = 3) {
-  const { ctx, rctx } = cart;
-  const capH = capHeight(ctx, size);
-  const w = textWidth(ctx, text, size);
+function abrText(ctx, rctx, o, scale) {
+  const size = o.size;
+  const ch = capH(size);
+  const w = tw(o.text, size);
   const pad = Math.ceil(size * 0.3);
-  const tw = Math.ceil(w + pad * 2), th = Math.ceil(size * 1.5);
-  const bb = Math.round(size * 1.15);
+  const s = scale;
   const t = document.createElement('canvas');
-  t.width = tw; t.height = th;
+  t.width = Math.ceil((w + pad * 2) * s);
+  t.height = Math.ceil(size * 1.5 * s);
   const tc = t.getContext('2d');
-  const top = bb - capH;
-  const b1 = Math.round(top + capH * 0.34), b2 = Math.round(top + capH * 0.68);
-  rect(tc, C.saffron, 0, 0, tw, b1);
-  rect(tc, C.atlas, 0, b1, tw, b2 - b1);
-  rect(tc, C.emerald, 0, b2, tw, th - b2);
-  rect(tc, C.ivory, 0, b1 - resist / 2, tw, resist);
-  rect(tc, C.ivory, 0, b2 - resist / 2, tw, resist);
-  // keep the bands only inside the glyphs (one destructive op, applied once)
+  tc.scale(s, s);
+  const bb = Math.round(size * 1.15);
+  const top = bb - ch;
+  const b1 = top + ch * 0.34, b2 = top + ch * 0.68;
+  const resist = Math.max(2, size * 0.022);
+  const tw0 = w + pad * 2, th = size * 1.5;
+  rect(tc, C.saffron, 0, 0, tw0, b1);
+  rect(tc, C.atlas, 0, b1, tw0, b2 - b1);
+  rect(tc, C.emerald, 0, b2, tw0, th - b2);
+  rect(tc, C.ivory, 0, b1 - resist / 2, tw0, resist);
+  rect(tc, C.ivory, 0, b2 - resist / 2, tw0, resist);
   tc.globalCompositeOperation = 'destination-in';
   tc.font = `${size}px ${DELA}`;
   tc.fillStyle = '#000';
-  tc.fillText(text, pad, bb);
-  ctx.drawImage(t, x - pad, base - bb);
+  tc.fillText(o.text, pad, bb);
+  ctx.drawImage(t, o.x - pad, o.base - bb, tw0, th);
   rctx.font = `${size}px ${DELA}`;
   rctx.fillStyle = rctx.strokeStyle = ROLE.abr;
   rctx.lineWidth = Math.max(8, size * 0.2);
   rctx.lineJoin = 'round';
-  rctx.strokeText(text, x, base);
-  rctx.fillText(text, x, base);
-  return { w, capH };
+  rctx.strokeText(o.text, o.x, o.base);
+  rctx.fillText(o.text, o.x, o.base);
 }
 
-// vertical abr word (phone): glyphs rotated 90deg cw, colour zones run across the warp (horizontal flame edges)
-export function abrVertical(cart, text, xLeft, yTop, size, zone, resist = 3) {
-  const { ctx, rctx } = cart;
-  const capH = capHeight(ctx, size);
-  const w = textWidth(ctx, text, size);
+// vertical abr word: glyphs rotated 90° clockwise (tops face right), colour zones run along the word
+function abrVertical(ctx, rctx, o, scale) {
+  const size = o.size;
+  const w = tw(o.text, size);
   const pad = Math.ceil(size * 0.3);
-  // draw horizontally into temp, then rotate
-  const tw = Math.ceil(w + pad * 2), th = Math.ceil(size * 1.5);
-  const bb = Math.round(size * 1.15);
+  const s = scale;
+  const tw0 = w + pad * 2, th = size * 1.5;
   const t = document.createElement('canvas');
-  t.width = tw; t.height = th;
+  t.width = Math.ceil(tw0 * s);
+  t.height = Math.ceil(th * s);
   const tc = t.getContext('2d');
-  // zones along the reading direction (becomes screen y after rotation)
+  tc.scale(s, s);
+  const bb = Math.round(size * 1.15);
   const cols = [C.saffron, C.atlas, C.emerald];
+  const zone = o.len / 4.5;
+  const resist = Math.max(2, size * 0.03);
   let k = 0;
-  for (let zx = pad; zx < tw; zx += zone, k++) {
-    rect(tc, cols[k % 3], zx, 0, zone, th);
+  for (let zx = pad; zx < tw0; zx += zone, k++) {
+    rect(tc, cols[k % 3], zx, 0, zone + 1, th);
     if (zx > pad) rect(tc, C.ivory, zx - resist / 2, 0, resist, th);
   }
   rect(tc, cols[0], 0, 0, pad, th);
   tc.globalCompositeOperation = 'destination-in';
   tc.font = `${size}px ${DELA}`;
   tc.fillStyle = '#000';
-  tc.fillText(text, pad, bb);
-  const capTopT = bb - capH;
-  // rotate cw: text x -> screen y, glyph tops face right
-  ctx.save();
-  // point (px,py) in temp -> screen (X, Y) = (xLeft + (bb - py) , yTop + (px - pad))   [baseline at xLeft]
-  ctx.setTransform(0, 1, -1, 0, xLeft + bb, yTop - pad);
-  ctx.drawImage(t, 0, 0);
-  ctx.restore();
-  rctx.save();
-  rctx.setTransform(0, 1, -1, 0, xLeft + bb, yTop - pad);
-  rctx.font = `${size}px ${DELA}`;
-  rctx.fillStyle = rctx.strokeStyle = ROLE.abr;
-  rctx.lineWidth = Math.max(8, size * 0.2);
-  rctx.strokeText(text, pad, bb);
-  rctx.fillText(text, pad, bb);
-  rctx.restore();
-  return { w, capH, capTopT };
-}
-
-// ---------------------------------------------------------------- scenes
-
-// P1 · 絣 = ABR, painted from cloth-y `oy` (used as the loose warp under the hero)
-export function paintP1(cart, oy, W) {
-  const { ctx } = cart;
-  const split = Math.round((W * 0.48) / 6) * 6;
-  rect(ctx, C.ai, 0, oy, split, cart.ch - oy);
-  rect(ctx, C.silk, split, oy, W - split, cart.ch - oy);
-  const s1 = Math.round(W * 0.264);
-  const c1 = capHeight(ctx, s1);
-  wovenText(cart, '絣', Math.round(W * 0.05), oy + 70 + c1, s1, C.ivory);
-  rect(ctx, C.saffron, split - 38, oy + 230, 76, 16);
-  rect(ctx, C.saffron, split - 38, oy + 262, 76, 16);
-  const s2 = Math.round(W * 0.167);
-  abrText(cart, 'ABR', split + 64, oy + 120 + capHeight(ctx, s2), s2, 4);
-}
-
-export function paintHeroDesktop(cart, { p1At }) {
-  const { ctx, W, ch } = cart;
-  rect(ctx, C.silk, 0, 0, W, ch);
-  const size = 112, x = 48;
-  const capH = capHeight(ctx, size);
-  const snap = (v) => Math.round(v / 3) * 3;
-  const lines = ['YAPON IT', 'AGENSTVASI', 'ENDI'];
-  const bases = [];
-  lines.forEach((t, k) => {
-    const b = snap(128 + k * 106 + capH);
-    bases.push(b);
-    wovenText(cart, t, x, b, size, C.ai);
-  });
-  const b4 = snap(128 + 3 * 106 + capH);
-  bases.push(b4);
-  const r = abrText(cart, 'OʻZBEKISTONDA!', x, b4, size);
-  if (p1At != null) paintP1(cart, p1At, W);
-  return { bases, capH, w4: r.w };
-}
-
-export function paintHeroPhone(cart, { p1At }) {
-  const { ctx, W, ch } = cart;
-  rect(ctx, C.silk, 0, 0, W, ch);
-  const x = 16;
-  const colW = 280;
-  const snap = (v) => Math.round(v / 2) * 2;
-  // fit-justified block
-  const words = ['YAPON', 'IT', 'AGENSTVASI', 'ENDI'];
-  let y = 92;
-  const out = [];
-  for (const wd of words) {
-    const s = Math.floor((100 * colW) / textWidth(ctx, wd, 100));
-    const capH = capHeight(ctx, s);
-    const base = snap(y + capH);
-    wovenText(cart, wd, x, base, s, C.ai);
-    out.push({ wd, s, base, capH });
-    y = base + Math.max(14, s * 0.16);
+  tc.fillText(o.text, pad, bb);
+  for (const [c, img] of [[ctx, true], [rctx, false]]) {
+    c.save();
+    c.transform(0, 1, -1, 0, o.xBase + bb, o.yTop - pad);
+    if (img) c.drawImage(t, 0, 0, tw0, th);
+    else {
+      c.font = `${size}px ${DELA}`;
+      c.fillStyle = c.strokeStyle = ROLE.abr;
+      c.lineWidth = Math.max(8, size * 0.2);
+      c.lineJoin = 'round';
+      c.strokeText(o.text, pad, bb);
+      c.fillText(o.text, pad, bb);
+    }
+    c.restore();
   }
-  // vertical OʻZBEKISTONDA! along the right edge
-  const vText = 'OʻZBEKISTONDA!';
-  const vLen = 600;
-  const vs = Math.floor((100 * vLen) / textWidth(ctx, vText, 100));
-  const vcap = capHeight(ctx, vs);
-  const xLeft = W - 14 - vcap; // baseline column x
-  const r = abrVertical(cart, vText, xLeft, 96, vs, Math.round(vLen / 4.5), 3);
-  if (p1At != null) paintP1(cart, p1At, W);
-  return { block: out, blockBottom: y, vs, vcap, vLeft: xLeft, r };
 }
 
-export const STRIPES = [
-  { g: C.ai, ink: C.ivory, name: 'MOBIL ILOVALAR', d: 'iOS · ANDROID', icon: 'phone' },
-  { g: C.atlas, ink: C.ivory, name: 'VEB-SAYTLAR', d: 'SAYT · VEB-PLATFORMA', icon: 'browser' },
-  { g: C.saffron, ink: C.ai, name: 'TELEGRAM BOTLAR', d: 'BUYURTMA · TOʻLOV · XABARNOMA', icon: 'plane' },
-  { g: C.emerald, ink: C.ivory, name: 'BACKEND', d: 'API · INTEGRATSIYALAR', icon: 'server' },
-  { g: C.silk, ink: C.atlas, name: 'DESKTOP', d: 'WINDOWS · MACOS · LINUX', icon: 'monitor' },
-  { g: C.ai, ink: C.saffron, name: 'IoT', d: 'QURILMALAR · SENSORLAR', icon: 'antenna' },
-  { g: C.atlas, ink: C.ivory, name: 'AI', d: 'SUNʼIY INTELLEKT INTEGRATSIYASI', icon: 'network' },
-];
-
-export function paintStripes(cart, { top = 96, sh = 94 }) {
-  const { ctx, W, ch } = cart;
-  rect(ctx, C.silk, 0, 0, W, ch);
-  const size = 60;
-  const capH = capHeight(ctx, size);
-  const rows = [];
-  STRIPES.forEach((s, k) => {
-    const y0 = top + k * sh;
-    rect(ctx, s.g, 0, y0, W, sh);
-    const base = Math.round((y0 + (sh + capH) / 2) / 3) * 3;
-    wovenText(cart, s.name, 48, base, size, s.ink);
-    drawIcon(ctx, s.icon, W - 48 - 78, y0 + 8, 6, s.ink);
-    // icons are kasuri too
-    cart.rctx.fillStyle = ROLE.kasuri;
-    cart.rctx.fillRect(W - 48 - 84, y0 + 4, 90, 86);
-    rows.push({ y0, base });
-  });
-  return { rows, capH };
+// a solid woven word set vertically (glyph tops face right)
+function vText(ctx, rctx, o) {
+  for (const [c, fill, role] of [[ctx, o.color, false], [rctx, ROLE.kasuri, true]]) {
+    c.save();
+    c.transform(0, 1, -1, 0, o.xBase, o.yTop);
+    c.font = `${o.size}px ${DELA}`;
+    c.fillStyle = c.strokeStyle = fill;
+    if (role) { c.lineWidth = Math.max(6, o.size * 0.14); c.lineJoin = 'round'; c.strokeText(o.text, 0, 0); }
+    c.fillText(o.text, 0, 0);
+    c.restore();
+  }
 }
 
-export function paintJidoka(cart) {
-  const { ctx, rctx, W, ch } = cart;
-  rect(ctx, C.aiDeep, 0, 0, W, ch);
-  // 井桁 igeta-gasuri: crosses aligned to whole threads (x) and rows (y), half-drop grid
-  const grid = 120, m = 36;
-  ctx.fillStyle = 'rgba(246,241,230,0.25)';
+function paintWoven(ctx, rctx, list, scale) {
+  for (const o of list || []) {
+    if (o.vertical && !o.abr) vText(ctx, rctx, o);
+    else if (o.vertical) abrVertical(ctx, rctx, o, scale);
+    else if (o.abr) abrText(ctx, rctx, o, scale);
+    else wovenText(ctx, rctx, o);
+  }
+}
+
+// 井桁 igeta-gasuri: crosses on whole threads, half-drop grid, omitted behind the text block
+function igeta(ctx, rctx, L, h) {
+  const { grid, mot, safe } = L.jid;
+  const P = L.pitch;
+  const bar = Math.max(4, Math.round(mot / 6));
+  ctx.fillStyle = 'rgba(246,241,230,0.26)';
   rctx.fillStyle = ROLE.kasuri;
-  for (let gx = -1; gx * grid < W + grid; gx++) {
-    for (let gy = -1; gy * grid < ch + grid; gy++) {
-      const x0 = Math.round((gx * grid + 42) / 6) * 6;
-      const y0 = Math.round((gy * grid + (gx % 2 ? 60 : 0) + 30) / 3) * 3;
-      ctx.fillRect(x0 + 6, y0, 6, m);
-      ctx.fillRect(x0 + 24, y0, 6, m);
-      ctx.fillRect(x0, y0 + 6, m, 6);
-      ctx.fillRect(x0, y0 + 24, m, 6);
-      rctx.fillRect(x0 - 6, y0 - 6, m + 12, m + 12);
+  for (let gx = -1; gx * grid < L.W + grid; gx++) {
+    for (let gy = -1; gy * grid < h + grid; gy++) {
+      const x0 = Math.round((gx * grid + grid * 0.35) / P) * P;
+      const y0 = Math.round(gy * grid + (gx % 2 ? grid / 2 : 0) + grid * 0.25);
+      if (x0 + mot > safe[0] && x0 < safe[0] + safe[2] && y0 + mot > safe[1] && y0 < safe[1] + safe[3]) continue;
+      if (Math.abs(x0 + mot / 2 - L.jid.sigX) < mot) continue;
+      const a = Math.round(mot * 0.22), b = Math.round(mot * 0.62);
+      ctx.fillRect(x0 + a, y0, bar, mot);
+      ctx.fillRect(x0 + b, y0, bar, mot);
+      ctx.fillRect(x0, y0 + a, mot, bar);
+      ctx.fillRect(x0, y0 + b, mot, bar);
+      rctx.fillRect(x0 - 6, y0 - 6, mot + 12, mot + 12);
     }
   }
+}
+
+function jiyakBand(ctx, x, y, w, h) {
+  // tri-colour Uzbek trim with ivory resist lines
+  const cols = [C.atlas, C.saffron, C.emerald, C.atlas];
+  const n = cols.length;
+  const bh = h / n;
+  cols.forEach((c, i) => rect(ctx, c, x, y + i * bh, w, bh));
+  for (let i = 1; i < n; i++) rect(ctx, C.ivory, x, y + i * bh - 1, w, 2);
+  rect(ctx, C.ivory, x, y, w, 2);
+  rect(ctx, C.ivory, x, y + h - 2, w, 2);
+}
+
+function timeRows(ctx, rctx, L) {
+  const t = L.time;
+  const row = (y0, y1, work) => {
+    for (let h = 0; h < 24; h++) {
+      const x = t.x0 + h * t.hw;
+      const on = h >= 9 && h < 18;
+      rect(ctx, on ? work : C.silkShade, x, y0, t.hw + 0.5, y1 - y0);
+      // hour rule: a darker weft line every hour, a deeper one every 6
+      rect(ctx, on ? 'rgba(0,0,0,0.16)' : 'rgba(24,35,74,0.12)', x, y0, h % 6 ? 1 : 2, y1 - y0);
+    }
+    // ivory resist lines at the ends of the working block
+    rect(ctx, C.ivory, t.x0 + 9 * t.hw - 1, y0, 2, y1 - y0);
+    rect(ctx, C.ivory, t.x0 + 18 * t.hw - 1, y0, 2, y1 - y0);
+    rctx.fillStyle = ROLE.kasuri;
+    rctx.fillRect(t.x0 - 4, y0 - 4, t.x1 - t.x0 + 8, y1 - y0 + 8);
+  };
+  row(t.tk[0], t.tk[1], C.shu);
+  row(t.ts[0], t.ts[1], C.emerald);
+}
+
+const GROUND = { silk: C.silk, ai: C.ai, aiDeep: C.aiDeep };
+
+export function paintPanel(ctx, rctx, L, id, scale) {
+  const p = L.panels[id];
+  const base = id === 'dan' ? 'abr' : id === 'hor' ? 'jid' : id;
+  const W = L.W, h = p.h;
+  ctx.save(); rctx.save();
+  ctx.beginPath(); ctx.rect(0, 0, W, h); ctx.clip();
+  rctx.beginPath(); rctx.rect(0, 0, W, h); rctx.clip();
+  rect(ctx, GROUND[p.ground] || C.silk, 0, 0, W, h);
+  switch (base) {
+    case 'abr': {
+      const s = L.abr.split;
+      rect(ctx, C.silk, s, 0, W - s, h);
+      const [x, y1, w, bh, y2] = L.abr.eq;
+      rect(ctx, C.saffron, x, y1, w, bh);
+      rect(ctx, C.saffron, x, y2, w, bh);
+      rctx.fillStyle = ROLE.kasuri;
+      rctx.fillRect(x - 4, y1 - 4, w + 8, y2 + bh - y1 + 8);
+      break;
+    }
+    case 'jid':
+      igeta(ctx, rctx, L, h);
+      break;
+    case 'stripes':
+      L.stripes.forEach((s) => rect(ctx, s.g, 0, s.sy, W, L.sh));
+      L.stripes.forEach((s, i) => i && rect(ctx, 'rgba(246,241,230,0.55)', 0, s.sy - 1, W, 2));
+      break;
+    case 'time':
+      timeRows(ctx, rctx, L);
+      break;
+    case 'foot': {
+      const b = L.foot.band;
+      jiyakBand(ctx, 0, 0, W, b);
+      jiyakBand(ctx, 0, h - b, W, b);
+      break;
+    }
+    case 'tail':
+      rect(ctx, '#F2EBDC', 0, 0, W, h);
+      break;
+  }
+  paintWoven(ctx, rctx, L.woven[base], scale);
+  if (L.flow) flowExtras(ctx, L, id, h);
+  ctx.restore(); rctx.restore();
+}
+
+// flow mode (reduced motion, no WebGL): each scene drawn in its settled state
+function flowExtras(ctx, L, id, h) {
+  const P = L.pitch, W = L.W;
+  if (id === 'dan') {
+    // the loom opened: loose warp, dark gaps between the dyed threads, ivory ties
+    for (let i = 0; i < L.threads + 1; i++) rect(ctx, 'rgba(18,15,23,0.9)', (i + 0.5) * P + 0.23 * P, 0, 0.54 * P, h);
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, 'rgba(18,15,23,0.15)');
+    g.addColorStop(1, 'rgba(18,15,23,0.55)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, h);
+    const [sx, sy, sw, shh] = L.danSafe;
+    rect(ctx, 'rgba(18,15,23,0.5)', sx, sy, sw, shh);
+  }
+  if (id === 'jid' || id === 'hor') {
+    const { sigX, brk, andon } = L.jid;
+    ctx.strokeStyle = C.saffron;
+    ctx.lineWidth = L.phone ? 3 : 4;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    if (id === 'jid') {
+      ctx.moveTo(sigX, 0); ctx.lineTo(sigX, brk - 8);
+      ctx.quadraticCurveTo(sigX + 4, brk + 18, sigX + 22, brk + 16);
+      ctx.moveTo(sigX, h); ctx.lineTo(sigX, brk + 70);
+      ctx.quadraticCurveTo(sigX - 14, brk + 46, sigX + 4, brk + 36);
+    } else {
+      ctx.moveTo(sigX, 0); ctx.lineTo(sigX, h);
+    }
+    ctx.stroke();
+    if (id === 'hor') {
+      ctx.fillStyle = C.saffron;
+      ctx.beginPath(); ctx.arc(sigX, brk, L.phone ? 6 : 8, 0, Math.PI * 2); ctx.fill();
+    }
+    const lit = id === 'jid' ? C.shu : C.emerald;
+    const ax = andon.x - andon.w / 2, ay = andon.y - andon.h / 2;
+    const glow = ctx.createRadialGradient(andon.x, andon.y, 4, andon.x, andon.y, andon.w * 4);
+    glow.addColorStop(0, id === 'jid' ? 'rgba(226,66,31,0.45)' : 'rgba(31,166,115,0.45)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(andon.x - andon.w * 4, andon.y - andon.w * 4, andon.w * 8, andon.w * 8);
+    rect(ctx, lit, ax, ay, andon.w, andon.h);
+    rect(ctx, '#2a1d16', ax - 6, ay - 10, andon.w + 12, 10);
+    rect(ctx, '#2a1d16', ax - 6, ay + andon.h, andon.w + 12, 10);
+    ctx.font = `${Math.round(andon.w * 0.7)}px ${DELA}`;
+    ctx.fillStyle = C.ivory;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(id === 'jid' ? '止' : '進', andon.x, andon.y);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+  if (id === 'time') {
+    // aligned by one instant: Tokyo four hours ahead, the shared hours woven as one block
+    const t = L.time;
+    for (let hh = 0; hh < 24; hh++) {
+      const x = t.x0 + ((hh - 4 + 24) % 24) * t.hw;
+      rect(ctx, hh >= 9 && hh < 18 ? C.shu : C.silkShade, x, t.tk[0], t.hw + 0.5, t.tk[1] - t.tk[0]);
+      rect(ctx, 'rgba(24,35,74,0.12)', x, t.tk[0], 1, t.tk[1] - t.tk[0]);
+    }
+    const [x0, y0, x1, y1] = t.shot;
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, '#7A4A26');
+    g.addColorStop(1, '#4E5E2E');
+    ctx.fillStyle = g;
+    ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+  }
+}
+
+// Paint the whole strip into one or more canvases (each at most maxTex texels tall).
+export function paintStrip(L, scale, maxTex) {
+  const ids = Object.keys(L.panels);
+  const chunks = [];
+  let cur = null;
+  for (const id of ids) {
+    const p = L.panels[id];
+    if (!cur || (p.y0 + p.h - cur.y0) * scale > maxTex) {
+      cur = { y0: p.y0, h: 0, ids: [] };
+      chunks.push(cur);
+    }
+    cur.ids.push(id);
+    cur.h = p.y0 + p.h - cur.y0;
+  }
+  const rs = scale * 0.5;
+  for (const c of chunks) {
+    c.canvas = document.createElement('canvas');
+    c.canvas.width = Math.ceil(L.W * scale);
+    c.canvas.height = Math.ceil(c.h * scale);
+    c.role = document.createElement('canvas');
+    c.role.width = Math.ceil(L.W * rs);
+    c.role.height = Math.ceil(c.h * rs);
+    const ctx = c.canvas.getContext('2d');
+    const rctx = c.role.getContext('2d');
+    rctx.fillStyle = ROLE.ground;
+    rctx.fillRect(0, 0, c.role.width, c.role.height);
+    for (const id of c.ids) {
+      const p = L.panels[id];
+      ctx.setTransform(scale, 0, 0, scale, 0, (p.y0 - c.y0) * scale);
+      rctx.setTransform(rs, 0, 0, rs, 0, (p.y0 - c.y0) * rs);
+      paintPanel(ctx, rctx, L, id, scale);
+    }
+  }
+  return chunks;
+}
+
+// one panel on its own canvas (flow mode backgrounds)
+export function paintPanelCanvas(L, id, scale) {
+  const p = L.panels[id];
+  const c = document.createElement('canvas');
+  c.width = Math.ceil(L.W * scale);
+  c.height = Math.ceil(p.h * scale);
+  const r = document.createElement('canvas');
+  r.width = 4; r.height = 4;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  paintPanel(ctx, r.getContext('2d'), L, id, scale);
+  return c;
 }

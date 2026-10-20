@@ -5,7 +5,7 @@
   font-stretch: 62.5% 100%;
   font-display: block;
   src: url(nsd-italic-100-900-latin-ext-0.woff2) format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-0101, U+012A-012B, U+014C-014D, U+016A-016B;
 }
 @font-face {
   font-family: 'Noto Serif Display';
@@ -23,7 +23,7 @@
   font-stretch: 62.5% 100%;
   font-display: block;
   src: url(nsd-normal-100-900-latin-ext-2.woff2) format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-0101, U+012A-012B, U+014C-014D, U+016A-016B;
 }
 @font-face {
   font-family: 'Noto Serif Display';
@@ -87,14 +87,14 @@
   font-style: normal;
   font-weight: 500;
   font-display: block;
-  src: url(shippori-normal-500-text-0.woff2) format('woff2');
-  unicode-range: U+49, U+54, U+6f, U+3044, U+304f-3056, U+305f-3060, U+3063-3065, U+306e, U+308a, U+3099-309a, U+30a2, U+30a6-30a8, U+30af-30b2, U+30b7-30ba, U+30bf-30c0, U+30c3, U+30c6-30c9, U+30cf-30d1, U+30d5-30d7, U+30db-30dd, U+30ea, U+30f3-30f4, U+4e00, U+4e03, U+4e09-4e0a, U+4e21, U+4e42, U+4e8c, U+4e94, U+4eba, U+4ed8, U+5207, U+5263, U+5370, U+5411, U+5584, U+5668, U+56db, U+5831, U+5965, U+5b57, U+5de5, U+6280, U+6539, U+6587, U+6642, U+6a2a, U+6a5f, U+6b66, U+76f8, U+771f, U+77e5, U+7d61, U+8077, U+80fd, U+8888, U+88df, U+9006, U+9023, U+9053;
+  src: url(shippori-500.woff2) format('woff2');
+  unicode-range: U+49, U+54, U+6f, U+3044, U+304a, U+304f, U+3052, U+3054, U+3055, U+3057, U+3060, U+3063, U+3064, U+3065, U+3066, U+306a, U+306e, U+3082, U+308a, U+30a2, U+30a6, U+30a7, U+30a8, U+30af, U+30b1, U+30b7, U+30b9, U+30bf, U+30c3, U+30c7, U+30c8, U+30c9, U+30d0, U+30d6, U+30d7, U+30dc, U+30ea, U+30f3, U+4e00, U+4e03, U+4e09, U+4e0a, U+4e21, U+4e42, U+4e5d, U+4e8c, U+4e94, U+4eba, U+4ed8, U+5149, U+516b, U+516d, U+5207, U+5263, U+5341, U+5370, U+5411, U+5584, U+5668, U+56db, U+5831, U+5965, U+5b57, U+5de5, U+6280, U+6539, U+6587, U+65ac, U+6642, U+6a2a, U+6a5f, U+6b66, U+76f8, U+771f, U+77e5, U+7b46, U+7d61, U+8077, U+80fd, U+8888, U+88df, U+8a66, U+9006, U+9023, U+9053;
 }
 @font-face {
   font-family: 'Shippori Mincho B1';
   font-style: normal;
   font-weight: 800;
   font-display: block;
-  src: url(shippori-normal-800-text-1.woff2) format('woff2');
-  unicode-range: U+49, U+54, U+6f, U+3044, U+304f-3056, U+305f-3060, U+3063-3065, U+306e, U+308a, U+3099-309a, U+30a2, U+30a6-30a8, U+30af-30b2, U+30b7-30ba, U+30bf-30c0, U+30c3, U+30c6-30c9, U+30cf-30d1, U+30d5-30d7, U+30db-30dd, U+30ea, U+30f3-30f4, U+4e00, U+4e03, U+4e09-4e0a, U+4e21, U+4e42, U+4e8c, U+4e94, U+4eba, U+4ed8, U+5207, U+5263, U+5370, U+5411, U+5584, U+5668, U+56db, U+5831, U+5965, U+5b57, U+5de5, U+6280, U+6539, U+6587, U+6642, U+6a2a, U+6a5f, U+6b66, U+76f8, U+771f, U+77e5, U+7d61, U+8077, U+80fd, U+8888, U+88df, U+9006, U+9023, U+9053;
+  src: url(shippori-800.woff2) format('woff2');
+  unicode-range: U+49, U+54, U+6f, U+3044, U+304a, U+304f, U+3052, U+3054, U+3055, U+3057, U+3060, U+3063, U+3064, U+3065, U+3066, U+306a, U+306e, U+3082, U+308a, U+30a2, U+30a6, U+30a7, U+30a8, U+30af, U+30b1, U+30b7, U+30b9, U+30bf, U+30c3, U+30c7, U+30c8, U+30c9, U+30d0, U+30d6, U+30d7, U+30dc, U+30ea, U+30f3, U+4e00, U+4e03, U+4e09, U+4e0a, U+4e21, U+4e42, U+4e5d, U+4e8c, U+4e94, U+4eba, U+4ed8, U+5149, U+516b, U+516d, U+5207, U+5263, U+5341, U+5370, U+5411, U+5584, U+5668, U+56db, U+5831, U+5965, U+5b57, U+5de5, U+6280, U+6539, U+6587, U+65ac, U+6642, U+6a2a, U+6a5f, U+6b66, U+76f8, U+771f, U+77e5, U+7b46, U+7d61, U+8077, U+80fd, U+8888, U+88df, U+8a66, U+9006, U+9023, U+9053;
 }

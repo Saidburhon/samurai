@@ -59,7 +59,7 @@ function erode(mask, S, k, opts) {
 export function houseSeal(size, opts = {}) {
   const k = opts.k ?? 3, S = Math.round(size), N = S * k;
   const m = document.createElement('canvas'); m.width = m.height = N;
-  const g = m.getContext('2d');
+  const g = m.getContext('2d', { willReadFrequently: true });
   const c = N / 15;
   g.fillStyle = '#000';
   // frame: irregular thickness
@@ -72,18 +72,18 @@ export function houseSeal(size, opts = {}) {
   }
   const mask = g.getImageData(0, 0, N, N).data;
   const bc = document.createElement('canvas'); bc.width = bc.height = N;
-  const bg = bc.getContext('2d'); bg.filter = `blur(${c * 0.28}px)`; bg.drawImage(m, 0, 0);
+  const bg = bc.getContext('2d', { willReadFrequently: true }); bg.filter = `blur(${c * 0.28}px)`; bg.drawImage(m, 0, 0);
   const blur = bg.getImageData(0, 0, N, N).data;
   const im = erode(mask, S, k, { blur, seed: opts.seed ?? 5, colour: opts.colour });
   const out = document.createElement('canvas'); out.width = out.height = N;
-  out.getContext('2d').putImageData(im, 0, 0);
+  out.getContext('2d', { willReadFrequently: true }).putImageData(im, 0, 0);
   return out;
 }
 
 export function nameSeal(size, opts = {}) {
   const k = opts.k ?? 3, S = Math.round(size), N = S * k;
   const m = document.createElement('canvas'); m.width = m.height = N;
-  const g = m.getContext('2d');
+  const g = m.getContext('2d', { willReadFrequently: true });
   g.fillStyle = '#000';
   const r = N * 0.04;
   g.beginPath(); g.roundRect(N * 0.02, N * 0.02, N * 0.96, N * 0.96, r); g.fill();
@@ -93,11 +93,11 @@ export function nameSeal(size, opts = {}) {
   g.fillText('剣', N / 2, N * 0.54);
   const mask = g.getImageData(0, 0, N, N).data;
   const bc = document.createElement('canvas'); bc.width = bc.height = N;
-  const bg = bc.getContext('2d'); bg.filter = `blur(${N * 0.02}px)`; bg.drawImage(m, 0, 0);
+  const bg = bc.getContext('2d', { willReadFrequently: true }); bg.filter = `blur(${N * 0.02}px)`; bg.drawImage(m, 0, 0);
   const blur = bg.getImageData(0, 0, N, N).data;
   const im = erode(mask, S, k, { blur, seed: opts.seed ?? 9, colour: opts.colour, erosion: opts.erosion ?? 0.25 });
   const out = document.createElement('canvas'); out.width = out.height = N;
-  out.getContext('2d').putImageData(im, 0, 0);
+  out.getContext('2d', { willReadFrequently: true }).putImageData(im, 0, 0);
   return out;
 }
 
@@ -106,7 +106,7 @@ export function stampOnto(sheet, src, cx, cy, size, rotDeg = 0, opts = {}) {
   const pad = Math.ceil(size * 0.2);
   const T = Math.ceil(size + pad * 2);
   const c = document.createElement('canvas'); c.width = c.height = T;
-  const g = c.getContext('2d');
+  const g = c.getContext('2d', { willReadFrequently: true });
   g.translate(T / 2, T / 2); g.rotate(rotDeg * Math.PI / 180);
   g.imageSmoothingQuality = 'high';
   g.drawImage(src, -size / 2, -size / 2, size, size);

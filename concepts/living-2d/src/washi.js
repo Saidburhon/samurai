@@ -42,7 +42,7 @@ export function bakeWashi(w, h, opts = {}) {
 
   // ---- 2. fibres on their own layer (white-ish), also kept as a channel
   const fc = document.createElement('canvas'); fc.width = w; fc.height = h;
-  const fx = fc.getContext('2d');
+  const fx = fc.getContext('2d', { willReadFrequently: true });
   fx.lineCap = 'round';
   const area = (w * h) / (2048 * 1024);
   const nLong = Math.round((opts.fibres ?? 1500) * area);
@@ -85,7 +85,7 @@ export function bakeWashi(w, h, opts = {}) {
 
   // ---- 3. darker fibres + bark flecks (chiri) drawn on top
   const tmp = document.createElement('canvas'); tmp.width = w; tmp.height = h;
-  const tx = tmp.getContext('2d');
+  const tx = tmp.getContext('2d', { willReadFrequently: true });
   tx.putImageData(img, 0, 0);
   tx.lineCap = 'round';
   const nDark = Math.round(380 * area);
@@ -133,6 +133,6 @@ export function bakeWashi(w, h, opts = {}) {
 
 export function sheetCanvas(sheet) {
   const c = document.createElement('canvas'); c.width = sheet.w; c.height = sheet.h;
-  c.getContext('2d').putImageData(sheet.img, 0, 0);
+  c.getContext('2d', { willReadFrequently: true }).putImageData(sheet.img, 0, 0);
   return c;
 }

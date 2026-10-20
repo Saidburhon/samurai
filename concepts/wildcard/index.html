@@ -2,26 +2,219 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qilich — Abr 絣 prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qilich — yapon IT agenstvasi Toshkentda: ilovalar, saytlar, botlar</title>
+<meta name="description" content="Yapon IT agenstvasi endi Oʻzbekistonda. iOS va Android ilovalar, veb-saytlar, Telegram botlar, backend, IoT va AI — yapon sifati, Toshkent vaqti va narxida.">
+<meta name="theme-color" content="#120F17">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23E2421F'/%3E%3Cpath d='M7 7h18v4H7zM7 14h7v11H7zM18 14h7v11h-7z' fill='%23F6F1E6'/%3E%3C/svg%3E">
 <style>html{background:#120F17}</style>
+<link rel="preload" href="fonts/dela-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/serif-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="style.css">
+<script>
+/* mode before first paint: loom (WebGL story) unless reduced motion; js flag for the woven-text fallback */
+(function(){var d=document.documentElement;d.classList.add('js');
+var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var ok=false;try{var c=document.createElement('canvas');ok=!!(c.getContext('webgl2')||c.getContext('webgl'));}catch(e){}
+var touch=matchMedia('(pointer: coarse)').matches||('ontouchstart' in window&&innerWidth<900);
+d.classList.add(rm||!ok?'flow':'loom');if(touch)d.classList.add('touch');if(innerWidth<760)d.classList.add('phone');
+if(!rm&&ok&&'scrollRestoration' in history)history.scrollRestoration='manual';})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":["Organization","ProfessionalService"],"@id":"https://qilich.com/#org","name":"Qilich","url":"https://qilich.com/","slogan":"Yapon IT agenstvasi endi Oʻzbekistonda!","description":"Yapon IT agenstvasi endi Oʻzbekistonda. iOS va Android ilovalar, veb-saytlar, Telegram botlar, backend, IoT va AI.","telephone":"+998972707007","email":"inbox@qilich.com","address":{"@type":"PostalAddress","addressLocality":"Toshkent","addressCountry":"UZ"},"areaServed":[{"@type":"City","name":"Tashkent"},{"@type":"Country","name":"Uzbekistan"}],"knowsLanguage":["uz","ru","en","ja"]},{"@type":"WebSite","@id":"https://qilich.com/#site","url":"https://qilich.com/","name":"Qilich","inLanguage":"uz","publisher":{"@id":"https://qilich.com/#org"}}]}
+</script>
 </head>
 <body>
-<div id="stage" aria-hidden="true"></div>
-<div id="ui"></div>
+<a class="skip" href="#main">Asosiy mazmunga oʻtish</a>
+<canvas id="intro" aria-hidden="true"></canvas>
+<div class="fr cnt" id="cnt" aria-hidden="true"><span lang="ja">経糸</span> · TANDA · <b id="cntn">001</b> → <span id="cntT">200</span></div>
 <script>
-/* concept viewer: scenes come from the #hash (also works where query strings are not allowed) */
-(function(){var h=location.hash.slice(1);if(h)window.__QS='?'+h;
-var S=[["scene=hero", "Hero (move the cursor)"], ["scene=weave", "Weaving in"], ["scene=stripes", "Services"], ["scene=jidoka", "Thread breaks"]];
-addEventListener('DOMContentLoaded',function(){var n=document.createElement('nav');n.className='qv';
-var cur=(window.__QS||location.search||'?scene=hero').slice(1);
-n.innerHTML='<a href="../index.html">&larr; All concepts</a>'+S.map(function(s){return '<a href="#'+s[0]+'"'+(s[0]===cur?' aria-current="true"':'')+'>'+s[1]+'</a>';}).join('');
-n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&a.getAttribute('href').charAt(0)==='#'){e.preventDefault();location.hash=a.getAttribute('href');location.reload();}});
-document.body.appendChild(n);});})();
+/* first act before WebGL is up: the warp drops (Canvas2D, no bundle needed); the loom takes over on its first frame */
+(function(){var D=document.documentElement;if(!D.classList.contains('loom'))return;
+var c=document.getElementById('intro');if(!c)return;var x=c.getContext('2d');var W=innerWidth,H=innerHeight,d=Math.min(devicePixelRatio||1,1.5);
+c.width=Math.round(W*d);c.height=Math.round(H*d);x.scale(d,d);
+var ph=W<760,T=ph?80:Math.max(120,Math.min(200,Math.round(W/7.2))),P=W/T,c0=Math.floor(T/2);
+var cn=document.getElementById('cnt'),cv=document.getElementById('cntn'),FL=Math.round(H*(ph?0.88:0.87));document.getElementById('cntT').textContent=T;if(cn){cn.style.left=(ph?16:48)+'px';cn.style.top=(FL+Math.round((H-FL)/2)-8)+'px';}
+var s=document.createElement('canvas');s.width=W;s.height=H;var g=s.getContext('2d');
+function paint(){g.fillStyle='#EFE6D2';g.fillRect(0,0,W,H);var k=ph?W/390:Math.min(W/1440,H/900),z=ph?62*k:112*k,y0=ph?84:116*k,st=ph?70*k:106*k;
+g.font=z+'px "Dela Gothic One", sans-serif';var L=['YAPON IT','AGENSTVASI','ENDI','OʻZBEKISTONDA!'];
+for(var i=0;i<4;i++){var b=y0+i*st+z*0.72;if(i<3){g.fillStyle='#18234A';g.fillText(L[i],ph?16:48*k,b);}else{var gr=g.createLinearGradient(0,b-z*0.72,0,b);gr.addColorStop(0,'#F2B11B');gr.addColorStop(.34,'#F2B11B');gr.addColorStop(.345,'#D1145A');gr.addColorStop(.68,'#D1145A');gr.addColorStop(.685,'#0A7F55');gr.addColorStop(1,'#0A7F55');g.fillStyle=gr;g.fillText(L[i],ph?16:48*k,b);}}}
+paint();try{document.fonts.load('112px "Dela Gothic One"').then(paint);}catch(e){}
+function h(n){var v=Math.sin(n*127.1+1.7)*43758.5453;return v-Math.floor(v);}
+var tw=P*0.46,lg=x.createLinearGradient(0,0,0,H);lg.addColorStop(0,'rgba(18,15,23,0)');lg.addColorStop(.55,'rgba(18,15,23,0.35)');lg.addColorStop(1,'rgba(18,15,23,0.8)');
+function f(){if(window.__glOn){c.style.transition='opacity .25s';c.style.opacity='0';setTimeout(function(){c.style.display='none';},300);return;}var t=performance.now()/1000-0.15;if(cv){var n=Math.min(T,Math.max(1,Math.round(Math.pow(2,Math.max(0,t)/0.12))));cv.textContent=(n<10?'00':n<100?'0':'')+n;}x.fillStyle='#120F17';x.fillRect(0,0,W,H);
+for(var i=0;i<T;i++){var gn=Math.ceil(Math.log2(Math.abs(i-c0)+1)),r3=h(i+47.3),p=Math.min(1,Math.max(0,(t-gn*0.12-r3*0.06)/0.45));if(p<=0)continue;var q=p-1,e=1+2.8*q*q*q+1.8*q*q,tip=Math.min(H,-60+e*(H*1.9+60));if(tip<=0)continue;
+var bn=h(Math.floor(i/6)+3.7)*2-1,off=(0.75*bn+0.25*(h(i+0.13)*2-1))*90,xc=(i+0.5)*P,sy=H*0.45-H*0.15+off;
+x.drawImage(s,Math.max(0,xc-tw/2),Math.max(0,Math.min(H-2,sy)),tw,Math.max(1,tip/3),xc-tw/2,0,tw,tip);}
+x.fillStyle=lg;x.globalCompositeOperation='source-atop';x.fillRect(0,0,W,H);x.globalCompositeOperation='source-over';requestAnimationFrame(f);}
+requestAnimationFrame(f);})();
 </script>
-<style>.qv{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483647;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(18,18,24,.82);backdrop-filter:blur(8px);font:500 12px/1 system-ui,sans-serif;max-width:calc(100vw - 20px);overflow-x:auto;white-space:nowrap}.qv a{color:#eee;text-decoration:none;padding:8px 11px;border-radius:999px}.qv a:hover{background:rgba(255,255,255,.12)}.qv a[aria-current]{background:#fff;color:#111}.qv a:first-child{opacity:.75}</style>
-<script type="module" src="bundle.js"></script>
+
+<header class="hdr" id="hdr">
+  <a class="wm" href="#hero" data-k="0" aria-label="Qilich — boshiga">Q<i class="t1"></i>L<i class="t2"></i>CH</a>
+  <nav class="nav" aria-label="Boʻlimlar">
+    <a href="#abr" data-k="2">Abr</a>
+    <a href="#jidoka" data-k="5">Jidoka</a>
+    <a href="#xizmatlar" data-k="9">Xizmatlar</a>
+    <a href="#vaqt" data-k="11">Vaqt</a>
+  </nav>
+  <div class="hr">
+    <a class="tel" href="tel:+998972707007">+998 97 270 70 07</a>
+    <div class="langs" role="group" aria-label="Til"><a href="./" lang="uz" aria-current="page">UZ</a><span lang="ru" title="Tez orada">RU</span><span lang="en" title="Tez orada">EN</span></div>
+    <a class="tag tag-s" href="#aloqa" data-k="13"><span>Aloqa</span></a>
+    <a class="callbtn" href="tel:+998972707007" aria-label="Qoʻngʻiroq qilish"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h4l1.5 4.5L8 8a10 10 0 0 0 4 4l1.5-2.5L18 11v4a2 2 0 0 1-2 2A14 14 0 0 1 3 4a2 2 0 0 1 2-2z" fill="currentColor"/></svg></a>
+    <button class="menubtn" type="button" aria-expanded="false" aria-controls="menu"><span class="sr">Menyu</span><i></i><i></i><i></i></button>
+  </div>
+</header>
+
+<nav class="selv" id="selv" aria-label="Sahifa indeksi">
+  <a href="#hero" data-k="0"><span>Bosh</span></a>
+  <a href="#abr" data-k="2"><span>Abr</span></a>
+  <a href="#dandori" data-k="3"><span>Dandori</span></a>
+  <a href="#jidoka" data-k="5"><span>Jidoka</span></a>
+  <a href="#horenso" data-k="6"><span>Hōrensō</span></a>
+  <a href="#xizmatlar" data-k="9"><span>Xizmatlar</span></a>
+  <a href="#vaqt" data-k="11"><span>Vaqt</span></a>
+  <a href="#aloqa" data-k="12"><span>Aloqa</span></a>
+  <a href="#footer" data-k="14"><span>Oxiri</span></a>
+</nav>
+<div class="prog" aria-hidden="true"><i id="progbar"></i></div>
+
+<div id="menu" class="menu" hidden>
+  <nav aria-label="Menyu">
+    <a href="#abr" data-k="2">Abr</a>
+    <a href="#jidoka" data-k="5">Jidoka</a>
+    <a href="#xizmatlar" data-k="9">Xizmatlar</a>
+    <a href="#vaqt" data-k="11">Vaqt</a>
+    <a href="#aloqa" data-k="13">Aloqa</a>
+  </nav>
+  <p class="mc"><a href="tel:+998972707007">+998 97 270 70 07</a><a href="mailto:inbox@qilich.com">inbox@qilich.com</a></p>
+  <p class="mg"><a href="../index.html">&larr; Barcha konseptlar</a></p>
+</div>
+
+<div id="scroller">
+<div id="track">
+<div id="pin">
+<div id="stage" aria-hidden="true"></div>
+<div id="dom">
+<div id="layer">
+<main id="main">
+
+<section id="hero" class="pn" aria-labelledby="h1">
+  <h1 id="h1" class="wv"><span>Yapon IT agenstvasi endi</span> <span>Oʻzbekistonda!</span></h1>
+  <p class="st sub" id="hero-sub">Yapon sifati — Toshkent vaqti va narxida.</p>
+  <p class="lbl svc" id="hero-svc">iOS · ANDROID · VEB · TELEGRAM · BACKEND · DESKTOP · IoT · AI</p>
+  <a class="tag tag-l cta" id="hero-cta" href="#aloqa" data-k="13"><span>Loyihani boshlash</span><svg class="ya" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L7 5V9L0 4Z"/><path d="M14 0L7 5V9L14 4Z"/><path d="M0 7L7 12V16L0 11Z"/><path d="M14 7L7 12V16L14 11Z"/></svg></a>
+  <p class="tate" id="hero-tate" lang="ja" aria-hidden="true">日本の開発会社、ウズベキスタンに上陸。</p>
+</section>
+
+<section id="abr" class="pn" aria-labelledby="abr-h2">
+  <p class="wv" aria-hidden="true"><span lang="ja">絣</span> = ABR</p>
+  <p class="lbl l-ivory" id="abr-l1">KASURI · YAPONIYA</p>
+  <p class="lbl" id="abr-l2">ABR · OʻZBEKISTON</p>
+  <h2 class="st" id="abr-h2">Bitta hunar: iplar toʻqishdan oldin boʻyaladi.</h2>
+</section>
+
+<section id="dandori" class="pn" aria-labelledby="dan-h2">
+  <p class="lbl l-saffron" id="dan-l"><span lang="ja">段取り</span> · DANDORI</p>
+  <h2 class="st st-l ivory" id="dan-h2">Naqsh — toʻqishdan oldin.</h2>
+  <p class="body ivory" id="dan-p">Kod yozishdan oldin siz bilan hammasini chizib chiqamiz: ekranlar, maʼlumotlar, muddatlar.</p>
+</section>
+
+<section id="jidoka" class="pn" aria-labelledby="jid-h2">
+  <p class="lbl l-saffron" id="jid-l"><span lang="ja">自働化</span> · JIDOKA</p>
+  <h2 class="st st-l ivory" id="jid-h2">Ip uzilsa — dastgoh toʻxtaydi.</h2>
+  <p class="body ivory" id="jid-p">Bizda ham shunday: test oʻtmasa, reliz chiqmaydi.</p>
+  <p class="sr" id="jid-state" aria-live="polite"></p>
+</section>
+
+<section id="horenso" class="pn" aria-labelledby="hor-h2">
+  <p class="lbl l-saffron" id="hor-l"><span lang="ja">報連相</span> · HŌRENSŌ</p>
+  <h2 class="st st-l ivory" id="hor-h2">Xatoni yashirmaymiz.</h2>
+  <p class="body ivory" id="hor-p">Tuzatamiz va sizga darhol aytamiz.</p>
+</section>
+
+<section id="xizmatlar" class="pn" aria-labelledby="svc-h2">
+  <h2 class="wv" id="svc-h2">Quramiz</h2>
+  <p class="lbl" id="svc-l"><span lang="ja">縞</span> · XIZMATLAR · 7 YOʻNALISH</p>
+  <p class="lbl" id="svc-hint">Keraklisini tanlang — xatga qoʻshamiz.</p>
+  <ul class="stripes" id="stripes">
+    <li><h3><button type="button" aria-pressed="false" data-svc="0">iOS va Android ilovalar</button></h3><p class="lbl d">iOS VA ANDROID</p></li>
+    <li><h3><button type="button" aria-pressed="false" data-svc="1">Veb-saytlar va veb-platformalar</button></h3><p class="lbl d">SAYTLAR · VEB-PLATFORMALAR</p></li>
+    <li><h3><button type="button" aria-pressed="false" data-svc="2">Telegram botlar</button></h3><p class="lbl d">BUYURTMA · TOʻLOV · XABARNOMA</p></li>
+    <li><h3><button type="button" aria-pressed="false" data-svc="3">Backend va integratsiyalar</button></h3><p class="lbl d">API · INTEGRATSIYALAR</p></li>
+    <li><h3><button type="button" aria-pressed="false" data-svc="4">Desktop ilovalar</button></h3><p class="lbl d">WINDOWS · macOS · LINUX</p></li>
+    <li><h3><button type="button" aria-pressed="false" data-svc="5">IoT</button></h3><p class="lbl d">QURILMALAR · SENSORLAR</p></li>
+    <li><h3><button type="button" aria-pressed="false" data-svc="6">Sunʼiy intellekt (AI)</button></h3><p class="lbl d">SUNʼIY INTELLEKT INTEGRATSIYASI</p></li>
+  </ul>
+</section>
+
+<section id="vaqt" class="pn" aria-labelledby="time-h2">
+  <h2 class="st st-m" id="time-h2">Bir ish kuni, ikki shahar.</h2>
+  <p class="lbl rowl" id="row-tk">TOKIO · UTC+9</p>
+  <p class="lbl rowl" id="row-ts">TOSHKENT · UTC+5</p>
+  <div class="nums" id="nums-tk" aria-hidden="true"></div>
+  <div class="nums" id="nums-ts" aria-hidden="true"></div>
+  <p class="st time-p" id="time-p">4 soat farq — har kuni 5 soat birga ishlaymiz.</p>
+  <div class="clocks" id="clocks">
+    <p class="clk"><span class="lbl">Toshkent</span><time id="clk-ts">--:--</time></p>
+    <p class="clk"><span class="lbl">Tokio</span><time id="clk-tk">--:--</time></p>
+  </div>
+  <div class="needle" id="needle" aria-hidden="true"><i></i><b></b></div>
+  <p class="lbl now" id="now-l" aria-hidden="true">HOZIR</p>
+</section>
+
+<section id="aloqa" class="pn" aria-labelledby="con-h2">
+  <h2 class="wv" id="con-h2">Naqshni birga chizamiz.</h2>
+  <p class="st con-p" id="con-p">Toshkentdagi ilk loyihalarimizdan biri sizniki <em>boʻlsin.</em></p>
+  <p class="tate" id="con-tate" lang="ja" aria-hidden="true">一緒に柄を描きましょう。</p>
+</section>
+
+<section id="raqam" class="pn" aria-label="Bogʻlanish">
+  <address>
+    <a class="phlink" id="phone" href="tel:+998972707007">+998 97 270 70 07</a>
+    <a class="email" id="email" href="mailto:inbox@qilich.com">inbox@qilich.com</a>
+    <span class="tags" id="ctags"><a class="tag tag-l" href="tel:+998972707007"><span>Qoʻngʻiroq qilish</span></a><a class="tag tag-l tag-alt" id="mailtag" href="mailto:inbox@qilich.com"><span>Xat yozish</span></a></span>
+  </address>
+  <p class="lbl" id="city">TOSHKENT · UTC+5</p>
+  <p class="lbl picks" id="picks" hidden></p>
+  <svg class="hanko" id="hanko" viewBox="0 0 100 100" role="img" aria-label="Qilich muhri">
+    <defs><filter id="ink" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter></defs>
+    <g filter="url(#ink)" fill="#E2421F">
+      <path d="M5 5h90v90H5z M11 11v78h78V11z" fill-rule="evenodd"/>
+      <path d="M18 18h24v26H18z M24 24v14h12V24z" fill-rule="evenodd"/><path d="M36 38h10v8H36z"/>
+      <path d="M50 18h6v26h-6z"/>
+      <path d="M62 18h6v20h14v6H62z"/>
+      <path d="M18 56h6v26h-6z"/>
+      <path d="M30 56h22v6H36v14h16v6H30z"/>
+      <path d="M58 56h6v10h12V56h6v26h-6V72H64v10h-6z"/>
+    </g>
+  </svg>
+</section>
+
+</main>
+
+<footer id="footer" class="pn">
+  <p class="wv" aria-hidden="true">QILICH</p>
+  <div class="f-label" id="mei" title="Toshkentlik Qilich ishi"><span lang="ja">タシケント住 キリチ作</span><i></i></div>
+  <nav class="f-nav" id="fnav" aria-label="Pastki menyu"><a href="#xizmatlar" data-k="9">Xizmatlar</a><a href="#vaqt" data-k="11">Vaqt</a><a href="#aloqa" data-k="13">Aloqa</a></nav>
+  <p class="f-con" id="fcon"><a href="tel:+998972707007">+998 97 270 70 07</a><a href="mailto:inbox@qilich.com">inbox@qilich.com</a></p>
+  <div class="f-row" id="frow">
+    <span class="langs f-langs"><a href="./" lang="uz" aria-current="page">UZ</a><span lang="ru">RU</span><span lang="en">EN</span></span>
+    <a class="tag tag-s top" href="#hero" data-k="0"><span>Yuqoriga</span></a>
+  </div>
+  <p class="f-copy" id="fcopy">© 2026 Qilich · Toshkent</p>
+  <p class="f-gal" id="fgal"><a href="../index.html">&larr; Barcha konseptlar</a></p>
+</footer>
+
+</div>
+</div>
+</div>
+<div id="snaps" aria-hidden="true"></div>
+</div>
+</div>
+<svg class="cur" id="cur" aria-hidden="true" width="140" height="140" viewBox="-70 -30 140 140"><circle class="ring" r="13" fill="none" stroke-width="1.5"/><circle class="dot" r="2.6"/><polyline class="thr" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<script type="module" src="./bundle.js"></script>
 </body>
 </html>

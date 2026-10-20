@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { C } from './palette.js';
-import { DELA } from './cartoon.js';
+import { DELA } from './layout.js';
 
 const col = (h) => new THREE.Color(h);
 
@@ -108,46 +108,55 @@ export function makeShuttle({ x, y, W, H, bobbin = C.emerald, scale = 1 }) {
   return g;
 }
 
-// paper andon lamp with 止
-export function makeAndon({ x, y, w = 64, h = 180, W, H, glyph = '止', lit = C.shu }) {
-  const g = new THREE.Group();
+function andonPaper(w, h, glyph, c0, c1, c2) {
   const c = document.createElement('canvas');
   const S = 3;
   c.width = w * S; c.height = h * S;
   const p = c.getContext('2d');
   const gr = p.createRadialGradient(c.width / 2, c.height * 0.48, 4, c.width / 2, c.height * 0.48, c.height * 0.62);
-  gr.addColorStop(0, '#FF8A4C');
-  gr.addColorStop(0.45, '#F2552A');
-  gr.addColorStop(1, '#B92E14');
+  gr.addColorStop(0, c0);
+  gr.addColorStop(0.45, c1);
+  gr.addColorStop(1, c2);
   p.fillStyle = gr;
   p.fillRect(0, 0, c.width, c.height);
-  // washi fibres
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
   for (let k = 0; k < 700; k++) {
-    p.strokeStyle = `rgba(255,230,200,${0.04 + Math.random() * 0.08})`;
-    p.lineWidth = 0.6 + Math.random();
-    const x0 = Math.random() * c.width, y0 = Math.random() * c.height, a = Math.random() * Math.PI;
-    const L = 4 + Math.random() * 18;
+    p.strokeStyle = `rgba(255,240,215,${0.04 + rnd() * 0.08})`;
+    p.lineWidth = 0.6 + rnd();
+    const x0 = rnd() * c.width, y0 = rnd() * c.height, a = rnd() * Math.PI;
+    const L = 4 + rnd() * 18;
     p.beginPath(); p.moveTo(x0, y0); p.lineTo(x0 + Math.cos(a) * L, y0 + Math.sin(a) * L); p.stroke();
   }
-  // bamboo ribs
   for (let yy = 22 * S; yy < c.height; yy += 22 * S) {
-    p.fillStyle = 'rgba(110,20,8,0.28)';
+    p.fillStyle = 'rgba(40,10,4,0.22)';
     p.fillRect(0, yy - 1.5 * S, c.width, 1.5 * S);
   }
-  // glyph
-  p.font = `${44 * S}px ${DELA}`;
-  p.textAlign = 'center';
-  p.textBaseline = 'middle';
-  p.shadowColor = 'rgba(255,240,220,0.9)';
-  p.shadowBlur = 18;
-  p.fillStyle = C.ivory;
-  p.fillText(glyph, c.width / 2, c.height * 0.5);
+  if (glyph) {
+    p.font = `${Math.round(w * 0.7) * S}px ${DELA}`;
+    p.textAlign = 'center';
+    p.textBaseline = 'middle';
+    p.shadowColor = 'rgba(255,240,220,0.9)';
+    p.shadowBlur = 18;
+    p.fillStyle = C.ivory;
+    p.fillText(glyph, c.width / 2, c.height * 0.5);
+  }
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
-  const paper = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t, toneMapped: false }));
-  paper.position.z = 10;
-  g.add(paper);
-  // wooden caps and posts
+  return t;
+}
+
+// paper andon lamp: off (dim washi), 止 (vermilion) and 進 (emerald)
+export function makeAndon({ x, y, w = 64, h = 180, W, H }) {
+  const g = new THREE.Group();
+  const off = new THREE.MeshBasicMaterial({ map: andonPaper(w, h, '', '#5b4a3c', '#3e3129', '#2a211c'), toneMapped: false });
+  const stop = new THREE.MeshBasicMaterial({ map: andonPaper(w, h, '止', '#FF8A4C', '#F2552A', '#B92E14'), toneMapped: false, transparent: true, opacity: 0 });
+  const go = new THREE.MeshBasicMaterial({ map: andonPaper(w, h, '進', '#7FE3B4', '#1FA673', '#0A6B47'), toneMapped: false, transparent: true, opacity: 0 });
+  for (const [mat, z] of [[off, 10], [stop, 10.2], [go, 10.4]]) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
+    m.position.z = z;
+    g.add(m);
+  }
   const wood = new THREE.MeshStandardMaterial({ color: 0x2a1d16, roughness: 0.6, metalness: 0.0 });
   for (const sy of [-1, 1]) {
     const cap = new THREE.Mesh(new THREE.BoxGeometry(w + 12, 12, 24), wood);
@@ -159,24 +168,57 @@ export function makeAndon({ x, y, w = 64, h = 180, W, H, glyph = '止', lit = C.
     post.position.set(sx * (w / 2 + 0.5), 0, 12);
     g.add(post);
   }
-  // cord
-  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 60, 8), wood);
-  cord.position.set(0, h / 2 + 40, 8);
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 400, 8), wood);
+  cord.position.set(0, h / 2 + 205, 8);
   g.add(cord);
-  // halo
-  const halo = new THREE.Sprite(
-    new THREE.SpriteMaterial({
-      map: radialTexture([[0, 'rgba(255,120,70,0.75)'], [0.22, 'rgba(240,84,44,0.32)'], [0.55, 'rgba(226,66,31,0.09)'], [1, 'rgba(226,66,31,0)']]),
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      toneMapped: false,
-    })
-  );
-  halo.scale.set(560, 560, 1);
+  const haloMat = new THREE.SpriteMaterial({
+    map: radialTexture([[0, 'rgba(255,255,255,0.75)'], [0.22, 'rgba(255,255,255,0.3)'], [0.55, 'rgba(255,255,255,0.08)'], [1, 'rgba(255,255,255,0)']]),
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    toneMapped: false,
+    color: new THREE.Color(C.shu),
+    opacity: 0,
+  });
+  const halo = new THREE.Sprite(haloMat);
+  halo.scale.set(w * 8.5, w * 8.5, 1);
   halo.position.z = 4;
   g.add(halo);
-  g.position.set(x - W / 2, H / 2 - y, 6);
-  return g;
+  const baseY = H / 2 - y;
+  g.position.set(x - W / 2, baseY, 6);
+  const shu = new THREE.Color(C.shu), em = new THREE.Color('#1FA673');
+  // s: 0 off .. 1 lit; mix: 0 = 止 vermilion, 1 = 進 emerald
+  const set = (s, mix, dy = 0) => {
+    stop.opacity = s * (1 - mix);
+    go.opacity = s * mix;
+    haloMat.opacity = s;
+    haloMat.color.copy(shu).lerp(em, mix);
+    g.position.y = baseY - dy;
+  };
+  return { group: g, set };
+}
+
+// a thread as a tube that can be re-shaped (screen px points [x, y, z])
+export function makeRope({ W, H, color = C.saffron, radius = 1.7, seg = 120 }) {
+  const mat = new THREE.MeshPhysicalMaterial({ color: col(color), roughness: 0.42, sheen: 1, sheenColor: col('#fff1c9'), sheenRoughness: 0.35, emissive: col(color), emissiveIntensity: 0.14 });
+  const mesh = new THREE.Mesh(new THREE.BufferGeometry(), mat);
+  mesh.frustumCulled = false;
+  let key = '';
+  const set = (pts) => {
+    const k = pts.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(';');
+    if (k === key) return;
+    key = k;
+    const curve = new THREE.CatmullRomCurve3(pts.map(([x, y, z]) => new THREE.Vector3(x - W / 2, H / 2 - y, z)), false, 'centripetal');
+    const geo = new THREE.TubeGeometry(curve, seg, radius, 8, false);
+    mesh.geometry.dispose();
+    mesh.geometry = geo;
+  };
+  return { mesh, set, mat };
+}
+
+export function makeKnot({ color = C.saffron, size = 1 }) {
+  const mat = new THREE.MeshPhysicalMaterial({ color: col(color), roughness: 0.4, sheen: 1, sheenColor: col('#fff1c9'), emissive: col(color), emissiveIntensity: 0.18 });
+  const m = new THREE.Mesh(new THREE.TorusKnotGeometry(5 * size, 1.7 * size, 96, 10, 2, 3), mat);
+  return m;
 }
 
 // a thread end as a tube, points given in screen px (x, y, z)

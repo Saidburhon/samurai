@@ -299,7 +299,7 @@ export function inkOnto(sheet, field, opts = {}) {
 
 export function fieldToCanvas(field, colour = [22, 18, 14], progress = 1) {
   const c = document.createElement('canvas'); c.width = field.w; c.height = field.h;
-  const x = c.getContext('2d'); const im = x.createImageData(field.w, field.h);
+  const x = c.getContext('2d', { willReadFrequently: true }); const im = x.createImageData(field.w, field.h);
   for (let i = 0; i < field.w * field.h; i++) {
     const d = field.dens[i]; if (d < 0.004 || field.arr[i] > progress) continue;
     im.data[i * 4] = colour[0]; im.data[i * 4 + 1] = colour[1]; im.data[i * 4 + 2] = colour[2]; im.data[i * 4 + 3] = d * 255;
