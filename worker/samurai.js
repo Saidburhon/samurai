@@ -25,7 +25,7 @@ const DISCOVERY_ABOVE_USD = 30000; // briefing §5: a paid discovery comes first
 const r = (x) => `${x.min}-${x.max}`;
 const CATALOGUE_LINES = SOLUTIONS.map(
   (s) =>
-    `${s.id} [${s.group}] ${s.title.en}: ${s.value.en} | for: ${s.for.join(',')}` +
+    `${s.id} [${s.group}] ${s.title.en}: ${s.value.en}` +
     ` | MVP ${r(s.timeline_weeks.mvp)}w $${r(s.price_usd.mvp)}; full ${r(s.timeline_weeks.full)}w $${r(s.price_usd.full)}` +
     (s.billing === 'monthly' ? ' per month' : '') +
     (s.running_usd_month ? ` | running $${r(s.running_usd_month)}/mo` : '') +
@@ -68,7 +68,7 @@ You answer by filling a JSON form that the qilich.com page renders. The site its
 
 export const SYSTEM_STABLE = [
   briefing.trim(),
-  '# Catalogue\n\nOne line per solution: id [group] title: value | for: industries | MVP weeks and USD; full version weeks and USD | running costs | MVP scope | note.\n\n' +
+  '# Catalogue\n\nOne line per solution: id [group] title: value | MVP weeks and USD; full version (cumulative, MVP included) weeks and USD | running costs the client pays to providers | MVP scope | note.\n\n' +
     CATALOGUE_LINES,
   SITE_RULES,
 ].join('\n\n');
@@ -301,7 +301,9 @@ function holidaysBetween(a, b) {
   const out = [];
   for (let y = a.getUTCFullYear(); y <= b.getUTCFullYear(); y++) out.push(`${y}-01-01`, `${y}-03-21`);
   out.push(...MOVING_HOLIDAYS);
-  return out.map(parseIso).filter((h) => h > a && h <= b);
+  const days = out.map(parseIso).filter((h) => h > a && h <= b).sort((x, y) => x - y);
+  // holidays less than two weeks apart (Navruz and a Hayit can be) cost one week, not two
+  return days.filter((h, i) => i === 0 || h - days[i - 1] >= 14 * DAY);
 }
 
 /** Ready-date range: today + start lead (1-2 weeks) + discovery when large (1-2 weeks) + the work weeks. */
@@ -407,15 +409,15 @@ function memoOf(out) {
   let m;
   if (out.kind === 'proposal') {
     const list = out.solutions
-      .map((s, i) => `${i + 1}) ${s.title} [${s.catalogue.map((c) => c.id).join(',')}] $${s.price.usd.min}-${s.price.usd.max}${s.billing === 'monthly' ? '/mo' : ''}, ${s.weeks.min}-${s.weeks.max} wk`)
+      .map((s, i) => `${i + 1}) ${s.title.slice(0, 60)} [${s.catalogue.map((c) => c.id).join(',')}] $${s.price.usd.min}-${s.price.usd.max}${s.billing === 'monthly' ? '/mo' : ''}`)
       .join('; ');
-    m = `${out.understanding.slice(0, 200)} Proposed: ${list}.`;
+    m = `${out.understanding.slice(0, 140).trim()}… Proposed: ${list}.`;
   } else if (out.kind === 'clarify') {
     m = `Asked: ${out.questions.join(' ')}`;
   } else {
     m = `Declined: ${out.understanding}`;
   }
-  return m.length > 600 ? `${m.slice(0, 599)}…` : m;
+  return m.length > 480 ? `${m.slice(0, 479)}…` : m; // short, so that a few turns of history fit in 4 KB
 }
 
 /**
