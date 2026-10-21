@@ -57,7 +57,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   if (dial && paper && !document.getElementById('dialw')) { const w = document.createElement('div'); w.id = 'dialw'; w.style.visibility = 'hidden'; w.appendChild(dial); paper.appendChild(w); }
   const layout0 = stage.w / stage.h >= 1.2 ? 'land' : 'port';
   const fz = parseBeatParam(q, layout0);
-  const state = { intro: null, d: null, key: '', holdKey: '', prepared: '', drawn: null };
+  const state = { intro: null, d: null, key: '', prepared: '', drawn: null };
   const dir = new Director({
     frozen: fz === 'intro' ? 0 : fz,
     onInput: () => { if (state.intro && state.intro.t < 1) introSpeed(4); },
@@ -211,15 +211,14 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   if (d.atHold && d.hold && !d.intro && fz == null) {
     const k = Math.round(d.pos), seq = SEQ[lay], hk = `${lay}|${k}|${stage.w}x${stage.h}`;
     const need = [k - 1, k].filter((j) => j >= 0 && j < seq.trans.length && isFreeze(seq.trans[j]));
-    if (need.some((j) => !cut.ready(j, lay)) && (d.settled || Math.abs(dir.v) < 0.6)) {
-      // the freeze that leaves this hold copies the frame on screen, in the task that drew it (a frame of this hold,
-      // at the resolution it was drawn): no second render (G3: the hold's extra renders ran into the next scroll)
-      if (need.includes(k) && !cut.ready(k, lay) && state.fresh && state.key.startsWith(`H|${seq.names[k]}|`)) cut.prepare(k, lay, true, true);
-      // the one that arrives here from hold k − 1 shows that hold, drawn once this hold has settled (scrolling
-      // forwards it was taken at hold k − 1 already)
-      const back = need.filter((j) => j !== k && !cut.ready(j, lay));
-      if (back.length && d.settled && state.prepared !== hk) { state.prepared = hk; for (const j of back) cut.prepare(j, lay, false, false); fence(); }
-    }
+    // the freeze that leaves this hold copies the frame on screen, in the task that drew it (a frame of this hold, at
+    // the resolution it was drawn): no second render (G3: the hold's extra renders ran into the next scroll). It costs
+    // two bitmaps and a copy of the page's layers, so it is taken on the first frame of the hold, however fast
+    if (need.includes(k) && !cut.ready(k, lay) && state.fresh && state.key.startsWith(`H|${seq.names[k]}|`)) cut.prepare(k, lay, true, true);
+    // the one that arrives here from hold k − 1 shows that hold, drawn once this hold has settled (scrolling forwards
+    // it was taken at hold k − 1 already)
+    const back = need.filter((j) => j !== k && !cut.ready(j, lay));
+    if (back.length && d.settled && state.prepared !== hk) { state.prepared = hk; for (const j of back) cut.prepare(j, lay, false, false); fence(); }
     Q.cutReady = need.every((j) => cut.ready(j, lay));
     Q.cutArrived = need.every((j) => cut.arrived(j, lay));
   } else Q.cutReady = !d.freeze;

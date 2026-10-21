@@ -13,7 +13,6 @@
 import { EASES } from '../core/eases.js';
 import { SEQ, evalS } from '../core/tracks.js';
 
-const NS = 'http://www.w3.org/2000/svg';
 const diagOf = (w, h) => Math.hypot(w, h);
 const stripIds = (el) => { el.removeAttribute && el.removeAttribute('id'); for (const x of el.querySelectorAll ? el.querySelectorAll('[id]') : []) x.removeAttribute('id'); return el; };
 
@@ -38,7 +37,7 @@ function halfPoly(W, H, P, n, sign) {
   }
   return out;
 }
-const polyCss = (pts, pad) => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',')})`;
+const polyCss = (pts) => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',')})`;
 
 export class Cut {
   constructor(film, dom) {
@@ -91,7 +90,7 @@ export class Cut {
     if (two) fz.copy = this.build(gls[1], d);
     // where the wipes start: the tsuba of the frozen hold, on screen
     fz.ts = st.project(st.point('tsuba'));
-    if (!same) { film.dirty = true; film.lastKey = ''; }
+    if (!same) film.dirty = true;
     return fz;
   }
   build(gl, d) {
@@ -296,4 +295,3 @@ export class Cut {
     this.show(fz, 0);
   }
 }
-export { NS };
