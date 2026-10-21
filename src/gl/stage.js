@@ -372,6 +372,20 @@ export class Stage {
     for (const [o, v] of vis) o.visible = v;
     return out;
   }
+  // G6 prewarm (§6.3) of what B14 adds at its first frame: the girih floor mask (a CPU canvas, uploaded now) and the
+  // rays' three passes (the black occluder, the radial blur, the composite) drawn once at the current pose. The default
+  // framebuffer is not preserved: the caller draws the film's frame again in the same task
+  prepFloor() {
+    if (!this.floorU.tGirih.value) this.floorU.tGirih.value = girihTexture(Math.min(this.tier.aniso || 4, this.renderer.capabilities.getMaxAnisotropy()));
+    this.renderer.initTexture(this.floorU.tGirih.value);
+  }
+  prewarmRays() {
+    const R = this.rays, dv = R.disc.visible, ready = R.ready;
+    R.disc.visible = true;
+    R.occlude(this.scene, this.camera, this.sword, [this.floor]);
+    R.draw();
+    R.disc.visible = dv; R.ready = ready;
+  }
   // resolves when the GPU has executed everything issued so far: a fence polled from timers, so neither the main
   // thread nor the GPU process stalls on a read-back (no "GPU stall due to ReadPixels"); without WebGL2 syncs, a read
   gpuDone() {

@@ -53,7 +53,7 @@ const cur = (slug, s) => (s && s === slug ? ' aria-current="page"' : '');
 export function page(p) {
   const { lang, slug } = p;
   const L = (k) => t(lang, k);
-  const head = headLinks({ lang, path: p.path, twins: p.twins, title: p.title, description: p.description, ogImage: p.ogImage, type: p.ogType || 'website' });
+  const head = headLinks({ lang, path: p.path, twins: p.twins, title: p.title, description: p.description, ogImage: p.ogImage, type: p.ogType || 'website', published: p.published, modified: p.modified });
   const ld = graph({ lang, path: p.path, type: p.type, title: p.title, description: p.description, crumbs: p.crumbs, people: p.people, mainEntity: p.mainEntity, extra: p.ldExtra });
   // the switch may name a page for a language without a twin (a blog post: that language's blog index)
   const sw = langNav(lang, p.switchTo || p.twins);
@@ -84,8 +84,8 @@ ${hasBlog(lang) ? `<link rel="alternate" type="application/rss+xml" title="${esc
 <a class="skip" href="#main">${L('skip')}</a>
 ${SPRITE}
 <header class="nav" id="nav">
-  <a class="brand" href="${HOME[lang]}" aria-label="${esc(L('homeLabel'))}"><svg class="mon" aria-hidden="true"><use href="#mon"/></svg><span class="word">QILICH</span></a>
-  <p class="clocks mono" aria-hidden="true"><span>${L('tas')}</span> <time class="t-tas">00:00</time> <i>·</i> <span>${L('tok')}</span> <time class="t-tok">00:00</time></p>
+  <a class="brand" href="${HOME[lang]}" aria-label="${esc(L('homeLabel'))}"><svg class="mon" aria-hidden="true"><use href="#mon"/></svg><span class="word">Qilich</span></a>
+  <p class="clocks mono" aria-hidden="true"><span>${L('tas')}</span> <time class="t-tas"></time> <i>·</i> <span>${L('tok')}</span> <time class="t-tok"></time></p>
   <nav class="links" aria-label="${esc(L('sections'))}"><a href="${CATALOGUE_BASE[lang]}"${cur('solutions', slug)}>${L('sol')}</a><a href="${pathOf(lang, 'samurai')}"${cur('samurai', slug)}>${L('ai')}</a>${hasBlog(lang) ? `<a href="${blogIndex(lang)}"${cur('blog', slug)}>${L('blog')}</a>` : ''}<a href="${pathOf(lang, 'about')}"${cur('about', slug)}>${L('about')}</a></nav>
   ${sw}
   <a class="btn" href="${pathOf(lang, 'contact')}" data-cta="nav"${cur('contact', slug)}><span>${L('cta')}</span></a>

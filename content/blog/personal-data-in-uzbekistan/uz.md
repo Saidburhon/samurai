@@ -9,6 +9,8 @@ related: [cloud-data-compliance, cloud-hosting-uz, cloud-backup-dr, cloud-migrat
 reading_minutes: 10
 ---
 
+Oʻzbekistonning OʻRQ-547-son «Shaxsga doir maʼlumotlar toʻgʻrisida»gi Qonuni axborot texnologiyalari yordamida ishlanadigan Oʻzbekiston fuqarolarining shaxsga doir maʼlumotlarini jismonan Oʻzbekistonda joylashgan serverlarda saqlashni talab qiladi, shuning uchun sayt, ilova yoki botingiz mijozlari maʼlumotlarining asosiy nusxasi mamlakatdagi xostingda boʻlishi kerak. CRM, analitika yoki AI kabi xorijiy xizmatlar faqat ularsiz ishlay olmaydigan maʼlumotni olishi, har bir bunday uzatish yurist bilan kelishilishi, maʼlumot yigʻishdan oldin esa insonning roziligi va maxfiylik bildirishnomasi boʻlishi kerak. Yangi loyihada bu bir necha kunlik ish, mavjud tizimni koʻchirish esa alohida loyiha.
+
 Sayti, boti yoki CRMi bor deyarli har bir biznes shaxsiy maʼlumot yigʻadi: ism, telefon raqami, yetkazib berish manzili, buyurtmalar tarixi. Qonun Oʻzbekiston fuqarolarining bunday maʼlumotlarini jismonan Oʻzbekistonda turgan serverlarda saqlashni talab qiladi. Amalda esa botning bazasi koʻpincha xorijiy hostingda turadi, arizalar bulutli CRMga tushadi, mijozlarning telefon raqamlari «kuryerlar uchun» ochilgan Google Sheets jadvalida yotadi, zaxira nusxalar esa provayderning standart sozlamasi qayerga yuborsa, oʻsha yoqqa ketadi. Biznes egasi bundan odatda dasturchidan toʻgʻridan-toʻgʻri soʻragandagina xabar topadi. Quyida masalaga yurist emas, muhandis koʻzi bilan qaraymiz: oddiy mahsulotda nimalar shaxsiy maʼlumot hisoblanadi, ular aslida qayerlarga borib qoladi va asosiy nusxa Oʻzbekistonda turishi uchun tizimni qanday qurish kerak. Sizning holatingiz boʻyicha huquqiy xulosani esa yurist beradi.
 
 ## Qonun nima deydi, qisqacha

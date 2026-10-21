@@ -9,6 +9,8 @@ related: [web, mobile, telegram]
 reading_minutes: 9
 ---
 
+Test your site, app or bot on a mid-range Android phone over mobile data, because that is how many customers open it, and every extra second of waiting costs orders. Measure it for free with PageSpeed Insights and Chrome's own tools, then fix things in order: images first (compress, resize, WebP or AVIF, lazy-load), then third-party scripts. Put a measurable speed budget, with a named test phone, in the contract.
+
 A new design usually gets signed off like this: the developer shows the site on their phone, the owner opens it on their own, and on the office Wi-Fi everything is instant. A month later the ads are running, the clicks are coming in, and orders are thin. The likely reason is that your customer opens the same site on an Android phone bought a couple of years ago, with its storage nearly full, over mobile data, in a lift or in a basement shop. They see a white screen, wait a few seconds and go back to Telegram, where a competitor has already replied. Nobody writes to tell you the site is slow. They just leave. Here is how to see your site and app the way that customer does, how to measure speed for free, and what to fix first.
 
 ## The phone you test on is not your customer's

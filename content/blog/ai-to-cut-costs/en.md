@@ -9,6 +9,8 @@ related: [ai, telegram, business]
 reading_minutes: 8
 ---
 
+AI lowers costs on frequent, repetitive text work: sorting incoming messages, drafting replies that a person approves, reading documents into your systems and writing a daily summary for the owner. It adds cost on rare tasks, on tasks that already take seconds, and wherever full accuracy is needed, such as prices and invoice totals. Test it with a two-week pilot on one task and 100 to 300 of your own examples before paying for a full build.
+
 Everyone is talking about AI: CRM vendors, Telegram channels, the business owner you know who says they've "already rolled it out". The promise is big: AI will replace your operators, your accountant and half the office. If you run a company on a limited budget, you need one answer out of all that noise: which tasks in my business can AI take over, and how much will that really save? The short answer: AI is good at reading, sorting and drafting text, and unreliable wherever the result has to be right every time without anyone checking it. The saving comes from fewer human minutes per task, not from replacing the team. Below is a task-by-task view, including the running costs that usually get left out of the sum.
 
 ## What today's AI is good at, in plain terms

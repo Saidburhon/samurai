@@ -9,6 +9,8 @@ related: [cloud-data-compliance, cloud-hosting-uz, cloud-backup-dr, cloud-migrat
 reading_minutes: 10
 ---
 
+Uzbekistan's law “On Personal Data” (ZRU-547) requires personal data of Uzbek citizens processed with information technology to be stored on servers physically located in Uzbekistan, so the master copy of your site's, app's or bot's customer data should sit with a host in the country. Foreign services such as a CRM, analytics or AI should get only what they cannot work without, with your lawyer confirming each transfer, and you need the person's consent and a privacy notice before you collect data. In a new project this is a few days of work; moving an existing system is a project of its own.
+
 Almost every business with a website, bot or CRM collects personal data: names, phone numbers, delivery addresses, order history. Uzbek law requires this data about Uzbek citizens to be stored on servers physically located in Uzbekistan. In practice, the bot's database often sits with a foreign host, leads go into a cloud CRM, customer phone numbers live in a Google Sheet made "for the couriers", and backups go wherever the provider sends them by default. Owners usually find out only when they ask their developer directly. What follows is an engineer's view, not a lawyer's: what counts as personal data in a typical product, where it actually ends up, and how to build the system so the main copy stays in Uzbekistan. The legal conclusions for your case are a lawyer's job.
 
 ## What the law says, briefly

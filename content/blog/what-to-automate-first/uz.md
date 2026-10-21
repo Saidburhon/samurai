@@ -9,6 +9,8 @@ related: [telegram, business, ai]
 reading_minutes: 8
 ---
 
+Avval har hafta buyurtma yoki pul yoʻqotayotgan ishni avtomatlashtiring: Oʻzbekistondagi koʻp kichik bizneslarda bu Telegram, Instagram, qoʻngʻiroqlar va saytdan keladigan barcha buyurtma va soʻrovlarni bir joyga yigʻish; undan keyin toʻlovlar va solishtirish, soʻng qoldiqlar, jadvallar va eslatmalar. Nomzodlarni oddiy bir haftadagi takroriy ishlarni yozib, har birini qanchalik tez-tez uchrashi, qancha vaqt olishi va xato narxi boʻyicha baholab topasiz. Har oy oʻzgarib turgan jarayonlarni hali avtomatlashtirmang, umumiy jadval yetarli boʻlgan joyda esa uni qoldiring.
+
 Buyurtmalar Telegramdan, Instagramdan va telefon orqali keladi. Omborda nima qolganini faqat egasi aniq biladi. Kechqurun administrator kassa, terminal va kartaga kelgan oʻtkazmalarni bir soat solishtiradi va deyarli har safar biror farq chiqadi. Shunda «hammasini avtomatlashtiramiz» degan fikr keladi, CRM sotmoqchi, ilova qilib bermoqchi yoki «sunʼiy intellekt joriy qilmoqchi» boʻlganlar ham darrov topiladi. Lekin biznesni avtomatlashtirishni xariddan boshlash eng qimmat yoʻl. Avval qaysi ish eng koʻp vaqt olayotganini va qayerda xato eng qimmatga tushayotganini aniqlab, oʻshandan boshlash arzonroq. Quyida Toshkentdagi 5–50 kishilik biznes uchun amaliy tartib: doʻkon, kafe, klinika, oʻquv markazi, xizmat koʻrsatuvchi kompaniya.
 
 ## Qoʻlda ishlash yetmay qolganini qanday bilasiz

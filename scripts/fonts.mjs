@@ -158,9 +158,14 @@ export async function buildFonts(extra = []) {
     fb('Geologica Fallback', ms, ['Arial', 'Liberation Sans', 'Helvetica Neue', 'Helvetica']),
     fb('Martian Fallback', mm, ['Courier New', 'Liberation Mono', 'Menlo']),
   ].join('');
+  // the generated pages swap every face (SEO-GEO-GUIDELINES: font-display swap): their decorative kanji (Mincho) and
+  // the sign face are not preloaded there, so `block` would hide them for up to 3 s. The landing keeps its own choice
+  // (its Mincho is preloaded, scripts/build.mjs step 7).
+  const LANDING = new Set(['public/index.html', 'public/ru/index.html', 'public/en/index.html', 'public/ja/index.html']);
+  const cssPages = css.replace(/font-display:block/g, 'font-display:swap');
   for (const [k, f] of Object.entries(files)) {
     if (!html[k]) continue;
-    const out = readFileSync(f, 'utf8').replace(/<style data-gen="fonts">[\s\S]*?<\/style>/, `<style data-gen="fonts">${css}</style>`);
+    const out = readFileSync(f, 'utf8').replace(/<style data-gen="fonts">[\s\S]*?<\/style>/, `<style data-gen="fonts">${LANDING.has(String(f).replace(/^\.\//, '')) ? css : cssPages}</style>`);
     writeFileSync(f, out);
   }
   // what each page needs for its first paint (the preload pass uses this)

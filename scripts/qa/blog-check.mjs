@@ -74,6 +74,15 @@ for (const lang of LANGS) {
     const head = h.match(/<head>([\s\S]*?)<\/head>/)[1];
     const body = h.replace(/<head>[\s\S]*?<\/head>/, '');
     if ((body.match(/<h1[\s>]/g) || []).length !== 1) fail(W, 'not exactly one h1');
+    // answer first (SEO-GEO-GUIDELINES Non-negotiable 6, Gate 2): the article's first paragraph is a declarative answer,
+    // not a question or a "you" scenario, and a cost post's answer carries its figures
+    const first = text((body.match(/<div class="prose">\s*<p>([\s\S]*?)<\/p>/) || [])[1] || '');
+    if (!first) fail(W, 'no first paragraph in the article');
+    else {
+      if (/[?？]$/.test(first.split(/(?<=[.。!?？])\s/)[0] || '')) fail(W, 'the article opens with a question, not the answer');
+      if (/^(You |Вы |Siz |Sizga )/.test(first)) fail(W, 'the article opens with a scenario ("you…"), not the answer');
+      if (/cost/.test(p.slug) && !/\d/.test(first)) fail(W, 'a cost post whose first paragraph gives no figure');
+    }
     // hreflang: only the languages of this post's folder
     const twins = posts.filter((q) => q.key === p.key);
     const alts = Object.fromEntries([...head.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g)].map((m) => [m[1], m[2]]));

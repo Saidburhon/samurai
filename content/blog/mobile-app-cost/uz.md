@@ -2,12 +2,14 @@
 slug: mobile-app-cost
 lang: uz
 title: "Mobil ilova narxi: byudjet nimalardan tashkil topadi"
-description: "iOS va Android ilova narxi nimaga bogʻliq: mijoz yoʻllari, backend, toʻlovlar, integratsiyalar, doʻkonlarga joylash va ishga tushirilgandan keyingi xarajatlar."
+description: "Qilichda iOS va Android mijoz ilovasining birinchi versiyasi $12 000–25 000 turadi va 8–12 hafta oladi, toʻliq ilova $30 000–70 000. Byudjet nimaga ketadi."
 date: 2026-10-21
 tags: [mobil ilova, narx, iOS, Android, backend]
 related: [mobile, cloud, web]
 reading_minutes: 10
 ---
+
+Toshkentdagi Qilich jamoasida iOS va Android uchun mijoz ilovasining birinchi versiyasi {{price:mob-customer-app}} turadi va {{weeks:mob-customer-app}} oladi. Toʻliq versiya {{fprice:mob-customer-app}} turadi va {{fweeks:mob-customer-app}} oladi. Byudjetning katta qismi ekranlarga emas, server qismi, integratsiyalar va testlarga ketadi; quyida u nimalardan tashkil topishi koʻrsatilgan.
 
 Yetkazib berish, onlayn yozilish, bonus dasturi yoki ulgurji buyurtmalar uchun ilova qilmoqchisiz va birinchi savol tabiiy: mobil ilova narxi qancha? Toshkentdagi bir nechta kompaniyadan ilova yasash narxini soʻrasangiz, eng qimmat taklif eng arzonidan bir necha baravar yuqori chiqishi mumkin. Smetadagi qatorlarning koʻpi esa telefonda koʻrinmaydigan narsalarga tegishli: server, admin panel, integratsiyalar, test. Quyida ilova ishlab chiqish narxi aslida nimalardan yigʻilishini, byudjetga qaysi qarorlar eng koʻp taʼsir qilishini va ishga tushirilgandan keyin qanday xarajatlar boshlanishini koʻrib chiqamiz. Maqsad oddiy: pulni faqat ishga tushirish kuniga emas, ilovaning birinchi yiliga rejalashtirish.
 

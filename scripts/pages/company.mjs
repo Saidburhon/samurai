@@ -24,7 +24,7 @@ function facts(lang, set) {
   const a = site.address, j = site.japan;
   const street = [a.streetAddress, a.postalCode].filter(has).join(', ');
   const japan = has(j.legalName) ? [j.legalName, [j.streetAddress, j.locality, j.postalCode].filter(has).join(', '), has(j.telephone) ? `<a href="${telHref(j.telephone)}">${nbspPhone(j.telephone)}</a>` : ''].filter(has).join('<br>') : '';
-  const clock = `${L('tz')}<span class="live" hidden> · ${L('now')} <time class="t-tas">00:00</time></span>`;
+  const clock = `${L('tz')}<span class="live" hidden> · ${L('now')} <time class="t-tas"></time></span>`;
   const rows = {
     name: [L('fName'), site.brand + (lang === 'ja' && has(site.brandKana) ? `（${site.brandKana}）` : '')],
     legal: [L('fLegal'), site.legalName],
@@ -42,11 +42,14 @@ function facts(lang, set) {
     japan: [L('fJapan'), japan],
     certs: [L('fCerts'), (site.certifications || []).map((c) => (typeof c === 'string' ? esc(c) : c.url ? `<a href="${esc(c.url)}">${esc(c.name)}</a>` : esc(c.name))).join(L('listSep'))],
     profiles: [L('fProfiles'), (site.sameAs || []).map((u) => `<a href="${esc(u)}" rel="me">${esc(host(u))}</a>`).join(L('listSep'))],
+    // named Japanese-speaking contacts (content/site.json japan.contacts), on the About and Contact pages, not only
+    // in a footer (SEO-GEO-GUIDELINES, Japanese pages: business proof); empty until the owner lists them
+    jaContacts: [L('fJaContacts'), (j.contacts || []).filter((c) => has(c?.name)).map((c) => [esc(c.name), has(c.role) ? esc(typeof c.role === 'object' ? c.role[lang] || c.role.en || '' : c.role) : '', has(c.email) ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : '', has(c.telephone) ? `<a href="${telHref(c.telephone)}">${nbspPhone(c.telephone)}</a>` : ''].filter(has).join(L('listSep'))).join('<br>')],
   };
   const SETS = {
-    about: ['name', 'legal', 'founded', 'rep', 'city', 'address', 'tz', 'langs', 'phone', 'email', 'web', 'japan', 'certs', 'profiles'],
+    about: ['name', 'legal', 'founded', 'rep', 'city', 'address', 'tz', 'langs', 'phone', 'email', 'web', 'japan', 'jaContacts', 'certs', 'profiles'],
     press: ['name', 'legal', 'founded', 'services', 'city', 'tz', 'langs', 'web', 'email', 'phone', 'japan', 'profiles'],
-    contact: ['city', 'address', 'tz', 'hours', 'langs', 'japan'],
+    contact: ['city', 'address', 'tz', 'hours', 'langs', 'japan', 'jaContacts'],
   };
   const out = SETS[set].map((k) => rows[k]).filter(([, v]) => has(v)).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`);
   return `<dl class="facts">${out.join('')}</dl>`;

@@ -9,6 +9,8 @@ related: [biz-1c-integration, web-ecommerce, tg-b2b-ordering, mob-field-sales]
 reading_minutes: 9
 ---
 
+1C bilan integratsiyada narxlar va qoldiqlar 1Cda qoladi, sayt yoki botdagi buyurtmalar esa 1Cga tayyor hujjat boʻlib tushadi va ularni hech kim qayta yozmaydi. Tipik konfiguratsiyada CommerceML orqali standart almashinuv odatda bir necha kundan ikki haftagacha, bot yoki bir nechta kanal uchun maxsus almashinuv esa bitta oqim uchun odatda bir necha hafta oladi. Loyihani koʻpincha 1Cdagi tartibsiz maʼlumotlar choʻzadi, shuning uchun takroriy yozuvlar, narxlar va oʻlchov birliklarini ish boshlanishidan oldin tartibga keltiring.
+
 Tovar qoldigʻi va narxlar ombor hisobi dasturida, koʻpincha 1Cda yuritiladi, sotuv esa sayt, Telegram-bot yoki savdo agentlari orqali ham boʻladi. 1C bilan sayt, bot va ilova oʻrtasida almashinuv boʻlmasa, bu ishni kimdir qoʻlda qiladi: kuniga bir marta narxlar roʻyxatini Excelga chiqaradi, saytdagi narxlarni tuzatadi, botga tushgan buyurtmalarni 1Cga qayta kiritadi. Bunday ishda xato muqarrar. Mijoz omborda allaqachon qolmagan tovar uchun pul toʻlaydi. Ulgurji xaridor botda eski narxni koʻrib, tovarni aynan shu narxda yuklab berishingizni talab qiladi. Buyurtma chat bilan buxgalteriya orasida yoʻqolib qoladi. 1C integratsiyasi bu muammolarni hal qiladi, lekin bir narsani ish boshlanmasdan oldin bilib qoʻygan maʼqul: almashinuv maʼlumotni borligicha uzatadi. 1Cda bitta tovarning uchta kartochkasi boʻlsa, saytda ham uchta tovar chiqadi. Shuning uchun gapni texnologiyadan emas, nima qayerga uzatilishi va maʼlumotlaringiz qanday holatda ekanidan boshlaymiz.
 
 ## Nima qayerga uzatilishi kerak

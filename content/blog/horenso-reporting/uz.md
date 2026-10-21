@@ -9,6 +9,8 @@ related: [mobile, web, telegram, support]
 reading_minutes: 7
 ---
 
+Hōrensō (報連相) dasturchilar jamoasi eslatmasiz bajaradigan uchta odatni anglatadi: har hafta bir kunda, koʻrish mumkin boʻlgan narsalarga havolalar bilan yoziladigan hisobot (hōkoku); yomon xabar jamoa uni bilgan kunning oʻzida (renraku); hajm, narx, muddat yoki foydalanuvchilar koʻradigan narsani oʻzgartiradigan har qanday qarordan oldin siz bilan maslahat (sōdan). Qilich aynan shunday ishlaydi. Yangiliksiz oʻtgan haftalar va bir oy davom etgan «90% tayyor» xavotirli belgilardir.
+
 Tanish holat: dasturchi topdingiz, avans toʻladingiz, birinchi kunlari yozishmalar qizgʻin ketdi. Keyin javoblar qisqara boshladi: «hammasi joyida», «deyarli tayyor». Bir oy oʻtib natijani ilk bor koʻrasiz: u kelishilgan narsaga unchalik oʻxshamaydi, muddat esa allaqachon surilgan. Koʻpincha muammo kodda emas. Shunchaki jamoada buyurtmachiga nima boʻlayotganini muntazam va aniq aytib turish odati yoʻq edi. Yapon kompaniyalarida bu odat hōrensō deyiladi. Bu maqolada: hōrensō nimalardan iborat, Telegramdagi yaxshi hisobot qanday koʻrinadi, jamoa sizdan nima kutadi, pudratchi sizni bexabar qoldirayotganini qaysi belgilardan bilsa boʻladi va shartnoma imzolashdan oldin nimalarni soʻrash kerak. Ilgari dasturchilar bilan ishlab kuyib qolgan boʻlsangiz yoki jamoani birinchi marta yollayotgan boʻlsangiz, shu maqoladan boshlang.
 
 ## Bu soʻz qayerdan kelgan

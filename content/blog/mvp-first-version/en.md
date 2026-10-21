@@ -9,6 +9,8 @@ related: [mobile, telegram, web, cloud]
 reading_minutes: 8
 ---
 
+An MVP should contain one complete customer journey, from first contact to payment and confirmation, that tests your riskiest assumption with real customers; leave loyalty points, complex roles, extra languages and reports until customers start coming back. Work behind the scenes can stay manual, and a Telegram bot or Mini App is often the cheapest MVP when customers already write to you there. Before launch, write down which numbers will count as success, and keep a data model that can grow.
+
 The feature list for a new product grows faster than the budget: customer accounts, loyalty points, chat with a manager, three languages, recommendations, a separate app for couriers. Every item feels essential because "the competitors have it". The result is a first version that ships months late, money that runs out around launch, and the one question that matters still unanswered: will customers use it and pay for it? An MVP exists to get that answer sooner and for less. Here is how to decide what goes into version one, what waits, and how to settle in advance what you will do after launch. This applies as much to a startup in Tashkent as to an established business that has run for years on phone calls and an administrator's notebook and is now moving online.
 
 ## What MVP means and what it doesn't

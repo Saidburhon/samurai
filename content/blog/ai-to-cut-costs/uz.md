@@ -9,6 +9,8 @@ related: [ai, telegram, business]
 reading_minutes: 8
 ---
 
+AI tez-tez takrorlanadigan matnli ishlarda xarajatni kamaytiradi: kiruvchi xabarlarni saralash, inson tasdiqlaydigan javob qoralamalari, hujjatlarni tizimlaringizga oʻqib kiritish va egasi uchun kunlik xulosa. Kam uchraydigan ishlarda, bir necha soniya oladigan vazifalarda va toʻliq aniqlik talab qilinadigan joyda, masalan narxlar va hisob summalarida u faqat xarajat qoʻshadi. Toʻliq ishlab chiqishdan oldin uni bitta vazifa va oʻzingizning 100–300 ta misolingizda ikki haftalik pilot bilan sinab koʻring.
+
 Sunʼiy intellekt haqida hozir hamma gapiradi: CRM sotadigan kompaniyalar, Telegram-kanallar, «biz allaqachon joriy qildik» deydigan tanish tadbirkorlar. Vaʼdalar katta: AI operatorlarni, buxgalterni va ofisning yarmini almashtiradi emish. Byudjeti cheklangan biznes egasiga esa bu shovqin orasidan bitta aniq javob kerak: mening kompaniyamda AI qaysi ishlarni oʻz zimmasiga oladi va bu qancha pulni tejaydi? Qisqasi: AI matnni oʻqish, saralash va qoralama yozishni yaxshi uddalaydi, lekin natija tekshiruvsiz ham har safar toʻgʻri chiqishi kerak boʻlgan joyda unga tayanib boʻlmaydi. Pul xodimlarni qisqartirish hisobiga emas, har bir ishga ketadigan daqiqalar kamaygani hisobiga tejaladi. Quyida har bir ishni alohida koʻrib chiqamiz va odatda hisobga olinmay qoladigan xarajatlarni sanab oʻtamiz.
 
 ## Hozirgi AI nimani yaxshi uddalaydi, oddiy til bilan

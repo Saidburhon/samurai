@@ -11,6 +11,7 @@ import { usd as fUsd, uzs as fUzs, weeks as fWeeks } from '../../src/shared/form
 import { LANGS, HOME, pathOf, site } from '../site.mjs';
 import { SOL } from './solutions-i18n.mjs';
 import { postLinks } from './blog-feed.mjs';
+import { offeredIn } from './ja-market.mjs';
 import { view, rowsFile, renderCatalogue, renderGroup, renderSolution, renderPrices, metaSolution, metaGroup, metaCatalogue, metaPrices, groupFacts, groupUrl, PRICES } from './solutions.mjs';
 
 const J = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -18,6 +19,9 @@ const J = (p) => JSON.parse(readFileSync(p, 'utf8'));
 // the blog posts per language with every catalogue id they name (front matter `related` plus their {{solution:…}} and
 // {{prices:group=…}} shortcodes), content/blog and content/blog-ja, from the blog's own loader (scripts/pages/blog-feed.mjs)
 const blogPosts = () => postLinks();
+// the addresses of pages a language does not offer (Japanese: scripts/pages/ja-market.mjs): build-pages.mjs writes a
+// 301 to that language's catalogue for each, so an old or generated link (SamurAI's results) still lands
+export const gone = [];
 
 export function buildSolutions({ assets, page, t, plates, jaPhrases }) {
   const cat = J('content/solutions.json');
@@ -44,7 +48,7 @@ export function buildSolutions({ assets, page, t, plates, jaPhrases }) {
   for (const lang of LANGS) {
     starters[lang] = {};
     for (const [id, ind] of Object.entries(model.industries)) {
-      const ids = ((lang === 'ja' && ind.ja_starter) || ind.starter || []).filter((x) => model.byId.get(x) && model.byId.get(x).billing !== 'monthly');
+      const ids = ((lang === 'ja' && ind.ja_starter) || ind.starter || []).filter((x) => model.byId.get(x) && model.byId.get(x).billing !== 'monthly' && offeredIn(model.byId.get(x), lang, scope));
       if (!ids.length) continue;
       const sols = ids.map((x, n) => enrichSolution(model, { n: n + 1, catalogue_id: x, size: 'm', scope: 'mvp', priority: 'must', modifiers: [], integrations: [], depends_on: [], difficulty: model.byId.get(x).difficulty }, { lang, rate }));
       const p = plan(model, sols, defaultSelection(sols), rate);
@@ -74,31 +78,42 @@ export function buildSolutions({ assets, page, t, plates, jaPhrases }) {
     writeFileSync(file, out);
     return file;
   };
-  const twinsOf = (f) => Object.fromEntries(LANGS.map((l) => [l, f(l)]));
+  const twinsOf = (f) => Object.fromEntries(LANGS.map((l) => [l, f(l)]).filter(([, v]) => v));
+  const offers = (s, l) => offeredIn(s, l, scope);
+  const groupIn = (gid, l) => model.solutions.some((s) => s.group === gid && offers(s, l));
+  gone.length = 0;
+  for (const l of LANGS) {
+    for (const g of cat.groups) if (!groupIn(g.id, l)) gone.push(groupUrl(g.id, l));
+    for (const s of model.solutions) if (!offers(s, l)) gone.push(solutionUrl(s, l));
+  }
   for (const lang of LANGS) {
     const V = view(ctx, lang);
     const T = SOL[lang];
     const home = { name: t(lang, 'home'), path: HOME[lang] };
     const catCrumb = { name: T.crumb, path: CATALOGUE_BASE[lang] };
+    // a language without the page: no hreflang to it, and the switch goes to that language's catalogue
     const emit = ({ path, twins, meta, r, crumbs, slug = 'solutions', kanji = '目録', gloss = T.hk }) => {
-      const html = page({ lang, slug, path, twins, title: meta.title, description: meta.description, type: 'WebPage', crumbs, main: r.main, kanji, gloss, assets: pageAssets, ldExtra: r.ldExtra, mainEntity: r.mainEntity });
+      const switchTo = Object.fromEntries(LANGS.map((l) => [l, twins[l] || CATALOGUE_BASE[l]]));
+      const html = page({ lang, slug, path, twins, switchTo, title: meta.title, description: meta.description, type: 'WebPage', crumbs, main: r.main, kanji, gloss, assets: pageAssets, ldExtra: r.ldExtra, mainEntity: r.mainEntity });
       entries.push({ lang, path, file: write(lang, path, html), slug, entry: 'solutions' });
     };
     // the catalogue
     emit({ path: CATALOGUE_BASE[lang], twins: twinsOf((l) => CATALOGUE_BASE[l]), meta: metaCatalogue(V), r: renderCatalogue(V), crumbs: [home, catCrumb] });
     // the groups
     for (const g of cat.groups) {
+      if (!groupIn(g.id, lang)) continue;
       const r = renderGroup(g.id, V);
-      emit({ path: groupUrl(g.id, lang), twins: twinsOf((l) => groupUrl(g.id, l)), meta: metaGroup(g.id, V, groupFacts(g.id, V)), r, crumbs: [home, catCrumb, { name: V.gTitle(g.id), path: groupUrl(g.id, lang) }] });
+      emit({ path: groupUrl(g.id, lang), twins: twinsOf((l) => groupIn(g.id, l) && groupUrl(g.id, l)), meta: metaGroup(g.id, V, groupFacts(g.id, V)), r, crumbs: [home, catCrumb, { name: V.gTitle(g.id), path: groupUrl(g.id, lang) }] });
     }
     // the solutions
     for (const s of model.solutions) {
-      emit({ path: solutionUrl(s, lang), twins: twinsOf((l) => solutionUrl(s, l)), meta: metaSolution(s, V), r: renderSolution(s, V), crumbs: [home, catCrumb, { name: V.gTitle(s.group), path: groupUrl(s.group, lang) }, { name: V.L(s.title), path: solutionUrl(s, lang) }] });
+      if (!offers(s, lang)) continue;
+      emit({ path: solutionUrl(s, lang), twins: twinsOf((l) => offers(s, l) && solutionUrl(s, l)), meta: metaSolution(s, V), r: renderSolution(s, V), crumbs: [home, catCrumb, { name: V.gTitle(s.group), path: groupUrl(s.group, lang) }, { name: V.L(s.title), path: solutionUrl(s, lang) }] });
     }
     // the price list
     emit({ path: PRICES[lang], twins: twinsOf((l) => PRICES[l]), meta: metaPrices(V), r: renderPrices(V), crumbs: [home, { name: T.pricesCrumb, path: PRICES[lang] }], slug: 'prices', kanji: '値', gloss: T.hkP });
   }
   void plates;
-  console.log(`solutions: ${entries.length} pages (catalogue, ${cat.groups.length} groups, ${model.solutions.length} solutions, prices × ${LANGS.length}), rate ${rate.uzs_per_usd} (${rate.date}), scope ${Object.keys(scope).length}/${model.solutions.length}`);
+  console.log(`solutions: ${entries.length} pages (catalogue, ${cat.groups.length} groups, ${model.solutions.length} solutions, prices × ${LANGS.length}; not offered: ${gone.length}, ja ${gone.filter((p) => p.startsWith('/ja/')).length}), rate ${rate.uzs_per_usd} (${rate.date}), scope ${Object.keys(scope).length}/${model.solutions.length}`);
   return entries;
 }

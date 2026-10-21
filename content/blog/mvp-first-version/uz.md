@@ -9,6 +9,8 @@ related: [mobile, telegram, web, cloud]
 reading_minutes: 8
 ---
 
+MVPda birinchi aloqadan toʻlov va tasdiqgacha boʻlgan bitta toʻliq mijoz yoʻli boʻlishi kerak, u eng xavfli taxminingizni haqiqiy mijozlarda tekshiradi; bonus ballar, murakkab rollar, qoʻshimcha tillar va hisobotlarni mijozlar qaytib kela boshlaguncha qoldiring. Ichki ishlar qoʻlda bajarilishi mumkin, mijozlar sizga allaqachon Telegramda yozsa, Telegram-bot yoki Mini App koʻpincha eng arzon MVP boʻladi. Ishga tushirishdan oldin qaysi raqamlar muvaffaqiyat hisoblanishini yozib qoʻying va oʻsa oladigan maʼlumotlar modelini quring.
+
 Boʻlajak mahsulotning funksiyalar roʻyxati byudjetdan tezroq oʻsadi: shaxsiy kabinet, bonuslar, menejer bilan chat, uchta til, tavsiyalar, kuryerlar uchun alohida ilova. Har bir band majburiydek tuyuladi, chunki «raqobatchida bor». Natijada ilovaning birinchi versiyasi rejadan oylab kechikadi, pul ishga tushirish arafasida tugaydi, eng asosiy savol esa javobsiz qoladi: mijozlar bundan foydalanadimi va pul toʻlaydimi? MVP shu javobni ertaroq va arzonroq olish uchun kerak. Quyida birinchi versiyaga nimani kiritish, nimani keyinga qoldirish va ishga tushirgandan keyin nima qilishni oldindan qanday belgilab qoʻyish haqida gaplashamiz. Bu Toshkentda startap uchun ilova qilayotganlarga ham, yillar davomida qoʻngʻiroqlar va administrator daftari bilan ishlab kelgan biznesni onlaynga olib chiqayotganlarga ham birdek tegishli.
 
 ## MVP nima va nima emas

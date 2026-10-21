@@ -9,6 +9,8 @@ related: [mobile, web, telegram, support]
 reading_minutes: 8
 ---
 
+Hajm aniq va oʻzgarmaydigan boʻlsa qatʼiy narx, mahsulot doim oʻzgarib boradigan boʻlsa soatbay toʻlov (time and materials) mos keladi, koʻpchilik loyihalar uchun esa qisqa pullik rejalashtirish bosqichi va undan keyingi qatʼiy narxli bosqichlar eng yaxshisi. Qaysi model boʻlmasin, shartnoma oʻtgan vaqt uchun emas, qabul qilingan natija uchun toʻlashni, «tayyor» nimani anglatishini, kod, domen va akkauntlar kompaniyangiz nomida boʻlishini hamda kafolat pullik qoʻllab-quvvatlashdan alohida ekanini belgilashi kerak.
+
 Tanish holat: narxni kelishib oldingiz, avans toʻladingiz, ikki oydan keyin loyiha «deyarli tayyor», ijrochi esa siz boshidanoq narxga kirgan deb hisoblagan ish uchun qoʻshimcha pul soʻrayapti. Yoki teskarisi: soatlar uchun toʻlab turdingiz, hisobotlar ham kelib turdi, lekin ishlatsa boʻladigan biror narsa chiqmasdan turib byudjet tugadi. Bunday kelishmovchiliklar odatda yomon koddan emas, eng muhim narsalar yozilmay qolgan shartnomadan boshlanadi.
 
 Toʻlov modelini tanlash (qatʼiy narxmi yoki sarflangan vaqt uchun toʻlovmi) muhim, lekin koʻpchilik oʻylaganchalik emas. Sizni shartnomadagi bir nechta band koʻproq himoya qiladi: nima «tayyor» hisoblanadi, nima uchun va qachon toʻlaysiz, kod va akkauntlar kimning nomida turadi, ish qabul qilingandan keyin nima boʻladi. Bu savollar IT autsorsingning har qanday turiga tegishli: Oʻzbekistondagi agentlik bilan ishlaysizmi, chet eldagi jamoa bilanmi yoki alohida dasturchi yollaysizmi. Quyida dastur buyurtma qilishdan oldin toʻlov modelini qanday tanlash va IT xizmatlar shartnomasida nimalarni tekshirish kerakligini koʻrib chiqamiz.

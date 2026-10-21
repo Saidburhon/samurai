@@ -9,6 +9,8 @@ related: [cloud-security-audit, cloud-backup-dr, cloud-identity, sup-sla]
 reading_minutes: 10
 ---
 
+For a small business the minimum is: the domain, hosting, bot and payment dashboards registered to the company; a password manager and two-factor login everywhere; personal accounts with the fewest rights for staff and contractors, closed when they leave; secrets such as bot tokens and payment keys kept on the server; backups stored away from the main server that you have actually restored; regular updates; and alerts when something stops responding. Write a one-page plan of who to call if something happens; the yes-or-no checklist at the end shows where you stand.
+
 When owners hear "we've been hacked", they picture someone spending weeks breaking into a server. In a small business it is usually simpler, and more embarrassing: the hosting password can be guessed in a minute, the website's admin panel is open to the whole internet and hasn't been updated in two years, the bot token sits in the team chat, and the manager who was let go in spring still logs into the CRM. None of this needs a gifted attacker. An automated scanner that checks every address on the internet, whatever the size of the business behind it, is enough, and so is a former employee with a grudge. Below is the minimum an owner can check without technical knowledge and demand from the developer. It is not a bank's security programme. It is what any site, bot or app that handles orders and money should have.
 
 ## Own your accounts

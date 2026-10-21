@@ -9,6 +9,8 @@ related: [mobile, web, telegram, support]
 reading_minutes: 8
 ---
 
+Choose a fixed price when the scope is clear and won't move, hourly billing (time and materials) when the product will keep changing, and for most projects a short paid planning stage followed by fixed-price stages. Whatever the model, the contract should pay for accepted results rather than time passing, define what “done” means, put the code, domain and accounts in your company's name, and keep the warranty separate from paid support.
+
 A familiar story: you agreed a price, paid the advance, and two months later the project is "almost done" while the contractor asks for extra money for work you thought was included from the start. Or the reverse: you paid by the hour, the reports kept coming, and the budget ran out before there was anything you could actually use. These disputes rarely start with bad code. They start with a contract that leaves out the parts that matter.
 
 The choice between fixed price and time and materials matters, but less than most people think. What protects you more is a handful of clauses: what counts as done, what you pay for and when, whose name the code and accounts are in, and what happens after acceptance. The same questions apply whether you hire an agency in Tashkent, a team abroad or a freelancer. Below: how to choose a payment model and what to check in the contract before you sign.

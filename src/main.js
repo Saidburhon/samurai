@@ -127,6 +127,8 @@ function startCinema() {
         const queue = [
           async () => { await stage.atlas(); log('atlas', performance.now()); },
           async () => { if (await stage.upgrade()) { F.film.dirty = true; log('hadaFull', performance.now()); } },
+          // B14's girih floor mask before the floor's own prewarm draws with it (its sampler is part of the pipeline)
+          async () => { const t0 = performance.now(); stage.prepFloor(); log('pw.girih', performance.now() - t0); },
           ...[[P.tsuba, M.ironFull], [stage.nakagoMesh, null], [stage.saya, null], [stage.kurikata, null], [stage.floor, null], [stage.blade, M.steelSign], [stage.blade, M.steelTogi]].map(([mesh, mat]) => async () => {
             const t0 = performance.now();
             stage.prewarm([mesh], { finish: false, material: mat });
@@ -135,6 +137,8 @@ function startCinema() {
             log('pw.' + ((mat && mat.defines && Object.keys(mat.defines).join('+')) || mesh.name || 'mesh'), performance.now() - t0);
           }),
         ];
+        // and B14's rays (three passes), last
+        queue.push(async () => { const t0 = performance.now(); stage.prewarmRays(); redraw(); await stage.gpuDone(); log('pw.rays', performance.now() - t0); });
         const step = async () => {
           try { await queue.shift()(); } catch (e) { Q.idleError = String(e && e.stack || e); }
           if (queue.length) ric(step); else log('prewarmed', performance.now());

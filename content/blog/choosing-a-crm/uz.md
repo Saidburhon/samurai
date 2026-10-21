@@ -9,6 +9,8 @@ related: [biz-crm, biz-1c-integration, biz-payments, tg-crm-mini-app]
 reading_minutes: 9
 ---
 
+amoCRM asosan chatlarda ishlaydigan va oddiy savdo voronkasini xohlaydigan savdo boʻlimlariga mos; Bitrix24 esa xuddi shu tizimda vazifalar, ichki chat, telefoniya va umumiy disk ham kerak boʻlgan kompaniyalarga mos. Oʻz CRM tizimingiz faqat jarayon gʻayrioddiy boʻlsa, integratsiyalar koʻp boʻlsa (1C, Click, Payme, Uzum bilan ikki tomonlama almashinuv), maʼlumotlar Oʻzbekistondagi oʻz serverlaringizda saqlanishi shart boʻlsa yoki CRM mahsulotingizning bir qismi boʻlsa oʻzini oqlaydi; birinchi versiya odatda ikki-toʻrt oy oladi. Koʻp bizneslar uchun eng yaxshisi oʻrta yoʻl: tayyor CRM va unga bot, sayt hamda 1C integratsiyalari.
+
 Murojaatlar uchta menejerning Telegramiga tushadi, bir qismi daftarga yoziladi, bir qismi bitta xodim yuritadigan Excelga. Oʻtgan hafta nechta murojaat boʻlgani va ulardan nechtasi toʻlovgacha yetganini egasi faqat menejerlarga birma-bir qoʻngʻiroq qilib bilib oladi. Menejer ishdan ketsa, telefoni bilan birga mijozlar ham ketadi. Buning aksi ham boʻladi: CRM allaqachon sotib olingan, har oy pul toʻlanadi, lekin bitimlar unga juma kuni kechqurun xotiradan kiritiladi, haqiqiy ish esa hamon chatlarda. Ikkala holatda ham «amoCRM yoki Bitrix24?» degan savol juda erta beriladi. CRM tizimini funksiyalar roʻyxatiga qarab emas, sotuvingiz qanday tuzilganiga va jamoangiz undan haqiqatan foydalanadimi-yoʻqmi, shunga qarab tanlash kerak. Quyida tayyor tizimlarni qanday solishtirishni, oʻz tizimingizni ishlab chiqish qachon oʻzini oqlashini va CRM qimmat telefon daftariga aylanib qolmasligi uchun nima qilish kerakligini koʻrib chiqamiz.
 
 ## CRM siz uchun nima qilishi kerak

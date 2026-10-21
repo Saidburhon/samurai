@@ -13,6 +13,7 @@
     "deploy:www": "wrangler deploy -c workers/www-redirect/wrangler.json",
     "indexnow": "node scripts/indexnow.mjs",
     "qa:seo": "node scripts/qa/seo-check.mjs",
+    "qa:launch": "node scripts/qa/launch-check.mjs",
     "qa:pages": "node scripts/qa/pages-probe.cjs",
     "qa:ja": "node scripts/qa/ja-review.mjs",
     "test": "node --test \"src/shared/*.test.js\" \"worker/*.test.js\"",

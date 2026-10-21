@@ -9,6 +9,8 @@ related: [sup-sla, cloud-devops, sup-qa, sup-dedicated-team]
 reading_minutes: 8
 ---
 
+Dasturlashda kaizen (改善) bir yillik oʻzgarishlarni bitta katta relizga yigʻib yurish oʻrniga sayt, ilova yoki botni har oy ozgina yaxshilashni anglatadi: bitta koʻrsatkichni tanlash, bitta narsani oʻzgartirish, oʻlchash va oʻzgarishni qoldirish yoki qaytarish. Oyiga qatʼiy ish hajmi va doimiy ritm (tahlil, ishlab chiqish, reliz, hisobot) haqida kelishing, tez-tez oʻzgarishlarni esa buyurtma, toʻlov va kirish uchun avtomatik testlar bilan himoyalang. Kichik relizlar nima ishlaganini koʻrsatadi va har bir gʻoyani mijozlarga haftalar ichida yetkazadi.
+
 Sayt, ilova yoki bot ishlayapti, buyurtmalar kelyapti. Yarim yil oʻtib esa shikoyatlar roʻyxati yigʻilib qoladi: yozilish formasi uzun, operatorlar admin paneldan norozi, chatda har kuni bir xil savol beriladi. Odatda bularning barchasi «ikkinchi versiya»ga qoldiriladi, ikki-uch yildan keyin esa tizimni noldan qayta qurishga buyurtma beriladi. Bu qimmatga tushadi, oylab choʻziladi va ishlab turgan narsani buzib qoʻyish xavfi bor. Boshqa yoʻl ham bor, yaponlar uni kaizen deyishadi: mahsulotni oz-ozdan, lekin har oy oʻzgartirib borish va har safar natija yaxshilandimi-yoʻqmi, tekshirish. Quyida bu amalda qanday koʻrinishi, oyiga qancha soat ajratish, tez-tez oʻzgartirib, hech narsani buzmaslik yoʻllari va nimani oʻlchash haqida gap boradi.
 
 ## Kaizen nima: afsonalarsiz

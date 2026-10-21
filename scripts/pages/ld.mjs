@@ -48,7 +48,10 @@ export function organization(lang) {
   });
   if (has(site.foundingDate)) o.foundingDate = String(site.foundingDate);
   o.address = addresses.length === 1 ? addresses[0] : addresses;
-  o.contactPoint = point;
+  // named Japanese-speaking contacts (content/site.json japan.contacts: { name, role, email, telephone, languages }),
+  // one ContactPoint each, only when the owner lists them
+  const jc = (j.contacts || []).filter((c) => has(c?.name));
+  o.contactPoint = jc.length ? [point, ...jc.map((c) => ({ '@type': 'ContactPoint', contactType: 'sales', name: c.name, ...(has(c.email) ? { email: c.email } : {}), ...(has(c.telephone) ? { telephone: c.telephone } : {}), availableLanguage: has(c.languages) ? c.languages : ['ja'], areaServed: 'JP' }))] : point;
   if (has(site.japan.legalName)) o.subOrganization = { '@type': 'Organization', name: site.japan.legalName, address: addresses[1] || undefined, telephone: has(j.telephone) ? j.telephone : undefined };
   if (has(site.sameAs)) o.sameAs = site.sameAs;
   return o;

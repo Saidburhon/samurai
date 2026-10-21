@@ -2,12 +2,14 @@
 slug: telegram-bot-cost
 lang: uz
 title: "Telegram-bot narxi Toshkentda: summa nimalarga bogʻliq"
-description: "Menyuli oddiy botdan toʻlov, CRM va AI bilan ishlaydigan botgacha: Telegram-bot narxini nima belgilaydi, qayerda tejash mumkin, qayerda yoʻq."
+description: "Qilichda oddiy Telegram-bot $1 000 dan, buyurtma boti $1 500–12 000, Mini App doʻkon $5 000 dan boshlanadi. Bot narxi nimalarga bogʻliq."
 date: 2026-10-21
 tags: [telegram-bot, narx, toʻlov, integratsiya, AI]
 related: [telegram, business, ai]
 reading_minutes: 9
 ---
+
+Toshkentdagi Qilich jamoasida arizalarni yigʻadigan oddiy bot {{price:tg-lead-bot}} turadi va {{weeks:tg-lead-bot}}da tayyor boʻladi. Katalog va toʻlovli buyurtma botining birinchi versiyasi {{price:tg-order-bot}} turadi va {{weeks:tg-order-bot}} oladi, toʻliq tizim — {{fprice:tg-order-bot}}; Telegram ichidagi Mini App doʻkon {{price:tg-mini-app-store}} turadi, muddati {{weeks:tg-mini-app-store}}. Narxni toʻlov, CRM yoki 1C bilan bogʻlash, boshqaruv paneli va AI javoblari oshiradi; quyida har biri nima qoʻshishi koʻrsatilgan.
 
 Telegram-bot buyurtma qilmoqchi boʻlib, uchta kompaniyaga yozdingiz va bir-biridan bir necha barobar farq qiladigan uchta narx oldingiz. Biri shubhali darajada arzon, boshqasining nega bunchalik qimmatligi esa tushunarsiz. Solishtirib ham boʻlmaydi: bir taklifda ikki qator matn, ikkinchisida bir sahifa atama. Ehtimol, hech kim sizni aldamoqchi emas, shunchaki har kim oʻzi tasavvur qilgan botni baholagan. Quyida bot qanday qismlardan iboratligini, har bir qism ishlab chiqish narxiga va oylik xarajatga nima qoʻshishini hamda ikki taklifni qatorma-qator qanday solishtirishni koʻrib chiqamiz.
 

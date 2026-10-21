@@ -9,6 +9,8 @@ related: [telegram, business, ai]
 reading_minutes: 8
 ---
 
+Automate first what loses orders or money every week, which in most small businesses in Uzbekistan means bringing every order and request from Telegram, Instagram, calls and the website into one place; payments and reconciliation come next, then stock, schedules and reminders. Find the candidates by logging a normal week of repeated tasks and scoring each by frequency, time and the cost of a mistake. Don't automate processes that still change every month, and keep a shared spreadsheet where it is enough.
+
 Orders come in through Telegram, Instagram and phone calls. Only the owner really knows what's in stock. Every evening an administrator spends an hour matching the cash drawer, the card terminal and card-to-card transfers, and something is usually a little off. It's tempting to "automate everything", and plenty of people will offer to sell you a CRM, build you an app or "add AI". Starting with a purchase is the most expensive way in. It's cheaper to find out which work eats the most hours and where a mistake costs the most, and start there. Here is a practical order of steps for a business of 5 to 50 people in Tashkent: a shop, café, clinic, learning centre or service company.
 
 ## Signs the business has outgrown manual work

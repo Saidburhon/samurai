@@ -9,6 +9,8 @@ related: [biz-payments, web-ecommerce, tg-order-bot, biz-1c-integration]
 reading_minutes: 9
 ---
 
+Click, Payme va Uzum orqali onlayn toʻlov qabul qilish uchun roʻyxatdan oʻtgan biznes (YaTT yoki kompaniya), hisob raqam va har bir provayder bilan shartnoma kerak; keyin dasturchi har bir provayderni shunday ulaydiki, buyurtma faqat provayder serveri tasdiqlagandan keyin toʻlangan hisoblanadi. Onlayn savdo uchun odatda har bir qatorida MXIK (IKPU) kodi boʻlgan fiskal chek kerak, qaytarishlar, qisman toʻlovlar va kunlik solishtirish esa boshidanoq oʻylab chiqilishi lozim. Uchala provayderni ulash odatda maʼqul: mijozlarning sevimli ilovasi bor, Humo va Uzcard kartalarini esa har biri qabul qiladi.
+
 Ehtimol, hozir sizda toʻlov shunday oʻtadi: menejer mijozga Telegramda karta raqamini yozadi, mijoz pul oʻtkazib, skrinshot yuboradi, menejer esa bank ilovasini ochib, oʻsha oʻtkazmani qidiradi. Kuniga oʻnta buyurtma boʻlsa, bunga chidasa boʻladi. Buyurtmalar koʻpaygach esa hech kim topa olmaydigan oʻtkazmalar, «axir toʻlaganman-ku» degan tortishuvlar, berilmagan cheklar va buxgalterning «tushum nega shaxsiy kartaga kelyapti?» degan savoli boshlanadi. Click, Payme yoki Uzum orqali onlayn toʻlov bu muammolarni hal qiladi, lekin aslida bu ikkita loyiha. Biri biznes tomoni: toʻlov tizimlari bilan shartnoma, fiskal chek, pulni qaytarish qoidalari. Ikkinchisi texnik tomoni: toʻlov haqidagi xabarlar, buyurtma holatlari, kundalik solishtirish. Quyida ikkalasini ham qilinish tartibida koʻrib chiqamiz.
 
 ## Biznes oʻsgani sari kartaga oʻtkazma nega ish bermay qoladi

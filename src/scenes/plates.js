@@ -16,7 +16,8 @@ const sine = (x) => 0.5 - 0.5 * Math.cos(Math.PI * clamp(x));
 const PLACE = {
 // range: the part of the plate's width that is on screen (the pen's front runs over it, not over the cropped tang)
   land: { base: { m: [-0.328, 0.902], ang: -14, s: 1.9, range: [0.42, 1] }, 3: { c: [0.555, 0.655], ang: 0, s: 1.05, range: [0.04, 0.98] } },
-  port: { base: { m: [-0.30, 1.06], ang: -62, s: 0.98, range: [0.36, 1] }, 3: { c: [0.50, 0.60], ang: 0, s: 0.56, range: [0.1, 0.9] } },
+  // (the phone's quench plate is cropped to its waterline and the submerged blade: af, the anchor as a fraction of it)
+  port: { base: { m: [-0.56, 1.433], ang: -62, s: 1.15, range: [0.52, 1] }, 3: { c: [0.5, 0.6], af: [0.6, 0.6], ang: 0, s: 0.92, range: [0.44, 0.76] } },
 };
 const DASHED = /\b(dash|dash2|hid|cl|fill|dot)\b/;
 const SAME = { 1: 'a', 2: 'a', 3: 'b', 4: 'c' };
@@ -70,7 +71,7 @@ export class Plates {
       if (!it.ready) continue;
       const [x0, y0, w, h] = it.vb, q = P[it.step] || P.base, s = q.s * k;
       // the anchor in the plate's own px: the machi (svg 0,0), or the plate's centre for the quench plate
-      const ax = q.c ? w / 2 : -x0, ay = q.c ? h / 2 : -y0;
+      const ax = q.c ? w * (q.af ? q.af[0] : 0.5) : -x0, ay = q.c ? h * (q.af ? q.af[1] : 0.5) : -y0;
       const tx = (q.c || q.m)[0] * W, ty = (q.c || q.m)[1] * H;
       it.box.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) rotate(${q.ang}deg) scale(${s.toFixed(4)}) translate(${(-ax).toFixed(1)}px,${(-ay).toFixed(1)}px)`;
     }
@@ -99,8 +100,12 @@ export class Plates {
       if (i >= 0 && i === k) { if (f <= 0) mode = 'rest'; else if (freeze) mode = f < 0.2 ? 'rest' : 'off'; else { mode = 'leave'; front = qa; } }
       else if (i >= 0 && i === k + 1) { if (f >= 1) mode = 'rest'; else { mode = 'arrive'; front = q; line = ql; } }
       if (!intro && d.atHold && d.hold === it.name) mode = 'rest';
+      // (the pen not yet on the paper, or the old plate wholly passed: nothing of that plate is drawn)
+      if (mode === 'leave' && front >= 0.999) mode = 'off';
       const r = (PLACE[layout][it.step] || PLACE[layout].base).range || [0, 1];
-      if (mode === 'leave' || mode === 'arrive') front = r[0] + (r[1] - r[0]) * front;
+      if (mode === 'arrive' && front <= 0.001) front = -1;
+      if (mode === 'leave' || (mode === 'arrive' && front >= 0)) front = r[0] + (r[1] - r[0]) * front;
+      if (front < 0) front = 0;
       const st = `${mode}|${front.toFixed(4)}|${line.toFixed(4)}`;
       if (st === it.st) continue;
       it.st = st;

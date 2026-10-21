@@ -4,10 +4,10 @@
 // Japanese companies considering an offshore development partner.
 export const B = {
   uz: {
-    crumb: 'Blog', h1: 'Blog',
+    crumb: 'Blog', h1: 'Qilich blogi',
     title: 'Blog: IT loyihalar narxi, muddati va qarorlar · Qilich',
     description: 'Biznes egalari uchun: sayt, ilova va Telegram-bot narxi, avtomatlashtirish, integratsiyalar, AI va loyiha boshqaruvi. Toshkentdagi yapon IT jamoasidan.',
-    lede: 'Biznes egalari uchun: narxlar, muddatlar va qarorlar.',
+    lede: 'Toshkentdagi yapon IT jamoasi Qilich biznes egalariga sayt, ilova va Telegram-bot qancha turishi, qancha vaqt olishi va loyihani qanday yuritishni tushuntiradi.',
     read: '{n} daqiqa oʻqish', published: 'Chop etilgan', updated: 'Yangilangan', by: 'Qilich jamoasi',
     count: '{n} ta maqola', rss: 'RSS', rssLabel: 'Blog yangiliklari RSS orqali',
     gloss: 'qaydlar',
@@ -22,10 +22,10 @@ export const B = {
     toc: 'Mundarija', table: 'Jadval', cue: 'Jadvalni suring', solCol: 'Yechim', groupCol: 'Yoʻnalish',
   },
   ru: {
-    crumb: 'Блог', h1: 'Блог',
+    crumb: 'Блог', h1: 'Блог Qilich',
     title: 'Блог: цены, сроки и решения в IT-проектах · Qilich',
     description: 'Для владельцев бизнеса: сколько стоят сайт, приложение и Telegram-бот, автоматизация, интеграции, ИИ и управление проектом. От японской IT-команды в Ташкенте.',
-    lede: 'Для владельцев бизнеса: цены, сроки, решения.',
+    lede: 'Qilich, японская IT-команда в Ташкенте, объясняет владельцам бизнеса, сколько стоят сайты, приложения и Telegram-боты, сколько времени занимает разработка и как вести проект.',
     read: '{n} мин чтения', published: 'Опубликовано', updated: 'Обновлено', by: 'Команда Qilich',
     count: 'Статей: {n}', rss: 'RSS', rssLabel: 'Новые статьи через RSS',
     gloss: 'записи',
@@ -40,10 +40,10 @@ export const B = {
     toc: 'Содержание', table: 'Таблица', cue: 'Таблица прокручивается', solCol: 'Решение', groupCol: 'Направление',
   },
   en: {
-    crumb: 'Blog', h1: 'Blog',
+    crumb: 'Blog', h1: 'The Qilich blog',
     title: 'Blog: prices, timelines and decisions in IT projects · Qilich',
     description: 'For business owners in Uzbekistan: what a website, app or Telegram bot costs, automation, integrations, AI, running a project. By a Japanese team in Tashkent.',
-    lede: 'For business owners: prices, timelines, decisions.',
+    lede: 'Qilich, a Japanese IT team in Tashkent, explains to business owners what websites, apps and Telegram bots cost, how long they take and how to run the project.',
     read: '{n} min read', published: 'Published', updated: 'Updated', by: 'The Qilich team',
     count: '{n} articles', rss: 'RSS', rssLabel: 'New articles by RSS',
     gloss: 'notes',

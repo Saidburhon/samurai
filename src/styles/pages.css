@@ -38,7 +38,7 @@ img { max-width: 100%; height: auto; }
 .nav.band { background: var(--washi); box-shadow: 0 1px 0 var(--line); }
 .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; }
 .brand .mon { width: 24px; height: 24px; fill: currentColor; }
-.brand .word { font-weight: 600; font-variation-settings: "SHRP" 100; font-size: 14px; letter-spacing: .2em; padding-top: 1px; }
+.brand .word { font-weight: 600; font-variation-settings: "SHRP" 100; font-size: 14px; letter-spacing: .2em; padding-top: 1px; text-transform: uppercase; }
 .nav .clocks { position: absolute; left: calc(var(--m) + 2 * (var(--col) + var(--g))); display: flex; gap: 8px; align-items: baseline; white-space: nowrap; visibility: hidden; }
 html.clocks-live .nav .clocks { visibility: visible; }
 .nav .clocks span, .nav .clocks i { opacity: .55; font-style: normal; }

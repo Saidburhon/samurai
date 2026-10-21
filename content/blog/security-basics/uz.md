@@ -9,6 +9,8 @@ related: [cloud-security-audit, cloud-backup-dr, cloud-identity, sup-sla]
 reading_minutes: 10
 ---
 
+Kichik biznes uchun minimal talab: domen, xosting, bot va toʻlov kabinetlari kompaniya nomida; hamma joyda parol menejeri va ikki bosqichli kirish; xodimlar va pudratchilar uchun eng kam huquqli shaxsiy akkauntlar, ular ketganda yopiladi; bot tokenlari va toʻlov kalitlari kabi maxfiy maʼlumotlar serverda saqlanadi; zaxira nusxalar asosiy serverdan alohida turadi va ular haqiqatan tiklab koʻrilgan; muntazam yangilanishlar va biror narsa javob bermay qolganda ogohlantirishlar. Biror narsa yuz bersa kimga qoʻngʻiroq qilishni bir sahifalik rejada oldindan yozib qoʻying; maqola oxiridagi «ha yoki yoʻq» roʻyxati qayerda turganingizni koʻrsatadi.
+
 Biznes egasi «saytni buzishibdi» degan gapni eshitsa, koʻz oldiga serverga haftalab kalit tanlaydigan xaker keladi. Kichik biznesda esa odatda hammasi ancha oddiy, alam qiladigani ham shu: hosting paroli bir daqiqada topiladi, saytning admin paneli butun internetga ochiq va ikki yildan beri yangilanmagan, bot tokeni umumiy ish chatida turibdi, bahorda ishdan boʻshatilgan menejer esa hamon CRMga kirib yuribdi. Bunga isteʼdodli xaker kerak emas. Internetdagi barcha manzillarni ketma-ket tekshirib chiqadigan va qurbonni biznesning kattaligiga qarab tanlamaydigan avtomatik skaner yoki xafa boʻlib ketgan sobiq xodim kifoya. Quyida biznes egasi texnik bilimsiz oʻzi tekshira oladigan va dasturchidan talab qila oladigan minimal choralar jamlangan. Bu bankning xavfsizlik dasturi emas, balki buyurtma va pul oʻtadigan har qanday sayt, bot yoki ilovada boʻlishi shart boʻlgan narsalar.
 
 ## Akkauntlar kompaniyaniki boʻlsin

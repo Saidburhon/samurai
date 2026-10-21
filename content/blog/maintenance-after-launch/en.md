@@ -9,6 +9,8 @@ related: [sup-sla, cloud-devops, cloud-backup-dr, sup-app-store]
 reading_minutes: 11
 ---
 
+After launch an app or website needs regular care even when nothing new is added: updates for new iOS and Android versions and the stores' yearly requirements, server, domain and certificate renewals, security updates, backups and bug fixes. Budget for it as a monthly retainer with guaranteed response times or as pay per task; a small retainer for monitoring and critical failures plus change requests by the hour often works best. Agree in advance what counts as a bug and what is a new feature, and keep the code and accounts in your name so another team could take over.
+
 The app is in the stores, the website loads, the bot is taking orders. The acceptance certificate is signed, and it feels as if the development costs are behind you. Then, six months later, the bot goes silent on a Saturday evening, Google Play emails you about new requirements, and the developer who built it all is busy on another project and replies two days later. That is what usually happens when nobody agreed on support in advance. Below we cover what maintaining a website, app or bot involves, how a bug differs from a new feature, which response times to put in the contract, how much to budget for the first year, and how to set things up so that another team could take over if it ever had to.
 
 ## Why software needs care when nothing changes

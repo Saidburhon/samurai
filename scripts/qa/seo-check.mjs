@@ -20,6 +20,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { LANGS, LANG_NAME, LOCALE, X_DEFAULT, HOME, fwWidth, site } from '../site.mjs';
 import { AGENTS } from '../build-pages.mjs';
+import { CATALOGUE_BASE } from '../../src/shared/catalogue.js';
 
 const base = (process.argv[2] || 'http://localhost:8810').replace(/\/$/, '');
 const reportPath = process.argv[3] || '.cache/seo-check.json';
@@ -217,7 +218,9 @@ for (const [path, { html: h }] of html) {
       const want = set[l] ? toPath(set[l]) : HOME[l];
       // a blog post without a twin in that language links that language's blog index (SOLUTIONS-SPEC §5.1)
       const blogIdx = !set[l] && /\/blog\/[^/]+\/$/.test(path) ? `${HOME[l]}blog/` : null;
-      if (at.href !== want && at.href !== blogIdx) fail(W, `the ${l} link goes to ${at.href}, its twin is ${want}`);
+      // a catalogue page a language does not offer (scripts/pages/ja-market.mjs) links that language's catalogue
+      const catIdx = !set[l] && Object.values(CATALOGUE_BASE).some((b) => path.startsWith(b) && path !== b) ? CATALOGUE_BASE[l] : null;
+      if (at.href !== want && at.href !== blogIdx && at.href !== catIdx) fail(W, `the ${l} link goes to ${at.href}, its twin is ${want}`);
       if ((l === lang) !== ('aria-current' in at)) fail(W, `aria-current on the wrong language link (${l})`);
     }
   }

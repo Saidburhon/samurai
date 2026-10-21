@@ -9,6 +9,8 @@ related: [web, mobile, telegram]
 reading_minutes: 9
 ---
 
+Design for three forms of text from the start: Uzbek in Latin script, Uzbek in Cyrillic and Russian. Put the language switch on every screen with each language named in itself, write both versions instead of translating word for word, leave room for Uzbek text that often runs longer, use a font that has the ʻ (U+02BB) mark, and make search understand both scripts. Planned from the first mockup, the second language adds days of copywriting and testing; added later, it means reworking the layout and the code.
+
 A familiar story: the site or app is built in Russian, and shortly before launch someone "adds Uzbek". The button "Buyurtmani rasmiylashtirish" wraps onto three lines, half the menu is still in Russian, the payment error message arrives in English, and a customer who searches for "somsa" gets "Nothing found" because the catalogue lists it as "самса". For a business in Uzbekistan the second language is not a translation you order at the end. It is a design constraint, like the size of a phone screen, and it belongs in the first mockup. What follows are practical rules that keep layouts from breaking and screens from ending up half translated.
 
 ## Who reads what

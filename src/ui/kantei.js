@@ -121,19 +121,25 @@ export function initToys(F, stage) {
   if (fine) {
     addEventListener('pointermove', (e) => {
       if (e.pointerType === 'touch') return;
-      const nx = e.clientX, ny = e.clientY;
-      if (Math.abs(nx - P.x) + Math.abs(ny - P.y) < 1) return;
-      const now = performance.now();
+      const nx = e.clientX, ny = e.clientY, now = performance.now();
+      if (Math.abs(nx - P.x) + Math.abs(ny - P.y) < 1) { if (!P.armed && P.hist) P.hist.push([now, nx, ny]); return; }
       // armed only by a real gesture (§9 item 32): 3 moves in 300 ms over 60 px (a single parked move never arms)
       if (!P.armed) {
         const hist = P.hist || (P.hist = []);
         hist.push([now, nx, ny]);
         while (hist.length && now - hist[0][0] > 300) hist.shift();
         let path = 0; for (let i = 1; i < hist.length; i++) path += Math.hypot(hist[i][1] - hist[i - 1][1], hist[i][2] - hist[i - 1][2]);
-        if (hist.length >= 3 && path >= 60) { P.armed = true; hist.length = 0; }
+        if (hist.length >= 3 && path >= 60) {
+          P.armed = true; hist.length = 0;
+          // the lamp is picked up where the cursor is: its blade point starts there (the weight still eases in)
+          if (S.geo && hero()) { const L = locate(S.geo, [nx, ny]); S.s = clamp(L.s, 0.02, 0.985); S.zf = clamp(L.zf, 0.06, 0.94); }
+        }
       }
       P.x = nx; P.y = ny; P.moved = now;
       if (!P.armed) return;
+      // while the lamp moves, the hero renders the film's moving frames (cheaper: the lamp keeps up on a software
+      // renderer); 150 ms after the last move the hold settles and its crisp frame is drawn again
+      if (hero() && F.state) F.state.windowSince = Math.max(F.state.windowSince ?? 0, now - 150);
       if (hero()) { S.ringT = P.moved; ring.style.transform = `translate(${nx}px, ${ny}px)`; ring.classList.add('on'); }
     }, { passive: true });
     document.documentElement.addEventListener('mouseleave', disarm);
@@ -257,7 +263,8 @@ export function initToys(F, stage) {
 
   // ---------------- the loop ----------------
   const tier = st.tier.tier;
-  const ambientHz = tier >= 3 ? 60 : tier === 1 ? 30 : 8;
+  // (a software renderer: 4 Hz, so a frame of the orbit is rarely in flight when the hand picks up the lamp)
+  const ambientHz = tier >= 3 ? 60 : tier === 1 ? 30 : 4;
   const loop = () => {
     requestAnimationFrame(loop);
     const now = performance.now(), dt = Math.min(0.1, (now - S.last) / 1000); S.last = now;

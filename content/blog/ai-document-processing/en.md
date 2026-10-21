@@ -9,6 +9,8 @@ related: [ai, business, telegram]
 reading_minutes: 7
 ---
 
+AI can read scanned, photographed and PDF waybills and invoices and enter the fields into 1C or a spreadsheet, as long as every value passes arithmetic and reference checks and a person confirms the flagged ones. E-invoices from Didox or Faktura.uz are already data and need an integration, not AI. Start with a pilot on your most frequent document type, using 100 to 200 real samples.
+
 Every day a stack of documents lands in accounting: supplier waybills, invoices, certificates of completed work, powers of attorney, contracts. Some are already in Didox, some arrived as PDFs in Telegram, and some came with the driver on paper, creased, with a stamp across the figures. Someone opens each one and types the supplier, tax ID, line items, quantities and totals into 1C. It is slow, dull work, and its mistakes surface a month later when you reconcile with the supplier. AI can take over the reading and the typing, but not for every document and not without checks. Below: which documents to hand to AI, how to build the path from a photo to a record in 1C, and where a person has to stay involved.
 
 ## Which documents are already data

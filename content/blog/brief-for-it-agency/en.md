@@ -9,6 +9,8 @@ related: [web, mobile, telegram, support]
 reading_minutes: 9
 ---
 
+A good brief fits on one or two pages and gives the agency six things: the goal in one sentence you can check, who will use the system, how the work is done today, the features sorted into must have, nice to have and not now, the systems it has to work with, and an honest budget range and deadline. It is not a technical specification: the agency writes that from your brief. With these facts the quote is sharper and the deadline more reliable; a one-page template is at the end.
+
 You sent the same message to three companies: "We need a website that takes orders online, how much?" The three prices that came back differ several times over. Usually nobody is cheating. Each company pictured a different product. One priced a single page with a form that sends the order to a manager's Telegram. Another priced a catalogue pulled from 1C, payment through Click and customer accounts. A brief closes that gap. The good news is that you don't need to know programming or write a technical specification to produce one. You need to describe, honestly, the business problem, the people who will use the system and the limits you work within. Below: what to put in each section, the questions a good agency should ask you back, and a one-page template you can copy and fill in.
 
 ## A brief is not a technical specification

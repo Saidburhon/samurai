@@ -2,12 +2,14 @@
 slug: website-cost
 lang: uz
 title: "Sayt ochish narxi: landing, korporativ sayt va internet-doʻkon"
-description: "Landing, korporativ sayt va internet-doʻkon narxi nimaga bogʻliq: dizayn, matnlar, boshqaruv paneli, toʻlovlar, 1C bilan bogʻlash va hosting."
+description: "Qilichda landing sahifa $1 000 dan, korporativ sayt $2 500–15 000, internet-doʻkon $8 000 dan boshlanadi. Toshkentda sayt narxi nimalarga bogʻliq."
 date: 2026-10-21
 tags: [sayt, narx, internet-doʻkon, landing, hosting]
 related: [web, business, cloud]
 reading_minutes: 9
 ---
+
+Toshkentdagi Qilich jamoasida landing sahifa {{price:web-landing}} turadi va {{weeks:web-landing}}da tayyor boʻladi. Korporativ saytning birinchi versiyasi {{price:web-corporate}} turadi va {{weeks:web-corporate}} oladi, toʻliq sayt — {{fprice:web-corporate}}; internet-doʻkonning birinchi versiyasi {{price:web-ecommerce}} turadi, muddati {{weeks:web-ecommerce}}. Bu oraliqlar ichida narxni sayt turi, maxsus dizayn, sahifa va tillar soni hamda toʻlov va 1C kabi integratsiyalar belgilaydi.
 
 Sayt kerak boʻldi: bitta frilanserdan va ikkita studiyadan narx soʻradingiz, uchta javob bir-biridan bir necha barobar farq qildi. Ularni solishtirish qiyin: biri bitta summa yozib yubordi, ikkinchisi tushunarsiz bandlarga toʻla sahifa joʻnatdi, uchinchisi avval brif toʻldirishni soʻrayapti. Odatda gap kimningdir ochkoʻzligida ham, tajribasizligida ham emas: har kim oʻz tasavvuridagi saytni baholagan. «Sayt» degan soʻz ostida uchta har xil mahsulot yashiringan, ishning katta qismi esa (matnlar, rasmlar, qidiruv tizimlari uchun sozlash, keyingi yilgi hosting) takliflarda koʻpincha umuman tilga olinmaydi. Quyida sayt ochish narxi nimalardan iborat ekanini, qaysi qarorlar sizga bogʻliqligini va qaysi xarajatlar odatda kech esga tushishini koʻrib chiqamiz.
 

@@ -9,6 +9,8 @@ related: [web, mobile, telegram]
 reading_minutes: 9
 ---
 
+Sayt, ilova yoki botni mobil internetdagi oʻrta darajali Android telefonda sinang: koʻp mijozlar uni aynan shunday ochadi va har bir ortiqcha soniya buyurtmalarni yoʻqotadi. Tezlikni PageSpeed Insights va Chrome vositalari bilan bepul oʻlchash mumkin, tuzatishni esa tartib bilan qiling: avval rasmlar (siqish, oʻlcham, WebP yoki AVIF, kechiktirib yuklash), keyin uchinchi tomon skriptlari. Aniq test telefoni koʻrsatilgan, oʻlchab boʻladigan tezlik byudjetini shartnomaga yozing.
+
 Yangi dizaynni odatda shunday qabul qilishadi: dasturchi saytni oʻz telefonida koʻrsatadi, rahbar oʻzinikida ochib koʻradi, ofisdagi Wi-Fi orqali hammasi chaqmoqdek ishlaydi. Bir oydan keyin reklama ketyapti, saytga oʻtishlar bor, buyurtma esa kam. Katta ehtimol bilan mijoz shu saytni ikki yilcha oldin olingan, xotirasi toʻlib qolgan Android telefonda, mobil internet orqali, liftda yoki yertoʻladagi doʻkonda ochyapti. Oq ekranni koʻradi, bir necha soniya kutadi va Telegramga qaytadi: u yerda raqobatchingiz allaqachon javob bergan. Mijoz sizga «sayt sekin ochilyapti» deb yozmaydi, shunchaki ketadi. Quyida saytingiz va ilovangizga shunday mijozning koʻzi bilan qanday qarash, sayt tezligini bepul qanday oʻlchash va birinchi navbatda nimani tuzatish kerakligi haqida gaplashamiz.
 
 ## Siz tekshirayotgan telefon mijozning telefoni emas

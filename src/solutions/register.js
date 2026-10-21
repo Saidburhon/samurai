@@ -51,7 +51,10 @@ export function initRegister(cfg) {
   const keys = ['industry', 'goal', 'budget', 'weeks', 'platform', 'q'];
   let sort = '';
   const read = () => Object.fromEntries(keys.map((k) => [k, (form.elements[k]?.value || '').trim()]));
+  // the state comes from the query, or from the fragment the site's own links use (/solutions/#q=1C: one crawlable
+  // URL per page, no parameter duplicates)
   const url = new URLSearchParams(location.search);
+  if (/^#[\w-]+=/.test(location.hash)) for (const [k, v] of new URLSearchParams(location.hash.slice(1))) if (!url.has(k)) url.set(k, v);
   for (const k of keys) if (url.has(k) && form.elements[k]) form.elements[k].value = url.get(k);
   if (url.has('sort')) sort = url.get('sort');
 
@@ -115,7 +118,7 @@ export function initRegister(cfg) {
       const p = new URLSearchParams();
       for (const k of keys) if (st[k]) p.set(k, st[k]);
       if (sort) p.set('sort', sort);
-      history.replaceState(null, '', `${location.pathname}${p.toString() ? `?${p}` : ''}${location.hash}`);
+      history.replaceState(null, '', `${location.pathname}${p.toString() ? `?${p}` : ''}${/^#[\w-]+=/.test(location.hash) ? '' : location.hash}`);
     }
   }
   form.addEventListener('submit', (e) => { e.preventDefault(); apply(); });

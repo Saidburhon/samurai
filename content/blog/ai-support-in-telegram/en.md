@@ -9,6 +9,8 @@ related: [ai, telegram, business]
 reading_minutes: 9
 ---
 
+An AI assistant in Telegram can answer repeat questions around the clock from a knowledge base you write, check order status and book appointments, but it should hand complaints and anything outside its rules to a person straight away. Build it from your real chat history, launch it in stages, starting with drafts that staff approve, and measure the share of conversations closed without staff. The cost has three parts: the build, AI usage per message, and keeping the knowledge base up to date.
+
 The receptionist at a clinic or a learning centre answers the same Telegram questions every day: how much is it, what time do you close, is there a free slot on Saturday, how do I get to you. At night and over the weekend the messages pile up, and by morning some of those people have already booked with whoever replied first. An AI assistant can take this part of the job and answer around the clock. Only this part, though: let it answer everything and sooner or later it will quote a price that doesn't exist or promise something you don't do. Below: how to split questions between the bot and your people, how to hand a conversation over to staff, and what goes into the cost.
 
 ## What AI support can and can't do

@@ -139,6 +139,16 @@ function shortcodes(C, lang, post) {
       if (inline) return `<a class="u" href="${target(C, s.id, lang).href}">${esc(pick(s.title, lang))}</a>`;
       return `<ul class="rel sc">${solutionRow(C, s, lang, 'p')}</ul>`;
     }
+    // inline figures for an answer-first opening (SEO-GEO-GUIDELINES, Non-negotiable 6): {{price:id}} and {{weeks:id}}
+    // are the MVP's price and timeline, {{fprice:id}} and {{fweeks:id}} the full version's, as the catalogue prints
+    // them at the build's rate (so the sentence never goes stale)
+    if (['price', 'fprice', 'weeks', 'fweeks'].includes(name)) {
+      if (!inline) throw new MdError(`${where}: {{${name}:…}} goes inside a sentence`);
+      const s = sol(args, where), v = name.startsWith('f') ? s.full : s.mvp;
+      if (name.endsWith('weeks')) return `<span class="nw">${weeks(v.weeks, lang)}</span>`;
+      const [m1, m2] = moneyParts(C, v.usd, lang);
+      return m2 ? `<span class="nw">${m1}</span> (<span class="nw">${m2}</span>)` : `<span class="nw">${m1}</span>`;
+    }
     if (name === 'prices') {
       const o = kv(args);
       if (o.group) {
@@ -253,7 +263,10 @@ function minutesOf(p, conv) {
   if (p.minutes) return p.minutes;
   return Math.max(1, Math.round(p.lang === 'ja' ? conv.cjk / 500 : conv.words / 200));
 }
-const time = (d, lang) => `<time datetime="${d}">${dateNum(d, lang)}</time>`;
+// English reads dates as "21 October 2026"; uz and ru keep 21.10.2026, ja 2026年10月21日
+const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const dateText = (d, lang) => { if (lang !== 'en') return dateNum(d, lang); const [y, m, day] = String(d).split('-').map(Number); return `${day} ${MONTHS_EN[m - 1]} ${y}`; };
+const time = (d, lang) => `<time datetime="${d}">${dateText(d, lang)}</time>`;
 
 function titleTag(p) {
   // the brand only where it fits a search result (about 60 characters); a long title stands alone
@@ -421,7 +434,7 @@ export function buildBlog({ assets, page, t, plates, jaPhrases, built: done }) {
         const html = plates(page({
           lang, slug: 'blog-post', path: p.path, twins, title: titleTag(p), description: p.description, type: 'WebPage',
           crumbs: [...crumbsBase, { name: p.title, path: p.path }], main: r.main, kanji: '記', gloss: L('gloss'),
-          assets, ldExtra: r.ld, ogType: 'article',
+          assets, ldExtra: r.ld, ogType: 'article', published: p.date, modified: p.updated || p.date,
           // the language switch: the twin, or that language's blog index, or its home
           switchTo: Object.fromEntries(LANGS.map((l) => [l, twins[l] || (posts.some((q) => q.lang === l) ? blogIndex(l) : HOME[l])])),
         }));

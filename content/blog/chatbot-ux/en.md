@@ -9,6 +9,8 @@ related: [telegram, ai]
 reading_minutes: 8
 ---
 
+Customers stay with a Telegram bot that does one main job from the first button, keeps its menus shallow, understands typed messages instead of answering “unknown command”, and always offers a person one tap away. Ask for data only when a task needs it, send few broadcasts, and acknowledge every tap within seconds. If you already have a bot, start with the operator button and a proper reply to text it didn't understand: it is the cheapest fix, and customers notice it at once.
+
 Your business has a Telegram bot, or will soon. A customer presses Start, and here is what happens: booking a dentist takes five levels of menus, a typed question gets "Unknown command", there is no "Talk to a person" button anywhere, and every other day a promotion arrives that nobody asked for. The customer does the easy thing: blocks the bot and messages the manager directly, or calls. The bot technically works; people just don't use it. Below are rules for designing a bot as a product with its own user experience, not as a tree of menus. They apply equally to a bot built on buttons and to one with AI behind it.
 
 ## One bot, one main job

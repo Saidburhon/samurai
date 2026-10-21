@@ -9,6 +9,8 @@ related: [web, mobile, telegram]
 reading_minutes: 8
 ---
 
+Most lost orders come from a few fixable mistakes: sign-up before the order, delivery cost and the minimum order shown only at the end, address forms that ignore landmarks, a payment step that leaves the customer unsure what happened, a hidden language switch, slow screens on mid-range Android, and buttons too small to tap. Find your own leaks with a step-by-step funnel in Google Analytics 4, Yandex Metrica or your bot's logs, and fix the cheapest things first: text and settings often take hours, not a redesign.
+
 The ads are running, people visit the site, dozens start the bot every day, and still there are fewer orders than you expected. In analytics this shows up as abandoned carts. In real life it is a customer who picked plov for four, got as far as checkout and closed the tab. The reason is usually neither the price nor the product. It is the small things between the cart and the payment: an extra step, a confusing field, a total that jumps on the last screen. Below are the common UX mistakes in online shops, delivery services and booking businesses in Tashkent, and how to spot each one in your own business, either in the numbers or simply by watching a customer.
 
 ## Sign-up before the order

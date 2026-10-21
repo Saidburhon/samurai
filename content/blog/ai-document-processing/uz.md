@@ -9,6 +9,8 @@ related: [ai, business, telegram]
 reading_minutes: 7
 ---
 
+AI skanerlangan, suratga olingan va PDF koʻrinishidagi yuk xatlari va hisob-fakturalarni oʻqib, maydonlarni 1C yoki jadvalga kirita oladi, agar har bir qiymat arifmetik va maʼlumotnoma tekshiruvlaridan oʻtsa va belgilangan maydonlarni inson tasdiqlasa. Didox yoki Faktura.uz orqali keladigan elektron hisob-fakturalar allaqachon maʼlumot, ular uchun AI emas, integratsiya kerak. Eng koʻp keladigan bitta hujjat turi va 100–200 ta haqiqiy namuna bilan pilotdan boshlang.
+
 Buxgalteriyaga har kuni bir dasta hujjat keladi: taʼminotchilarning yuk xatlari, hisobvaraqlar, dalolatnomalar, ishonchnomalar, shartnomalar. Bir qismi Didoxda turibdi, bir qismini Telegramga PDF qilib tashlashgan, yana bir qismini haydovchi qogʻozda olib kelgan: gʻijimlangan, raqamlar ustidan muhr bosilgan. Kimdir ularni birma-bir ochib, taʼminotchi, STIR, tovarlar, miqdor va summalarni 1Cga koʻchiradi. Ish sekin va zerikarli, xatolar esa bir oydan keyin, taʼminotchi bilan hisob-kitoblar solishtirilganda yuzaga chiqadi. Oʻqish va koʻchirish ishini AI oʻz zimmasiga olishi mumkin, lekin hamma hujjatda emas va tekshiruvsiz emas. Quyida shular haqida: qaysi hujjatlarni AIga berish kerak, rasmdan 1Cdagi yozuvgacha boʻlgan yoʻl qanday quriladi va qayerda odamsiz ish bitmaydi.
 
 ## Qaysi hujjatlar allaqachon tayyor maʼlumot

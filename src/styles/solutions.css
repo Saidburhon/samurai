@@ -74,6 +74,9 @@ html.no-js .sort, html.no-js .lens-out { display: none; }
 /* ---------------- the register: chapters by group, ruled rows ---------------- */
 .chap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); padding: 44px 0 56px; border-top: 1px solid var(--sumi); }
 .chap[hidden] { display: none; }
+/* the catalogue is 158 rows: a chapter (and a price table) is laid out only when it comes near the screen, holding the
+   room of its rows until then (--ch-h, set by the build; `auto` keeps the real height once it has been seen) */
+.register > .chap[style*="--ch-h"], .prices > .ptab { content-visibility: auto; contain-intrinsic-size: auto var(--ch-h, 400px); }
 .reg-group .chap { border-top: 0; padding-top: 0; }
 .ch-h { grid-column: 1 / span 3; position: relative; align-self: start; position: sticky; top: 96px; padding-right: 20px; }
 .ch-h h2 { font-weight: 280; font-size: clamp(26px, calc(34 * var(--fit)), 34px); line-height: 1.08; letter-spacing: -.02em; font-variation-settings: "SHRP" 100; text-wrap: balance; }

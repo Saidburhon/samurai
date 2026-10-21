@@ -9,6 +9,8 @@ related: [sup-sla, cloud-devops, sup-qa, sup-dedicated-team]
 reading_minutes: 8
 ---
 
+Kaizen (改善) in software means improving a site, app or bot a little every month instead of saving a year of changes for one big release: pick one number, change one thing, measure it, then keep or roll back the change. Agree a fixed monthly volume of work with a steady rhythm of review, development, release and report, and protect frequent changes with automated tests of ordering, payment and login. Small releases show what worked and get each idea to customers within weeks.
+
 Your site, app or bot is live and orders are coming in. Six months later you have a list of complaints: the booking form is too long, operators grumble about the admin panel, and the chat gets the same question every day. The usual response is to save it all for "version two" and then, two or three years on, to order a full rebuild. That costs a lot, takes months, and can break things that used to work. There is another way, known in Japan as kaizen: change the product a little at a time, every month, and check each time whether it actually got better. Below: what that looks like in practice, how many hours to budget, how to change things often without breaking them, and what to measure.
 
 ## What kaizen means, without the myth

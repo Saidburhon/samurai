@@ -9,6 +9,8 @@ related: [web, mobile, telegram]
 reading_minutes: 8
 ---
 
+Yoʻqolgan buyurtmalarning koʻpi bir nechta tuzatsa boʻladigan xatolardan kelib chiqadi: buyurtmadan oldin roʻyxatdan oʻtish, yetkazib berish narxi va minimal buyurtmaning faqat oxirida koʻrinishi, moʻljalni hisobga olmaydigan manzil shakllari, mijoz nima boʻlganini tushunmay qoladigan toʻlov, yashirin til almashtirgich, oʻrta darajali Androidda sekin ekranlar va juda kichik tugmalar. Oʻz yoʻqotishlaringizni Google Analytics 4, Yandex Metrika yoki bot loglaridagi bosqichma-bosqich voronka bilan toping va eng arzonidan boshlab tuzating: matn va sozlamalar koʻpincha qayta dizayn emas, bir necha soat oladi.
+
 Reklamaga pul ketyapti, saytga odam kiryapti, botni har kuni oʻnlab kishi ochyapti, lekin buyurtmalar kutilganidan kam. Analitikada bu tashlab ketilgan savatlar boʻlib koʻrinadi. Hayotda esa bu shunday boʻladi: mijoz toʻrt kishilik osh tanladi, buyurtmani rasmiylashtirishgacha yetib keldi va sahifani yopdi. Koʻpincha sabab narxda ham, mahsulotda ham emas, balki savatdan toʻlovgacha boʻlgan yoʻldagi mayda narsalarda: ortiqcha qadam, tushunarsiz maydon, oxirgi ekranda birdan oshib ketgan summa. Quyida internet doʻkon, yetkazib berish va onlayn yozilish xizmatlarida koʻp uchraydigan UX xatolarini koʻrib chiqamiz va har birini oʻzingizda qanday topishni aytamiz: raqamlarga qarab yoki shunchaki mijozni kuzatib.
 
 ## Buyurtmadan oldin roʻyxatdan oʻtish

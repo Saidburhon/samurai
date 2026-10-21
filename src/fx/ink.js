@@ -83,7 +83,7 @@ export class Ink {
   // G3, the film (scenes/frame.js), every frame: which drawing lies on the paper ('hero', 'saya' for the bookend,
   // 'plan' for Yaki), its opacity, the reveal. crisp (inside a hold window): the stipple is redrawn from its dot list;
   // between holds it keeps its last raster, moved by the change of the paper's matrix (one CSS matrix, no redraw).
-  film(stage, pose, { draw = 'hero', alpha = 1, reveal = 2, front = 0, annot = true, blade = 1, crisp = true } = {}) {
+  film(stage, pose, { draw = 'hero', alpha = 1, reveal = 2, front = 0, annot = true, blade: bladeA = 1, crisp = true } = {}) {
     const td = stage.td, W = stage.w, H = stage.h;
     if (!this.hair) { hairlines(); this.hair = true; }
     if (!this.groups) this.groups = { hero: this.hero, plan: document.getElementById('osh-plan'), saya: document.getElementById('osh-saya') };
@@ -99,7 +99,7 @@ export class Ink {
     this.paper.style.opacity = alpha < 0.999 ? alpha.toFixed(3) : '';
     // the drawn sword (outline, fittings and stipple, or the saya) fades under the lifted steel (§8 G2: registered or
     // faded, never a second outline beside the steel); the dimensions and labels stay
-    const bo = blade < 0.999 ? Math.max(0, blade).toFixed(3) : '', bk = bo + '|' + draw;
+    const bo = bladeA < 0.999 ? Math.max(0, bladeA).toFixed(3) : '', bk = bo + '|' + draw;
     if (this.bladeK !== bk) {
       this.bladeK = bk;
       if (!this.bladeEls) this.bladeEls = this.hero ? [...this.hero.querySelectorAll('.o-blade, .o-kosh')] : [];
@@ -125,8 +125,8 @@ export class Ink {
     st.willChange = crisp ? '' : 'transform';
     this.m = { e0, ex, ey, k };
     const u0 = reveal < 1.5 ? reveal * LKT : null;
-    const blade = draw === 'hero' ? this.blade : draw === 'saya' && this.groups.saya ? this.groups.saya.children : [];
-    this.clipOn(blade, draw === 'saya' && u0 != null ? reveal * (this.lkj || (this.lkj = LKJ())) : u0);
+    const clipEls = draw === 'hero' ? this.blade : draw === 'saya' && this.groups.saya ? this.groups.saya.children : [];
+    this.clipOn(clipEls, draw === 'saya' && u0 != null ? reveal * (this.lkj || (this.lkj = LKJ())) : u0);
     if (draw === 'hero') {
       this.stip.style.visibility = '';
       // the stipple is never clipped in the film: the steel is drawn over the ink wherever it has arrived (#gl lies

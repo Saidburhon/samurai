@@ -2,12 +2,14 @@
 slug: website-cost
 lang: en
 title: "Website cost in Tashkent: from landing page to online shop"
-description: "What drives the price of a landing page, a company website and an online shop: design, content, CMS, payments, 1C sync and hosting."
+description: "Qilich builds a landing page from $1,000, a company website for $2,500–15,000 and an online shop from $8,000: what sets the price of a website in Tashkent."
 date: 2026-10-21
 tags: [website, cost, online shop, landing page, hosting]
 related: [web, business, cloud]
 reading_minutes: 9
 ---
+
+At Qilich in Tashkent, a landing page costs {{price:web-landing}} and takes {{weeks:web-landing}}. A company website costs {{price:web-corporate}} for a first version in {{weeks:web-corporate}} and {{fprice:web-corporate}} as a full site; the first version of an online shop costs {{price:web-ecommerce}} and takes {{weeks:web-ecommerce}}. Within these ranges, the price is set by the type of site, custom design, the number of pages and languages, and integrations such as payments and 1C.
 
 You asked a freelancer and two studios what a website would cost and got three figures that are several times apart. They are hard to compare: one sent a single number, the second sent a page of line items you can't make sense of, and the third wants you to fill in a brief first. Usually nobody is being greedy or naive; each of them priced the site they had in mind. "Website" covers three different products, and a good part of the work (texts, photos, search setup, next year's hosting) often isn't in the quote at all. Here is what the price of a website in Tashkent is made of, which decisions are yours, and which costs people tend to remember too late.
 

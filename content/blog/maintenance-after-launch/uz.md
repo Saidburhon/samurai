@@ -9,6 +9,8 @@ related: [sup-sla, cloud-devops, cloud-backup-dr, sup-app-store]
 reading_minutes: 11
 ---
 
+Ishga tushirilgandan keyin ilova yoki sayt hech narsa qoʻshilmasa ham muntazam parvarish talab qiladi: iOS va Androidning yangi versiyalari hamda doʻkonlarning har yilgi talablari uchun yangilanishlar, server, domen va sertifikatlarni uzaytirish, xavfsizlik yangilanishlari, zaxira nusxalar va xatolarni tuzatish. Buning byudjeti kafolatlangan javob vaqti bilan oylik abonement yoki har bir vazifa uchun toʻlov sifatida rejalashtiriladi; koʻpincha monitoring va jiddiy nosozliklar uchun kichik abonement va soatbay oʻzgartirishlar eng yaxshi ishlaydi. Nima xato, nima yangi funksiya ekanini oldindan kelishib oling, kod va akkauntlarni esa boshqa jamoa qabul qila olishi uchun oʻz nomingizda saqlang.
+
 Ilova doʻkonga chiqdi, sayt ochilyapti, bot buyurtma qabul qilyapti. Qabul qilish dalolatnomasi imzolandi va dasturlash xarajatlari ortda qolgandek tuyuladi. Olti oydan keyin esa shanba kuni kechqurun bot birdan javob bermay qoʻyadi, Google Playdan yangi talablar haqida xat keladi, loyihani qilgan dasturchi esa boshqa ish bilan band va ikki kundan keyin javob beradi. Qoʻllab-quvvatlash oldindan kelishilmagan loyihalarda bu odatiy holat. Quyida sayt, ilova va botni texnik qoʻllab-quvvatlashga nimalar kirishi, xatoni tuzatish yangi vazifadan qanday farq qilishi, shartnomaga qanday javob muddatlarini yozish, birinchi yilga qancha pul ajratish va zarurat boʻlsa loyihani boshqa jamoa qabul qila olishi uchun nimalarni oldindan qilib qoʻyish haqida soʻz boradi.
 
 ## Hech kim tegmasa ham dastur nega eskiradi

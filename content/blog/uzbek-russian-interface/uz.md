@@ -9,6 +9,8 @@ related: [web, mobile, telegram]
 reading_minutes: 9
 ---
 
+Boshidanoq matnning uch shakli uchun loyihalang: lotin yozuvidagi oʻzbekcha, kirill yozuvidagi oʻzbekcha va ruscha. Til almashtirgich har bir ekranda boʻlsin va har bir til oʻz tilida nomlansin; ikkala versiya soʻzma-soʻz tarjima qilinmasdan yozilsin; koʻpincha uzunroq boʻladigan oʻzbekcha matnga joy qoldirilsin; shriftda ʻ (U+02BB) belgisi boʻlsin, qidiruv esa ikkala yozuvni tushunsin. Ikkinchi til birinchi maketdan rejalashtirilsa, matn va test uchun bir necha kun qoʻshadi; keyin qoʻshilsa, maket va kodni qayta ishlashga toʻgʻri keladi.
+
 Koʻp uchraydigan holat: sayt yoki ilova avval rus tilida qilinadi, ishga tushirishdan oldin esa «oʻzbekchasini ham qoʻshib qoʻyamiz» deyiladi. Natijada «Buyurtmani rasmiylashtirish» yozuvi tugmaga sigʻmay, uch qatorga boʻlinib ketadi, menyuning yarmi ruscha qoladi, toʻlovdagi xatolik haqidagi xabar inglizcha chiqadi, «somsa» deb qidirgan mijoz esa «Hech narsa topilmadi» yozuvini koʻradi, chunki katalogda «самса» deb yozilgan. Oʻzbekistondagi biznes uchun ikkinchi til ish oxirida buyurtma qilinadigan tarjima emas. U telefon ekranining oʻlchami kabi vazifaning shartlaridan biri, uni birinchi maketdanoq hisobga olish kerak. Quyida tugmalar sigʻmay qolishi va ekranlar yarim tarjima qilinib qolishining oldini oladigan amaliy qoidalarni keltiramiz.
 
 ## Kim nimani oʻqiydi

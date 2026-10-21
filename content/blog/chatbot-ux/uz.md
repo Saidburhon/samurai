@@ -9,6 +9,8 @@ related: [telegram, ai]
 reading_minutes: 8
 ---
 
+Mijozlar birinchi tugmadanoq bitta asosiy ishni bajaradigan, menyusi sayoz, «nomaʼlum buyruq» oʻrniga yozilgan matnni tushunadigan va doim bir bosishda odam bilan bogʻlaydigan Telegram-botda qoladi. Maʼlumotni faqat vazifa uchun kerak boʻlganda soʻrang, xabarnomalarni kam yuboring va har bir bosishga soniyalar ichida javob bering. Botingiz allaqachon boʻlsa, operator tugmasi va tushunilmagan matnga toʻgʻri javobdan boshlang: bu eng arzon tuzatish va mijozlar uni darhol sezadi.
+
 Biznesingizda Telegram-bot bor yoki yaqinda ishga tushadi. Mijoz botni ishga tushiradi va muammolar boshlanadi: stomatologga yozilish uchun besh darajali menyudan oʻtish kerak, yozib yuborilgan savolga bot «Nomaʼlum buyruq» deb javob beradi, «Operator bilan bogʻlanish» tugmasi umuman yoʻq, har ikki kunda esa hech kim soʻramagan aksiya keladi. Mijoz eng oson yoʻlni tanlaydi: botni bloklaydi-yu, menejerga shaxsiy chatda yozadi yoki qoʻngʻiroq qiladi. Bot texnik jihatdan ishlayapti, faqat undan hech kim foydalanmayapti. Quyida botni menyular daraxti sifatida emas, oʻz foydalanuvchi tajribasi (UX) boʻlgan mahsulot sifatida loyihalash qoidalari. Ular tugmali oddiy botga ham, AI bilan ishlaydigan botga ham birdek taalluqli.
 
 ## Bitta bot, bitta asosiy vazifa

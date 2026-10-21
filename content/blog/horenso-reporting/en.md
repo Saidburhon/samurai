@@ -9,6 +9,8 @@ related: [mobile, web, telegram, support]
 reading_minutes: 7
 ---
 
+Hōrensō (報連相) means three habits a development team keeps without being asked: a written progress report on the same day every week, with links to what you can see (hōkoku); bad news on the day the team learns it (renraku); and consulting you before any decision that changes the scope, cost, timeline or what users see (sōdan). Qilich works this way. Weeks without news, or “90% done” for a month, are red flags.
+
 You found a developer, paid the deposit, and for the first few days the chat was lively. Then the replies got shorter: "all on track", "almost done". A month later you see the result for the first time: it isn't quite what you agreed, and the deadline has already slipped. Usually the code isn't the problem. The team simply had no habit of telling the client, regularly and in plain facts, what was going on. Japanese companies call that habit hōrensō. Below: its three parts, what a good report in Telegram looks like, what the team needs from you in return, the signs that a contractor is keeping you in the dark, and the questions to ask before you sign.
 
 ## Where the word comes from

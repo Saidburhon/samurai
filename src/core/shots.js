@@ -242,11 +242,13 @@ export const TRANS = {
   'togi.mirror': { type: 'cut', cut: { ang: 90, at: [0.5, 0.5] } },
   'tsuba.guard': { type: 'cam', studioW: 0 },
   'tsuba.carpet': { type: 'cam' },
-  'tsuba.team': { type: 'wipe', wipe: 'light' },
+  // (final pass: the iris of the light wipe left a disc of the tsuba over the dial at its mid frame, r1: the house cut)
+  'tsuba.team': { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } },
   'toki.0900': { type: 'cam' },
   'toki.1130': { type: 'cam' },
   'toki.1400': { type: 'wipe', wipe: 'sweep' },
-  'temur.quote': { type: 'wipe', wipe: 'shadow' },
+  // (final pass: the shadow wipe's hard vertical front sliced the quote, r1: the house cut)
+  'temur.quote': { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } },
   'noto.sheath': { type: 'cam', groups: { mat: [0.15, 0.85, 'seat'] } },
   'noto.contact': { type: 'cut', cut: { ang: -18, at: [0.4965, 0.478] } },
   'bookend.drawing': { type: 'reveal', groups: { mat: [0.15, 0.6, 'power2.inOut'], cam: [0.55, 0.85, 'lift'], look: [0.55, 0.85, 'lift'], ink: [0.55, 0.85, 'lift'] } },

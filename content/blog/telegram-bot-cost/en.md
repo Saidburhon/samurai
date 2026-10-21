@@ -2,12 +2,14 @@
 slug: telegram-bot-cost
 lang: en
 title: "Telegram bot cost in Tashkent: what drives the price"
-description: "From a menu bot to one with payments, CRM sync and AI: what really sets the price of a Telegram bot, where you can save and where you shouldn't."
+description: "Qilich builds a simple Telegram bot from $1,000, an ordering bot for $1,500–12,000 and a Mini App shop from $5,000: what sets the price of a bot."
 date: 2026-10-21
 tags: [telegram bot, cost, payments, integrations, AI]
 related: [telegram, business, ai]
 reading_minutes: 9
 ---
+
+At Qilich in Tashkent, a simple bot that collects requests costs {{price:tg-lead-bot}} and takes {{weeks:tg-lead-bot}}. An ordering bot with a catalogue and payment costs {{price:tg-order-bot}} for a first version in {{weeks:tg-order-bot}} and {{fprice:tg-order-bot}} as a full system; a shop inside Telegram as a Mini App costs {{price:tg-mini-app-store}} and takes {{weeks:tg-mini-app-store}}. Payments, links to a CRM or 1C, an admin panel and AI replies raise the price; the sections below show what each adds.
 
 You asked three companies for "a Telegram bot for orders" and got three prices, the highest several times the lowest. One looks suspiciously cheap, another is expensive for no obvious reason, and you can't compare them: one quote is two lines long, the other is a page of jargon. Most likely nobody is trying to cheat you. Each of them simply priced a different bot. This article breaks a bot into the parts you pay for, shows what each part adds to the build and to the monthly bill, and gives you a way to put two quotes side by side, line by line.
 

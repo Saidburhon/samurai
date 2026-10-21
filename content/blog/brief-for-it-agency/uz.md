@@ -9,6 +9,8 @@ related: [web, mobile, telegram, support]
 reading_minutes: 9
 ---
 
+Yaxshi brif bir-ikki sahifadan iborat boʻlib, agentlikka olti narsani beradi: tekshirsa boʻladigan bitta jumladagi maqsad, tizimdan kim foydalanishi, ish hozir qanday yurishi, «albatta kerak», «boʻlsa yaxshi» va «hozir emas» roʻyxatlariga ajratilgan funksiyalar, bogʻlanishi kerak boʻlgan tizimlar hamda halol byudjet oraligʻi va muddat. Bu texnik topshiriq emas: uni agentlik sizning brifingiz asosida yozadi. Bu faktlar bilan smeta aniqroq, muddat esa ishonchliroq boʻladi; bir sahifalik shablon maqola oxirida.
+
 Uchta kompaniyaga bir xil xabar yubordingiz: «Buyurtma qabul qiladigan Telegram-bot kerak, qancha turadi?» Kelgan uchta narx bir-biridan bir necha baravar farq qiladi. Odatda hech kim aldamayapti: har bir kompaniya koʻz oldiga boshqa-boshqa mahsulotni keltirgan. Biri buyurtmani menejerga yuboradigan oddiy menyu-botni hisoblagan, boshqasi esa katalogi 1Cdan olinadigan va Payme orqali toʻlov qabul qiladigan botni. Brif aynan shu chalkashlikni yoʻqotadi. Yaxshi tomoni, uni yozish uchun dasturlashni bilish ham, texnik topshiriq tuzish ham shart emas. Biznes muammosini, tizimdan kim foydalanishini va qanday cheklovlar borligini halol yozib berish kifoya. Quyida: har bir boʻlimga nima yozish kerakligi, agentlik sizga javoban qanday savollar berishi kerakligi va nusxa olib toʻldirsa boʻladigan bir sahifalik shablon.
 
 ## Brif texnik topshiriq emas

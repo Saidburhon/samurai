@@ -9,6 +9,8 @@ related: [ai, telegram, business]
 reading_minutes: 9
 ---
 
+Telegramdagi AI yordamchi siz yozgan bilimlar bazasi asosida takroriy savollarga kecha-kunduz javob bera oladi, buyurtma holatini tekshiradi va qabulga yozadi, lekin shikoyatlarni va qoidalaridan tashqaridagi hamma narsani darhol xodimga oʻtkazadi. U chatlaringizning haqiqiy tarixi asosida quriladi, bosqichma-bosqich, avval xodimlar tekshiradigan qoralamalar bilan ishga tushiriladi va xodimsiz yopilgan suhbatlar ulushi oʻlchanadi. Narx uch qismdan iborat: ishlab chiqish, har bir xabar uchun AI toʻlovi va bilimlar bazasini yangilab turish.
+
 Klinika yoki oʻquv markazi administratori har kuni Telegramda bir xil savollarga javob beradi: narxi qancha, soat nechagacha ishlaysiz, shanbaga joy bormi, sizlarga qanday borsa boʻladi. Kechasi va dam olish kunlari xabarlar toʻplanib qoladi, ertalabgacha esa mijozlarning bir qismi tezroq javob bergan joyga yozilib ulguradi. Biznes uchun AI yordamchi shu ishni oʻz zimmasiga olib, kecha-yu kunduz javob bera oladi. Lekin faqat shu ishni: unga hamma savolga javob berishga ruxsat bersangiz, ertami-kechmi u mavjud boʻlmagan narxni aytadi yoki siz qilmaydigan ishni vaʼda qiladi. Quyida savollarni bot va xodimlar oʻrtasida qanday taqsimlash, suhbatni odamga qanday uzatish va xarajatlar nimalardan iborat ekanini koʻrib chiqamiz.
 
 ## AI yordamchi nimani qila oladi va nimani qilmasligi kerak

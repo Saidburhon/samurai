@@ -9,6 +9,8 @@ related: [biz-1c-integration, web-ecommerce, tg-b2b-ordering, mob-field-sales]
 reading_minutes: 9
 ---
 
+A 1C integration keeps prices and stock in 1C and sends orders from the site or bot back into 1C as ready documents, so nobody retypes them. A standard CommerceML exchange with an unmodified configuration usually takes from a few days to a couple of weeks; a custom exchange for a bot or several channels usually takes a few weeks per flow. Messy data in 1C causes most delays, so clean up duplicates, prices and units before the work starts.
+
 Your stock and prices live in 1C, but you also sell through a website, a Telegram bot or sales reps. Without an exchange between them, someone does the job by hand: exports a price list to Excel once a day, fixes prices on the site, retypes bot orders into 1C. Mistakes follow. A customer pays for an item that is no longer in the warehouse. A wholesale buyer sees an old price in the bot and insists on it. An order gets lost somewhere between the chat and accounting. Connecting 1C fixes this, with one caveat worth hearing before any work starts: the exchange moves your data exactly as it is. If 1C has three records for the same product, the site will show three products. So we start not with technology but with what should flow where, and what state your data is in.
 
 ## What should flow where

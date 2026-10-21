@@ -9,6 +9,8 @@ related: [business, telegram, ai]
 reading_minutes: 10
 ---
 
+Avtomatlashtirish tejalgan soatlar, oldi olingan xatolar va endi yoʻqotilmaydigan buyurtmalar yigʻindisi ishlab chiqish va bir yillik joriy xarajatlardan oshganda oʻzini oqlaydi. Tejalgan soatlar shunday hisoblanadi: (oldingi daqiqalar − keyingi daqiqalar) × oyiga vazifalar soni ÷ 60 × xodim bir soatining toʻliq qiymati; boshlangʻich qiymatlar loyiha boshlanishidan ikki hafta oldin oʻlchanadi. Natija ishga tushirilgandan ikki-uch oy oʻtib xuddi shu oʻlchovlar bilan tekshiriladi.
+
 Pudratchi buyurtmalar uchun Telegram-bot smetasini yubordi, unda faqat bitta umumiy summa bor. CRM sotuvchisi «uch oyda oʻzini oqlaydi» deydi, lekin hisob-kitobini koʻrsatmaydi. Buxgalter esa qoʻllab-quvvatlash uchun har oy toʻlanadigan pul qayerdan olinishini soʻrayapti. Dastur oʻzini oqlaydimi, yoʻqmi, buni bilish uchun konsultant ham, murakkab moliyaviy model ham shart emas. Bitta jadval, ikki haftalik kuzatuv va halol taxminlar yetadi. Quyida shunday usulni koʻrib chiqamiz: biznes egasi yoki moliyachi avtomatlashtirish samaradorligini loyiha boshlanishidan oldin oʻzi hisoblaydi, ishga tushirgandan keyin esa hisob toʻgʻri chiqqanini tekshiradi.
 
 Butun hisob-kitob bitta formulaga tushadi:

@@ -2,12 +2,14 @@
 slug: mobile-app-cost
 lang: en
 title: "What a mobile app costs in Tashkent: where the budget goes"
-description: "What sets the price of an iOS and Android app: user journeys, backend, payments, integrations, store publishing, and the costs that start after launch."
+description: "At Qilich the first version of a customer app for iOS and Android costs $12,000–25,000 and takes 8–12 weeks; a full app $30,000–70,000. Where the budget goes."
 date: 2026-10-21
 tags: [mobile app, cost, iOS, Android, backend]
 related: [mobile, cloud, web]
 reading_minutes: 10
 ---
+
+At Qilich in Tashkent, the first version of a customer app for iOS and Android costs {{price:mob-customer-app}} and takes {{weeks:mob-customer-app}}. The full version costs {{fprice:mob-customer-app}} and takes {{fweeks:mob-customer-app}}. Most of the budget goes not into the screens you see but into the server side, integrations and testing; the sections below break it down.
 
 You want an app for delivery, bookings, a loyalty programme or wholesale orders, and the first question is what it will cost. Ask a few companies in Tashkent and the highest quote can be several times the lowest, and much of each estimate covers things you never see on the phone: the server, the admin panel, integrations, testing. This article walks through where the money in an app goes, which decisions move the budget most, and which costs begin after launch, so that you plan for the app's first year and not only for release day.
 

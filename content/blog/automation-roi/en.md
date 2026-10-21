@@ -9,6 +9,8 @@ related: [business, telegram, ai]
 reading_minutes: 10
 ---
 
+Automation pays for itself when the hours saved, the mistakes avoided and the orders no longer lost add up to more than the build plus a year of running costs. Count hours saved as (minutes before − minutes after) × tasks per month ÷ 60 × the full cost of a staff hour, and measure the starting values for two weeks before the project begins. Check the result two to three months after launch, measuring the same things the same way.
+
 A contractor has sent a quote for a Telegram ordering bot, and it's a single number. A CRM salesperson says it will "pay for itself in three months" but doesn't show the maths. Your accountant wants to know which budget the monthly support fee comes out of. You don't need a consultant or a financial model to decide whether a project is worth the money. A spreadsheet, two weeks of observation and honest assumptions are enough. Below is a method an owner or finance person can use to estimate the payback before the project starts, and to check afterwards whether the estimate held.
 
 The whole calculation comes down to one formula:

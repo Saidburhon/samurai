@@ -60,7 +60,14 @@ export const SERVICE_TARGETS = ['mobile', 'web', 'telegram', 'cloud-backend-api'
 export const serviceHref = (i, lang) => `${CATALOGUE_BASE[lang]}${lang === 'ja' && SERVICE_TARGETS[i] === 'telegram' ? 'ai' : SERVICE_TARGETS[i]}/`;
 
 // <head> tags shared by every page: canonical, hreflang (the page's existing twins plus x-default), Open Graph
-export function headLinks({ lang, path, twins, title, description, ogTitle, ogDescription, ogImage, type = 'website' }) {
+// what the share card shows (scripts/og.mjs: the mon and the katana drawing with the language's headline)
+export const OG_ALT = {
+  uz: 'Qilich belgisi va qilich chizmasi: «Yapon IT agenstvasi endi Oʻzbekistonda!»',
+  ru: 'Знак Qilich и чертёж меча: «Японское IT-агентство теперь в Узбекистане!»',
+  en: 'The Qilich mark and a drawing of a katana: “A Japanese IT agency, now in Uzbekistan!”',
+  ja: 'Qilichのロゴと日本刀の押形の図',
+};
+export function headLinks({ lang, path, twins, title, description, ogTitle, ogDescription, ogImage, type = 'website', published, modified }) {
   const t = twins || { [lang]: path };
   const xd = t[X_DEFAULT] || t[lang];
   const alts = LANGS.filter((l) => t[l]).map((l) => `<link rel="alternate" hreflang="${l}" href="${abs(t[l])}">`);
@@ -76,7 +83,10 @@ export function headLinks({ lang, path, twins, title, description, ogTitle, ogDe
     `<meta property="og:image" content="${ogImage || `${SITE}/assets/img/og-${lang}.png`}">`,
     '<meta property="og:image:width" content="1200">',
     '<meta property="og:image:height" content="630">',
+    ...(ogImage ? [] : [`<meta property="og:image:alt" content="${esc(OG_ALT[lang])}">`]),
+    ...(type === 'article' && published ? [`<meta property="article:published_time" content="${published}">`, `<meta property="article:modified_time" content="${modified || published}">`] : []),
     '<meta name="twitter:card" content="summary_large_image">',
+    ...(ogImage ? [] : [`<meta name="twitter:image:alt" content="${esc(OG_ALT[lang])}">`]),
   ];
   return { canonical: `<link rel="canonical" href="${abs(path)}">`, alternates: alts.join('\n'), og: og.join('\n') };
 }

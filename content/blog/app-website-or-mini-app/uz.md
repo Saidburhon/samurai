@@ -9,6 +9,8 @@ related: [telegram, web, mobile, cloud]
 reading_minutes: 9
 ---
 
+Tanlovni mijozlar sizni qanday topishi va qanchalik tez-tez xarid qilishiga qarab qiling: yangi mijozlar qidiruv va xaritalardan kelsa sayt; ular sizga allaqachon Telegramda yozsa va hech narsa oʻrnatmasdan buyurtma berishi kerak boʻlsa Telegram Mini App; push-bildirishnoma va bonus kartadan foydalanadigan tez-tez qaytadigan mijozlar uchungina mobil ilova. Koʻpchilik sayt va bot yoki Mini Appdan boshlab, ilovani keyinroq qoʻshadi. Qaysi birini tanlasangiz ham, narxlar, buyurtmalar va ballar bir joyda boʻlishi uchun hammasiga bitta backend quring.
+
 Mijozlar sizga Telegramda allaqachon yozishadi, raqobatchingiz ilova chiqardi, tanishingiz esa «avval tuzukroq sayt qil» deydi. Uchta maslahat, uch xil byudjet, muddatlar esa ikki haftadan bir necha oygacha. Ikki tomonga ham xato qilish mumkin: deyarli hech kim oʻrnatmaydigan ilovaga pul toʻlaysiz yoki yillab saytsiz yurasiz, yangi mijozlar esa sizni xaritadan qidirib, yoningizdagi raqobatchini topadi. Sayt yoki ilova, qaysi biri kerak va Telegram Mini App bu tanlovda qayerda turadi? Ikki narsaga qarab koʻrib chiqamiz: mijozlaringiz hozir qayerda va ular sizga qanchalik tez-tez qaytadi.
 
 ## Texnologiyadan emas, mijozdan boshlang

@@ -9,6 +9,8 @@ related: [telegram, web, mobile, cloud]
 reading_minutes: 9
 ---
 
+Choose by how customers find you and how often they buy: a website when new customers come from search and maps, a Telegram Mini App when they already write to you in Telegram and should order without installing anything, and a mobile app only for frequent repeat customers who will use push notifications and a loyalty card. Many businesses start with a website plus a bot or Mini App and add an app later. Whatever you pick, build one backend for all of them, so prices, orders and points stay in one place.
+
 Your customers already message you on Telegram, a competitor has just launched an app, and a friend says you need a "proper website" first. That is three pieces of advice, three different budgets, and timelines from a couple of weeks to several months. You can get it wrong in either direction: pay for an app that hardly anyone installs, or go years without a website while new customers look for you on the map and find the place next door. Here is how to choose using two facts about your business: where your customers already are, and how often they come back.
 
 ## Start from the customer, not the technology

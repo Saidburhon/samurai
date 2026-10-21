@@ -26,7 +26,7 @@ export const RU = {
   'ui.copied': 'Скопировано',
   'mei.gloss': 'Подпись: работа Qilich, житель Ташкента',
   'hero.h': L('Японское <span class="nw">IT-агентство</span>', 'теперь в Узбекистане!'), // never broken after the hyphen (Geologica has no U+2011)
-  'hero.sub': 'Строим приложения, сайты, ботов и системы для бизнеса по японским стандартам.',
+  'hero.sub': 'Qilich строит приложения, сайты, ботов и системы для бизнеса по японским стандартам.',
   'hero.cta': 'Связаться',
   'pr.h': L('Японское качество.', 'Ташкентские цены.'),
   'pr.sub': 'Дисциплина и забота — в ташкентские рабочие часы.',
@@ -127,7 +127,7 @@ export const EN = {
   'ui.copied': 'Copied',
   'mei.gloss': 'Signature: made by Qilich, resident of Tashkent',
   'hero.h': L('A Japanese IT agency,', 'now in Uzbekistan!'),
-  'hero.sub': 'We build apps, websites, bots and systems for businesses in Uzbekistan, to Japanese standards.',
+  'hero.sub': 'Qilich builds apps, websites, bots and systems for businesses in Uzbekistan, to Japanese standards.',
   'hero.cta': 'Get in touch',
   'pr.h': L('Japanese quality.', 'Tashkent prices.'),
   'pr.sub': 'Discipline and care, on Tashkent working hours.',

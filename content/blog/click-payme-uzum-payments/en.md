@@ -9,6 +9,8 @@ related: [biz-payments, web-ecommerce, tg-order-bot, biz-1c-integration]
 reading_minutes: 9
 ---
 
+To accept Click, Payme and Uzum online you need a registered business (a sole proprietor or a company), a bank account and a merchant agreement with each provider; the developer then connects each provider so that an order counts as paid only after the provider's server confirms it. Online sales usually need a fiscal receipt with an MXIK (IKPU) code on every line, and refunds, partial payments and daily reconciliation have to be designed in from the start. Connecting all three usually makes sense: customers have their favourite app, and each provider accepts Humo and Uzcard cards.
+
 Right now your payments probably work like this: a manager sends the customer a card number in Telegram, the customer transfers the money and sends a screenshot, and the manager opens the banking app to look for that transfer. At ten orders a day you can live with it. As orders grow, you get transfers nobody can find, "but I already paid" arguments, missing receipts, and an accountant asking why revenue is landing on someone's personal card. Online payment through Click, Payme or Uzum fixes this, but it is really two projects. One is business: merchant agreements, fiscal receipts, refund rules. The other is technical: payment notifications, order statuses, daily reconciliation. Here are both, in the order you should tackle them.
 
 ## Why card-to-card transfers stop working as you grow

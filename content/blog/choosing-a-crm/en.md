@@ -9,6 +9,8 @@ related: [biz-crm, biz-1c-integration, biz-payments, tg-crm-mini-app]
 reading_minutes: 9
 ---
 
+amoCRM suits sales teams that work mostly in chats and want a simple deal pipeline; Bitrix24 suits companies that also want tasks, internal chat, telephony and a shared drive in the same system. A custom CRM is justified only when the process is unusual, the integrations are heavy (two-way sync with 1C, Click, Payme, Uzum), the data must stay on your servers in Uzbekistan, or the CRM is part of your product; a first version then usually takes two to four months. For many businesses the best path is the middle one: a ready-made CRM plus integrations with the bot, the website and 1C.
+
 Leads land in three managers' Telegram chats; some get written in a notebook, some in an Excel file that one person keeps. To find out how many enquiries came in last week and how many turned into payments, the owner has to call each manager. When a manager leaves, the clients leave with their phone. The opposite happens too: the company already pays for a CRM every month, but deals get entered on Friday evening from memory and the real work still happens in chats. Either way, "amoCRM or Bitrix24?" is being asked too early. Choose by how your sales actually work and by whether your team will use the system, not by the feature list. Here is how to compare the ready-made options, when building your own makes sense, and how to keep a CRM from turning into an expensive address book.
 
 ## What a CRM should do for you
