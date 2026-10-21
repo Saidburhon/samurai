@@ -174,7 +174,8 @@ S['tsuba.carpet'] = {
   port: { cam: { mode: 'orbit', frame: 'floor', target: { s: 0.25 }, az: -20, el: 70, dist: 17, fov: 36, ang: 62, off: [0.04, -0.02] } },
 };
 S['tsuba.team'] = {
-  ...carpet, look: 'ai-warm', floorGain: 1.05, floorWarm: 1,
+  // (r2: straight down, the blade turns on to its flat as the crane rises, so the ji takes the warm light)
+  ...carpet, look: 'ai-warm', floorGain: 1.05, floorWarm: 1, pose: { roll: -1.25, pitch: 0, sori: 0.3 },
   land: { cam: { mode: 'orbit', frame: 'floor', target: { s: 0.25 }, az: -35, el: 89.9, dist: 16, fov: 30, ang: -18, off: [0, 0] } },
 };
 

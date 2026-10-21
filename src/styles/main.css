@@ -301,3 +301,7 @@ html.cinema .klabel { position: absolute; inset: 0; z-index: 3; color: var(--fg)
   html.snd .sound svg { opacity: 1; animation: snd 1.2s cubic-bezier(.45, 0, .55, 1) infinite alternate; transform-origin: 50% 50%; }
 }
 @keyframes snd { from { transform: scaleY(.55); } to { transform: scaleY(1); } }
+/* the freeze's glyph warm-up (fx/cut.js: a clone of every scene's text at opacity .002) leaves out the hero's text:
+   it is on screen already, so its glyphs are rasterised, and its unclipped clone, a hair larger than the original,
+   was a new largest-contentful-paint candidate at ~5.9 s on /ja/ (the LCP moved from 0.35 s to 5.9 s) */
+.fz-warm-story .b-hero { visibility: hidden; }
