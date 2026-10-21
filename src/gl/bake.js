@@ -9,7 +9,7 @@ import { tsubaHoles } from './geom.js';
 
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
 
-export async function bakeAll(renderer, { big = true, onEach, maxAniso = 16 } = {}) {
+export async function bakeAll(renderer, { big = true, onEach, maxAniso = 16, wait = null } = {}) {
   const gl = renderer.getContext();
   const half = renderer.extensions.has('EXT_color_buffer_float') || renderer.extensions.has('EXT_color_buffer_half_float');
   const aniso = Math.min(maxAniso, renderer.capabilities.getMaxAnisotropy());
@@ -19,7 +19,7 @@ export async function bakeAll(renderer, { big = true, onEach, maxAniso = 16 } = 
   const quad = new Mesh(new PlaneGeometry(2, 2), mat);
   quad.frustumCulled = false; scene.add(quad);
   const out = { times: {}, half };
-  const job = (name, w, h, mode, { mips = true } = {}) => () => {
+  const job = (name, w, h, mode, { mips = true } = {}) => async () => {
     const t0 = performance.now();
     const rt = new WebGLRenderTarget(w, h, {
       type: half ? HalfFloatType : UnsignedByteType, depthBuffer: false, stencilBuffer: false,
@@ -28,22 +28,23 @@ export async function bakeAll(renderer, { big = true, onEach, maxAniso = 16 } = 
     });
     U.uMode.value = mode;
     renderer.setRenderTarget(rt); renderer.render(scene, cam); renderer.setRenderTarget(null);
-    // a 1-texel read forces the bake to finish here, so the timing is the bake's (and the next frame stays light)
-    const px = new (half ? Uint16Array : Uint8Array)(4);
-    try { renderer.readRenderTargetPixels(rt, 0, 0, 1, 1, px); } catch (e) { gl.finish(); }
+    // the bake is awaited (a fence, wait(): no read-back stall), so the timing is the bake's and the next frame stays light
+    if (wait) await wait();
+    else { const px = new (half ? Uint16Array : Uint8Array)(4); try { renderer.readRenderTargetPixels(rt, 0, 0, 1, 1, px); } catch (e) { gl.finish(); } }
     out[name] = rt.texture;
     out.times[name] = Math.round(performance.now() - t0);
     if (onEach) onEach(name, out.times[name]);
   };
   const S = big ? 1 : 0.5;
+  // the grip first: the reveal fills the sword from the kashira, so the silk is the first baked surface on screen
   const jobs = {
+    silk: job('silk', 1024, 512, 2),   // top half: albedo + height; bottom half: ribbon, menuki
     hamon: job('hamon', 4096, 1, 0, { mips: false }),
     hada: job('hada', 4096 * S, 256 * S, 1),
-    silk: job('silk', 1024, 512, 2),   // top half: albedo + height; bottom half: ribbon, menuki
     ishime: job('ishime', 512, 512, 3),
   };
   const order = Object.keys(jobs);
-  for (let i = 0; i < order.length; i++) { jobs[order[i]](); if (i < order.length - 1) await nextFrame(); }
+  for (let i = 0; i < order.length; i++) { await jobs[order[i]](); if (i < order.length - 1) await nextFrame(); }
   mat.dispose(); quad.geometry.dispose();
   return out;
 }

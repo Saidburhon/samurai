@@ -57,11 +57,12 @@ const facts = JSON.parse(readFileSync('content/site.json', 'utf8'));
 for (const [lang, v] of Object.entries(facts.description)) checkText(`site.json description.${lang}`, v, OPT(lang));
 for (const [lang, m] of Object.entries(META)) for (const [k, v] of Object.entries(m)) for (const s of [].concat(v)) checkText(`META ${lang}.${k}`, s, { uz: lang === 'uz', ru: lang === 'ru' });
 // SamurAI and the catalogue overlay: every string per language (content/solutions-extra.json, content/pricing.json,
-// content/samurai-samples.json); the samples were guarded when they were made, this checks them again
+// content/solutions-ja.json, content/samurai-samples.json); the samples were guarded when they were made, this checks them again
 for (const f of ['content/solutions-extra.json', 'content/pricing.json']) {
   const walkJ = (v, lang, where) => { if (typeof v === 'string') checkText(`${f} ${where}`, v, OPT(lang)); else if (Array.isArray(v)) v.forEach((x, i) => walkJ(x, lang, `${where}[${i}]`)); else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walkJ(x, ['uz', 'ru', 'en', 'ja'].includes(k) ? k : lang, `${where}.${k}`); };
   walkJ(JSON.parse(readFileSync(f, 'utf8')), 'en', '');
 }
+if (existsSync('content/solutions-ja.json')) for (const x of strings(JSON.parse(readFileSync('content/solutions-ja.json', 'utf8')).solutions)) checkText('solutions-ja', x, OPT('ja'));
 if (existsSync('content/samurai-samples.json')) {
   const S = JSON.parse(readFileSync('content/samurai-samples.json', 'utf8'));
   for (const [lang, list] of Object.entries(S.samples || {})) for (const x of strings(list)) checkText(`samurai-samples ${lang}`, x, OPT(lang));

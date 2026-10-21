@@ -73,8 +73,10 @@ export class Poster {
     const st = this.stage, layout = this.layout();
     const S = hold(name, layout, opt);
     if (!S) throw new Error('no hold ' + name);
-    domHold(name);
-    document.getElementById('labels').innerHTML = '';
+    // opt.dom === false: the GL state only; the page's part (scene classes, the drawing's placement) waits for
+    // applyDom(). The boot path uses it so that no page raster lands in the GPU process while it builds the programs.
+    const dom = opt.dom !== false;
+    if (dom) { domHold(name); document.getElementById('labels').innerHTML = ''; }
     // the ink pose comes from its own framing, before this hold's camera is solved
     const inkPose = S.ink ? this.inkPoseFor(S.ink.fit, layout) : null;
     // look, pose, visibility, camera
@@ -89,7 +91,9 @@ export class Poster {
     st.blade.material = S.polishFront < 1.5 ? st.mat.steelTogi : S.sign ? st.mat.steelSign : st.mat.steel;
     const P = st.parts, R = st.mat.reveal, M = st.mat;
     P.habaki.material = reveal ? R.copper : M.copper; P.seppa1.material = P.seppa2.material = reveal ? R.gold : M.gold;
-    P.tsuba.material = reveal ? R.iron : M.iron; P.fuchi.material = P.kashira.material = reveal ? R.shakudo : M.shakudo;
+    // the guard: the boot program's lean iron on the hero's holds, the full one (ishime relief, backlight) elsewhere
+    const lean = name === 'intro' || /^(mei|bookend)\./.test(name);
+    P.tsuba.material = lean ? (reveal ? R.iron : M.iron) : M.ironFull; P.fuchi.material = P.kashira.material = reveal ? R.shakudo : M.shakudo;
     P.tsuka.material = reveal ? R.silk : M.silk; P.mekugi.material = reveal ? R.gold : M.gold;
     U.uReveal.value = reveal ? S.reveal : 2; U.uFront.value = S.front;
     sU.uPolishFront.value = S.polishFront;
@@ -108,7 +112,7 @@ export class Poster {
     }
     // the iron's frame (the tsuba face) for the ishime normal map and the back glow
     const ax = st.dirH(new Vector3(1, 0, 0)).normalize();
-    for (const m of [M.iron, R.iron]) { m.uniforms.uAxisW.value.copy(ax); m.uniforms.uFaceU.value.copy(st.dirH(new Vector3(0, 0, 1)).normalize()); m.uniforms.uFaceV.value.copy(st.dirH(new Vector3(0, 1, 0)).normalize()); }
+    for (const m of [M.iron, M.ironFull]) { m.uniforms.uAxisW.value.copy(ax); m.uniforms.uFaceU.value.copy(st.dirH(new Vector3(0, 0, 1)).normalize()); m.uniforms.uFaceV.value.copy(st.dirH(new Vector3(0, 1, 0)).normalize()); }
     // the reflected sign
     if (S.sign) {
       await st.atlas();
@@ -130,8 +134,15 @@ export class Poster {
       st.soft.update(st, L, { soft: st.look.shadowSoft, base: st.look.shadowBase, col: st.look.shadowCol, alpha: st.look.shadowA * S.shadow, reveal: reveal ? S.reveal : 2 });
     }
     // the ink
-    if (S.ink && st.td) this.ink.place(st, inkPose, { reveal: reveal ? S.reveal : 2, front: S.front, show: true, annot: S.ink.annot !== false });
-    else this.ink.place(st, null, { show: false });
+    const td = st.td;
+    const placeInk = () => {
+      const keep = st.td; st.td = td;
+      if (S.ink && td) this.ink.place(st, inkPose, { reveal: reveal ? S.reveal : 2, front: S.front, show: true, annot: S.ink.annot !== false });
+      else this.ink.place(st, null, { show: false });
+      st.td = keep;
+    };
+    if (dom) placeInk();
+    else this.applyDom = () => { domHold(name); document.getElementById('labels').innerHTML = ''; placeInk(); this.applyDom = null; };
     this.S = S;
     // labels (the one detail of the poster)
     if (name === 'mei.promise') label('p.kissaki', st.project(st.point({ s: 0.995, zf: 0.1 })), layout === 'land' ? [-0.35, -0.94] : [-0.3, -0.95], 40);

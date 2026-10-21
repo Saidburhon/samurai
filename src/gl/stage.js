@@ -14,14 +14,19 @@ import { holdStudio } from './studio.js';
 import { girihTexture } from './bake.js';
 import { wordAtlas } from './sign.js';
 
-// Every geometry of the sword, the koshirae and the saya: CPU only (no GL), so the GL boot (gl/index.js) builds them
-// while the GPU process is still busy with the page's last intro frames.
-export function buildGeometries() {
-  return {
-    blade: GM.buildBlade(), habaki: GM.buildHabaki(), seppa1: GM.buildSeppa('seppa1'), tsuba: GM.buildTsuba(), seppa2: GM.buildSeppa('seppa2'),
-    fuchi: GM.buildFuchi(), tsuka: GM.buildTsuka(), kashira: GM.buildKashira(), mekugi: GM.buildMekugi(), nakago: GM.buildNakago(),
-    saya: GM.buildSaya(), kurikata: GM.buildKurikata(),
-  };
+// Every geometry of the sword, the koshirae and the saya: CPU only (no GL). gl/index.js prebuild() makes them one by
+// one in the main thread's idle time during the intro drawing; buildGeometries() completes whatever is missing.
+const PARTS = {
+  blade: () => GM.buildBlade(), tsuba: () => GM.buildTsuba(), tsuka: () => GM.buildTsuka(), habaki: () => GM.buildHabaki(),
+  seppa1: () => GM.buildSeppa('seppa1'), seppa2: () => GM.buildSeppa('seppa2'), fuchi: () => GM.buildFuchi(), kashira: () => GM.buildKashira(),
+  mekugi: () => GM.buildMekugi(), nakago: () => GM.buildNakago(), saya: () => GM.buildSaya(), kurikata: () => GM.buildKurikata(),
+};
+export const PART_NAMES = Object.keys(PARTS);
+export const buildPart = (name) => PARTS[name]();
+export function buildGeometries(have = {}) {
+  const out = { ...have };
+  for (const n of PART_NAMES) if (!out[n]) out[n] = PARTS[n]();
+  return out;
 }
 
 const D = Math.PI / 180;
@@ -83,7 +88,7 @@ export class Stage {
     if (T.hada) { M.steelU.tHada.value = T.hada; M.lacquer.uniforms.tHada.value = T.hada; }
     if (T.hamon) M.steelU.tHamon.value = T.hamon;
     if (T.silk) M.silk.uniforms.tSilk.value = T.silk;
-    if (T.ishime) for (const m of [M.copper, M.gold, M.iron, M.shakudo, M.nakago]) m.uniforms.tIshime.value = T.ishime;
+    if (T.ishime) for (const m of [M.copper, M.gold, M.iron, M.ironFull, M.shakudo, M.nakago]) m.uniforms.tIshime.value = T.ishime;
     if (T.girih) this.floorU.tGirih.value = T.girih;
   }
   setSize(w, h, atHold = true) {
@@ -113,8 +118,7 @@ export class Stage {
     const s = this.mat.steelU;
     s.uNie.value = lk.nie; s.uNieAvg.value = lk.nieAvg; s.uShinogiSheen.value = lk.shinogiSheen; s.uShinogiRough.value = lk.shinogiRough; s.uEdgeLine.value = lk.edgeLine;
     s.uMacro.value = lk.macro; s.uLampSpec.value = lk.lampSpec;
-    this.mat.iron.uniforms.uBackGlow.value.set(...lk.backGlow);
-    this.mat.iron.uniforms.uBase.value.set(...lk.ironBase);
+    for (const m of [this.mat.iron, this.mat.ironFull]) { m.uniforms.uBackGlow.value.set(...lk.backGlow); m.uniforms.uBase.value.set(...lk.ironBase); }
   }
 
   // ---------- the pose ----------
@@ -315,21 +319,38 @@ export class Stage {
   // Prewarm (§6.3): draw each mesh once into the default framebuffer with a 1 × 1 scissor, with its own blend and
   // depth state, so a software renderer builds the real pipeline now and not inside a scene. Returns ms per mesh.
   // finish = false: the draws are only issued, so the main thread goes on while the GPU process compiles
-  prewarm(meshes, { finish = true } = {}) {
-    const r = this.renderer, gl = r.getContext(), out = {};
+  prewarm(meshes, { finish = true, material = null } = {}) {
+    const r = this.renderer, out = {};
     const vis = [];
     this.scene.traverse((o) => { if (o.isMesh) { vis.push([o, o.visible]); o.visible = false; } });
     r.setRenderTarget(null); r.setScissorTest(true); r.setScissor(0, 0, 1, 1);
     for (const m of meshes) {
       const t0 = performance.now();
+      // a part of a hidden group (the saya, the floor) is drawn with its ancestors shown for the draw
+      const up = []; for (let o = m.parent; o && o !== this.scene; o = o.parent) if (!o.visible) { up.push(o); o.visible = true; }
+      const mat = m.material; if (material) m.material = material;
       m.visible = true; r.render(this.scene, this.camera); m.visible = false;
+      m.material = mat; for (const o of up) o.visible = false;
       if (finish) this.finish();
-      out[m.name || m.material.type] = Math.round(performance.now() - t0);
+      out[(material && material.name) || m.name || m.material.type] = Math.round(performance.now() - t0);
     }
     r.setScissorTest(false);
     for (const [o, v] of vis) o.visible = v;
-    void gl;
     return out;
+  }
+  // resolves when the GPU has executed everything issued so far: a fence polled from timers, so neither the main
+  // thread nor the GPU process stalls on a read-back (no "GPU stall due to ReadPixels"); without WebGL2 syncs, a read
+  gpuDone() {
+    const gl = this.renderer.getContext();
+    if (!gl.fenceSync) { this.finish(); return Promise.resolve(); }
+    const s = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
+    gl.flush();
+    return new Promise((res) => {
+      const poll = () => {
+        if (gl.isContextLost() || gl.getSyncParameter(s, gl.SYNC_STATUS) === gl.SIGNALED) { gl.deleteSync(s); res(); } else setTimeout(poll, 4);
+      };
+      setTimeout(poll, 0);
+    });
   }
   // a full GPU round trip, for timing logs
   finish() { const gl = this.renderer.getContext(); const px = new Uint8Array(4); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }

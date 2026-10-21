@@ -2,6 +2,7 @@
 import cat from '../content/solutions.json' with { type: 'json' };
 import extra from '../content/solutions-extra.json' with { type: 'json' };
 import pricing from '../content/pricing.json' with { type: 'json' };
+import ja from '../content/solutions-ja.json' with { type: 'json' };
 import { normalise } from '../src/shared/catalogue.js';
 
-export const MODEL = normalise(cat, extra, pricing);
+export const MODEL = normalise(cat, { ...extra, ja_solutions: ja.solutions }, pricing);

@@ -141,7 +141,7 @@ function mergeDetail(m, entry, d, f, scope, lang, rate) {
   const risks = (d.risks || []).map((r) => ({ ...r, adds_usd: riskUsd(r.adds_weeks, f.usd[scope], f.weeks[scope], m.pricing.round?.usd || 100) }));
   const imp = d.impact || { model: 'none', summary: '', inputs: [] };
   const inputs = (imp.inputs || []).map((i) => ({ key: i.key, label: i.label, unit: UNIT[i.key] || 'count_per_month', value: clampInput(i.key, i.value), basis: i.basis === 'from_text' ? 'from_text' : 'assumed' }));
-  const impact = { model: imp.model, summary: imp.summary || '', inputs, payback_months: payback(imp.model, inputs, f.usd[scope], f.monthly) };
+  const impact = { model: imp.model, summary: imp.summary || '', inputs, payback_months: paybackShown(imp.model, inputs, f.usd[scope], f.monthly).months };
   return { deliverables_mvp: d.deliverables_mvp || [], deliverables_full: d.deliverables_full || [], team, stack, risks, needs, impact };
 }
 
@@ -168,6 +168,18 @@ export function payback(model, inputs, priceUsd, monthlyUsd) {
   const net = gain - (monthlyUsd[0] + monthlyUsd[1]) / 2;
   if (!(net > 0)) return null;
   return [Math.max(1, Math.ceil(priceUsd[0] / net)), Math.max(1, Math.ceil(priceUsd[1] / net))];
+}
+/**
+ * The payback the page may show. A range beyond PAYBACK_CAP_MONTHS is not a number anyone should plan on (a Tashkent
+ * office hour nets little after running costs), so it becomes the qualitative line instead.
+ * → { months: [a, b] } | { months: null, why: 'na' (missing input or no net gain) | 'long' (over the cap) }
+ */
+export const PAYBACK_CAP_MONTHS = 36;
+export function paybackShown(model, inputs, priceUsd, monthlyUsd) {
+  const pb = payback(model, inputs, priceUsd, monthlyUsd);
+  if (!pb) return { months: null, why: 'na' };
+  if (pb[1] > PAYBACK_CAP_MONTHS) return { months: null, why: 'long' };
+  return { months: pb };
 }
 
 // ---- the plan (§2.6.6): selection, schedule, totals ----
@@ -209,12 +221,26 @@ export function plan(m, solutions, selection, rate) {
   const gross = on.reduce((a, s) => add(a, price(s)), zero());
   const usd = on.length ? roundUsd([gross[0] - saving[0], gross[1] - saving[1]], step) : [0, 0];
   usd[1] = Math.max(usd[0], usd[1]);
-  // weeks: the latest end, plus overhead for every track that runs alongside the critical one
+  // weeks: the latest end, plus overhead for every track that really runs alongside the critical one. Two tracks
+  // overlap only when they do on both bounds (min against min, max against max), and never along a depends_on
+  // chain: a dependant starts where its dependency's MVP ends, which is a sequence, not parallel work.
   let weeks = [0, 0], parallel = false;
   if (list.length) {
+    const solOf = new Map(on.map((s) => [solId(s), s]));
+    const anc = new Map();
+    const ancestors = (s, depth = 0) => {
+      const id = solId(s);
+      if (anc.has(id)) return anc.get(id);
+      const set = new Set();
+      anc.set(id, set);
+      if (depth < 8) for (const d of s.depends_on || []) { const dep = byCat.get(d); if (dep && dep !== s) { set.add(solId(dep)); for (const x of ancestors(dep, depth + 1)) set.add(x); } }
+      return set;
+    };
+    const linked = (a, b) => ancestors(solOf.get(a.id)).has(b.id) || ancestors(solOf.get(b.id)).has(a.id);
+    const overlaps = (a, b) => !linked(a, b) && [0, 1].every((k) => a.start[k] < b.end[k] && b.start[k] < a.end[k]);
     const crit = list.reduce((a, t) => (t.end[1] > a.end[1] ? t : a), list[0]);
-    const over = list.filter((t) => t !== crit && t.start[0] < crit.end[1] && t.end[1] > crit.start[0]);
-    parallel = list.some((a, i) => list.some((b, j) => j > i && a.start[0] < b.end[1] && b.start[0] < a.end[1]));
+    const over = list.filter((t) => t !== crit && overlaps(t, crit));
+    parallel = list.some((a, i) => list.some((b, j) => j > i && overlaps(a, b)));
     const ow = over.reduce((a, t) => add(a, [t.end[0] - t.start[0], t.end[1] - t.start[1]]), zero());
     weeks = roundWeeks([Math.max(...list.map((t) => t.end[0])) + P.parallel_overhead * ow[0], crit.end[1] + P.parallel_overhead * ow[1]]);
   }

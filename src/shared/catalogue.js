@@ -38,12 +38,15 @@ export function normalise(cat, extra, pricing) {
       stack: o.stack || [], integrations_included: o.integrations_included || [], needs: extra.needs[o.needs] || extra.needs.business,
     };
   }
+  // Japanese lines from content/solutions-ja.json (passed as extra.ja_solutions) until the catalogue has its own
+  const jaS = extra.ja_solutions || {};
+  const withJa = (v, id, k) => (jaS[id]?.[k] && !v?.ja ? { ...v, ja: jaS[id][k] } : v);
   const solutions = cat.solutions.map((s) => {
     const o = extra.solutions[s.id] || {}, g = groups[s.group];
     const ints = [...new Set((s.integrations || []).map((n) => alias.get(String(n).toLowerCase())).filter(Boolean))];
     const included = [...new Set([...(o.integrations_included || []), ...g.integrations_included])];
     return {
-      id: s.id, group: s.group, title: s.title, oneliner: s.value, industries: s.for || [], billing: s.billing || 'project',
+      id: s.id, group: s.group, title: withJa(s.title, s.id, 'title'), oneliner: withJa(s.value, s.id, 'oneliner'), industries: s.for || [], billing: s.billing || 'project',
       mvp: { weeks: R(s.timeline_weeks.mvp), usd: R(s.price_usd.mvp) },
       full: { weeks: R(s.timeline_weeks.full), usd: R(s.price_usd.full) },
       monthly_usd: s.running_usd_month ? R(s.running_usd_month) : (o.monthly_usd || pricing.monthly_default[s.group] || [0, 0]),
@@ -85,10 +88,10 @@ export function compact(model, lang) {
     stack: p.stack,
     phase: model.phase_text[lang] || model.phase_text.en,
     goals: model.goals,
-    industries: Object.fromEntries(Object.values(model.industries).map((i) => [i.id, [pickLang(i.name, lang), pickLang(i.plural, lang), i.starter, i.examples[lang] || i.examples.en]])),
+    industries: Object.fromEntries(Object.values(model.industries).map((i) => [i.id, [pickLang(i.name, lang), pickLang(i.plural, lang), i.starter, i.examples[lang] || i.examples.en, ...(lang === 'ja' && i.ja_words ? [i.ja_words] : [])]])),
     // [id, group, title, mvp weeks lo, hi, mvp usd lo, hi, full weeks lo, hi, full usd lo, hi, monthly lo, hi, difficulty, integrations, included, shares, one-liner]
-    sol: model.solutions.filter((s) => s.billing !== 'monthly').map((s) => [s.id, s.group, pickLang(s.title, lang === 'ja' ? 'en' : lang), ...s.mvp.weeks, ...s.mvp.usd, ...s.full.weeks, ...s.full.usd, ...s.monthly_usd, s.difficulty,
-      s.integrations.join(' '), s.integrations_included.join(' '), s.shares.join(' '), pickLang(s.oneliner, lang === 'ja' ? 'en' : lang)]),
+    sol: model.solutions.filter((s) => s.billing !== 'monthly').map((s) => [s.id, s.group, pickLang(s.title, lang), ...s.mvp.weeks, ...s.mvp.usd, ...s.full.weeks, ...s.full.usd, ...s.monthly_usd, s.difficulty,
+      s.integrations.join(' '), s.integrations_included.join(' '), s.shares.join(' '), pickLang(s.oneliner, lang)]),
   };
 }
 
@@ -106,7 +109,7 @@ export function expand(d) {
   const modifiers = Object.fromEntries(Object.entries(d.mods).map(([k, m]) => [k, { label: { [d.lang]: m[0] }, mult: m[1], weeks_mult: m[2], add_usd: m[3], add_weeks: m[4] }]));
   const integrations = Object.fromEntries(Object.entries(d.ints).map(([k, m]) => [k, { name: m[0], what: { [d.lang]: m[1] }, add_usd: m[2], add_weeks: m[3], monthly_usd: m[4] }]));
   const groups = Object.fromEntries(Object.entries(d.groups).map(([k, g]) => [k, { id: k, title: { [d.lang]: g.t }, team: g.team.map(([role, count]) => ({ role, count })), stack: g.stack, needs: { [d.lang]: g.needs } }]));
-  const industries = Object.fromEntries(Object.entries(d.industries).map(([k, v]) => [k, { id: k, name: { [d.lang]: v[0] }, plural: { [d.lang]: v[1] }, starter: v[2], examples: { [d.lang]: v[3] } }]));
+  const industries = Object.fromEntries(Object.entries(d.industries).map(([k, v]) => [k, { id: k, name: { [d.lang]: v[0] }, plural: { [d.lang]: v[1] }, starter: v[2], examples: { [d.lang]: v[3] }, ...(v[4] ? { ja_words: v[4] } : {}) }]));
   const pricing = { ...d.pricing, modifiers, roles: Object.fromEntries(Object.entries(d.roles).map(([k, v]) => [k, { [d.lang]: v }])), stack: d.stack };
   return { version: d.v, lang: d.lang, groups, industries, integrations, modifiers, goals: d.goals, phase_text: { [d.lang]: d.phase }, pricing, solutions, byId: new Map(solutions.map((s) => [s.id, s])) };
 }

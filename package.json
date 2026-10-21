@@ -17,6 +17,7 @@
     "qa:ja": "node scripts/qa/ja-review.mjs",
     "test": "node --test \"src/shared/*.test.js\" \"worker/*.test.js\"",
     "samples": "node scripts/samurai-samples.mjs",
+    "ja:catalogue": "node scripts/samurai-ja-catalogue.mjs",
     "eval:samurai": "node scripts/eval-samurai.mjs",
     "qa:samurai": "node scripts/qa/samurai-probe.mjs"
   },

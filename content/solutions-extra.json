@@ -150,6 +150,7 @@
       "name": { "uz": "restoran", "ru": "ресторан", "en": "a restaurant", "ja": "飲食店" },
       "plural": { "uz": "Restoranlar", "ru": "Рестораны", "en": "Restaurants", "ja": "飲食店" },
       "starter": ["tg-order-bot", "biz-delivery-routing", "biz-1c-integration"],
+      "ja_words": ["飲食", "レストラン", "カフェ", "居酒屋", "食堂", "厨房"],
       "examples": {
         "uz": ["Yetkazib berishli restoran, buyurtmalar telefon va Telegram orqali", "Ikki filialli kafe, kassa bilan oshxona oʻrtasida chalkashlik"],
         "ru": ["Ресторан с доставкой, заказы по телефону и в Telegram", "Кафе с двумя филиалами, путаница между кассой и кухней"],
@@ -161,6 +162,7 @@
       "name": { "uz": "klinika", "ru": "клиника", "en": "a clinic", "ja": "クリニック" },
       "plural": { "uz": "Klinikalar", "ru": "Клиники", "en": "Clinics", "ja": "クリニック" },
       "starter": ["tg-booking-bot", "biz-call-centre", "ind-clinic"],
+      "ja_words": ["クリニック", "病院", "医院", "歯科", "診療", "患者"],
       "examples": {
         "uz": ["Chilonzorda 3 filialli stomatologiya, yozuvlar daftarda", "Laboratoriya natijalari bemorlarga telefon orqali aytiladi"],
         "ru": ["Стоматология с 3 филиалами в Чиланзаре, запись в тетради", "Результаты анализов сообщаем пациентам по телефону"],
@@ -172,6 +174,7 @@
       "name": { "uz": "oʻquv markazi", "ru": "учебный центр", "en": "a learning centre", "ja": "学習塾・スクール" },
       "plural": { "uz": "Oʻquv markazlari", "ru": "Учебные центры", "en": "Learning centres", "ja": "学習塾・スクール" },
       "starter": ["ind-education-centre", "biz-payments", "tg-course-bot"],
+      "ja_words": ["塾", "学校", "スクール", "教室", "生徒", "受講"],
       "examples": {
         "uz": ["200 oʻquvchili oʻquv markazi, toʻlovlar Excelda", "Ingliz tili kurslari, davomat qogʻozda yuritiladi"],
         "ru": ["Учебный центр на 200 учеников, оплаты в Excel", "Курсы английского, посещаемость ведём на бумаге"],
@@ -183,6 +186,7 @@
       "name": { "uz": "ulgurji savdo kompaniyasi", "ru": "оптовая компания", "en": "a wholesale business", "ja": "卸売業" },
       "plural": { "uz": "Ulgurji savdo kompaniyalari", "ru": "Оптовые компании", "en": "Wholesale businesses", "ja": "卸売業" },
       "starter": ["tg-b2b-ordering", "biz-1c-integration", "biz-wms"],
+      "ja_words": ["卸", "問屋", "商社", "取引先", "受発注"],
       "examples": {
         "uz": ["Qurilish materiallari ulgurji savdosi, 1C bor, dilerlar telefon qiladi", "Ichimliklar distribyutori, agentlar buyurtmani WhatsAppda yuboradi"],
         "ru": ["Оптовая торговля стройматериалами, есть 1С, дилеры звонят", "Дистрибьютор напитков, агенты присылают заказы в WhatsApp"],
@@ -194,6 +198,7 @@
       "name": { "uz": "goʻzallik saloni", "ru": "салон красоты", "en": "a beauty salon", "ja": "美容サロン" },
       "plural": { "uz": "Goʻzallik salonlari", "ru": "Салоны красоты", "en": "Beauty salons", "ja": "美容サロン" },
       "starter": ["tg-booking-bot", "ai-sales-assistant", "tg-loyalty-bot"],
+      "ja_words": ["美容", "サロン", "ネイル", "エステ", "理容"],
       "examples": {
         "uz": ["Goʻzallik saloni, Instagram orqali yozilish", "Barbershop, mijozlar navbatni unutib qoʻyadi"],
         "ru": ["Салон красоты, запись через Instagram", "Барбершоп, клиенты забывают о записи"],
@@ -205,6 +210,7 @@
       "name": { "uz": "logistika kompaniyasi", "ru": "логистическая компания", "en": "a logistics company", "ja": "物流会社" },
       "plural": { "uz": "Logistika kompaniyalari", "ru": "Логистические компании", "en": "Logistics companies", "ja": "物流会社" },
       "starter": ["iot-fleet-gps", "tg-field-reports", "ind-logistics-tms"],
+      "ja_words": ["物流", "倉庫", "運送", "トラック"],
       "examples": {
         "uz": ["Shahar ichida yuk tashish, 15 ta haydovchi, hisobotlar qogʻozda", "Ombordan doʻkonlarga yetkazish, reyslar Excelda rejalanadi"],
         "ru": ["Грузоперевозки по городу, 15 водителей, отчёты на бумаге", "Доставка со склада в магазины, рейсы планируем в Excel"],
@@ -216,6 +222,7 @@
       "name": { "uz": "doʻkon", "ru": "магазин", "en": "a shop", "ja": "小売店" },
       "plural": { "uz": "Doʻkonlar", "ru": "Магазины", "en": "Shops", "ja": "小売店" },
       "starter": ["tg-order-bot", "tg-loyalty-bot", "biz-bi-dashboards"],
+      "ja_words": ["小売", "スーパー", "ショップ", "売り場"],
       "examples": {
         "uz": ["Kiyim doʻkoni, mijozlar Telegramda narx soʻraydi", "Uchta oziq-ovqat doʻkoni, qoldiqlar daftarda"],
         "ru": ["Магазин одежды, клиенты спрашивают цены в Telegram", "Три продуктовых магазина, остатки в тетради"],
@@ -227,6 +234,7 @@
       "name": { "uz": "internet-doʻkon", "ru": "интернет-магазин", "en": "an online store", "ja": "ECサイト" },
       "plural": { "uz": "Internet-doʻkonlar", "ru": "Интернет-магазины", "en": "Online stores", "ja": "ECサイト" },
       "starter": ["web-ecommerce", "biz-payments", "biz-marketplace-sync"],
+      "ja_words": ["ネットショップ", "通販", "オンラインショップ", "ECサイト"],
       "examples": {
         "uz": ["Instagramdagi doʻkon, buyurtmalar Directda", "Uzum Marketda sotamiz, qoldiqlar qoʻlda yangilanadi"],
         "ru": ["Магазин в Instagram, заказы в директе", "Продаём на Uzum Market, остатки обновляем вручную"],
@@ -238,6 +246,7 @@
       "name": { "uz": "yetkazib berish xizmati", "ru": "служба доставки", "en": "a delivery service", "ja": "配達サービス" },
       "plural": { "uz": "Yetkazib berish xizmatlari", "ru": "Службы доставки", "en": "Delivery services", "ja": "配達サービス" },
       "starter": ["tg-order-bot", "biz-delivery-routing", "biz-notification-hub"],
+      "ja_words": ["デリバリー", "宅配", "出前"],
       "examples": {
         "uz": ["Suv yetkazib berish, kuryerlar manzilni adashtiradi", "Gul yetkazish, buyurtmalar telefon orqali"],
         "ru": ["Доставка воды, курьеры путают адреса", "Доставка цветов, заказы по телефону"],
@@ -249,6 +258,7 @@
       "name": { "uz": "dorixona", "ru": "аптека", "en": "a pharmacy", "ja": "薬局" },
       "plural": { "uz": "Dorixonalar", "ru": "Аптеки", "en": "Pharmacies", "ja": "薬局" },
       "starter": ["ind-pharmacy", "tg-order-bot"],
+      "ja_words": ["薬局", "ドラッグストア", "医薬品"],
       "examples": {
         "uz": ["Beshta dorixona, dori qoldigʻini telefon orqali soʻrashadi", "Dorixona, mijozlar dori bor-yoʻqligini bilolmaydi"],
         "ru": ["Пять аптек, наличие лекарств узнают по телефону", "Аптека, клиенты не знают, есть ли лекарство"],
@@ -260,6 +270,7 @@
       "name": { "uz": "fitnes klub", "ru": "фитнес-клуб", "en": "a fitness club", "ja": "フィットネスクラブ" },
       "plural": { "uz": "Fitnes klublar", "ru": "Фитнес-клубы", "en": "Fitness clubs", "ja": "フィットネスクラブ" },
       "starter": ["ind-fitness-sports", "tg-booking-bot"],
+      "ja_words": ["フィットネス", "ジム", "スポーツクラブ"],
       "examples": {
         "uz": ["Fitnes klub, abonementlar daftarda yoziladi", "Sport maktabi, ota-onalar toʻlovni naqd qiladi"],
         "ru": ["Фитнес-клуб, абонементы записываем в тетрадь", "Спортивная школа, родители платят наличными"],
@@ -271,6 +282,7 @@
       "name": { "uz": "mehmonxona", "ru": "гостиница", "en": "a hotel", "ja": "ホテル" },
       "plural": { "uz": "Mehmonxonalar", "ru": "Гостиницы", "en": "Hotels", "ja": "ホテル" },
       "starter": ["ind-hotel-kit", "web-booking-engine"],
+      "ja_words": ["ホテル", "旅館", "宿泊", "ホステル"],
       "examples": {
         "uz": ["Buxorodagi 20 xonali mehmonxona, bronlar Booking.com orqali", "Mehmonxona, xonalar jadvali Excelda"],
         "ru": ["Гостиница на 20 номеров в Бухаре, брони через Booking.com", "Гостиница, шахматка номеров в Excel"],
@@ -282,6 +294,7 @@
       "name": { "uz": "turistik kompaniya", "ru": "турфирма", "en": "a tour company", "ja": "旅行会社" },
       "plural": { "uz": "Turistik kompaniyalar", "ru": "Турфирмы", "en": "Tour companies", "ja": "旅行会社" },
       "starter": ["web-corporate", "ind-tour-operator"],
+      "ja_words": ["旅行", "ツアー", "観光"],
       "examples": {
         "uz": ["Xorijlik turistlar uchun turlar, soʻrovlar elektron pochtada", "Turfirma, gidlar jadvali Telegram guruhda"],
         "ru": ["Туры для иностранцев, заявки приходят на почту", "Турфирма, расписание гидов в группе Telegram"],
@@ -293,6 +306,7 @@
       "name": { "uz": "transport kompaniyasi", "ru": "транспортная компания", "en": "a transport company", "ja": "運送会社" },
       "plural": { "uz": "Transport kompaniyalari", "ru": "Транспортные компании", "en": "Transport companies", "ja": "運送会社" },
       "starter": ["iot-fleet-gps", "tg-field-reports", "biz-delivery-routing"],
+      "ja_words": ["交通", "バス", "タクシー", "運行"],
       "examples": {
         "uz": ["40 ta yuk mashinasi, yoqilgʻi sarfini nazorat qilolmaymiz", "Avtobus parki, haydovchilar hisobotni kechiktiradi"],
         "ru": ["40 грузовиков, не можем контролировать расход топлива", "Автобусный парк, водители сдают отчёты с опозданием"],
@@ -304,6 +318,7 @@
       "name": { "uz": "qurilish kompaniyasi", "ru": "строительная компания", "en": "a construction company", "ja": "建設会社" },
       "plural": { "uz": "Qurilish kompaniyalari", "ru": "Строительные компании", "en": "Construction companies", "ja": "建設会社" },
       "starter": ["ind-construction", "tg-field-reports"],
+      "ja_words": ["建設", "工事", "施工", "現場"],
       "examples": {
         "uz": ["Uchta obyekt, materiallar sarfi Excelda", "Qurilish, prorablar hisobotni ovozli xabar bilan yuboradi"],
         "ru": ["Три объекта, расход материалов в Excel", "Стройка, прорабы присылают отчёты голосовыми"],
@@ -315,6 +330,7 @@
       "name": { "uz": "quruvchi kompaniya", "ru": "девелоперская компания", "en": "a property developer", "ja": "不動産デベロッパー" },
       "plural": { "uz": "Quruvchi kompaniyalar", "ru": "Девелоперы", "en": "Property developers", "ja": "不動産デベロッパー" },
       "starter": ["ind-developer-sales", "web-apartment-picker"],
+      "ja_words": ["不動産", "賃貸", "入居者", "物件"],
       "examples": {
         "uz": ["Turar joy majmuasi, xonadonlar jadvali Excelda, muddatli toʻlov bor", "Quruvchi, sotuv boʻlimi mijozlarni yoʻqotadi"],
         "ru": ["Жилой комплекс, шахматка квартир в Excel, есть рассрочка", "Девелопер, отдел продаж теряет клиентов"],
@@ -326,6 +342,7 @@
       "name": { "uz": "ishlab chiqarish korxonasi", "ru": "производство", "en": "a factory", "ja": "製造業" },
       "plural": { "uz": "Ishlab chiqarish korxonalari", "ru": "Производства", "en": "Factories", "ja": "製造業" },
       "starter": ["iot-factory-monitoring", "biz-wms", "biz-bi-dashboards"],
+      "ja_words": ["製造", "工場", "メーカー", "生産", "設備"],
       "examples": {
         "uz": ["Plastik idishlar zavodi, dastgohlar toʻxtab qolishini bilmaymiz", "Mebel ishlab chiqarish, buyurtmalar daftarda"],
         "ru": ["Завод пластиковой тары, не знаем, когда простаивают станки", "Мебельное производство, заказы в тетради"],
@@ -337,6 +354,7 @@
       "name": { "uz": "tikuv sexi", "ru": "швейное производство", "en": "a garment workshop", "ja": "縫製工場" },
       "plural": { "uz": "Tikuv sexlari", "ru": "Швейные производства", "en": "Garment workshops", "ja": "縫製工場" },
       "starter": ["ind-textile", "biz-hr-payroll"],
+      "ja_words": ["縫製", "アパレル", "繊維", "衣料"],
       "examples": {
         "uz": ["120 tikuvchili sex, ish haqi dona boʻyicha qoʻlda hisoblanadi", "Eksport uchun tikuv, buyurtma bosqichlari koʻrinmaydi"],
         "ru": ["Цех на 120 швей, сдельную зарплату считаем вручную", "Пошив на экспорт, не видно этапов заказа"],
@@ -348,6 +366,7 @@
       "name": { "uz": "fermer xoʻjaligi", "ru": "фермерское хозяйство", "en": "a farm", "ja": "農業法人" },
       "plural": { "uz": "Fermer xoʻjaliklari", "ru": "Фермерские хозяйства", "en": "Farms", "ja": "農業法人" },
       "starter": ["ind-agro-farm", "iot-irrigation"],
+      "ja_words": ["農業", "農場", "農園", "畜産"],
       "examples": {
         "uz": ["300 gektar bogʻ, sugʻorish qoʻlda boshqariladi", "Issiqxona, harorat kechasi kuzatilmaydi"],
         "ru": ["Сад на 300 гектаров, полив вручную", "Теплица, ночью температуру никто не видит"],
@@ -359,6 +378,7 @@
       "name": { "uz": "avtoservis", "ru": "автосервис", "en": "a car service", "ja": "自動車整備工場" },
       "plural": { "uz": "Avtoservislar", "ru": "Автосервисы", "en": "Car services", "ja": "自動車整備工場" },
       "starter": ["ind-auto-service", "tg-booking-bot"],
+      "ja_words": ["自動車整備", "整備工場", "洗車", "ディーラー", "カー用品"],
       "examples": {
         "uz": ["Avtoservis va avtoyuvish, mijozlar navbat kutib ketib qoladi", "Ehtiyot qismlar doʻkoni, qoldiqlar Excelda"],
         "ru": ["Автосервис и мойка, клиенты уходят из очереди", "Магазин запчастей, остатки в Excel"],
@@ -370,6 +390,7 @@
       "name": { "uz": "xizmat koʻrsatish biznesi", "ru": "сервисный бизнес", "en": "a service business", "ja": "サービス業" },
       "plural": { "uz": "Xizmat koʻrsatish bizneslari", "ru": "Сервисные компании", "en": "Service businesses", "ja": "サービス業" },
       "starter": ["tg-booking-bot", "biz-crm", "web-corporate"],
+      "ja_words": ["清掃", "修理", "クリーニング"],
       "examples": {
         "uz": ["Tozalash xizmati, buyurtmalar telefon orqali, ustalar adashadi", "Yuridik firma, mijoz soʻrovlari pochtada yoʻqoladi"],
         "ru": ["Клининг, заказы по телефону, мастера путаются", "Юридическая фирма, заявки клиентов теряются в почте"],

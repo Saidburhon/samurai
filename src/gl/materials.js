@@ -60,9 +60,11 @@ export function makeMaterials(U, T) {
     steelReveal: null,
     copper: metal({ uBase: { value: v3(0.80, 0.46, 0.24) }, uRough: { value: 0.26 }, uMetal: { value: 1 }, uKind: { value: 0 } }),
     gold: metal({ uBase: { value: v3(0.86, 0.66, 0.32) }, uRough: { value: 0.2 }, uMetal: { value: 1 }, uKind: { value: 1 } }),
+    // the guard: lean in the boot program (the hero), full (ishime normal map, backlight) from Tsuba on
     iron: metal({ uBase: { value: v3(0.055, 0.048, 0.042) }, uRough: { value: 0.55 }, uMetal: { value: 0.6 }, uKind: { value: 2 } }),
+    ironFull: metal({ uBase: { value: v3(0.055, 0.048, 0.042) }, uRough: { value: 0.55 }, uMetal: { value: 0.6 }, uKind: { value: 2 } }, { IRON_FULL: '' }),
     shakudo: metal({ uBase: { value: v3(0.035, 0.038, 0.048) }, uRough: { value: 0.28 }, uMetal: { value: 0.85 }, uKind: { value: 3 } }),
-    nakago: metal({ uBase: { value: v3(0.075, 0.045, 0.028) }, uRough: { value: 0.62 }, uMetal: { value: 0.55 }, uKind: { value: 4 } }, {}, DoubleSide),
+    nakago: metal({ uBase: { value: v3(0.075, 0.045, 0.028) }, uRough: { value: 0.62 }, uMetal: { value: 0.55 }, uKind: { value: 4 } }, { NAKAGO: '' }, DoubleSide),
     // the grip shares the fittings' program (kind 5): one compile less on the boot path
     silk: metal({ uBase: { value: v3(0.80, 0.60, 0.30) }, uRough: { value: 0.5 }, uMetal: { value: 0 }, uKind: { value: 5 } }),
     lacquer: new ShaderMaterial({ ...base, vertexShader: swordV, fragmentShader: frag(LACQ_F), uniforms: { ...U, tHada: { value: T.hada }, uHornEnd: { value: 0.14 }, uBandEnd: { value: 0.56 }, uSayaLen: { value: 7.5 }, uPart: { value: 0 } } }),

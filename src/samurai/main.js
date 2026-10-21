@@ -9,8 +9,10 @@ import { match } from '../shared/match.js';
 import * as F from '../shared/format.js';
 import { firstMonday, snapMonday, tashkentToday, endOfWork, addDays, daysBetween } from '../shared/holidays.js';
 import { streamSamurai } from './stream.js';
-import { h, fill, money, briefHtml, questionsHtml, sheetHtml, skeletonHtml, notNeededHtml, refineHtml, stampHtml, actionsHtml } from './render.js';
+import { h, fill, money, SEP, briefHtml, questionsHtml, sheetHtml, skeletonHtml, notNeededHtml, refineHtml, stampHtml, actionsHtml } from './render.js';
 import { planHtml } from './plan.js';
+// the link sanitizer loads only when a link or the last estimate is opened (it is not on the page's first load)
+const sanitizer = () => import('./sanitize.js');
 import { hamonStrip } from './plate.js';
 import { encode, decode, verify } from './share.js';
 import { openLead, deckleFor } from '../ui/lead.js';
@@ -41,7 +43,7 @@ store.set('qilich.visits', String((Number(store.get('qilich.visits')) || 0) + 1)
 const fresh = () => ({
   meta: null, pick: null, details: {}, source: 'model', sel: new Map(), answers: {}, ticks: new Set(), open: new Set(), impact: {},
   chips: new Set(), fresh: new Set(), inked: new Set(), newIds: new Set(), text: '', intake: {}, preselected: [], done: false, partial: false,
-  verified: false, sig: '', start: firstMonday(today), deadline: '', budgetUsd: 0, plan: null, sols: [], nr: [], prevBig: new Map(), nextBig: new Map(),
+  verified: false, sig: '', start: firstMonday(today), deadline: '', budgetUsd: 0, plan: null, sols: [], prevBig: new Map(), nextBig: new Map(),
   was: null, struck: new Set(), nextStage: [], fitMsg: '', removed: [], error: null, expired: false, repriced: false, preset: '', qnote: null, intOpen: null, briefOpen: false,
 });
 let st = fresh();
@@ -72,30 +74,39 @@ function paint() {
   const sheets = st.sols.map((s) => { const id = solId(s), inkIn = !reduced && st.newIds.has(id) && !st.inked.has(id); if (inkIn) st.inked.add(id); return sheetHtml(C, s, st, { scale, width, inkIn }); }).join('');
   st.prevBig = st.nextBig;
   const waiting = !st.done && st.source === 'model' && !st.planSeen;
-  const notes = [];
-  if (st.source === 'fallback') notes.push(`<p class="note mono">${h(S.srcFallback)}</p>`);
-  if (st.unavailable) notes.push(`<p class="note">${h(S.unavailable)}</p>`);
-  if (st.error) notes.push(`<div class="broken"><img src="${h(brokenSrc())}" alt="" width="220" height="80"><p>${h(S.errDrop)} <button class="tlink" type="button" data-act="retry">${h(S.retry)}</button> · <a href="tel:${h(cfg.phone.replace(/[^\d+]/g, ''))}">${h(cfg.phone.replace(/ /g, '\u00a0'))}</a></p></div>`);
-  if (st.partial && st.done) notes.push(`<p class="note mono">${h(S.partial)} · <button class="tlink" type="button" data-act="retry">${h(S.retry)}</button></p>`);
   const nb = st.pick.status === 'not_business';
+  const hasSols = st.sols.length > 0;
+  if (nb) {
+    // not a business: one line and the examples, nothing that looks like an estimate (no number, stamp or actions)
+    result.innerHTML = `<div class="rtop"><div class="desk nb"><p class="note nb-line" id="res-h" tabindex="-1">${h(S.notBusiness)}</p><p class="examples mono">${exampleButtons()}</p><p><button class="tlink edit" type="button" data-act="edit">${h(S.edit)}</button></p></div></div>`;
+    st.fresh.clear(); st.newIds.clear();
+    strip(false);
+    return;
+  }
+  const notes = [];
+  if (st.source === 'fallback' && !st.unavailable) notes.push(`<p class="note mono">${h(S.srcFallback)}</p>`);
+  if (st.unavailable) notes.push(`<p class="note">${h(S.unavailable)}</p>`);
+  if (st.error) notes.push(`<div class="broken"><img src="${h(brokenSrc())}" alt="" width="220" height="80"><div><p>${h(S.errDrop)}</p><p class="acts"><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button><a href="tel:${h(cfg.phone.replace(/[^\d+]/g, ''))}">${h(cfg.phone.replace(/ /g, '\u00a0'))}</a></p></div></div>`);
+  if (st.partial && st.done) notes.push(`<p class="note mono">${h(S.partial)}${SEP}<button class="tlink" type="button" data-act="retry">${h(S.retry)}</button></p>`);
+  // the currency switch, the stamp and the actions belong to an estimate: only with at least one solution
+  const cur = hasSols ? `<p class="cur" role="group" aria-label="${h(S.cur.label)}"><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'usd' : 'uzs'}" aria-pressed="${C.cur === (lang === 'ja' ? 'usd' : 'uzs')}">${h(lang === 'ja' ? S.cur.usd : S.cur.uzs)}</button><i></i><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'uzs' : 'usd'}" aria-pressed="${C.cur === (lang === 'ja' ? 'uzs' : 'usd')}">${h(lang === 'ja' ? S.cur.uzs : S.cur.usd)}</button></p>` : '';
   const desk = `<div class="desk">
-    <div class="res-head"><h2 id="res-h" tabindex="-1">${h(S.res)}</h2><span class="no mono">${h(st.meta?.brief_no || '')}</span>
-      <p class="cur" role="group" aria-label="${h(S.cur.label)}"><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'usd' : 'uzs'}" aria-pressed="${C.cur === (lang === 'ja' ? 'usd' : 'uzs')}">${h(lang === 'ja' ? S.cur.usd : S.cur.uzs)}</button><i></i><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'uzs' : 'usd'}" aria-pressed="${C.cur === (lang === 'ja' ? 'uzs' : 'usd')}">${h(lang === 'ja' ? S.cur.uzs : S.cur.usd)}</button></p></div>
+    <div class="res-head"><h2 id="res-h" tabindex="-1">${h(S.res)}</h2><span class="no mono">${h(st.meta?.brief_no || '')}</span>${cur}</div>
     ${notes.join('')}
     <div class="res-status">${st.statusText && !st.done ? `<p class="status mono">${h(st.statusText)}</p>` : ''}</div>
-    ${nb ? `<p class="note">${h(S.notBusiness)}</p><p class="examples mono">${exampleButtons()}</p>` : ''}
     ${questionsHtml(C, st)}
     ${sheets}
-    ${waiting && !nb ? skeletonHtml(C, width) : ''}
+    ${waiting ? skeletonHtml(C, width) : ''}
     ${notNeededHtml(C, st)}
   </div>`;
-  const hasPlan = st.sols.length && (st.planSeen || st.done || st.source !== 'model');
-  const printHead = `<div class="print-head"><b><svg aria-hidden="true"><use href="#mon"/></svg>QILICH</b><span>${h(S.printHead)} · ${h(st.meta?.brief_no || '')} · ${h(F.dateNum((st.meta?.generated_at || today).slice(0, 10), lang))} · ${h(fill(S.valid, { n: cfg.validity || 30 }))}</span></div>`;
-  result.innerHTML = printHead + briefHtml(C, st) + desk
+  const hasPlan = hasSols && (st.planSeen || st.done || st.source !== 'model');
+  const printHead = `<div class="print-head"><b><svg aria-hidden="true"><use href="#mon"/></svg>QILICH</b><span>${h(S.printHead)}${SEP}${h(st.meta?.brief_no || '')}${SEP}${h(F.dateNum((st.meta?.generated_at || today).slice(0, 10), lang))}${SEP}${h(fill(S.valid, { n: cfg.validity || 30 }))}</span></div>`;
+  // the brief and the desk share a wrapper, so the sticky brief stops where the sheets end (not over the plan)
+  result.innerHTML = printHead + `<div class="rtop">${briefHtml(C, st)}${desk}</div>`
     + (hasPlan ? planHtml(C, st.sols, st, full) : '')
-    + (st.done && st.sols.length && st.source !== 'shared' ? refineHtml(C, st) : '')
-    + (st.done || st.source !== 'model' ? stampHtml(C, st) + actionsHtml(C) : '')
-    + `<p class="print-foot">${h(cfg.phone)} · ${h(cfg.email)} · qilich.com${h(location.pathname)} · ${h(S.res)} ${h(st.meta?.brief_no || '')}</p>`;
+    + (st.done && hasSols && st.source !== 'shared' ? refineHtml(C, st) : '')
+    + (hasSols && (st.done || st.source !== 'model') ? stampHtml(C, st) + actionsHtml(C) : '')
+    + `<p class="print-foot">${h(cfg.phone)}${SEP}${h(cfg.email)}${SEP}qilich.com${h(location.pathname)}${SEP}${h(S.res)} ${h(st.meta?.brief_no || '')}</p>`;
   st.fresh.clear(); st.newIds.clear();
   if (!reduced) result.querySelectorAll('.letter mark').forEach((m, i) => setTimeout(() => m.classList.add('on'), 120 + i * 450));
   else result.querySelectorAll('.letter mark').forEach((m) => m.classList.add('on'));
@@ -116,7 +127,7 @@ function strip(on) {
   if (!stripEl) { stripEl = document.createElement('div'); stripEl.className = 'strip'; document.body.append(stripEl); }
   const t = st.plan?.totals;
   if (!on || !t?.count) { stripEl.classList.remove('on'); document.body.classList.remove('has-strip'); return; }
-  stripEl.innerHTML = `<span>${h(S.total)} ${h(money(C, t.usd, t.uzs)[0])} · ${h(F.weeks(t.weeks, lang))}</span><a href="#plan">${h(S.plan)}</a>`;
+  stripEl.innerHTML = `<span>${h(S.total)} <span class="nw">${h(money(C, t.usd, t.uzs)[0])}</span>${SEP}<span class="nw">${h(F.weeks(t.weeks, lang))}</span></span><a href="#plan">${h(S.plan)}</a>`;
   stripEl.classList.add('on'); document.body.classList.add('has-strip');
 }
 
@@ -134,7 +145,7 @@ text.addEventListener('input', () => { counter(); saveDraft(); });
 function saveDraft() { store.set('qilich.samurai.draft', JSON.stringify({ text: text.value, sel: Object.fromEntries([...form.querySelectorAll('select')].map((s) => [s.name, s.value])), touched: [...touched] })); }
 function exampleButtons(ind) {
   const list = cfg.examplesByIndustry[ind || form.elements.industry.value] || [];
-  return `<span class="lbl">${h(S.examples)}</span> ${list.map((e) => `<button type="button" class="ex" data-ex="${h(e)}">${h(e)}</button>`).join('<i> · </i>')}`;
+  return `<span class="lbl">${h(S.examples)}</span> ${list.map((e) => `<button type="button" class="ex" data-ex="${h(e)}">${h(e)}</button>`).join(' ')}`;
 }
 function examplesFor(ind) { form.querySelector('.examples').innerHTML = exampleButtons(ind); }
 function setSelect(name, v) { const sel = form.elements[name]; if (sel && [...sel.options].some((o) => o.value === v)) { sel.value = v; syncBlank(sel); touched.add(name); } }
@@ -159,12 +170,13 @@ function busy(on) {
     tick = setInterval(() => {
       const t = (performance.now() - t0) / 1000;
       ink.style.setProperty('--pool', (1 - Math.exp(-t / 6)).toFixed(3));
-      if (reduced && !st.pick) statusEl.textContent = `${st.statusText || ''} · ${Math.round(t)} s`;
+      if (reduced && !st.pick) statusEl.textContent = `${st.statusText || ''}${SEP}${Math.round(t)}\u00a0s`;
     }, 250);
   } else statusEl.textContent = '';
 }
 function status(t) { st.statusText = t; if (!st.pick) statusEl.textContent = t; else { const el = $('.res-status', result); if (el) el.innerHTML = t ? `<p class="status mono">${h(t)}</p>` : ''; } }
-function show() { sam.classList.add('has-result'); result.hidden = false; }
+// the form folds away when a result first shows; scroll anchoring would otherwise keep the page at the bottom
+function show() { const first = !sam.classList.contains('has-result'); sam.classList.add('has-result'); result.hidden = false; if (first) window.scrollTo({ top: 0, behavior: 'auto' }); }
 
 async function run(body, { refine = false } = {}) {
   await dataReady;
@@ -192,7 +204,7 @@ async function run(body, { refine = false } = {}) {
       st.statusText = S.st.estimating;
       paint();
       live.textContent = `${d.n}. ${d.title}, ${F.weeks(d.weeks[d.scope], lang)}, ${money(C, d.usd[d.scope], d.uzs[d.scope])[0]}`;
-    } else if (ev === 'not_recommended') st.nr = d;
+    } else if (ev === 'not_recommended') { /* the list is in the pick that follows (signed with it) */ }
     else if (ev === 'plan') {
       st.pick = d.pick; st.planSeen = true;
       if (d.source === 'fallback') st.source = 'fallback';
@@ -205,18 +217,20 @@ async function run(body, { refine = false } = {}) {
     else if (ev === 'done') { st.done = true; st.sig = d.sig || ''; st.partial = !!d.partial; }
     else if (ev === 'error') {
       // a refine that fails before anything new arrived keeps the estimate it started from
-      if (refine && !gotSolution && d?.code !== 'rate_limited') { st = prev; st.error = d?.code || 'upstream'; return; }
+      if (refine && !gotSolution) { st = prev; if (d?.code === 'rate_limited') { st.rateLimited = true; st.retryAfter = d.retry_after || 60; } else st.error = d?.code || 'upstream'; return; }
       onError(d, gotSolution, body);
     }
   }, abort.signal);
   busy(false);
-  if (!st.pick && !st.error && !st.rateLimited) onError({ code: 'network' }, false, body);
+  // the per-visitor limit: the message stays and the button counts down (limited() runs after the stream closes)
+  if (st.rateLimited) { st.rateLimited = false; return limited(st.retryAfter || 60); }
+  if (!st.pick && !st.error) onError({ code: 'network' }, false, body);
   if (st.pick) await finish(refine ? prev : null);
 }
 
 function onError(d, gotSolution, body) {
   const code = d?.code || 'upstream';
-  if (code === 'rate_limited') { st.rateLimited = true; return limited(d.retry_after || 60); }
+  if (code === 'rate_limited') { st.rateLimited = true; st.retryAfter = d.retry_after || 60; return; }
   if (code === 'too_long') { count.classList.add('over'); return; }
   if (gotSolution) { st.partial = true; st.done = true; return; }
   // nothing arrived: the catalogue matcher answers, with the reason
@@ -235,9 +249,9 @@ function localMeta() {
 }
 function limited(sec) {
   let left = sec;
-  statusEl.textContent = S.rateLimited;
+  status(S.rateLimited);
   go.disabled = true;
-  const t = setInterval(() => { left--; go.querySelector('span').textContent = left > 0 ? `${S.estimate} · ${left}` : S.estimate; if (left <= 0) { clearInterval(t); go.disabled = false; } }, 1000);
+  const t = setInterval(() => { left--; go.querySelector('span').textContent = left > 0 ? `${S.estimate} · ${left}` : S.estimate; if (left <= 0) { clearInterval(t); go.disabled = false; status(''); } }, 1000);
 }
 
 async function finish(prev) {
@@ -248,7 +262,7 @@ async function finish(prev) {
   }
   if (st.sig && st.source === 'model') st.verified = await verify(signedPart(), st.sig);
   paint();
-  if (st.source !== 'sample') { try { store.set('qilich.samurai.last', await encode(payload())); } catch { /* storage full */ } }
+  if (st.source !== 'sample' && st.sols.length) { try { store.set('qilich.samurai.last', await encode(payload())); } catch { /* storage full */ } }
   $('#res-h')?.focus({ preventScroll: true });
   if (st.verified && navigator.vibrate && !reduced) try { navigator.vibrate(8); } catch { /* not allowed */ }
 }
@@ -257,32 +271,37 @@ async function finish(prev) {
 // share links, the last estimate, samples
 const signedPart = () => ({ brief_no: st.meta.brief_no, lang: st.meta.lang, generated_at: st.meta.generated_at, catalogue_version: st.meta.catalogue_version, rate: st.meta.rate, pick: st.pick, details: st.details });
 function payload() {
-  return { v: 1, src: st.source, meta: { ...st.meta, rate: st.meta.rate }, pick: st.pick, details: st.details, sig: st.sig, nr: st.nr,
+  return { v: 1, src: st.source, meta: { ...st.meta, rate: st.meta.rate }, pick: st.pick, details: st.details, sig: st.sig,
     state: { sel: [...st.sel], ans: st.answers, ticks: [...st.ticks], budget: st.budgetUsd, deadline: st.deadline, start: st.start, cur: C.cur, impact: st.impact } };
 }
 async function shareUrl() { return `${location.origin}${location.pathname}#r=${await encode(payload())}`; }
-async function openPayload(p, { last = false } = {}) {
+async function openPayload(raw, { last = false } = {}) {
   await dataReady;
+  // a link is data anyone can type: only the shapes Qilich writes get through (src/samurai/sanitize.js)
+  const p = (await sanitizer()).cleanPayload(raw, model);
+  if (!p) return false;
   st = fresh();
-  st.meta = p.meta; st.pick = p.pick; st.details = p.details || {}; st.sig = p.sig || ''; st.nr = p.nr || [];
-  st.source = p.src === 'sample' ? 'sample' : last ? (p.src || 'model') : 'shared';
-  st.sel = new Map(p.state?.sel || []); st.answers = p.state?.ans || {}; st.ticks = new Set(p.state?.ticks || []);
-  st.budgetUsd = p.state?.budget || 0; st.deadline = p.state?.deadline || ''; st.start = p.state?.start || st.start; st.impact = p.state?.impact || {};
-  if (p.state?.cur) C.cur = p.state.cur;
+  st.meta = p.meta; st.pick = p.pick; st.details = p.details; st.sig = p.sig;
+  st.source = p.src === 'sample' ? 'sample' : last ? (p.src === 'shared' ? 'shared' : p.src) : 'shared';
+  st.sel = new Map(p.state.sel); st.answers = p.state.ans; st.ticks = new Set(p.state.ticks);
+  st.budgetUsd = p.state.budget; st.deadline = p.state.deadline; st.start = p.state.start || st.start; st.impact = p.state.impact;
+  if (p.state.cur) C.cur = p.state.cur;
   C.rate = p.meta.rate;
   st.done = true;
   st.repriced = p.meta.catalogue_version !== cfg.catalogueVersion;
-  st.expired = p.meta.valid_until < today;
+  // validity counts from the signed date, never from a field the link could carry on its own
+  st.expired = addDays(p.meta.generated_at.slice(0, 10), cfg.validity || 30) < today;
   show();
   paint();
   if (st.sig && st.source !== 'sample') { st.verified = await verify(signedPart(), st.sig); paint(); }
+  return true;
 }
 async function renderSample(x) {
   await dataReady;
   abort?.abort();
   st = fresh();
   st.source = 'sample'; st.meta = { ...x.meta, rate: cfg.rate }; C.rate = cfg.rate;
-  st.pick = x.pick; st.details = x.details || {}; st.text = x.text; st.nr = x.nr || []; st.done = true; st.repriced = false;
+  st.pick = x.pick; st.details = x.details || {}; st.text = x.text; st.done = true; st.repriced = false;
   x.pick.solutions.forEach((s) => st.newIds.add(solId(s)));
   st.fresh.add('heard');
   show(); paint();
@@ -325,7 +344,7 @@ result.addEventListener('click', async (e) => {
   else if (act === 'int') { st.intOpen = st.intOpen?.k === el.dataset.k && st.intOpen?.s === el.dataset.s ? null : { k: el.dataset.k, s: el.dataset.s }; st.open.add(`${el.dataset.s}:int`); paint(); }
   else if (act === 'legend') legend();
   else if (act === 'preset') { st.sel = new Map(presetOf(st.sols, el.dataset.k).map((x) => [x.id, x.state])); st.preset = el.dataset.k; st.struck.clear(); st.fitMsg = ''; st.nextStage = []; paint(); }
-  else if (act === 'quick') { const f = el.closest('form'); f.elements.deadline.value = addDays(st.start, Number(el.dataset.m) * 30); }
+  else if (act === 'quick') { const f = el.closest('form'); f.elements.deadline.value = addDays(st.start, Number(el.dataset.m) * 30); showDate(f.elements.deadline); }
   else if (act === 'chip') { const k = el.dataset.k; st.chips.has(k) ? st.chips.delete(k) : st.chips.add(k); el.setAttribute('aria-pressed', st.chips.has(k)); }
   else if (act === 'retry') run(request());
   else if (act === 'reprice') { C.rate = cfg.rate; st.meta = { ...st.meta, rate: cfg.rate }; st.expired = false; st.repriced = true; paint(); }
@@ -347,7 +366,15 @@ result.addEventListener('change', (e) => {
     const n = Number(String(el.value).replace(/[\s\u00a0,]/g, '').replace(/[^\d.]/g, ''));
     if (Number.isFinite(n)) { st.impact[el.dataset.k] = el.dataset.money && C.cur !== 'usd' ? n / C.rate.uzs_per_usd : n; paint(); }
   } else if (el.dataset.act === 'start') { st.start = snapMonday(el.value || st.start); paint(); }
+  else if (el.type === 'date') showDate(el);
 });
+// the date fields show the page's own format; the native picker lies invisibly over the value and opens on a click
+function showDate(el) { const v = el.closest('.dt')?.querySelector('.dv'); if (v) v.textContent = /^\d{4}-\d{2}-\d{2}$/.test(el.value) ? F.dateNum(el.value, lang) : '—'; }
+result.addEventListener('click', (e) => { const d = e.target.closest?.('.dt input[type=date]'); if (d) try { d.showPicker(); } catch { /* not allowed or not supported: the native control still takes typing */ } });
+// print: every row open (the A4 copy shows deliverables, risks and needs, not the closed one-line values)
+let printOpen = null;
+addEventListener('beforeprint', () => { printOpen = [...result.querySelectorAll('.rows details:not([open])')]; printOpen.forEach((d) => (d.open = true)); });
+addEventListener('afterprint', () => { printOpen?.forEach((d) => (d.open = false)); printOpen = null; });
 result.addEventListener('submit', (e) => {
   e.preventDefault();
   const f = e.target;
@@ -395,7 +422,7 @@ function fitNow(f) {
 // the legend, sharing, the lead
 function legend() {
   const dlg = $('#legend-sheet');
-  dlg.innerHTML = `<button class="sheet-close" type="button" aria-label="${h(S.close)}"><i></i></button><h2>${h(S.row.diff)}</h2><ol>${S.legendNames.map((n, i) => `<li><b lang="ja">${['直刃', '湾れ', '互の目', '丁子', '乱れ'][i]}</b><span>${i + 1}/5 · ${h(lang === 'ja' ? S.diff[i] : `${['suguha', 'notare', 'gunome', 'chōji', 'midare'][i]} · ${n}`)}</span>${hamonStrip({ difficulty: i + 1, seed: 40 + i })}</li>`).join('')}</ol><p>${h(S.legendText)}</p>`;
+  dlg.innerHTML = `<button class="sheet-close" type="button" aria-label="${h(S.close)}"><i></i></button><h2>${h(S.row.diff)}</h2><ol>${S.legendNames.map((n, i) => `<li><b lang="ja">${['直刃', '湾れ', '互の目', '丁子', '乱れ'][i]}</b><span>${i + 1}/5${SEP}${h(lang === 'ja' ? S.diff[i] : `${['suguha', 'notare', 'gunome', 'chōji', 'midare'][i]}${SEP}${n}`)}</span>${hamonStrip({ difficulty: i + 1, seed: 40 + i })}</li>`).join('')}</ol><p>${h(S.legendText)}</p>`;
   deckleFor(dlg, 21);
   dlg.querySelector('.sheet-close').onclick = () => dlg.close();
   dlg.addEventListener('close', () => document.documentElement.classList.remove('legend-open', 'sheet-open'), { once: true });
@@ -421,7 +448,7 @@ async function lead() {
     totals: { usd: t.usd, uzs: t.uzs, weeks: t.weeks }, budget_usd: Math.round(st.budgetUsd || 0), budget_uzs: st.budgetUsd ? Math.round(st.budgetUsd * C.rate.uzs_per_usd) : 0,
     deadline: st.deadline, answers: answersList().map((a) => ({ q: a.question, a: a.answer })), text: st.text || '', link,
   };
-  const preview = [`${S.res} ${st.meta.brief_no}`, ...on.map((s) => `${s.title} · ${S.sc[st.sel.get(solId(s))]}`), `${S.total}: ${money(C, t.usd, t.uzs)[0]} · ${F.weeks(t.weeks, lang)}`];
+  const preview = [`${S.res} ${st.meta.brief_no}`, ...on.map((s) => `${s.title}${SEP}${S.sc[st.sel.get(solId(s))]}`), `${S.total}: ${money(C, t.usd, t.uzs)[0]}${SEP}${F.weeks(t.weeks, lang)}`];
   const mailText = [`${S.res} ${st.meta.brief_no}`, st.pick.heard?.summary || '', ...preview.slice(1), st.text ? `«${st.text}»` : '', link].filter(Boolean).join('\n');
   openLead({ S, lang, brief, preview, mailText, phone: cfg.phone, email: cfg.email });
 }
@@ -448,18 +475,21 @@ addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout((
     if (pre.length) { const p = form.querySelector('.pre'); p.hidden = false; p.querySelector('b').textContent = pre.map((id) => model.byId.get(id).title[lang] || id).join(', '); }
   }
   if (location.hash.startsWith('#r=')) {
-    try { await openPayload(await decode(location.hash.slice(3))); } catch { /* a broken link: the empty page */ }
-    return;
+    try { if (await openPayload(await decode(location.hash.slice(3)))) return; } catch { /* a broken link: the empty page */ }
   }
   if (q.has('sample')) { const s = (await samples()).list.find((x) => x.id === q.get('sample')); if (s) return renderSample(s); }
   const last = store.get('qilich.samurai.last');
   if (last) {
     try {
-      const p = await decode(last);
-      const el = $('.reopen');
-      el.innerHTML = `${h(fill(S.reopen, { no: p.meta.brief_no, date: F.dateNum(p.meta.generated_at.slice(0, 10), lang) }))} · <button class="tlink" type="button">${h(S.open)}</button>`;
-      el.hidden = false;
-      el.querySelector('button').onclick = () => openPayload(p, { last: true });
+      const raw = await decode(last);
+      await dataReady;
+      const p = (await sanitizer()).cleanPayload(raw, model);
+      if (p && p.pick.solutions.length) {
+        const el = $('.reopen');
+        el.innerHTML = `${h(fill(S.reopen, { no: p.meta.brief_no, date: F.dateNum(p.meta.generated_at.slice(0, 10), lang) }))}${SEP}<button class="tlink" type="button">${h(S.open)}</button>`;
+        el.hidden = false;
+        el.querySelector('button').onclick = () => openPayload(raw, { last: true });
+      }
     } catch { /* an old format */ }
   }
   // samples load in idle time, so a tapped example renders at once

@@ -58,6 +58,16 @@ function plural(lang, n) {
 }
 const RU = { week: ['неделя', 'недели', 'недель'], month: ['месяц', 'месяца', 'месяцев'] };
 function ruForm(word, n) { const c = plural('ru', n); return RU[word][c === 'one' ? 0 : c === 'few' ? 1 : 2]; }
+/**
+ * A UI string for a count n: `forms` is one string (Uzbek and Japanese need no plural after a number), or
+ * [one, few, many] for Russian, or [one, other] for English. "основа + 5 дополнений", "1 deliverable".
+ */
+export function plForm(forms, n, lang) {
+  if (!Array.isArray(forms)) return forms;
+  const c = plural(lang, n);
+  if (lang === 'ru') return forms[c === 'one' ? 0 : c === 'few' ? 1 : 2] ?? forms[forms.length - 1];
+  return forms[c === 'one' ? 0 : 1] ?? forms[forms.length - 1];
+}
 
 /** "4–6 hafta", "4–6 недель", "4–6 weeks", "4〜6週間" (the Russian form follows the upper bound) */
 export function weeks(r, lang) {

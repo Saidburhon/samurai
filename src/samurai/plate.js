@@ -57,11 +57,19 @@ function bladeOutline({ x0, y0, len, h, sag }) {
 }
 const outlinePath = (o) => `M${pts(o.spine)}L${pts([...o.edge].reverse())}Z`;
 
-// a dimension line with kissaki arrowheads at both ends, its label above
+// a kissaki-shaped arrowhead, as the oshigata plates draw them (src/sword/drawing.js arrow()): the tip at (x, y),
+// pointing along dir (+1 right, −1 left); one curved edge, one straight spine, like the blade's own point
+function kissakiHead(x, y, dir, size = 8) {
+  const n = dir; // perp([dir, 0]) = [0, dir]
+  const bx = x - dir * size;
+  const s1 = [bx, y + n * size * 0.27], s2 = [bx, y - n * size * 0.12];
+  const c = [x - dir * size * 0.35, y + n * size * 0.3];
+  return `M${r1(x)} ${r1(y)}Q${r1(c[0])} ${r1(c[1])} ${r1(s1[0])} ${r1(s1[1])}L${r1(s2[0])} ${r1(s2[1])}Z`;
+}
+// a dimension line with kissaki arrowheads at both ends (tips on the extension lines), its label above
 function dimension(x1, x2, y, label, cls = 'dim') {
-  const a = 5, k = 1.6;
-  const head = (x, dir) => `M${r1(x)} ${r1(y)}l${r1(dir * a)} ${-k}l${r1(-dir * 0.8)} ${k}l${r1(dir * 0.8)} ${k}Z`;
-  return `<g class="${cls}"><path class="k4" d="M${r1(x1)} ${r1(y)}H${r1(x2)}"/><path class="ah" d="${head(x1, 1)}${head(x2, -1)}"/><path class="k5" d="M${r1(x1)} ${r1(y - 4)}v8M${r1(x2)} ${r1(y - 4)}v8"/><text x="${r1(x1 + 4)}" y="${r1(y - 6)}">${esc(label)}</text></g>`;
+  const size = Math.min(8, Math.max(4, (x2 - x1) / 3));
+  return `<g class="${cls}"><path class="k4" d="M${r1(x1 + 2)} ${r1(y)}H${r1(x2 - 2)}"/><path class="ah" d="${kissakiHead(x1, y, -1, size)}${kissakiHead(x2, y, 1, size)}"/><path class="k5 ext" d="M${r1(x1)} ${r1(y - 5)}v10M${r1(x2)} ${r1(y - 5)}v10"/><text x="${r1(x1 + 4)}" y="${r1(y - 7)}">${esc(label)}</text></g>`;
 }
 
 /**
@@ -131,7 +139,8 @@ export function hamonStrip({ difficulty, seed = 7, width = 120, height = 14, lab
 
 /** A small blade silhouette for the plan's rows (x from start to end weeks; 14 px tall). */
 export function ganttBlade(x1, x2, y, state, h = 9) {
-  const len = Math.max(8, x2 - x1), o = bladeOutline({ x0: x1, y0: y, len, h, sag: 0.008 * len });
+  // the arc stays within 2.5 px, so the row's label above always has its air
+  const len = Math.max(8, x2 - x1), o = bladeOutline({ x0: x1, y0: y, len, h, sag: Math.min(2.5, 0.008 * len) });
   return `<path class="${state === 'off' ? 'k5 plan off' : 'k2 steel'}" d="${outlinePath(o)}"/>`;
 }
 

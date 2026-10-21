@@ -3,7 +3,7 @@
 // the state and paints; this file only turns state into markup. Every model string is escaped (textContent rules).
 import { bladePlate, hamonStrip, seedOf, struckBlade } from './plate.js';
 import * as F from '../shared/format.js';
-import { solId, payback, monthlyGain, NEEDS_KEYS } from '../shared/price.js';
+import { solId, paybackShown, monthlyGain, NEEDS_KEYS } from '../shared/price.js';
 import { solutionUrl } from '../shared/catalogue.js';
 
 export const h = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -11,6 +11,16 @@ export const fill = (s, o) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in o 
 const CARET = '<svg class="caret" viewBox="0 0 8 6" aria-hidden="true"><path d="M.6 .8h6.8L4 5.4z"/></svg>';
 const KISSAKI = '<svg viewBox="0 0 30 8" aria-hidden="true"><use href="#kissaki"/></svg>';
 export const money = (C, usdR, uzsR) => F.money(usdR, uzsR, C.cur, C.lang);
+// a separator that never starts a line: the dot is tied to the word before it, the line may break after it
+export const SEP = '\u00a0· ';
+// a range with its unit never breaks across lines ("19–27 недель", "$16 900–26 200", "3,000〜4,100ドル"): wrapped in a
+// nowrap span. Runs on escaped HTML text, never on markup with attributes.
+const RANGE = /\$?\d[\d\u00a0.,]*万?(?:[–〜]\$?\d[\d\u00a0.,]*万?)?(?:\u00a0[^\s<&·]+(?:\u00a0[^\s<&·]+)?|ドル|週間|か月|スム)?/g;
+export const nw = (html) => html.replace(RANGE, (m) => (/[–〜\u00a0]/.test(m.trim()) ? `<span class="nw">${m}</span>` : m));
+/** escape, then keep every range whole */
+export const R = (s) => nw(h(s));
+// a plural UI string for a count (Russian one/few/many, English one/other)
+const N = (C, forms, n, extra = {}) => fill(F.plForm(forms, n, C.lang), { n, ...extra });
 
 // the visitor's own words with each quote the model found underlined (folded match: case, spaces, okina look-alikes)
 function fold(text) {
@@ -40,7 +50,7 @@ export function markQuotes(text, quotes = []) {
 export function briefHtml(C, st) {
   const { S } = C, heard = st.pick?.heard;
   const words = st.text ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${markQuotes(st.text, heard?.quotes)}</p><button class="tlink more" type="button" data-act="more">${h(S.showText)}</button>`
-    : heard?.quotes?.length ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${heard.quotes.map((q, i) => `«<mark class="on" style="--i:${i}">${h(q)}</mark>»`).join(' · ')}</p>` : '';
+    : heard?.quotes?.length ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${heard.quotes.map((q, i) => `«<mark class="on" style="--i:${i}">${h(q)}</mark>»`).join(SEP)}</p>` : '';
   return `<aside class="brief${st.briefOpen ? ' open' : ''}" aria-label="${h(S.res)}">
     ${st.source === 'sample' ? `<p class="mono note k">${h(S.sample)}</p>` : ''}
     <p class="no mono">${h(S.res)} <b>${h(st.meta?.brief_no || '')}</b></p>
@@ -53,7 +63,7 @@ export function briefHtml(C, st) {
 export function questionsHtml(C, st) {
   const qs = st.pick?.questions || [];
   if (!qs.length) return '';
-  return `<div class="questions">${qs.map((q) => `<div class="qline" data-q="${h(q.id)}"><p>${h(q.text)}</p><div class="qopts" role="group" aria-label="${h(q.text)}">${q.options.map((o, i) => `${i ? '<i>·</i>' : ''}<button type="button" data-act="answer" data-q="${h(q.id)}" data-o="${h(o.id)}" aria-pressed="${st.answers[q.id] === o.id}">${h(o.label)}</button>`).join('')}</div>${st.qnote?.q === q.id ? `<p class="qnote mono">${h(C.S.narrow)} ${h(st.qnote.from)} ${KISSAKI} ${h(st.qnote.to)}</p>` : ''}</div>`).join('')}${st.pick.status === 'need_more' ? `<p class="run-answers"><button class="btn" type="button" data-act="run-answers"><span>${h(C.S.runAnswers)}</span>${KISSAKI}</button></p>` : ''}</div>`;
+  return `<div class="questions">${qs.map((q) => `<div class="qline" data-q="${h(q.id)}"><p>${h(q.text)}</p><div class="qopts" role="group" aria-label="${h(q.text)}">${q.options.map((o) => `<button type="button" data-act="answer" data-q="${h(q.id)}" data-o="${h(o.id)}" aria-pressed="${st.answers[q.id] === o.id}">${h(o.label)}</button>`).join('')}</div>${st.qnote?.q === q.id ? `<p class="qnote mono">${h(C.S.narrow)} ${R(st.qnote.from)} ${KISSAKI} ${R(st.qnote.to)}</p>` : ''}</div>`).join('')}${st.pick.status === 'need_more' ? `<p class="run-answers"><button class="btn" type="button" data-act="run-answers"><span>${h(C.S.runAnswers)}</span>${KISSAKI}</button></p>` : ''}</div>`;
 }
 
 // the one-line value a closed row shows, and its body
@@ -70,51 +80,56 @@ function rows(C, s, st, entry) {
   const list = (a) => `<ul>${a.map((x) => `<li>${h(x)}</li>`).join('')}</ul>`;
   // 1 what you get
   const mvpL = d?.deliverables_mvp?.length ? d.deliverables_mvp : [entry?.oneliner?.[lang] || ''].filter(Boolean);
-  row('get', d ? `${h(fill(S.sumGet, { n: d.deliverables_mvp.length }))} · MVP` : h(S.defaults), `<div class="cols2"><div><h4>${h(S.mvp)}</h4>${list(mvpL)}</div>${d?.deliverables_full?.length ? `<div><h4>${h(S.full)}</h4>${list(d.deliverables_full)}</div>` : ''}</div>`, waiting);
+  row('get', d ? `${h(N(C, S.sumGet, d.deliverables_mvp.length))}${SEP}MVP` : h(S.defaults), `<div class="cols2"><div><h4>${h(S.mvp)}</h4>${list(mvpL)}</div>${d?.deliverables_full?.length ? `<div><h4>${h(S.full)}</h4>${list(d.deliverables_full)}</div>` : ''}</div>`, waiting);
   // 2 phases, with real dates when the plan knows them
   const tr = st.plan?.tracks?.find((t) => t.id === id), dates = tr && st.start ? C.dates(tr.start[0] + (state === 'full' ? 0 : 0), tr.mvp_end) : '';
   const phases = s.phases[state];
-  row('phases', `${['plan', 'build', 'test', 'launch'].map((k) => h(S.ph[k])).join(' · ')}${dates ? ` · ${h(fill(S.mvpDates, { d: dates }))}` : ''}`,
-    `<table class="phase-t">${phases.map((p) => `<tr><td>${h(S.ph[p.key])}</td><td>${h(W(p.weeks))}</td><td>${h(p.deliverable)}</td></tr>`).join('')}<tr><td>${h(S.ph.kaizen)}</td><td>—</td><td></td></tr></table>`);
+  row('phases', `${['plan', 'build', 'test', 'launch'].map((k) => h(S.ph[k])).join(SEP)}${dates ? `${SEP}${h(fill(S.mvpDates, { d: dates }))}` : ''}`,
+    `<table class="phase-t">${phases.map((p) => `<tr><td>${h(S.ph[p.key])}</td><td>${R(W(p.weeks))}</td><td>${h(p.deliverable)}</td></tr>`).join('')}<tr><td>${h(S.ph.kaizen)}</td><td>—</td><td></td></tr></table>`);
   // 3 team, 4 stack
-  const teamLine = team.map((t) => `${t.label} ${t.count}`).join(' · ');
+  const teamLine = team.map((t) => `${t.label} ${t.count}`).join(SEP);
   row('team', h(teamLine), list(team.map((t) => `${t.label} × ${t.count}`)), waiting);
-  row('stack', h(stack.map((x) => x.name).join(' · ')), `<p class="chips">${stack.map((x) => `<span>${h(x.name)}</span>`).join('')}</p>`, waiting);
+  row('stack', h(stack.map((x) => x.name).join(SEP)), `<p class="chips">${stack.map((x) => `<span>${h(x.name)}</span>`).join('')}</p>`, waiting);
   // 5 integrations: a tap tells what each does and what it adds
-  row('int', ints.length ? h(ints.map((x) => x.name).join(' · ')) : '—', ints.length ? `<p class="chips">${s.integrations.map((k) => `<button type="button" data-act="int" data-k="${h(k)}" data-s="${h(id)}">${h(C.model.integrations[k]?.name || k)}</button>`).join('')}</p>${st.intOpen?.s === id ? `<p class="chip-what mono">${h(C.model.integrations[st.intOpen.k]?.what?.[lang] || '')} · +${h(W(C.model.integrations[st.intOpen.k]?.add_weeks.map((w) => w * 0.5) || [0, 0]))}</p>` : ''}` : `<p>—</p>`);
+  row('int', ints.length ? h(ints.map((x) => x.name).join(SEP)) : '—', ints.length ? `<p class="chips">${s.integrations.map((k) => `<button type="button" data-act="int" data-k="${h(k)}" data-s="${h(id)}">${h(C.model.integrations[k]?.name || k)}</button>`).join('')}</p>${st.intOpen?.s === id ? `<p class="chip-what mono">${h(C.model.integrations[st.intOpen.k]?.what?.[lang] || '')}${SEP}+${R(W(C.model.integrations[st.intOpen.k]?.add_weeks.map((w) => w * 0.5) || [0, 0]))}</p>` : ''}` : `<p>—</p>`);
   // 6 risks
   const risks = d?.risks || [];
   const worst = risks.reduce((a, r) => Math.max(a, r.adds_weeks), 0);
-  row('risks', risks.length ? h(fill(S.sumRisks, { n: risks.length, w: W([worst, worst]) })) : h(S.noRisks), risks.length ? risks.map((r) => `<div class="risk"><p>${h(r.text)}</p><p class="k">${h(r.mitigation)}</p>${r.adds_weeks ? `<span class="flag">+${h(W([r.adds_weeks, r.adds_weeks]))} · +${h(money(C, r.adds_usd, C.uzs(r.adds_usd))[0])}</span>` : ''}</div>`).join('') : `<p>${h(S.noRisks)}</p>`, waiting);
+  row('risks', risks.length ? h(N(C, S.sumRisks, risks.length, { w: W([worst, worst]) })) : h(S.noRisks), risks.length ? risks.map((r) => `<div class="risk"><p>${h(r.text)}</p><p class="k">${h(r.mitigation)}</p>${r.adds_weeks ? `<span class="flag">+${R(W([r.adds_weeks, r.adds_weeks]))}${SEP}+${R(money(C, r.adds_usd, C.uzs(r.adds_usd))[0])}</span>` : ''}</div>`).join('') : `<p>${h(S.noRisks)}</p>`, waiting);
   // 7 needed from you: ticks strike the item and travel in the share link
-  row('needs', h(`${fill(S.sumNeeds, { n: needs.length })} · ${needs[0] || ''}`), `<div class="needs">${needs.map((x, i) => `<label><input type="checkbox" data-act="tick" data-k="${h(`${id}:${i}`)}"${st.ticks.has(`${id}:${i}`) ? ' checked' : ''}><span class="t">${h(x)}</span></label>`).join('')}</div>`, waiting);
-  // 8 impact: the formula as a sentence with editable numbers
+  row('needs', h(`${N(C, S.sumNeeds, needs.length)}${SEP}${needs[0] || ''}`), `<div class="needs">${needs.map((x, i) => `<label><input type="checkbox" data-act="tick" data-k="${h(`${id}:${i}`)}"${st.ticks.has(`${id}:${i}`) ? ' checked' : ''}><span class="t">${h(x)}</span></label>`).join('')}</div>`, waiting);
+  // 8 impact: the formula as a sentence with editable numbers. A payback beyond three years is never shown as a
+  // number (a Tashkent office hour nets little after running costs): the row says it is hard to measure in money.
   const imp = d?.impact;
   let impSum = h(S.impactNone), impBody = `<p>${h(S.impactNone)}${imp?.summary ? `. ${h(imp.summary)}` : ''}</p>`;
   if (imp && imp.model !== 'none' && NEEDS_KEYS[imp.model]) {
     const inputs = imp.inputs.map((i) => ({ ...i, value: st.impact[`${id}:${i.key}`] ?? i.value }));
     const price = s.usd[state];
-    const pb = payback(imp.model, inputs, price, s.monthly_usd), gain = monthlyGain(imp.model, inputs) || 0;
-    impSum = pb ? h(fill(S.sumImpact, { m: F.months(pb, lang) })) : h(S.impactNa);
+    const pb = paybackShown(imp.model, inputs, price, s.monthly_usd), gain = monthlyGain(imp.model, inputs) || 0;
+    const run = (s.monthly_usd[0] + s.monthly_usd[1]) / 2;
+    const one = (u) => money(C, [u, u], C.uzs([Math.max(0, u), Math.max(0, u)]))[0];
+    const verdict = pb.months ? fill(S.sumImpact, { m: F.months(pb.months, lang) }) : pb.why === 'long' ? S.impactLong : S.impactNa;
+    impSum = pb.months ? R(verdict) : h(pb.why === 'long' ? S.impactNone : S.impactNa);
     const money1 = (u) => (C.cur === 'usd' ? u : Math.round(u * C.rate.uzs_per_usd / 1000) * 1000);
     impBody = `<p>${h(imp.summary)}</p><p class="formula">${inputs.map((i) => {
       const isMoney = i.unit === 'usd' || i.unit === 'usd_per_hour';
       const v = isMoney ? money1(i.value) : i.value;
       return `<label>${h(i.label)} <input inputmode="decimal" class="${i.basis === 'assumed' ? 'assumed' : ''}" data-act="impact" data-k="${h(`${id}:${i.key}`)}" data-money="${isMoney ? 1 : ''}" value="${h(F.int(v, lang === 'ja' ? 'en' : lang).replace(/\u00a0/g, ' '))}" aria-label="${h(i.label)}"><span class="tag">${isMoney ? h(C.cur === 'usd' ? '$' : S.cur.uzs) : ''} ${h(i.basis === 'assumed' ? S.assumed : S.fromText)}</span></label>`;
-    }).join(' · ')}</p><p class="res">${h(S.gain)} ≈ ${h(money(C, [gain, gain], C.uzs([gain, gain]))[0])} − ${h(S.running)} → ${pb ? h(fill(S.sumImpact, { m: F.months(pb, lang) })) : h(S.impactNa)}</p>`;
+    }).join('')}</p><p class="res">${h(S.gain)} ≈ ${R(one(gain))} − ${h(S.running)} ${R(one(run))} = ${gain - run < 0 ? '−' : ''}${R(one(Math.abs(gain - run)))}</p><p class="res verdict">${R(verdict)}</p>`;
   }
   row('impact', impSum, impBody, waiting);
   // 9 the price breakdown: one ruled line split into proportional segments, labelled under it
   const lines = s.price_lines[state];
   const tot = lines.reduce((a, l) => a + l.usd[1], 0) || 1;
-  row('breakdown', lines.length > 1 ? h(fill(S.sumBreak, { n: lines.length - 1 })) : h(S.sumBase), `<div class="bar" aria-hidden="true">${lines.map((l) => `<span style="flex:${(l.usd[1] / tot).toFixed(3)}"></span>`).join('')}</div><ul class="bar-l">${lines.map((l) => `<li><span>${h(l.label)}</span><b>${h(money(C, l.usd.map(Math.round), C.uzs(l.usd))[0])}</b></li>`).join('')}</ul>`);
+  row('breakdown', lines.length > 1 ? h(N(C, S.sumBreak, lines.length - 1)) : h(S.sumBase), `<div class="bar" aria-hidden="true">${lines.map((l) => `<span style="flex:${(l.usd[1] / tot).toFixed(3)}"></span>`).join('')}</div><ul class="bar-l">${lines.map((l) => `<li><span>${h(l.label)}</span><b>${R(money(C, l.usd.map(Math.round), C.uzs(l.usd))[0])}</b></li>`).join('')}</ul>`);
   return out.join('');
 }
 
+const SCOPE_STATES = ['off', 'mvp', 'full'];
 /** One solution sheet. scale: the longest full.max of the result (one shared weeks scale). */
 export function sheetHtml(C, s, st, { scale, width, inkIn }) {
-  const { S, lang } = C, id = solId(s), state = st.sel.get(id) || 'off';
-  const sc = state === 'off' ? s.scope : state;
+  const { S, lang } = C, id = solId(s), state = SCOPE_STATES.includes(st.sel.get(id)) ? st.sel.get(id) : 'off';
+  const sc = state === 'off' ? (s.scope === 'full' ? 'full' : 'mvp') : state;
   const entry = C.model.byId.get(s.catalogue_id === 'custom' ? s.based_on[0] : s.catalogue_id);
   const cat = s.catalogue_id === 'custom'
     ? `<span>${h(S.basedOn)} ${h(s.based_on.map((x) => C.model.byId.get(x)?.title?.[lang] || x).join(', '))}</span>`
@@ -125,7 +140,7 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
   const [big, small] = money(C, s.usd[sc], s.uzs[sc]);
   const other = sc === 'mvp' ? 'full' : 'mvp';
   const prevBig = st.prevBig?.get(id);
-  const bigHtml = prevBig && prevBig !== big && !inkIn ? diffDigits(prevBig, big) : h(big);
+  const bigHtml = bigDigits(prevBig && !inkIn ? prevBig : big, big);
   st.nextBig?.set(id, big);
   const was = st.was?.get(id);
   const mon = money(C, s.monthly_usd, s.monthly_uzs);
@@ -135,21 +150,32 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
     <h3 id="t-${h(id)}">${h(s.title)}</h3>
     ${plate}
     <dl class="sfacts">
-      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v">${h(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small">${h(small)} · ${h(sc === 'mvp' ? S.mvp : S.full)}</span><span class="mid">${h(S[other])}: ${h(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
-      <div><dt>${h(S.row.time)}</dt><dd class="mono-v">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was">${h(was.weeks)}</span>` : ''}${h(S.mvp)} ${h(W(s.weeks.mvp))} · ${h(S.full)} ${h(W(s.weeks.full))}</dd></div>
-      <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${h(mon[0])}</dd></div>
-      <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${s.difficulty}/5 · ${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
+      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small">${R(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
+      <div><dt>${h(S.row.time)}</dt><dd class="mono-v">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span>${SEP}<span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
+      <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div>
+      <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
       <div><dt>${h(S.row.why)}</dt><dd class="why">${h(s.why)}</dd></div>
     </dl>
     <fieldset class="scope"><legend>${h(S.sc.legend)}</legend>${['off', 'mvp', 'full'].map((v) => `<label class="${st.struck?.has(id) && v === 'off' ? 'struck' : ''}"><input type="radio" name="sc-${h(id)}" value="${v}" data-act="scope" data-id="${h(id)}"${state === v ? ' checked' : ''}><span>${h(S.sc[v])}</span></label>`).join('')}</fieldset>
     <div class="rows">${rows(C, s, st, entry)}</div>
   </article>`;
 }
-// only the characters that changed rise (T40)
-function diffDigits(a, b) {
-  let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++;
-  let j = 0; while (j < a.length - i && j < b.length - i && a[a.length - 1 - j] === b[b.length - 1 - j]) j++;
-  return h(b.slice(0, i)) + [...b.slice(i, b.length - j)].map((c) => `<span class="dg">${h(c)}</span>`).join('') + h(b.slice(b.length - j));
+// the large price: its numeric range stays on one line (the unit may wrap), and when it changed only the characters
+// that changed rise (T40)
+function bigDigits(a, b) {
+  let i = 0, j = 0;
+  if (a !== b) {
+    while (i < a.length && i < b.length && a[i] === b[i]) i++;
+    while (j < a.length - i && j < b.length - i && a[a.length - 1 - j] === b[b.length - 1 - j]) j++;
+  } else i = b.length;
+  const m = /\$?\d[\d\u00a0.,]*万?(?:[–〜]\$?\d[\d\u00a0.,]*万?)?/.exec(b);
+  let out = '';
+  for (let k = 0; k < b.length; k++) {
+    if (m && k === m.index) out += '<span class="nw">';
+    out += k >= i && k < b.length - j ? `<span class="dg">${h(b[k])}</span>` : h(b[k]);
+    if (m && k === m.index + m[0].length - 1) out += '</span>';
+  }
+  return out;
 }
 
 export function skeletonHtml(C, width) {
@@ -157,12 +183,14 @@ export function skeletonHtml(C, width) {
 }
 
 export function notNeededHtml(C, st) {
-  const nr = st.nr || [];
+  // from the pick (signed), never from a separate list: a share link cannot add text beside the hanko
+  const nr = st.pick?.not_recommended || [];
   if (!nr.length) return '';
   const { S, lang } = C;
   return `<section class="nr" aria-labelledby="nr-h"><h3 id="nr-h">${h(S.nr)}</h3><ul>${nr.map((x) => {
     const e = C.model.byId.get(x.catalogue_id);
-    const t = x.title || e?.title?.[lang] || x.catalogue_id;
+    // the catalogue's own name first: a sample or a share link made before a translation existed keeps the old one
+    const t = e?.title?.[lang] || e?.title?.en || x.catalogue_id;
     return `<li>${struckBlade(seedOf(x.catalogue_id))}<div><p class="t">${C.cfg.cataloguePages && e ? `<a href="${h(solutionUrl(e, lang))}">${h(t)}</a>` : h(t)}</p><p class="w">${h(x.why)}</p></div></li>`;
   }).join('')}</ul></section>`;
 }
@@ -177,11 +205,15 @@ export function refineHtml(C, st) {
 export function stampHtml(C, st) {
   const { S, lang } = C, m = st.meta;
   const date = F.dateNum(m.generated_at.slice(0, 10), lang);
-  const sig = st.source === 'sample' ? S.sampleStamp : st.verified ? S.signed : S.unsigned;
-  return `<div class="stamp${st.verified && st.source !== 'sample' ? ' signed' : ''}">
-    <div><p>${h(fill(S.stampNo, { no: m.brief_no, date }))}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>
-    ${st.expired ? `<p>${h(S.expired)} · <button class="tlink" type="button" data-act="reprice">${h(S.reprice)}</button></p>` : ''}${st.repriced ? `<p>${h(S.repriced)}</p>` : ''}</div>
-    <p class="sig">${h(sig)}<i class="hanko" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i></p>
+  // the hanko only on a genuine, verified estimate (status ok, at least one solution); a preliminary need_more sheet
+  // carries no signature line at all
+  const genuine = st.pick?.status === 'ok' && st.sols?.length > 0;
+  const signed = genuine && st.verified && st.source !== 'sample';
+  const sig = st.source === 'sample' ? S.sampleStamp : signed ? S.signed : genuine ? S.unsigned : '';
+  return `<div class="stamp${signed ? ' signed' : ''}">
+    <div><p>${h(fill(S.stampNo, { no: m.brief_no, date })).replace(/ · /g, SEP)}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>
+    ${st.expired ? `<p>${h(S.expired)}${SEP}<button class="tlink" type="button" data-act="reprice">${h(S.reprice)}</button></p>` : ''}${st.repriced ? `<p>${h(S.repriced)}</p>` : ''}</div>
+    ${sig ? `<p class="sig">${h(sig)}${signed ? `<i class="hanko" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i>` : ''}</p>` : ''}
   </div>`;
 }
 

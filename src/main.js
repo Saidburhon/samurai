@@ -28,9 +28,12 @@ function startCinema() {
   log('main', performance.now());
   const tier = chooseTier(q);
   Q.tier = tier.tier; Q.sw = tier.sw; Q.renderer = tier.renderer;
-  // the GL chunk: fetched at the gate's first check (0.80 s), so its evaluation does not stall the drawing
+  // The GL chunk (three.js and the sword, ~150 KB gz) is requested now, in cinema mode only, so the network has the
+  // whole drawing to bring it (the build does not modulepreload it: flow-mode phones must not pay for it, Addendum 2);
+  // evaluating its modules is only class definitions. Nothing GL runs before the gate below (0.80 s).
   let mods = null;
   const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js')]).then((m) => { log('fetched', performance.now()); return m; }));
+  if (!q.has('beat')) setTimeout(() => load().then(([gl]) => gl.prebuild()), 0);
   requestAnimationFrame(() => log('raf1', performance.now()));
   // GL work starts when the drawing's animations have ended, checked from 0.80 s, at most 0.40 s later (§4.1).
   // "Ended" is read from their scheduled end on the document timeline, not from their play state: a software
@@ -67,21 +70,42 @@ function startCinema() {
     const { stage, warm } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst') });
     Q.stage = stage;
     if (q.has('beat')) {
-      warm();
+      await warm();
       await poster.runPoster(stage, log);
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
     } else {
       // the boot path (G2 animates from here): the first frame at the reveal pose with nothing revealed yet
       const p = new poster.Poster(stage);
       let t = performance.now();
-      await p.apply('intro', { reveal: 0 });   // while the GPU process compiles the steel
+      // the GL state of the reveal's first frame, while the GPU process works through the raster and the two programs;
+      // the page's part (the drawing refined to the camera's similarity) follows glReady, so no page raster queues
+      // in the GPU process in front of the programs
+      await p.apply('intro', { reveal: 0, dom: false });
       log('apply', performance.now() - t);
-      warm(); t = performance.now();
-      p.render(); stage.finish();
+      await warm(); t = performance.now();
+      p.render(); if (q.has('rp')) stage.finish(); else await stage.gpuDone();
       log('frame1', performance.now() - t);
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
+      if (p.applyDom) p.applyDom();
       await stage.bake(); log('baked', performance.now());
       stage.atlas().then(() => log('atlas', performance.now()));
+      // the programs of the later scenes, one per idle period from 6.2 s (never during the reveal or the lift, §6.3),
+      // before any of their scenes can be reached: the full guard (Tsuba, Nōtō), the tang, the lacquer, the floor and
+      // the two other steel programs
+      const ric = window.requestIdleCallback || ((f) => setTimeout(f, 50));
+      setTimeout(() => {
+        const M = stage.mat, P = stage.parts;
+        const queue = [[P.tsuba, M.ironFull], [stage.nakagoMesh, null], [stage.saya, null], [stage.kurikata, null], [stage.floor, null], [stage.blade, M.steelSign], [stage.blade, M.steelTogi]];
+        const step = async () => {
+          const [mesh, mat] = queue.shift();
+          const t0 = performance.now();
+          stage.prewarm([mesh], { finish: false, material: mat });
+          await stage.gpuDone();
+          log('pw.' + ((mat && mat.defines && Object.keys(mat.defines).join('+')) || mesh.name || 'mesh'), performance.now() - t0);
+          if (queue.length) ric(step); else log('prewarmed', performance.now());
+        };
+        ric(step);
+      }, Math.max(0, 6200 - performance.now()));
     }
   }).catch((e) => { Q.glError = String(e && e.stack || e); console.error(e); }).finally(() => html.classList.remove('gl-boot'));
 }

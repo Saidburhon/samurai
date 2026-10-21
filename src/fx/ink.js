@@ -36,7 +36,6 @@ function hairlines() {
 
 export class Ink {
   constructor() {
-    hairlines();
     this.paper = document.getElementById('osh-paper');
     this.svg = document.getElementById('osh');
     this.stip = document.getElementById('stip');
@@ -49,6 +48,7 @@ export class Ink {
   // place the drawing for a td camera and a pose; reveal < 1.5 clips it along the axial front
   place(stage, pose, { reveal = 2, front = 0, show = true, annot = true } = {}) {
     const W = stage.w, H = stage.h, td = stage.td;
+    if (!this.hair) { hairlines(); this.hair = true; }
     if (!show || !td) { this.paper.style.visibility = 'hidden'; this.stip.style.visibility = 'hidden'; this.front.innerHTML = ''; return; }
     this.paper.style.visibility = ''; this.stip.style.visibility = '';
     // the dimension lines, their labels and the face-on tsuba belong to the hero poster: they leave with the h1

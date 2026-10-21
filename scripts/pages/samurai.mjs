@@ -49,7 +49,7 @@ export function renderSamurai(lang, { model, rate, files, cataloguePages = false
     deadline: blank('deadline', T.sl.deadline, opt('deadline'), DEFAULT.deadline),
   };
   const sentence = esc(T.sentence).replace(/\{(\w+)\}/g, (m, k) => slots[k] || m);
-  const ex = (model.industries[DEFAULT.industry].examples[lang] || []).map((e) => `<button type="button" class="ex">${esc(e)}</button>`).join('<i> · </i>');
+  const ex = (model.industries[DEFAULT.industry].examples[lang] || []).map((e) => `<button type="button" class="ex">${esc(e)}</button>`).join(' ');
   const phone = `<a href="${telHref(site.telephone)}">${nbspPhone(site.telephone)}</a>`, mail = `<a href="mailto:${site.email}">${site.email}</a>`;
   const path = pathOf(lang, SLUG);
   const main = `

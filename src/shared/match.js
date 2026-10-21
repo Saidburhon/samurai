@@ -38,8 +38,19 @@ function keywordHits(m, text, lang) {
     .map((x) => x.id);
 }
 
+// Japanese has no spaces between words, so keyword tokens find nothing: the industry comes from its words instead
+// (content/solutions-extra.json industries.*.ja_words), the one with the most hits, ties to the catalogue order
+function industryFromText(m, text, lang) {
+  if (lang !== 'ja' || !text) return null;
+  let best = null, top = 0;
+  for (const ind of Object.values(m.industries)) { const n = (ind.ja_words || []).filter((w) => text.includes(w)).length; if (n > top) { top = n; best = ind; } }
+  return best;
+}
+
 /** intake: §2.2 ids; returns the pick (status ok) or null when the catalogue has nothing to offer. */
 export function match(m, { intake = {}, text = '', lang = 'uz', preselected = [] } = {}) {
+  const guessed = !m.industries[intake.industry] || intake.industry === 'other' ? industryFromText(m, text, lang) : null;
+  if (guessed) intake = { ...intake, industry: guessed.id };
   const ind = m.industries[intake.industry] || m.industries.other;
   const valid = (id) => m.byId.has(id) && m.byId.get(id).billing !== 'monthly';
   const fromText = intake.industry && intake.industry !== 'other' ? [] : keywordHits(m, text, lang);

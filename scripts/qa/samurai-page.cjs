@@ -44,7 +44,7 @@ const world = async (p) => p.evaluate(() => {
   const vis = (el) => { const r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none' && r.bottom > 0 && r.top < innerHeight; };
   const shu = [...document.querySelectorAll('body *')].filter((el) => vis(el) && ['rgb(217, 56, 30)'].some((c) => [getComputedStyle(el).color, getComputedStyle(el).backgroundColor, getComputedStyle(el).fill].includes(c)) && !el.closest('.hanko')).length;
   const hanko = [...document.querySelectorAll('.signed .hanko')].filter(vis).length;
-  const kanji = [...document.querySelectorAll('[lang=ja]')].filter((el) => vis(el) && !el.closest('nav.lang') && !el.closest('.mei-s') && /[一-鿿]/.test(el.textContent)).length;
+  const kanji = [...document.querySelectorAll('body [lang=ja]')].filter((el) => vis(el) && !el.closest('nav.lang') && !el.closest('.mei-s') && /[一-鿿]/.test(el.textContent)).length;
   const fams = new Set(), small = [];
   for (const el of document.querySelectorAll('main *, .nav *')) {
     if (!vis(el) || !el.childNodes.length || ![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue;
@@ -278,9 +278,15 @@ const world = async (p) => p.evaluate(() => {
     midstream: { events: [...upTo('solution'), { event: 'error', data: { code: 'timeout' } }] },
     not_business: { events: [full[0], { event: 'status', data: { status: 'not_business' } }, { event: 'heard', data: { summary: '', quotes: [], industry: 'other', size: 'small' } }, { event: 'not_recommended', data: [] }, { event: 'plan', data: { selection: [], tracks: [], totals: {}, pick: { status: 'not_business', heard: { summary: '', quotes: [], industry: 'other', size: 'small' }, questions: [], solutions: [], not_recommended: [], roadmap_note: '', first_step: '', assumptions: [] }, source: 'model' } }, { event: 'done', data: { sig: '', partial: false, ms: 1 } }] },
     rate_limited: { events: [{ event: 'error', data: { code: 'rate_limited', retry_after: 60 } }] },
+    need_more: (() => {
+      const pk = full.find((e) => e.event === 'plan').data.pick, heard = full.find((e) => e.event === 'heard').data;
+      const qs = (pk.questions || []).length ? pk.questions : [{ id: 'q1', text: '?', options: [{ id: 'a', label: 'A', effect: { targets: [], size: 'keep', add_modifiers: [], add_integrations: [], drop: [] } }, { id: 'b', label: 'B', effect: { targets: [], size: 'keep', add_modifiers: [], add_integrations: [], drop: [] } }] }];
+      const pick = { ...pk, status: 'need_more', questions: qs, solutions: [], not_recommended: [] };
+      return { events: [full[0], { event: 'status', data: { status: 'need_more' } }, { event: 'heard', data: heard }, ...qs.map((q) => ({ event: 'question', data: q })), { event: 'not_recommended', data: [] }, { event: 'plan', data: { selection: [], tracks: [], totals: {}, pick, source: 'model' } }, { event: 'done', data: { sig: '', partial: false, ms: 1 } }] };
+    })(),
   };
   for (const [name, s] of Object.entries(STATES)) {
-    for (const [w, h, tag] of [[1440, 900, 'd'], [390, 844, 'p']]) {
+    for (const [w, h, tag] of [[1440, 900, 'd'], [390, 844, 'p'], [360, 740, 's']]) {
       const p = await page(b, w, h, { stream: s.hold ? null : sse(s.events) });
       if (s.hold) await p.route('**/api/samurai', () => {}); // never answers: the thinking state
       await p.goto(base + PAGE, { waitUntil: 'networkidle' });
@@ -290,6 +296,8 @@ const world = async (p) => p.evaluate(() => {
       const st = await p.evaluate(() => ({ sheets: document.querySelectorAll('.sheet:not(.ghost), .sheet[data-state]').length, status: (document.querySelector('.res-status')?.innerText || document.querySelector('.intake .status')?.innerText || '').trim(), notes: [...document.querySelectorAll('.desk .note, .broken p')].map((n) => n.textContent.trim()), busy: document.querySelector('.intake').classList.contains('busy'), btn: document.querySelector('.go-btn').disabled, spinner: !!document.querySelector('.spinner, [class*=spin]') }));
       const wd = await world(p);
       check(`state ${name} ${w}: renders, no spinner, no overflow, no errors`, !st.spinner && wd.overflow <= 0 && !p.errors.length, { ...st, overflow: wd.overflow, errors: p.errors });
+      if (name === 'rate_limited') check(`state rate_limited ${w}: the message stays and the button counts down`, st.btn && st.status.length > 10 && /\d/.test(await p.textContent('.go-btn')), { status: st.status, btn: st.btn });
+      if (name === 'need_more') check(`state need_more ${w}: the questions and "calculate with the answers"`, (await p.$$('.questions [data-act=answer]')).length >= 2 && !!(await p.$('[data-act=run-answers]')), { sheets: st.sheets });
       await p.context().close();
     }
   }

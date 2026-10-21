@@ -9,24 +9,80 @@ const ROLES = ['pm', 'designer', 'frontend', 'backend', 'mobile', 'bot', 'qa', '
 const IMPACT_KEYS = ['hours_per_week', 'hourly_cost_usd', 'orders_per_month', 'avg_order_usd', 'margin_pct', 'uplift_pct', 'no_shows_per_month', 'errors_per_month', 'cost_per_error_usd'];
 const IMPACT_MODELS = ['hours_saved', 'more_orders', 'fewer_no_shows', 'fewer_errors', 'none'];
 
-/** Cut at a word boundary to at most n characters, adding nothing. */
+/**
+ * Cut to at most n characters (plus "…"). A whole sentence when one fits in most of the room; otherwise the cut lands
+ * at the last clause boundary (or word) and ends with "…", so a summary never stops mid-clause as if it were complete.
+ */
 export function cut(s, n) {
   const a = [...String(s)];
   if (a.length <= n) return String(s);
   let t = a.slice(0, n).join('');
-  // a whole sentence when one fits in most of the room, otherwise whole words
   const end = Math.max(t.lastIndexOf('. '), t.lastIndexOf('。'), t.lastIndexOf('! '), t.lastIndexOf('? '));
   if (end > n * 0.45) return t.slice(0, end + 1);
-  const sp = Math.max(t.lastIndexOf(' '), t.lastIndexOf('\u00a0'), t.lastIndexOf('、'));
-  if (!/\s/.test(a[n]) && sp > n * 0.5) t = t.slice(0, sp);
-  return t.replace(/[\s,;:–—\-(、]+$/u, '');
+  // room for the "…": the result is at most n characters
+  t = a.slice(0, n - 1).join('');
+  n -= 1;
+  const clause = Math.max(t.lastIndexOf(', '), t.lastIndexOf('; '), t.lastIndexOf(' – '), t.lastIndexOf('、'), t.lastIndexOf('，'));
+  if (clause > n * 0.45) t = t.slice(0, clause);
+  else {
+    const sp = Math.max(t.lastIndexOf(' '), t.lastIndexOf('\u00a0'), t.lastIndexOf('、'));
+    if (!/\s/.test(a[n]) && sp > n * 0.5) t = t.slice(0, sp);
+  }
+  return `${t.replace(/[\s,;:–—\-(、，.]+$/u, '')}…`;
+}
+
+// The model's short fields sometimes end in a stray token after their last sentence: "kerak.\"", "kerak.ʻ", "kerak..",
+// "into the system.uh", "kerak.Ustalar odatlanishi", "ulash kerak. ҳ", "1C setup. ','. ' '". tidy() removes such a
+// tail (and a lone letter of the other script in Latin Uzbek or English) and leaves a clean text exactly as it was.
+const STOPS = '.!?。！？';
+const lastStop = (x) => Math.max(...[...STOPS].map((c) => x.lastIndexOf(c)));
+const ABBR = /(?:^|[\s.])\p{L}{1,3}\.$/u; // т.е., e.g., etc. — a stop that is not a sentence end
+const TECH = /^(?:js|ts|io|net|com|org|uz|ru|jp|ai|py|me)\b/i; // Next.js, qilich.com
+const OTHER = { uz: /[\u0400-\u04ff]/u, en: /[\u0400-\u04ff]/u };
+function stripQuotes(t) {
+  for (;;) {
+    const c = t.slice(-1);
+    const n = (ch) => t.split(ch).length - 1;
+    const stray = /[\s'`ʻʼ‘’,;:]/u.test(c) || (c === '"' && n('"') % 2 === 1) || (c === '»' && n('«') < n('»')) || (c === '”' && n('“') + n('„') < n('”'));
+    if (!stray || t.length < 2) return t;
+    t = t.slice(0, -1);
+  }
+}
+export function tidy(s, lang) {
+  let t = String(s).trim();
+  for (let k = 0; k < 6; k++) {
+    const before = t;
+    t = t.replace(/(^|[^.])\.\.(?!\.)/g, '$1.').replace(/。。+/g, '。');
+    // stray quotes, okina and spaces after the final stop
+    const i = lastStop(t);
+    if (i >= 0 && i < t.length - 1 && !/[\p{L}\p{N}]/u.test(t.slice(i + 1))) t = stripQuotes(t);
+    // a tail after the last stop that is not a sentence
+    const j = lastStop(t);
+    if (j >= 0 && j < t.length - 1 && lang !== 'ja') {
+      const head = t.slice(0, j + 1), tail = t.slice(j + 1);
+      const words = tail.trim().split(/\s+/).filter(Boolean);
+      if (!/[\p{L}\p{N}]/u.test(tail)) t = stripQuotes(t); // only what does not close a quote
+      else if (ABBR.test(head) || /\d\.$/.test(head)) { /* an abbreviation or a number: not a sentence end */ }
+      else if (/^\p{L}/u.test(tail) && !TECH.test(tail)) t = head; // "system.uh", "kerak.Ustalar odatlanishi"
+      else if (/^\s/.test(tail) && words.length <= 2 && tail.trim().length <= 12 && [...head].length >= 24) t = head; // "kerak. ҳ"
+    }
+    // a final "sentence" with no letter or digit in it: "setup. ','."
+    if (STOPS.includes(t.slice(-1))) {
+      const q = lastStop(t.slice(0, -1)), seg = t.slice(q + 1, -1);
+      if (q >= 0 && seg.length && !/[\p{L}\p{N}]/u.test(seg)) t = t.slice(0, q + 1);
+    }
+    if (OTHER[lang]) t = t.replace(new RegExp(`(^|\\s)${OTHER[lang].source}{1,2}(?=[\\s.,;:!?]|$)`, 'gu'), '$1').replace(/\s+([.,;:!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
+    if (t === before) break;
+  }
+  return t;
 }
 export function textOf(ctx, s, n, { money = true } = {}) {
   if (typeof s !== 'string') return '';
   let t = guard(s, ctx.lang);
   if (!t) return '';
   if (money) t = stripMoney(t, ctx.text);
-  return cut(t, n);
+  t = tidy(t, ctx.lang);
+  return t ? cut(t, n) : '';
 }
 const oneOf = (v, list, d) => (list.includes(v) ? v : d);
 const uniq = (a) => [...new Set(a)];
@@ -46,7 +102,7 @@ export function validateHeard(ctx, h) {
     .filter((q) => t.includes(norm(q)) && guard(q, ctx.lang) === q.replace(/\s+/g, ' ').trim()).map((q) => q.replace(/\s+/g, ' ').trim()).slice(0, 4);
   const inds = [...Object.keys(ctx.m.catalogueIndustries || ctx.m.industries || {}), 'other'];
   return {
-    summary: textOf(ctx, h?.summary, 160, { money: false }),
+    summary: textOf(ctx, h?.summary, 150, { money: false }),
     quotes,
     industry: oneOf(h?.industry, inds, ctx.intake.industry && inds.includes(ctx.intake.industry) ? ctx.intake.industry : 'other'),
     size: oneOf(h?.size, ['solo', 'small', 'medium', 'large'], 'small'),

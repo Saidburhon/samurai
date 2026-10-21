@@ -29,7 +29,7 @@ export function buildSchemas(m) {
   const pick = obj({
     status: en(['ok', 'need_more', 'not_business'], 'ok: solutions follow. need_more: too little to choose well; ask questions and give at most one preliminary solution. not_business: the text is not about a business or an IT need.'),
     heard: obj({
-      summary: S('One sentence in the page language: what the business is and what hurts. Use only facts the visitor gave.'),
+      summary: S('One complete sentence in the page language, at most 150 characters, ending with a full stop: what the business is and what hurts. Use only facts the visitor gave.'),
       quotes: arr(S(), 'Up to 4 short phrases copied exactly, character for character, from the visitor\'s text.'),
       industry: en(IND),
       size: en(['solo', 'small', 'medium', 'large']),
@@ -51,7 +51,7 @@ export function buildSchemas(m) {
       integrations: arr(en(INT)),
       depends_on: arr(id, 'Catalogue ids of other chosen solutions whose MVP must exist first.'),
       difficulty: { type: 'integer', enum: [1, 2, 3, 4, 5] },
-      difficulty_reason: S('Up to 90 characters: what makes it this hard.'),
+      difficulty_reason: S('One complete phrase, at most 90 characters: what makes it this hard. Nothing after it.'),
     }), '1 to 4, most important first. The smallest set that solves what the visitor described. Empty only when status is not_business.'),
     not_recommended: arr(obj({ catalogue_id: id, why: S('One sentence.') }), '0 to 2 things the visitor might expect but does not need yet, e.g. a mobile app when a Telegram bot is enough.'),
     roadmap_note: S('One sentence on the order of work.'),

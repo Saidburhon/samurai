@@ -52,7 +52,7 @@ export function parseRequest(m, body) {
   if ([...text].length > 1500) return { error: 'too_long', lang };
   const i = body.intake && typeof body.intake === 'object' ? body.intake : {};
   const intake = {};
-  if (typeof i.industry === 'string' && (m.catalogueIndustries[i.industry] || i.industry === 'other') && i.industry !== 'any') intake.industry = i.industry;
+  if (typeof i.industry === 'string' && (Object.hasOwn(m.catalogueIndustries, i.industry) || i.industry === 'other') && i.industry !== 'any') intake.industry = i.industry;
   for (const [k, list] of Object.entries(INTAKE)) if (list.includes(i[k])) intake[k] = i[k];
   const ok = new Set(pickable(m).map((s) => s.id));
   const preselected = (Array.isArray(body.preselected) ? body.preselected : []).filter((x) => ok.has(x)).slice(0, 6);
@@ -135,6 +135,27 @@ export async function runSamurai(opts) {
   };
   const calls = [];
   let cost = 0, partial = false;
+  // every call is metered from its stream events, so a run that is cut short (the visitor left, a timeout) still
+  // counts what it spent: the input as message_start reports it, the output estimated from the text streamed so far.
+  // A call that never reported (blind) makes the spend guard keep the whole reservation (worker/index.js).
+  const meters = [];
+  const meter = () => { const mt = { usage: null, model: null, chars: 0, done: false }; meters.push(mt); return mt; };
+  const onEvent = (mt) => (ev) => {
+    if (ev.type === 'message_start') { mt.model = ev.message?.model || null; mt.usage = { ...(ev.message?.usage || {}) }; }
+    else if (ev.type === 'message_delta' && ev.usage) mt.usage = { ...(mt.usage || {}), ...Object.fromEntries(Object.entries(ev.usage).filter(([, v]) => v != null)) };
+    else if (ev.type === 'content_block_delta') mt.chars += (ev.delta?.text || ev.delta?.partial_json || '').length;
+  };
+  const unsettled = () => {
+    let usd = 0, blind = 0;
+    for (const mt of meters) {
+      if (mt.done) continue;
+      if (!mt.usage) { blind++; continue; }
+      const { iterations, ...u } = mt.usage;
+      usd += costUsd({ ...u, output_tokens: Math.max(u.output_tokens || 0, Math.ceil((mt.chars / 2.5) * 1.1)) }, mt.model || MODEL_ID);
+      mt.done = true;
+    }
+    return { usd: Math.round(usd * 1e6) / 1e6, blind };
+  };
 
   // ---- stage 2 ----
   const details = {};
@@ -149,9 +170,12 @@ export async function runSamurai(opts) {
       solution: sol,
       entry: { id: entry.id, title: entry.title.en, what: entry.oneliner.en, mvp_scope: entry.scope?.mvp, full_scope: entry.scope?.full, note: entry.notes, can_add: entry.integrations.filter((x) => !entry.integrations_included.includes(x)), included: entry.integrations_included, typical_team: entry.team, typical_stack: entry.stack },
     };
+    const mt = meter();
     try {
       const s = client.beta.messages.stream({ ...base(P.schemas.detail, 4000), messages: [{ role: 'user', content: JSON.stringify(user) }] }, { signal: att.ctrl.signal });
+      s.on?.('streamEvent', onEvent(mt));
       const msg = await s.finalMessage();
+      mt.done = true;
       const c = costUsd(msg.usage, msg.model); cost += c;
       const fell = (msg.usage?.iterations || []).some((e) => e.type === 'fallback_message');
       calls.push({ stage: 'detail', id: sol.catalogue_id, ms: Date.now() - t1, model: msg.model, fallback: fell, stop: msg.stop_reason, usage: usageOf(msg), cost_usd: c });
@@ -192,9 +216,11 @@ export async function runSamurai(opts) {
   let firstText = 0, timedOut = false, final = null, errCode = null;
   const firstTimer = setTimeout(() => { if (!firstText) { timedOut = true; ctrl.abort(); } }, FIRST_TEXT_MS);
   const t1 = Date.now();
+  const pm = meter();
   try {
     const stream = client.beta.messages.stream({ ...base(P.schemas.pick, 8000), messages: [{ role: 'user', content: JSON.stringify(user) }] }, { signal: ctrl.signal });
     for await (const ev of stream) {
+      onEvent(pm)(ev);
       if (ev.type === 'content_block_start' && ev.content_block?.type === 'fallback') {
         // a server-side fallback took over: everything after meta is void
         scanner.reset(); attempt.ctrl.abort(); attempt = { ctrl: new AbortController(), jobs: [] };
@@ -206,6 +232,7 @@ export async function runSamurai(opts) {
       if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') { if (!firstText) firstText = Date.now(); scanner.push(ev.delta.text); }
     }
     final = await stream.finalMessage();
+    pm.done = true;
   } catch (err) {
     errCode = timedOut || capped ? 'timeout' : opts.signal?.aborted ? 'aborted' : mapError(err);
     log({ samurai_error: 'pick', name: err?.name, status: err?.status, message: String(err?.message || '').slice(0, 200) });
@@ -218,12 +245,21 @@ export async function runSamurai(opts) {
     if (final.stop_reason === 'refusal') errCode = 'refused';
     if (final.stop_reason === 'max_tokens') partial = true;
   }
-  if (errCode === 'aborted') { finish(); return { status: 'aborted', cost, partial: true, ms: Date.now() - t0, calls }; }
+  if (errCode === 'aborted') {
+    // the visitor left: the detail calls stop too; what every call spent so far is counted, never nothing
+    attempt.ctrl.abort();
+    await Promise.allSettled(attempt.jobs);
+    const u = unsettled();
+    finish();
+    return { status: 'aborted', cost: Math.round((cost + u.usd) * 1e6) / 1e6, blind: u.blind, partial: true, ms: Date.now() - t0, calls };
+  }
   if (errCode && !solutions.length) {
     attempt.ctrl.abort();
     send('error', { code: errCode });
+    await Promise.allSettled(attempt.jobs);
+    const u = unsettled();
     finish();
-    return { status: errCode, cost, partial: true, ms: Date.now() - t0, calls };
+    return { status: errCode, cost: Math.round((cost + u.usd) * 1e6) / 1e6, blind: u.blind, partial: true, ms: Date.now() - t0, calls };
   }
   if (errCode) partial = true;
 
@@ -250,11 +286,14 @@ export async function runSamurai(opts) {
   if (source === 'model') await Promise.allSettled(attempt.jobs);
   const kept = new Set(pick.solutions.map(solId));
   for (const k of Object.keys(details)) if (!kept.has(k)) delete details[k];
-  const sig = await sign(opts.signingKey, { ...meta, pick, details });
+  // the signature (and so the hanko) only for a genuine estimate: status ok, at least one solution, from the model
+  const genuine = pick.status === 'ok' && pick.solutions.length > 0 && source === 'model';
+  const sig = genuine ? await sign(opts.signingKey, { ...meta, pick, details }) : '';
   const ms = Date.now() - t0;
   send('done', { sig, partial, ms });
+  const u = unsettled();
   finish();
-  return { status: pick.status, source, cost, partial, ms, calls, pick, details, meta, sig };
+  return { status: pick.status, source, cost: Math.round((cost + u.usd) * 1e6) / 1e6, blind: u.blind, partial, ms, calls, pick, details, meta, sig };
 
   function finish() { clearTimeout(cap); opts.signal?.removeEventListener?.('abort', onAbort); }
 }

@@ -60,7 +60,7 @@ test('detail: four phases in order, impact without its inputs becomes none, leng
   assert.equal(d.risks[0].adds_weeks, 0);
   assert.equal(d.impact.model, 'none');
   assert.ok([...d.deliverables_mvp[1]].length <= 70);
-  assert.equal(cut('bir ikki uch tort besh', 12), 'bir ikki uch');
+  assert.equal(cut('bir ikki uch tort besh', 12), 'bir ikki…');
 });
 
 test('schemas are byte-stable and the prompt is deterministic', () => {
@@ -71,4 +71,31 @@ test('schemas are byte-stable and the prompt is deterministic', () => {
   const walk = (o) => { if (o && typeof o === 'object') { if (o.type === 'object') { assert.equal(o.additionalProperties, false); assert.deepEqual(o.required, Object.keys(o.properties)); } Object.values(o).forEach(walk); } };
   walk(buildSchemas(m));
   assert.ok(buildSystem(m).length < 70000, `prompt ${buildSystem(m).length} chars`);
+});
+
+test('tidy drops the junk tails the model left in short fields, and leaves clean text alone (rv2a must-fix 3)', async () => {
+  const { tidy } = await import('./validate.js');
+  const bad = [
+    ['Uch filial, turli rollar va daftardan qogʻozsiz ishlashga oʻtish kerak."', 'uz', 'Uch filial, turli rollar va daftardan qogʻozsiz ishlashga oʻtish kerak.'],
+    ['Ustalar jadvali va boʻsh vaqtlarni toʻgʻri koʻrsatish kerak.ʻ', 'uz', 'Ustalar jadvali va boʻsh vaqtlarni toʻgʻri koʻrsatish kerak.'],
+    ['Exceldagi eski toʻlov maʼlumotlarini koʻchirish va toʻlovlarni ulash kerak. ҳ', 'uz', 'Exceldagi eski toʻlov maʼlumotlarini koʻchirish va toʻlovlarni ulash kerak.'],
+    ['Three branches, several staff roles and moving paper records into the system.uh', 'en', 'Three branches, several staff roles and moving paper records into the system.'],
+    ["Dealer-specific prices and balances must sync reliably with your 1C setup. ','. ' '", 'en', 'Dealer-specific prices and balances must sync reliably with your 1C setup.'],
+    ['Mashina va buyurtmani bogʻlash kerak.Ustalar odatlanishi', 'uz', 'Mashina va buyurtmani bogʻlash kerak.'],
+    ['Qogʻozdan oʻtish kerak..', 'uz', 'Qogʻozdan oʻtish kerak.'],
+    ['Buyurtmani kuryerga berish.Bot', 'uz', 'Buyurtmani kuryerga berish.'],
+  ];
+  for (const [i, lang, want] of bad) assert.equal(tidy(i, lang), want);
+  for (const [i, lang] of [['Standart bot, menyu va yetkazish manzili, bitta filial', 'uz'], ['Built with Next.js', 'en'], ['Нужно перенести данные, т.е. клиентов', 'ru'], ['He said "hello."', 'en'], ['日報項目の標準化が主な課題です。', 'ja'], ['Hmm...', 'en'], ['Uch filial. Har birida alohida kassa', 'uz'], ['Kassa «Mijoz».', 'uz']]) assert.equal(tidy(i, lang), i);
+});
+
+test('a long summary is cut at a clause boundary and ends with "…", never mid-clause (rv2a must-fix 2)', async () => {
+  const { cut } = await import('./validate.js');
+  const en = cut('A city freight company with 15 drivers where drivers report on paper, clients keep calling about cargo location, and fuel use is not tracked at all by anyone', 150);
+  assert.equal(en, 'A city freight company with 15 drivers where drivers report on paper, clients keep calling about cargo location…');
+  const ru = cut('Фитнес-клуб ведёт базу клиентов в Excel, на групповые тренировки записываются через Telegram, а оплату принимают только наличными на ресепшене клуба, и владелец не видит, сколько абонементов продано за месяц', 150);
+  assert.match(ru, /…$/);
+  assert.ok(!/, а…$/.test(ru));
+  assert.equal(cut('Short one.', 150), 'Short one.');
+  assert.ok([...cut('x '.repeat(200), 150)].length <= 150);
 });

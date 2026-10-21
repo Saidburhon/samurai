@@ -41,7 +41,8 @@ function hashed(name, lang, obj) {
 
 export function buildSamurai({ assets, page, t, plates, jaPhrases }) {
   const rate = cbuRate();
-  const model = normalise(J('content/solutions.json'), J('content/solutions-extra.json'), J('content/pricing.json'));
+  const ja = existsSync('content/solutions-ja.json') ? J('content/solutions-ja.json').solutions : {};
+  const model = normalise(J('content/solutions.json'), { ...J('content/solutions-extra.json'), ja_solutions: ja }, J('content/pricing.json'));
   const meta = { _readme: 'Written by scripts/build.mjs (scripts/pages/samurai-build.mjs): the catalogue fingerprint and the last good CBU rate. Do not edit by hand.', catalogue_version: model.version, rate_fallback: { uzs_per_usd: rate.uzs_per_usd, date: rate.date }, built_at: rate.date };
   const metaPath = 'worker/gen/meta.json';
   const metaText = JSON.stringify(meta, null, 1) + '\n';

@@ -11,7 +11,7 @@ import { DurableObject } from 'cloudflare:workers';
 
 export const GUARD = {
   DAILY_USD: 15,
-  RESERVE_USD: 0.4, // the worst cold brief: 1-hour cache writes of the ~14k-token prompt for both stages ($0.22) + pick and 4 details ($0.18)
+  RESERVE_USD: 0.7, // at least the costliest cold brief measured live ($0.6–0.7: 1-hour cache writes of the prompt for both stages, the pick and 4 details)
   PER_KEY_WINDOW: 15,
   WINDOW_S: 600,
   PER_KEY_DAY: 30,

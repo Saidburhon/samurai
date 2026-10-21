@@ -25,7 +25,13 @@
         glName = String(x ? g.getParameter(x.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER));
         // a software renderer (T2, no MSAA) keeps this context for the stage: created now, while the GPU process is
         // idle, it costs little; created after the gate it waits behind the page's frames (up to ~1.3 s measured)
-        if (/swiftshader|llvmpipe|software/i.test(glName)) glKeep = { canvas: c, context: g };
+        if (/swiftshader|llvmpipe|software/i.test(glName)) {
+          glKeep = { canvas: c, context: g };
+          // what three.js asks of a new renderer, asked now: each of these waits for the GPU process, which is idle
+          // here (about 1 ms each) and busy with the intro's raster at the gate (0.2–0.3 s for the first one)
+          for (const e of ['EXT_color_buffer_float', 'WEBGL_clip_cull_distance', 'OES_texture_float_linear', 'EXT_color_buffer_half_float', 'WEBGL_multisampled_render_to_texture', 'WEBGL_render_shared_exponent', 'EXT_texture_filter_anisotropic', 'KHR_parallel_shader_compile']) g.getExtension(e);
+          for (const s of [g.VERTEX_SHADER, g.FRAGMENT_SHADER]) for (const p of [g.HIGH_FLOAT, g.MEDIUM_FLOAT]) g.getShaderPrecisionFormat(s, p);
+        }
         else { const l = g.getExtension('WEBGL_lose_context'); if (l) l.loseContext(); }
       }
     } catch (e) { cinema = false; }

@@ -168,6 +168,18 @@ test('the matcher is deterministic and follows the intake (§2.8.8)', () => {
   assert.equal(fold('ўқув'), 'oquv');
 });
 
+test('Japanese: the matcher finds the industry from its words, and the page data carries Japanese titles', () => {
+  const mj = normalise(J('content/solutions.json'), { ...J('content/solutions-extra.json'), ja_solutions: J('content/solutions-ja.json').solutions }, pricing);
+  const page = expand(compact(mj, 'ja'));
+  const a = match(page, { text: '名古屋で学習塾を3教室運営しています。出欠と月謝の管理を紙とExcelで行っています。', lang: 'ja' });
+  assert.equal(a.heard.industry, 'education');
+  assert.deepEqual(a, match(mj, { text: '名古屋で学習塾を3教室運営しています。出欠と月謝の管理を紙とExcelで行っています。', lang: 'ja' }));
+  for (const s of a.solutions) assert.match(s.title + s.why, /[぀-ヿ一-鿿]/u);
+  assert.equal(match(page, { text: '自動車部品メーカーです。設備の稼働状況を紙の日報で管理しています。', lang: 'ja' }).heard.industry, 'manufacturing');
+  // an industry chosen in the form wins over the words
+  assert.equal(match(page, { intake: { industry: 'clinics' }, text: '学習塾です', lang: 'ja' }).heard.industry, 'clinics');
+});
+
 test('working days skip weekends and holidays (Navroʻz, 1 September)', () => {
   assert.equal(isWorkday('2027-03-22'), true);
   assert.equal(isWorkday('2027-03-21'), false); // Sunday and Navroʻz
@@ -205,4 +217,40 @@ test('priceResult is the same in two calls and its totals equal plan()', () => {
   assert.deepEqual(a, b);
   assert.deepEqual(a.plan.totals, plan(m, a.solutions, defaultSelection(a.solutions), rate).totals);
   assert.ok(a.solutions.every((s) => solId(s) === s.catalogue_id));
+});
+
+test('a dependency chain is a sequence, not parallel work: no overhead, parallel false (rv2a/par.mjs)', () => {
+  const mm = { pricing: { round: { usd: 100 }, shared: {}, parallel_overhead: 0.1 }, byId: new Map() };
+  const A = { catalogue_id: 'a', weeks: { mvp: [7, 11], full: [13, 20] }, usd: { mvp: [9900, 15500], full: [23000, 39000] }, uzs: {}, monthly_usd: [0, 0], depends_on: [] };
+  const B = { catalogue_id: 'b', weeks: { mvp: [2, 4], full: [6, 9] }, usd: { mvp: [2300, 3500], full: [6800, 11500] }, uzs: {}, monthly_usd: [0, 0], depends_on: ['a'] };
+  const r = plan(mm, [A, B], [{ id: 'a', state: 'mvp' }, { id: 'b', state: 'mvp' }], rate);
+  assert.deepEqual(r.totals.weeks, [9, 15]);
+  assert.equal(r.totals.parallel, false);
+  // a chain through a third track stays a sequence; an independent track that runs alongside is parallel
+  const C = { ...B, catalogue_id: 'c', depends_on: ['b'] };
+  const chain = plan(mm, [A, B, C], [{ id: 'a', state: 'mvp' }, { id: 'b', state: 'mvp' }, { id: 'c', state: 'mvp' }], rate);
+  assert.equal(chain.totals.parallel, false);
+  assert.deepEqual(chain.totals.weeks, [11, 19]);
+  const D = { ...B, catalogue_id: 'd', depends_on: [] };
+  const two = plan(mm, [A, D], [{ id: 'a', state: 'mvp' }, { id: 'd', state: 'mvp' }], rate);
+  assert.equal(two.totals.parallel, true);
+  // the overhead is the overlapping track's weeks × 0.1 on each bound: [7 + .2, 11 + .4] → [7, 12]
+  assert.deepEqual(two.totals.weeks, [7, 12]);
+  // a dependant of a dependency built in full still follows a chain: it starts at the MVP end, by design
+  const E = { ...B, catalogue_id: 'e', depends_on: [], weeks: { mvp: [2, 4], full: [6, 9] } };
+  const late = plan(mm, [A, { ...E, depends_on: ['a'] }], [{ id: 'a', state: 'full' }, { id: 'e', state: 'mvp' }], rate);
+  assert.equal(late.totals.parallel, false);
+});
+
+test('payback beyond 36 months is shown as the qualitative line, not a number', async () => {
+  const { paybackShown, PAYBACK_CAP_MONTHS } = await import('./price.js');
+  assert.equal(PAYBACK_CAP_MONTHS, 36);
+  const hours = [{ key: 'hours_per_week', value: 30 }, { key: 'hourly_cost_usd', value: 3 }];
+  // 30 h × 4.33 × $3 = $389.7 a month, less $50 running: about 1 351–1 940 months for $13 500–19 500 is not shown
+  assert.deepEqual(paybackShown('hours_saved', hours, [13500, 19500], [40, 60]), { months: null, why: 'long' });
+  assert.deepEqual(paybackShown('hours_saved', [hours[0]], [13500, 19500], [40, 60]), { months: null, why: 'na' });
+  const orders = [{ key: 'orders_per_month', value: 1000 }, { key: 'uplift_pct', value: 10 }, { key: 'avg_order_usd', value: 10 }, { key: 'margin_pct', value: 30 }];
+  assert.deepEqual(paybackShown('more_orders', orders, [2000, 3000], [20, 80]), { months: [8, 12] });
+  const a = enrichSolution(m, sol(1, 'ind-clinic'), { lang: 'uz', rate, detail: { needs: [], team: [], stack: [], risks: [], impact: { model: 'hours_saved', summary: 's', inputs: hours.map((i) => ({ ...i, label: 'l', basis: 'assumed' })) } } });
+  assert.equal(a.detail.impact.payback_months, null);
 });

@@ -1,4 +1,6 @@
-// The fittings and the grip, one program (a software renderer compiles each program for ~0.1 s on the boot path):
+// The fittings and the grip, one program (a software renderer compiles each program for ~0.1 s on the boot path).
+// Defines: IRON_FULL (the guard's ishime normal map and the backlight through its piercings: Tsuba and Nōtō, prewarmed
+// after the intro), NAKAGO (the tang's patina: Yaki and Togi). The boot program has neither:
 // copper habaki (kind 0), gold seppa (1), the patinated iron girih tsuba (2), shakudo fuchi and kashira (3), the
 // nakago's rust patina (4), and the grip (5): Margʻilon atlas (abr ikat) hishimaki over ray skin, with the gilt paxta
 // menuki under the wrap. The weave, the ikat and the ray skin are baked (bake.js) into tSilk: the top half albedo +
@@ -42,17 +44,20 @@ void main(){
   } else if (uKind < 1.5) {    // gold seppa
     h = texture2D(tIshime, fract(lp.zy * 0.7)).a * .2 * lod(fwidth(lp.z*300.));
     bscale = .0022;
-  } else if (uKind < 2.5) {    // patinated iron tsuba, stone-hammered (ishime): a baked normal map
-    vec2 fc = lp.zy / 0.82 + .5;
-    vec4 ish = texture2D(tIshime, fc);
-    float n = ish.b;
+  } else if (uKind < 2.5) {    // patinated iron tsuba, stone-hammered (ishime)
+    float rr = length(lp.zy * vec2(1., 1./1.03));
+    vec4 ish = texture2D(tIshime, lp.zy / 0.82 + .5);
+    float n = ish.b, ha = ish.a;
+#ifdef IRON_FULL
+    // the full guard (Tsuba, Nōtō): the baked ishime as a normal map (on the hero's guard, about 70 px across, the
+    // hammered relief is under a pixel, so the boot program keeps only its tone)
     float face = smoothstep(.6, .9, abs(dot(N, uAxisW)));
     N = normalize(N - ((ish.r - .5) * uFaceU + (ish.g - .5) * uFaceV) * 2. * face);
-    float rr = length(lp.zy * vec2(1., 1./1.03));
+#endif
     // worn, brighter rim + a gold inlay ring
     float rimWear = smoothstep(.355, .39, rr);
     base = mix(base * (0.75 + 0.5*n), base*1.9, rimWear*.6);
-    rough = mix(uRough + (ish.a - .5)*.12, .32, rimWear*.6);
+    rough = mix(uRough + (ha - .5)*.12, .32, rimWear*.6);
     float inlay = smoothstep(.3685,.3705,rr) * (1.-smoothstep(.3755,.3775,rr));
     base = mix(base, vec3(.85,.62,.28), inlay);
     rough = mix(rough, .22, inlay); metal = mix(metal, 1., inlay);
@@ -64,7 +69,9 @@ void main(){
     h = dot1 * k;
     base *= 0.9 + 0.2*dot1;
     bscale = .0012;
-  } else {                     // nakago: the rust patina with oblique file marks (yasurime)
+  }
+#ifdef NAKAGO
+  else {                       // nakago: the rust patina with oblique file marks (yasurime)
     float ph = (lp.x * 1.0 + lp.z * 0.6) * 900.;
     float k = lod(fwidth(ph) / 6.2832);
     float f = sin(ph) * k;
@@ -73,6 +80,7 @@ void main(){
     h = f * .3 + n * .4;
     bscale = .0008;
   }
+#endif
   if (!silk && (uKind < 1.5 || uKind > 2.5)) N = bumpN(vWPos, N, h, bscale);
   vec3 R = reflect(-V, N);
   float NoV = clamp(dot(N,V),0.,1.);
@@ -88,6 +96,7 @@ void main(){
     // silk sheen: a soft grazing glow tinted by the thread
     col += pow(1. - NoV, 3.) * ribbon * (alb*1.6 + vec3(.25,.28,.4)) * .55 * (irr.g + .3);
   } else col += base * (1.-metal) * (irr + uLampCol*max(dot(N, L),0.)*.25);
+#ifdef IRON_FULL
   if (uKind > 1.5 && uKind < 2.5) {
     // light coming through the piercings warms their inner walls, strongest at the back face
     float wall = 1. - abs(dot(normalize(vWNrm), uAxisW));
@@ -95,6 +104,7 @@ void main(){
     float rr = length(lp.zy * vec2(1., 1./1.03));
     col += uBackGlow * pow(wall, 2.5) * (0.25 + 0.75*depth*depth) * step(rr, 0.362);
   }
+#endif
   if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(vAxial - uReveal, 0., 0.0022)*3.0);
   col *= uExposure;
   // round parts (the fuchi, the kashira, the grip, the tsuba's rim): their silhouette (N.V -> 0) ramps to 0 over

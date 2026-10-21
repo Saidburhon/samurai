@@ -86,10 +86,13 @@ async function stippleAudit(page) {
       const p = new DOMPoint(st.left + (x + 0.5) * sx, st.top + (y + 0.5) * sy).matrixTransform(inv);
       if (blade.isPointInFill(p) || blade.isPointInStroke(p)) inside++;
     }
-    return { painted, sampled, inside: sampled ? +(inside / sampled).toFixed(3) : 0, dots: (window.__qilich.boot || {}).stipN || 0, canvas: [w, h], iw: innerWidth, cw: document.documentElement.clientWidth };
+    // the inked area in CSS px² (each sample stands for 2 × 2 canvas px): independent of the canvas resolution,
+    // which follows the device pixel ratio (boot.js)
+    const area = Math.round(painted * 4 * sx * sy);
+    return { painted, area, sampled, inside: sampled ? +(inside / sampled).toFixed(3) : 0, dots: (window.__qilich.boot || {}).stipN || 0, canvas: [w, h], iw: innerWidth, cw: document.documentElement.clientWidth };
   });
 }
-const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 9000 dots inked` : s.painted < 1500 ? `only ${s.painted} painted pixels` : s.inside < 0.9 ? `${(s.inside * 100).toFixed(1)} % of the dots on the blade` : null);
+const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 9000 dots inked` : s.area < 1000 ? `only ${s.area} CSS px² inked` : s.inside < 0.9 ? `${(s.inside * 100).toFixed(1)} % of the dots on the blade` : null);
 
 (async () => {
   const { RU, EN, JA } = await import(path.resolve('scripts/i18n.mjs'));
@@ -232,7 +235,7 @@ const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 900
     run.errors = errors;
     for (const e of errors) bad('console', e);
     fails += run.issues.length;
-    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: lang ${info.lang}, h1 ${info.h1.length}, ${run.keys} i18n keys, diagonal ±${Math.max(run.diagonal.errK, run.diagonal.errT)} px at ${run.diagonal.angle}°, ${i} frames, fonts ${JSON.stringify(run.fonts.used)} in ${run.fonts.elements} elements${run.stipple ? `, stipple ${run.stipple.dots} dots ${run.stipple.painted} px ${(run.stipple.inside * 100).toFixed(1)} % on the blade` : ''}${run.okina ? ', okina ' + JSON.stringify(run.okina) : ''}${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
+    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: lang ${info.lang}, h1 ${info.h1.length}, ${run.keys} i18n keys, diagonal ±${Math.max(run.diagonal.errK, run.diagonal.errT)} px at ${run.diagonal.angle}°, ${i} frames, fonts ${JSON.stringify(run.fonts.used)} in ${run.fonts.elements} elements${run.stipple ? `, stipple ${run.stipple.dots} dots ${run.stipple.area} CSS px² ${(run.stipple.inside * 100).toFixed(1)} % on the blade` : ''}${run.okina ? ', okina ' + JSON.stringify(run.okina) : ''}${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
     report.runs.push(run);
     await ctx.close();
   }
@@ -282,7 +285,7 @@ const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 900
     if (sw > st.cw) run.issues.push(`overflow-x: ${sw} > ${st.cw}`);
     await page.screenshot({ path: path.join(out, `${tag}.png`) });
     fails += run.issues.length;
-    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: innerWidth ${st.iw}, clientWidth ${st.cw}, scrollWidth ${sw}, stipple ${st.dots} dots ${st.painted} px ${(st.inside * 100).toFixed(1)} % on the blade${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
+    console.log(`${run.issues.length ? 'FAIL' : 'ok  '} ${tag}: innerWidth ${st.iw}, clientWidth ${st.cw}, scrollWidth ${sw}, stipple ${st.dots} dots ${st.area} CSS px² ${(st.inside * 100).toFixed(1)} % on the blade${run.issues.length ? '\n   ' + run.issues.join('\n   ') : ''}`);
     report.runs.push(run);
     await ctx.close();
   }

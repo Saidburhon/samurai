@@ -28,6 +28,7 @@ import { parseRequest, runSamurai } from './samurai.js';
 import { verify } from './sign.js';
 import { parseLead, sendLead } from './lead.js';
 import { visitorKey, over } from './limits.js';
+import { GUARD } from './spend.js';
 import { tashkentToday } from '../src/shared/holidays.js';
 
 export { SamuraiGuard } from './spend.js';
@@ -127,8 +128,11 @@ async function samurai(request, env, ctx) {
         apiKey: env.ANTHROPIC_API_KEY, signingKey: env.SAMURAI_SIGNING_KEY,
         effort: ['low', 'medium', 'high'].includes(env.SAMURAI_EFFORT) ? env.SAMURAI_EFFORT : 'low', fast: env.SAMURAI_FAST === '1',
       });
-      if (guard && booking?.ok) ctx.waitUntil(guard.settle({ rid: booking.rid, usd: out.cost }).catch(() => null));
-      log({ samurai: { lang: input.lang, refine: Boolean(input.refine), status: out.status, source: out.source || null, solutions: out.pick?.solutions?.length ?? 0, partial: out.partial, ms: Date.now() - t0, cost_usd: out.cost, calls: out.calls } });
+      // settle at the metered cost; a run with a call that never reported its usage keeps the whole reservation, so
+      // leaving mid-stream never makes an answer free for the daily cap
+      const spent = out.blind ? Math.max(out.cost, GUARD.RESERVE_USD) : out.cost;
+      if (guard && booking?.ok) ctx.waitUntil(guard.settle({ rid: booking.rid, usd: spent }).catch(() => null));
+      log({ samurai: { lang: input.lang, refine: Boolean(input.refine), status: out.status, source: out.source || null, solutions: out.pick?.solutions?.length ?? 0, partial: out.partial, ms: Date.now() - t0, cost_usd: out.cost, settled_usd: spent, blind: out.blind || 0, calls: out.calls } });
     } catch (e) {
       log({ samurai_error: 'handler', name: e?.name, message: String(e?.message || '').slice(0, 200) });
       send('error', { code: 'upstream' });
@@ -144,7 +148,8 @@ async function samurai(request, env, ctx) {
 async function verifyRoute(request, env) {
   if (request.method !== 'POST') return err(405, 'method_not_allowed', { Allow: 'POST' });
   if (!originOk(request, env)) return err(403, 'forbidden_origin');
-  const r = await readJson(request, 24 * 1024);
+  // a realistic four-solution Russian estimate is about 22 KB; the validator's caps allow well over 35 KB
+  const r = await readJson(request, 64 * 1024);
   if (r.res) return r.res;
   const p = r.body?.payload;
   if (!p || typeof p !== 'object') return json(400, { ok: false, reason: 'bad_input' });
@@ -156,7 +161,8 @@ async function leadRoute(request, env) {
   if (!originOk(request, env)) return err(403, 'forbidden_origin');
   const key = visitorKey(request.headers.get('CF-Connecting-IP') || 'local');
   if (await over(env.RL_LEAD, key)) return json(429, { ok: false, error: 'rate_limited' }, { 'Retry-After': '60' });
-  const r = await readJson(request, 16 * 1024);
+  // the estimate link travels whole (up to 12 000 characters) beside a 1 500-character text
+  const r = await readJson(request, 24 * 1024);
   if (r.res) return r.res;
   const p = parseLead(r.body);
   if (p.error) return json(400, { ok: false, error: p.error });
