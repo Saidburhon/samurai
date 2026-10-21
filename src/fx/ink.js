@@ -68,12 +68,12 @@ export class Ink {
     const [vx, vy] = this.vb;
     const tx = e0[0] + vx * ex[0] + vy * ey[0], ty = e0[1] + vx * ex[1] + vy * ey[1];
     const k = Math.hypot(ex[0], ex[1]), ang = Math.atan2(ex[1], ex[0]);
-    const st = this.paper.style;
-    st.transform = `matrix(${ex[0]},${ex[1]},${ey[0]},${ey[1]},${tx},${ty})`;
+    const st = this.paper.style, bm = this.boxMatrix(W, H, ex, ey, tx, ty, k);
+    st.transform = bm.css;
     // the matrix takes over from the build's placement (cinema.css: html.osh-set)
     document.documentElement.classList.add('osh-set');
     st.setProperty('--osh-rot', `${(ang * 180 / Math.PI).toFixed(3)}deg`);
-    st.setProperty('--ik', (1 / k).toFixed(5));
+    st.setProperty('--ik', bm.ik);
     this.m = { e0, ex, ey, k };
     // the reveal: the ink of the sword is clipped where the steel has arrived (u < reveal · LKT)
     this.clip(reveal < 1.5 ? reveal * LKT : null);
@@ -114,12 +114,12 @@ export class Ink {
     const [vx, vy] = this.vb;
     const tx = e0[0] + vx * ex[0] + vy * ey[0], ty = e0[1] + vx * ex[1] + vy * ey[1];
     const k = Math.hypot(ex[0], ex[1]), ang = Math.atan2(ex[1], ex[0]);
-    const st = this.paper.style, mtx = `matrix(${ex[0]},${ex[1]},${ey[0]},${ey[1]},${tx},${ty})`;
+    const st = this.paper.style, bm = this.boxMatrix(W, H, ex, ey, tx, ty, k), mtx = bm.css;
     if (this.mtx !== mtx) {
       st.transform = mtx; this.mtx = mtx;
       document.documentElement.classList.add('osh-set');
       st.setProperty('--osh-rot', `${(ang * 180 / Math.PI).toFixed(3)}deg`);
-      st.setProperty('--ik', (1 / k).toFixed(5));
+      st.setProperty('--ik', bm.ik);
     }
     // while the matrix changes the wrapper is a layer; at rest it re-rasterises crisp (§3.8)
     st.willChange = crisp ? '' : 'transform';
@@ -150,6 +150,23 @@ export class Ink {
       this.stip.style.visibility = 'hidden';
       if (this.frontOn !== false) { this.front.style.visibility = 'hidden'; this.frontOn = false; }
     }
+  }
+  // The wrapper keeps the build's layout box (gen/osh.css: its left, top and width; cinema.css drops only its
+  // translate and rotate), so taking over the placement moves no box and is no layout shift (PERF-1: the svg and the
+  // labels were resized from that box to 1402 px, CLS 0.38–0.52). The matrix from svg px (1 unit = 1 px, the old
+  // 1402 px box at 0, 0) is composed with that box: q = M(s · p) − (left, top), s = 1402 / its width. The box is read
+  // once per stage size. paper.dataset.m keeps the 1402 px matrix for the freeze layer's copy (fx/cut.js).
+  boxMatrix(W, H, ex, ey, tx, ty, k) {
+    const key = W + 'x' + H;
+    if (this.boxKey !== key) {
+      const cs = getComputedStyle(this.paper), w = parseFloat(cs.width);
+      this.box = { x: parseFloat(cs.left) || 0, y: parseFloat(cs.top) || 0, s: w > 0 ? this.vb[2] / w : 1 };
+      this.boxKey = key;
+    }
+    const { x, y, s } = this.box;
+    this.paper.dataset.m = `matrix(${ex[0]},${ex[1]},${ey[0]},${ey[1]},${tx},${ty})`;
+    this.paper.dataset.ik = (1 / k).toFixed(5);
+    return { css: `matrix(${ex[0] * s},${ex[1] * s},${ey[0] * s},${ey[1] * s},${tx - x},${ty - y})`, ik: (1 / (k * s)).toFixed(5) };
   }
   clipOn(els, u0) {
     if (this.clipEls && this.clipEls !== els) for (const g of this.clipEls) g.removeAttribute('clip-path');

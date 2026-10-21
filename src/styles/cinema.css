@@ -29,7 +29,9 @@ html.cinema #labels { position: absolute; inset: 0; z-index: 3; }
 /* the drawing: one matrix() from svg units to the screen (fx/ink.js). Only once ink.js has written that matrix
    (html.osh-set): until then the drawing keeps the build's own placement on its diagonal (gen/osh.css) and draws
    itself as in flow mode, so the 1 s frame is the finished drawing on −18° whenever this sheet arrives (G1 r2) */
-html.cinema.osh-set #osh-paper { left: 0; top: 0; width: 1402px; translate: none; rotate: none; transform-origin: 0 0; }
+/* (its layout box stays the build's: only translate and rotate go, so the hand-over is no layout shift; ink.js
+   composes the matrix with that box) */
+html.cinema.osh-set #osh-paper { translate: none; rotate: none; transform-origin: 0 0; }
 html.cinema.osh-set #osh path, html.cinema.osh-set #osh circle { vector-effect: non-scaling-stroke; }
 html.cinema .ol { font-size: calc(13px * var(--ik, 1)); }
 html.cinema .ol b { font-size: calc(14px * var(--ik, 1)); }

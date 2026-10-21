@@ -123,6 +123,8 @@ export class Cut {
         ink.appendChild(c);
       }
       const pc = stripIds(paper.cloneNode(true)); pc.style.willChange = '';
+      // the copy has no #osh-paper box: it takes the matrix from svg px, as before (fx/ink.js boxMatrix)
+      if (paper.dataset.m) { pc.style.transform = paper.dataset.m; pc.style.setProperty('--ik', paper.dataset.ik); }
       ink.appendChild(pc);
       const fr = document.getElementById('front');
       if (fr && fr.firstChild) ink.appendChild(stripIds(fr.cloneNode(true)));
