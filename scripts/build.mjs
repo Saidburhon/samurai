@@ -129,12 +129,14 @@ async function finish(meta) {
     try { node('scripts/og.mjs'); writeFileSync(ogStamp, ogKey); } catch (e) { console.warn('og: skipped (' + e.message.split('\n')[0] + ')'); }
   }
   const kb = (n) => (n / 1024).toFixed(1) + ' KB';
-  // weight budgets of the SamurAI page (SOLUTIONS-SPEC §7.5): its JS (entry and every chunk it imports) ≤ 35 KB gz,
+  // weight budgets of the SamurAI page (SOLUTIONS-SPEC §7.5): its JS (entry and every chunk it imports, statically or
+  // dynamically: a share link or a reopened estimate loads its dynamic chunks too) ≤ 35 KB gz,
   // its HTML ≤ 25 KB gz, pages_css ≤ 14 KB gz; no three.js, GSAP or Lenis in its graph. Over budget fails the build.
   {
     const { gzipSync } = await import('node:zlib');
     const gz = (f) => gzipSync(readFileSync(f)).length;
-    const graph = new Set(); const walkJs = (f) => { if (graph.has(f)) return; graph.add(f); for (const i of meta.outputs[f]?.imports || []) if (i.kind === 'import-statement') walkJs(i.path); };
+    const graph = new Set(), dynamic = new Set();
+    const walkJs = (f, dyn = false) => { if (graph.has(f)) return; graph.add(f); if (dyn) dynamic.add(f); for (const i of meta.outputs[f]?.imports || []) if (i.kind === 'import-statement' || i.kind === 'dynamic-import') walkJs(i.path, dyn || i.kind === 'dynamic-import'); };
     walkJs(samuraiJs);
     const inputs = [...graph].flatMap((f) => Object.keys(meta.outputs[f].inputs || {}));
     const heavy = inputs.filter((i) => /node_modules\/(three|gsap|lenis)\//.test(i) || /src\/gl\//.test(i));
@@ -142,7 +144,7 @@ async function finish(meta) {
     const htmlGz = Math.max(...pages.filter((p) => p.entry === 'samurai').map((p) => gz(p.file)));
     const cssGz = gz(pagesCss) + gz(samuraiCss);
     const over = [jsGz > 35 * 1024 && `samurai JS ${kb(jsGz)} gz > 35 KB`, htmlGz > 25 * 1024 && `samurai HTML ${kb(htmlGz)} gz > 25 KB`, gz(pagesCss) > 14 * 1024 && `pages_css ${kb(gz(pagesCss))} gz > 14 KB`, heavy.length && `samurai imports ${heavy.join(', ')}`].filter(Boolean);
-    console.log(`samurai budget: JS ${kb(jsGz)} gz (${graph.size} files), HTML ${kb(htmlGz)} gz, CSS ${kb(cssGz)} gz (pages_css ${kb(gz(pagesCss))})`);
+    console.log(`samurai budget: JS ${kb(jsGz)} gz (${graph.size} files, ${dynamic.size} loaded dynamically: ${kb([...dynamic].reduce((a, f) => a + gz(f), 0))}), HTML ${kb(htmlGz)} gz, CSS ${kb(cssGz)} gz (pages_css ${kb(gz(pagesCss))})`);
     if (over.length) { console.error(`budget: ${over.join('; ')}`); process.exitCode = 1; if (!watch) throw new Error(over.join('; ')); }
   }
   console.log(outs.map(([f, o]) => `${f.replace(OUT + '/', '')} ${kb(o.bytes)}`).join(', '));

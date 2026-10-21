@@ -4,6 +4,7 @@
 // turns it into the appraiser's desk. Words: scripts/pages/samurai-i18n.mjs. Drawings: src/samurai/plate.js.
 import { S } from './samurai-i18n.mjs';
 import { blankForm } from '../../src/samurai/plate.js';
+import { MONTHS, MONTHS_SHORT } from '../../src/shared/months.js';
 import { esc, site, telHref, nbspPhone, abs, pathOf, LANGS } from '../site.mjs';
 import { ORG_ID } from './ld.mjs';
 
@@ -48,7 +49,8 @@ export function renderSamurai(lang, { model, rate, files, cataloguePages = false
     budget: blank('budget', T.sl.budget, opt('budget', lang === 'ja' ? IDS.budgetJa : IDS.budget), 'unknown'),
     deadline: blank('deadline', T.sl.deadline, opt('deadline'), DEFAULT.deadline),
   };
-  const sentence = esc(T.sentence).replace(/\{(\w+)\}/g, (m, k) => slots[k] || m);
+  // a blank and the punctuation after it never part at a line end (no line starts with ",", ":" or "、")
+  const sentence = esc(T.sentence).replace(/\{(\w+)\}([,.:;、。]?)/g, (m, k, p) => (!slots[k] ? m : p ? `<span class="nw">${slots[k]}${p}</span>` : slots[k]));
   const ex = (model.industries[DEFAULT.industry].examples[lang] || []).map((e) => `<button type="button" class="ex">${esc(e)}</button>`).join(' ');
   const phone = `<a href="${telHref(site.telephone)}">${nbspPhone(site.telephone)}</a>`, mail = `<a href="mailto:${site.email}">${site.email}</a>`;
   const path = pathOf(lang, SLUG);
@@ -90,7 +92,7 @@ export function renderSamurai(lang, { model, rate, files, cataloguePages = false
     phone: site.telephone, email: site.email, validity: model.pricing.validity_days, defaults: DEFAULT,
     budgetIds: lang === 'ja' ? IDS.budgetJa : IDS.budget, examplesByIndustry: Object.fromEntries(Object.values(model.industries).map((i) => [i.id, i.examples[lang] || i.examples.en])),
   }).replace(/</g, '\\u003c')}</script>
-  <script type="application/json" id="sam-strings">${JSON.stringify(T).replace(/</g, '\\u003c')}</script>`;
+  <script type="application/json" id="sam-strings">${JSON.stringify({ ...T, months: MONTHS[lang], monthsShort: MONTHS_SHORT[lang] }).replace(/</g, '\\u003c')}</script>`;
   const app = {
     '@type': 'WebApplication', '@id': `${abs(path)}#app`, name: 'SamurAI', url: abs(path), description: T.lede,
     applicationCategory: 'BusinessApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript', isAccessibleForFree: true,

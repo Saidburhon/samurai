@@ -4,7 +4,10 @@
 //   - a separator dot "·" that starts or ends a line
 //   - text under 13 px on desktop or 12 px on a phone (SVG text measured at its rendered scale)
 //   - horizontal overflow of the page
+//   - punctuation that starts a line in the intake sentence (", 6–20 сотрудников", "、従業員は": jb2a must-fix 5)
+//   - two texts of the Gantt that overlap, or one cut by its edge ("Кайдзен" over "Старт": jb2a must-fix 6)
 // Usage: node scripts/qa/samurai-wrap.cjs <base> <path,path,...> [outDir]   e.g. /samurai/?sample=clinic
+// The empty pages (/samurai/, /ru/samurai/, …) measure the intake; the sample pages the result and its Gantt.
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
@@ -34,7 +37,41 @@ const WIDTHS = [[1440, 900], [390, 844], [360, 740]];
       const min = innerWidth < 500 ? 12 : 13;
       const lineOf = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1); const q = [...rg.getClientRects()].filter((x) => x.width > 0)[0]; return q ? Math.round(q.top + q.height / 2) : null; };
       const visible = (el) => { const cs = getComputedStyle(el); const rc = el.getBoundingClientRect(); return cs.display !== 'none' && cs.visibility !== 'hidden' && rc.width > 0 && rc.height > 0 && !el.closest('[hidden], .vh, dialog:not([open]), script, style, .print-head, .print-foot, .gantt-table'); };
-      const broken = [], dots = [], small = [];
+      const broken = [], dots = [], small = [], punct = [], overlap = [];
+      // the intake: a punctuation mark on another line than the glyph or the blank before it
+      const sent = document.querySelector('.intake .sentence');
+      if (sent && visible(sent)) {
+        const sameLine = (a, b) => a.top < b.bottom - 2 && a.bottom > b.top + 2;
+        const w = document.createTreeWalker(sent, NodeFilter.SHOW_TEXT);
+        while (w.nextNode()) {
+          const n = w.currentNode, t = n.textContent;
+          if (n.parentElement.closest('select, .val')) continue;
+          for (let i = 0; i < t.length; i++) {
+            if (!/[,.:;、。]/.test(t[i])) continue;
+            const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
+            const r1 = [...rg.getClientRects()].find((x) => x.width > 0);
+            let r0 = null, k = i - 1;
+            while (k >= 0 && /\s/.test(t[k])) k--;
+            if (k >= 0) { const q = document.createRange(); q.setStart(n, k); q.setEnd(n, k + 1); r0 = [...q.getClientRects()].find((x) => x.width > 0); }
+            else { let el = n.previousSibling; while (el && el.nodeType === 3 && !el.textContent.trim()) el = el.previousSibling; if (el && el.nodeType === 1) r0 = [...el.getClientRects()].pop(); }
+            if (r1 && r0 && !sameLine(r1, r0)) punct.push(t.slice(i, i + 14));
+          }
+        }
+      }
+      // the Gantt: every pair of texts, and each text against the drawing's edges
+      for (const svg of document.querySelectorAll('svg.gantt')) {
+        if (!visible(svg)) continue;
+        const box = svg.getBoundingClientRect();
+        const ts = [...svg.querySelectorAll('text')].map((x) => ({ t: x.textContent, r: x.getBoundingClientRect() })).filter((x) => x.r.width > 0);
+        for (let i = 0; i < ts.length; i++) {
+          const a = ts[i].r;
+          if (a.left < box.left - 1 || a.right > box.right + 1) overlap.push(`cut: ${ts[i].t}`);
+          for (let j = i + 1; j < ts.length; j++) {
+            const b = ts[j].r, area = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+            if (area > 4) overlap.push(`${ts[i].t} × ${ts[j].t}`);
+          }
+        }
+      }
       const roots = [document.querySelector('#result'), document.querySelector('.strip'), document.querySelector('.intake')].filter(Boolean);
       for (const root of roots) {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -62,13 +99,13 @@ const WIDTHS = [[1440, 900], [390, 844], [360, 740]];
           if (size < min - 0.25) small.push(`${el.tagName.toLowerCase()}.${String(el.className?.baseVal ?? el.className).split(' ')[0]} ${size.toFixed(1)}px "${el.textContent.trim().slice(0, 24)}"`);
         }
       }
-      return { broken: [...new Set(broken)], dots: [...new Set(dots)], small: [...new Set(small)].slice(0, 12), overflow: document.documentElement.scrollWidth - innerWidth };
+      return { broken: [...new Set(broken)], dots: [...new Set(dots)], small: [...new Set(small)].slice(0, 12), punct, overlap, overflow: document.documentElement.scrollWidth - innerWidth };
     });
-    const ok = !r.broken.length && !r.dots.length && !r.small.length && r.overflow <= 0 && !errors.length;
+    const ok = !r.broken.length && !r.dots.length && !r.small.length && !r.punct.length && !r.overlap.length && r.overflow <= 0 && !errors.length;
     if (!ok) bad++;
     report.push({ page: pg, width: w, ok, ...r, errors });
-    console.log(`${ok ? 'ok  ' : 'FAIL'} ${pg} ${w}: ranges broken ${r.broken.length}, line-edge dots ${r.dots.length}, small ${r.small.length}, overflow ${r.overflow}${errors.length ? `, errors ${errors.length}` : ''}`);
-    for (const k of ['broken', 'dots', 'small']) if (r[k].length) console.log(`     ${k}: ${r[k].map((x) => JSON.stringify(x)).join(' ')}`);
+    console.log(`${ok ? 'ok  ' : 'FAIL'} ${pg} ${w}: ranges broken ${r.broken.length}, line-edge dots ${r.dots.length}, small ${r.small.length}, line-start punctuation ${r.punct.length}, Gantt overlaps ${r.overlap.length}, overflow ${r.overflow}${errors.length ? `, errors ${errors.length}` : ''}`);
+    for (const k of ['broken', 'dots', 'small', 'punct', 'overlap']) if (r[k].length) console.log(`     ${k}: ${r[k].map((x) => JSON.stringify(x)).join(' ')}`);
     if (out) await p.screenshot({ path: path.join(out, `wrap-${pg.replace(/[^\w]+/g, '_')}-${w}.png`), fullPage: true });
     await ctx.close();
   }

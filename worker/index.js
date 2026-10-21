@@ -166,7 +166,7 @@ async function leadRoute(request, env) {
   // the estimate link travels whole (up to 12 000 characters) beside a 1 500-character text
   const r = await readJson(request, 24 * 1024);
   if (r.res) return r.res;
-  const p = parseLead(r.body);
+  const p = parseLead(r.body, { dev: isDev(request, env) });
   if (p.error) return json(400, { ok: false, error: p.error });
   const out = await sendLead(env, p.lead, tashkentToday());
   return json(out.status, out.body);

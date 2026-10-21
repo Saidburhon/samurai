@@ -83,12 +83,13 @@ export function compact(model, lang) {
     pricing: { size_band: p.size_band, max_mult: p.max_mult, integration_weeks_overlap: p.integration_weeks_overlap, custom_factor: p.custom_factor, parallel_overhead: p.parallel_overhead, shared: p.shared, phase_split: p.phase_split, round: p.round, validity_days: p.validity_days, monthly_default: p.monthly_default },
     groups: Object.fromEntries(Object.values(model.groups).map((g) => [g.id, { t: pickLang(g.title, lang), needs: g.needs[lang] || g.needs.en, team: g.team.map((x) => [x.role, x.count]), stack: g.stack }])),
     mods: Object.fromEntries(Object.entries(model.modifiers).map(([k, m]) => [k, [pickLang(m.label, lang), m.mult || 1, m.weeks_mult || 1, m.add_usd || [0, 0], m.add_weeks || [0, 0]]])),
-    ints: Object.fromEntries(Object.entries(model.integrations).map(([k, m]) => [k, [m.name, pickLang(m.what, lang), m.add_usd, m.add_weeks, m.monthly_usd]])),
+    ints: Object.fromEntries(Object.entries(model.integrations).map(([k, m]) => [k, [m.names?.[lang] || m.name, pickLang(m.what, lang), m.add_usd, m.add_weeks, m.monthly_usd]])),
     roles: Object.fromEntries(Object.entries(p.roles).map(([k, v]) => [k, pickLang(v, lang)])),
     stack: p.stack,
     phase: model.phase_text[lang] || model.phase_text.en,
     goals: model.goals,
-    industries: Object.fromEntries(Object.values(model.industries).map((i) => [i.id, [pickLang(i.name, lang), pickLang(i.plural, lang), i.starter, i.examples[lang] || i.examples.en, ...(lang === 'ja' && i.ja_words ? [i.ja_words] : [])]])),
+    // the Japanese page: its own starters (a company in Japan) and its own words; the others share the uz/ru/en words
+    industries: Object.fromEntries(Object.values(model.industries).map((i) => { const w = lang === 'ja' ? i.ja_words : i.words; return [i.id, [pickLang(i.name, lang), pickLang(i.plural, lang), (lang === 'ja' && i.ja_starter) || i.starter, i.examples[lang] || i.examples.en, ...(w ? [w] : [])]]; })),
     // [id, group, title, mvp weeks lo, hi, mvp usd lo, hi, full weeks lo, hi, full usd lo, hi, monthly lo, hi, difficulty, integrations, included, shares, one-liner]
     sol: model.solutions.filter((s) => s.billing !== 'monthly').map((s) => [s.id, s.group, pickLang(s.title, lang), ...s.mvp.weeks, ...s.mvp.usd, ...s.full.weeks, ...s.full.usd, ...s.monthly_usd, s.difficulty,
       s.integrations.join(' '), s.integrations_included.join(' '), s.shares.join(' '), pickLang(s.oneliner, lang)]),
@@ -109,7 +110,7 @@ export function expand(d) {
   const modifiers = Object.fromEntries(Object.entries(d.mods).map(([k, m]) => [k, { label: { [d.lang]: m[0] }, mult: m[1], weeks_mult: m[2], add_usd: m[3], add_weeks: m[4] }]));
   const integrations = Object.fromEntries(Object.entries(d.ints).map(([k, m]) => [k, { name: m[0], what: { [d.lang]: m[1] }, add_usd: m[2], add_weeks: m[3], monthly_usd: m[4] }]));
   const groups = Object.fromEntries(Object.entries(d.groups).map(([k, g]) => [k, { id: k, title: { [d.lang]: g.t }, team: g.team.map(([role, count]) => ({ role, count })), stack: g.stack, needs: { [d.lang]: g.needs } }]));
-  const industries = Object.fromEntries(Object.entries(d.industries).map(([k, v]) => [k, { id: k, name: { [d.lang]: v[0] }, plural: { [d.lang]: v[1] }, starter: v[2], examples: { [d.lang]: v[3] }, ...(v[4] ? { ja_words: v[4] } : {}) }]));
+  const industries = Object.fromEntries(Object.entries(d.industries).map(([k, v]) => [k, { id: k, name: { [d.lang]: v[0] }, plural: { [d.lang]: v[1] }, starter: v[2], examples: { [d.lang]: v[3] }, ...(v[4] ? { [d.lang === 'ja' ? 'ja_words' : 'words']: v[4] } : {}) }]));
   const pricing = { ...d.pricing, modifiers, roles: Object.fromEntries(Object.entries(d.roles).map(([k, v]) => [k, { [d.lang]: v }])), stack: d.stack };
   return { version: d.v, lang: d.lang, groups, industries, integrations, modifiers, goals: d.goals, phase_text: { [d.lang]: d.phase }, pricing, solutions, byId: new Map(solutions.map((s) => [s.id, s])) };
 }

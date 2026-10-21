@@ -1,9 +1,10 @@
-// The sample lint (rv2a must-fix 3): the committed samples are what a visitor sees first, so every string the model
+// The sample lint (rv2a must-fix 3; currency-free impact labels): the committed samples are what a visitor sees first, so every string the model
 // wrote must be clean: no junk ending (tidy() in worker/validate.js would change it), no copy-rule hit, and "what we
 // understood" a whole sentence. Run by `node scripts/samurai-samples.mjs --lint`, by the unit tests and before a
 // generated sample is kept.
 import { tidy } from '../../worker/validate.js';
 import { BANNED } from '../../worker/copy-rules.js';
+import { plainLabel } from '../../src/shared/format.js';
 
 /** The model's own strings in a sample (never the visitor's quotes): what the page prints as Qilich's words. */
 export function modelStrings(x) {
@@ -21,5 +22,7 @@ export function sampleProblems(x, lang) {
     for (const [re, what] of BANNED) if (re.test(t)) bad.push(`${what}: ${t.slice(0, 40)}`);
   }
   if (!/[.!?。！？…]$/.test(x.pick.heard?.summary || '')) bad.push(`summary is not a sentence: …${(x.pick.heard?.summary || '').slice(-30)}`);
+  // an impact label never names a currency (rv2a must-fix 3): the page adds the unit in the visitor's currency
+  for (const d of Object.values(x.details || {})) for (const i of d.impact?.inputs || []) if (plainLabel(i.label) !== i.label) bad.push(`currency in a label: ${i.label}`);
   return bad;
 }

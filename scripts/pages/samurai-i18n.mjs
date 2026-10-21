@@ -54,6 +54,9 @@ export const S = {
     partial: 'Toʻliq emas',
     rateLimited: 'Bir daqiqada juda koʻp soʻrov. Bir oz kutib qayta urining yoki qoʻngʻiroq qiling: +998 97 270 70 07',
     narrow: 'Oraliq toraydi:',
+    changed: 'Oraliq oʻzgardi:',
+    // Uzbekistan's public holidays (src/shared/holidays.js indexes them), named on the plan's axis
+    hol: ['Yangi yil', 'Xotin-qizlar kuni', 'Navroʻz', 'Xotira va qadrlash kuni', 'Mustaqillik kuni', 'Oʻqituvchi va murabbiylar kuni', 'Konstitutsiya kuni', 'Ramazon hayiti (taxminan)', 'Qurbon hayiti (taxminan)'],
     runAnswers: 'Javoblar bilan hisoblash',
     pr: { must: 'Zarur', should: 'Tavsiya', could: 'Keyinroq' },
     sc: { off: 'Yoʻq', mvp: 'MVP', full: 'Toʻliq', legend: 'Qayerdan boshlaymiz' },
@@ -171,6 +174,9 @@ export const S = {
     partial: 'Не полностью',
     rateLimited: 'Слишком много запросов за минуту. Подождите немного или позвоните: +998 97 270 70 07',
     narrow: 'Диапазон сузился:',
+    changed: 'Диапазон изменился:',
+    // Uzbekistan's public holidays (src/shared/holidays.js indexes them), named on the plan's axis
+    hol: ['Новый год', 'Международный женский день', 'Навруз', 'День памяти и почестей', 'День независимости', 'День учителя', 'День Конституции', 'Рамазан хайит (примерно)', 'Курбан хайит (примерно)'],
     runAnswers: 'Рассчитать с ответами',
     pr: { must: 'Необходимо', should: 'Рекомендуем', could: 'Позже' },
     sc: { off: 'Нет', mvp: 'MVP', full: 'Полная', legend: 'С чего начать' },
@@ -288,6 +294,9 @@ export const S = {
     partial: 'Incomplete',
     rateLimited: 'Too many requests in a minute. Wait a moment, or call +998 97 270 70 07',
     narrow: 'The range narrowed:',
+    changed: 'The range changed:',
+    // Uzbekistan's public holidays (src/shared/holidays.js indexes them), named on the plan's axis
+    hol: ['New Year', 'Women’s Day', 'Navruz', 'Day of Remembrance', 'Independence Day', 'Teachers’ Day', 'Constitution Day', 'Eid al-Fitr (approximate)', 'Eid al-Adha (approximate)'],
     runAnswers: 'Estimate with these answers',
     pr: { must: 'Essential', should: 'Recommended', could: 'Later' },
     sc: { off: 'Off', mvp: 'MVP', full: 'Full', legend: 'Where to start' },
@@ -367,7 +376,7 @@ export const S = {
     o: {
       branches: ['1か所', '2〜5か所', '6か所以上'],
       staff: ['1〜5名', '6〜20名', '21〜100名', '100名超'],
-      tools: ['紙と電話', 'Excel', 'チャットのグループ', '1C', '自社システム', 'Instagram', 'Webサイト'],
+      tools: ['紙と電話', 'Excel', 'チャットのグループ', '会計・販売管理ソフト', '自社システム', 'Instagram', 'Webサイト'],
       goal: ['売上を伸ばすこと', '業務の見える化と管理', '手作業を減らすこと', '新規顧客の獲得', 'オンライン決済の導入'],
       budget: ['未定', '5,000ドル未満', '5,000〜15,000ドル', '15,000〜50,000ドル', '50,000ドル以上'],
       deadline: ['1か月以内', '3か月以内', '急がない'],
@@ -405,6 +414,9 @@ export const S = {
     partial: '一部のみ',
     rateLimited: '短時間にリクエストが集中しています。しばらくしてからお試しいただくか、+998 97 270 70 07 までお電話ください。',
     narrow: '費用の幅が絞られました：',
+    changed: '費用の幅が変わりました：',
+    // Uzbekistan's public holidays (src/shared/holidays.js indexes them), named on the plan's axis
+    hol: ['元日', '国際女性デー', 'ナウルーズ', '追悼と敬意の日', '独立記念日', '教師の日', '憲法記念日', 'ラマダン明けの祭り（予定）', '犠牲祭（予定）'],
     runAnswers: '回答をふまえて再計算する',
     pr: { must: '必須', should: '推奨', could: '後で検討' },
     sc: { off: 'なし', mvp: 'MVP', full: '完全版', legend: '開発の範囲' },

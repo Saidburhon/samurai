@@ -258,6 +258,7 @@ html[lang=ja] .fitter .dv { font-family: var(--sans); }
 .refine form { margin-top: 14px; display: flex; gap: 18px; align-items: flex-end; flex-wrap: wrap; }
 .refine input { flex: 1 1 18em; padding: 6px 0 8px; border: 0; border-bottom: 1px solid rgba(15, 14, 12, .45); background: transparent; font: 380 17px/1.4 var(--sans); border-radius: 0; }
 .refine input:focus-visible { outline: 2px solid var(--shu); outline-offset: 3px; }
+.refine .rf-status { flex-basis: 100%; } .refine .rf-status:empty { display: none; }
 .was { position: relative; color: var(--kurogane); margin-right: 8px; }
 .was::after { content: ""; position: absolute; left: -2px; right: -2px; top: 52%; height: 1.5px; background: var(--sumi); transform: rotate(-2deg); transform-origin: left; animation: strike .25s var(--ui) both; }
 @keyframes strike { from { transform: rotate(-2deg) scaleX(0); } }
@@ -273,12 +274,14 @@ html[lang=ja] .fitter .dv { font-family: var(--sans); }
 .hanko rect { fill: var(--shu); } .hanko .m { fill: var(--washi); }
 .hanko svg { width: 100%; height: 100%; filter: url(#inked); }
 .signed .hanko { opacity: 1; animation: stampin .35s var(--hone) both; }
+.signed .hanko.still, .was.still::after { animation: none; }
 @keyframes stampin { from { transform: scale(1.5); opacity: 0; } }
 .actions { grid-column: 5 / -1; margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
 .actions .btn { height: 44px; font: inherit; color: var(--sumi); }
 .actions .btn span { font-size: 13px; font-weight: 560; letter-spacing: .08em; text-transform: uppercase; font-variation-settings: "SHRP" 60; }
 .actions .btn.solid { background: var(--sumi); color: var(--washi); }
-.actions .btn.solid:hover { background: transparent; color: var(--sumi); }
+/* the outlined button's label turns washi with its ink fill (its sumi colour above would leave a black slab) */
+@media (hover: hover) { .actions .btn:not(.solid):hover { color: var(--washi); } .actions .btn.solid:hover { background: transparent; color: var(--sumi); } }
 .actions .tlink, .actions a { font-size: 15px; }
 .actions a { box-shadow: inset 0 -1px 0 var(--line); }
 .strip { display: none; }
@@ -443,3 +446,4 @@ html.legend-open .hako { visibility: hidden; }
 }
 .gantt-table { display: none; width: 100%; border-collapse: collapse; margin-top: 10px; font: 400 9pt/1.4 var(--mono); }
 .gantt-table td, .gantt-table th { text-align: left; padding: 3px 8px 3px 0; border-top: 1px solid rgba(15, 14, 12, .3); font-weight: 400; }
+.gantt-table th { width: 34%; } .gantt-table td.nw { white-space: nowrap; }

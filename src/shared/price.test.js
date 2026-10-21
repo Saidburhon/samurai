@@ -6,6 +6,7 @@ import { normalise, compact, expand, pickable } from './catalogue.js';
 import { enrichSolution, plan, fit, preset, applyEffect, payback, monthlyGain, priceResult, uzsRange, roundUsd, defaultSelection, solId, riskUsd } from './price.js';
 import { match, fold } from './match.js';
 import * as F from './format.js';
+import { MONTHS } from './months.js';
 import { endOfWork, isWorkday, firstMonday, holidaysBetween } from './holidays.js';
 import { canon } from './canon.js';
 
@@ -180,6 +181,42 @@ test('Japanese: the matcher finds the industry from its words, and the page data
   assert.equal(match(page, { intake: { industry: 'clinics' }, text: '学習塾です', lang: 'ja' }).heard.industry, 'clinics');
 });
 
+test('the matcher reads the industry the visitor wrote, in every language, before any keyword (jb2a must-fix 7)', () => {
+  const extra = J('content/solutions-extra.json');
+  const cases = [
+    ['uz', 'Toshkentda goʻzallik saloni, mijozlar Instagram orqali yoziladi', 'beauty'], ['ru', 'Салон красоты в Ташкенте, клиенты записываются через Instagram', 'beauty'], ['en', 'A beauty salon in Tashkent, clients book through Instagram', 'beauty'],
+    ['uz', 'Samarqandda 30 xonali mehmonxona, bron telefon orqali', 'hospitality'], ['ru', 'Отель на 40 номеров, брони в Excel', 'hospitality'], ['en', 'A small hotel with 25 rooms, bookings in a notebook', 'hospitality'],
+    ['uz', 'Avtoservis, mijozlar navbatda uzoq kutadi', 'auto'], ['ru', 'Автосервис и автомойка, очереди и путаница с записью', 'auto'],
+    ['ru', 'Оптовая торговля стройматериалами в Ташкенте, 15 менеджеров', 'distribution'], ['uz', 'Qurilish mollari ulgurji savdosi', 'distribution'], ['ru', 'Ресторан с доставкой, заказы по телефону', 'restaurants'],
+    ['ru', 'Интернет-магазин одежды, заказы в Instagram', 'ecommerce'], ['en', 'We store our stock in Excel and run a pharmacy', 'pharmacy'],
+  ];
+  for (const [lang, text, ind] of cases) {
+    const page = expand(compact(m, lang)), a = match(page, { text, lang });
+    assert.equal(a.heard.industry, ind, `${lang}: ${text}`);
+    assert.deepEqual(a.solutions.map((s) => s.catalogue_id), extra.industries[ind].starter.slice(0, 3), `${lang}: ${text}`);
+    assert.deepEqual(a, match(m, { text, lang }), 'the page model and the full model agree');
+  }
+  // an industry chosen in the form still wins over the words
+  assert.equal(match(m, { intake: { industry: 'clinics' }, text: 'Салон красоты', lang: 'ru' }).heard.industry, 'clinics');
+});
+
+test('the Japanese page serves a company in Japan: no Telegram-first starter, no Uzbekistan-only service (jb2a must-fix 8)', () => {
+  const mj = normalise(J('content/solutions.json'), { ...J('content/solutions-extra.json'), ja_solutions: J('content/solutions-ja.json').solutions }, pricing);
+  const page = expand(compact(mj, 'ja'));
+  const uzOnly = Object.entries(J('content/solutions-extra.json').integrations).filter(([, v]) => v.region === 'uz').map(([k]) => k);
+  for (const text of ['東京で衣料品店を3店舗運営しています。在庫はExcelです。', '大阪の歯科クリニックで、予約は電話です。', '飲食店です。', '学習塾を運営しています。', '']) {
+    for (const goal of ['sales', 'payments']) {
+      const a = match(page, { text, intake: { goal }, lang: 'ja' });
+      assert.ok(!a.solutions[0].catalogue_id.startsWith('tg-'), `${text}: ${a.solutions[0].catalogue_id}`);
+      for (const s of a.solutions) assert.ok(!s.integrations.some((k) => uzOnly.includes(k)), `${text}: ${s.integrations}`);
+    }
+  }
+  assert.equal(match(page, { text: '東京で衣料品店を3店舗運営しています。', lang: 'ja' }).heard.industry, 'retail');
+  // the page data names services neutrally on the Japanese page
+  assert.equal(page.integrations.sms.name, 'SMS配信');
+  assert.equal(expand(compact(mj, 'uz')).integrations.sms.name, 'SMS (Eskiz, Play Mobile)');
+});
+
 test('working days skip weekends and holidays (Navroʻz, 1 September)', () => {
   assert.equal(isWorkday('2027-03-22'), true);
   assert.equal(isWorkday('2027-03-21'), false); // Sunday and Navroʻz
@@ -190,7 +227,7 @@ test('working days skip weekends and holidays (Navroʻz, 1 September)', () => {
   // one week from Monday 2027-08-30: 30, 31, (1 Sep), 2, 3, 6
   assert.equal(endOfWork('2027-08-30', 1), '2027-09-06');
   assert.equal(firstMonday('2026-10-21'), '2026-11-02');
-  assert.deepEqual(holidaysBetween('2028-03-20', '2028-03-24', 'uz').map((h) => h.date), ['2028-03-21']);
+  assert.deepEqual(holidaysBetween('2028-03-20', '2028-03-24'), [{ date: '2028-03-21', k: 2 }]);
 });
 
 test('formatting: soʻm first, NBSP only (no U+202F or U+2009), Russian plural on the upper bound', () => {
@@ -204,7 +241,7 @@ test('formatting: soʻm first, NBSP only (no U+202F or U+2009), Russian plural o
   assert.equal(F.weeks([2, 3], 'ru'), '2–3\u00a0недели');
   assert.equal(F.weeks([4, 21], 'ru'), '4–21\u00a0неделя');
   assert.equal(F.weeks([1, 1], 'en'), '1\u00a0week');
-  for (const l of ['uz', 'ru', 'en', 'ja']) for (const s of [F.uzs([1e5, 9e9], l), F.usd([1, 1e6], l), F.weeks([1, 30], l), F.rateLine(rate, l), F.dateRange('2026-12-30', '2027-01-12', l)]) assert.doesNotMatch(s, /[\u202f\u2009]/);
+  for (const l of ['uz', 'ru', 'en', 'ja']) for (const s of [F.uzs([1e5, 9e9], l), F.usd([1, 1e6], l), F.weeks([1, 30], l), F.rateLine(rate, l), F.dateRange('2026-12-30', '2027-01-12', l, MONTHS[l])]) assert.doesNotMatch(s, /[\u202f\u2009]/);
 });
 
 test('canon sorts keys at every depth', () => {

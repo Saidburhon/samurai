@@ -64,7 +64,9 @@ export function evalT(a, b, tr, f, k = 0) {
   }
   // what the live layers show: the incoming hold under a freeze (its camera still easing in), else the mix
   const live = fr ? (f < FREEZE_WIN[0] ? 'a' : 'b') : 'mix';
-  const push = fr && live === 'b' ? 1 - ease('cam')(clamp01((f - FREEZE_WIN[0]) / (FREEZE_WIN[1] - FREEZE_WIN[0]))) : 0;
+  // (G3: the incoming camera holds still under a freeze; easing it in from further back re-rasterised the paper's
+  // layers, the dial above all, in every frame of the wipe on a software renderer)
+  const push = 0;
   return { a, b, k, f, tr, e, p, freeze, live, push, near: f < 0.5 ? a : b };
 }
 

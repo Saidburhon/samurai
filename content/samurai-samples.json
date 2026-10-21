@@ -360,7 +360,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Bitta qabulning oʻrtacha narxi qancha (USD)",
+         "label": "Bitta qabulning oʻrtacha narxi qancha",
          "value": 35,
          "basis": "assumed"
         },
@@ -483,7 +483,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Bitta qabulning oʻrtacha narxi qancha (USD)?",
+         "label": "Bitta qabulning oʻrtacha narxi qancha?",
          "value": 40,
          "basis": "assumed"
         },
@@ -899,7 +899,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Oʻrtacha buyurtma qancha turadi (USD)?",
+         "label": "Oʻrtacha buyurtma qancha turadi?",
          "value": 12,
          "basis": "assumed"
         },
@@ -1007,7 +1007,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Oʻrtacha buyurtma summasi qancha (USD)?",
+         "label": "Oʻrtacha buyurtma summasi qancha?",
          "value": 12,
          "basis": "assumed"
         },
@@ -1232,7 +1232,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Administratorning bir soati qancha turadi (USD)?",
+         "label": "Administratorning bir soati qancha turadi?",
          "value": 3,
          "basis": "assumed"
         }
@@ -1500,7 +1500,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Menejerning bir soati sizga necha dollarga tushadi?",
+         "label": "Menejerning bir soati sizga qanchaga tushadi?",
          "value": 3,
          "basis": "assumed"
         }
@@ -1606,7 +1606,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Dispetcherning bir soatlik ishi sizga qanchaga tushadi (USD)?",
+         "label": "Dispetcherning bir soatlik ishi sizga qanchaga tushadi?",
          "value": 3,
          "basis": "assumed"
         }
@@ -1829,7 +1829,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Bitta tashrifning oʻrtacha summasi qancha (USD)?",
+         "label": "Bitta tashrifning oʻrtacha summasi qancha?",
          "value": 15,
          "basis": "assumed"
         },
@@ -1940,7 +1940,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Bitta tashrifning oʻrtacha narxi qancha (USD)?",
+         "label": "Bitta tashrifning oʻrtacha narxi qancha?",
          "value": 15,
          "basis": "assumed"
         },
@@ -2228,7 +2228,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Bu ishni qiladigan xodimning bir soati necha dollar turadi?",
+         "label": "Bu ishni qiladigan xodimning bir soati qancha turadi?",
          "value": 3,
          "basis": "assumed"
         }
@@ -2432,7 +2432,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Dispetcher yoki hisobchining bir soati sizga necha dollarga tushadi?",
+         "label": "Dispetcher yoki hisobchining bir soati sizga qanchaga tushadi?",
          "value": 3,
          "basis": "assumed"
         }
@@ -2885,7 +2885,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Сколько в среднем стоит один визит, в долларах?",
+         "label": "Сколько в среднем стоит один визит?",
          "value": 40,
          "basis": "assumed"
         },
@@ -3298,7 +3298,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Какой средний чек заказа на доставку в долларах",
+         "label": "Какой средний чек заказа на доставку",
          "value": 15,
          "basis": "assumed"
         },
@@ -3409,7 +3409,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Какой средний чек заказа в долларах?",
+         "label": "Какой средний чек заказа?",
          "value": 12,
          "basis": "assumed"
         },
@@ -3699,7 +3699,7 @@
         },
         {
          "key": "cost_per_error_usd",
-         "label": "Сколько в среднем стоит одна пропущенная оплата, в USD?",
+         "label": "Сколько в среднем стоит одна пропущенная оплата?",
          "value": 40,
          "basis": "assumed"
         }
@@ -4149,7 +4149,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Сколько стоит час работы диспетчера в долларах?",
+         "label": "Сколько стоит час работы диспетчера?",
          "value": 3,
          "basis": "assumed"
         }
@@ -4250,7 +4250,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "Сколько стоит час работы менеджера, в долларах",
+         "label": "Сколько стоит час работы менеджера",
          "value": 3,
          "basis": "assumed"
         }
@@ -4525,7 +4525,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Средний чек визита в долларах?",
+         "label": "Средний чек визита?",
          "value": 15,
          "basis": "assumed"
         },
@@ -4636,7 +4636,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Средний чек одного визита в долларах?",
+         "label": "Средний чек одного визита?",
          "value": 15,
          "basis": "assumed"
         },
@@ -4747,7 +4747,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "Какой средний чек одного визита в долларах",
+         "label": "Какой средний чек одного визита",
          "value": 20,
          "basis": "assumed"
         },
@@ -5125,7 +5125,7 @@
         },
         {
          "key": "cost_per_error_usd",
-         "label": "Во сколько в среднем обходится один такой случай, в долларах?",
+         "label": "Во сколько в среднем обходится один такой случай?",
          "value": 25,
          "basis": "assumed"
         }
@@ -5503,7 +5503,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What does an average visit cost the patient, in USD?",
+         "label": "What does an average visit cost the patient?",
          "value": 35,
          "basis": "assumed"
         },
@@ -5626,7 +5626,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What an average dental visit brings in, in USD",
+         "label": "What an average dental visit brings in",
          "value": 35,
          "basis": "assumed"
         },
@@ -5931,7 +5931,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What is the average order in USD?",
+         "label": "What is the average order?",
          "value": 10,
          "basis": "assumed"
         },
@@ -6040,7 +6040,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What is the average delivery order in USD?",
+         "label": "What is the average delivery order?",
          "value": 12,
          "basis": "assumed"
         },
@@ -6147,7 +6147,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What is the average order value in USD?",
+         "label": "What is the average order value?",
          "value": 12,
          "basis": "assumed"
         },
@@ -6420,7 +6420,7 @@
         },
         {
          "key": "hourly_cost_usd",
-         "label": "What does an hour of your admin's time cost in USD?",
+         "label": "What does an hour of your admin's time cost?",
          "value": 3,
          "basis": "assumed"
         }
@@ -6697,7 +6697,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What does an average visit cost the client, in USD?",
+         "label": "What does an average visit cost the client?",
          "value": 15,
          "basis": "assumed"
         },
@@ -6802,7 +6802,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What is the average bill per visit, in USD?",
+         "label": "What is the average bill per visit?",
          "value": 20,
          "basis": "assumed"
         },
@@ -6913,7 +6913,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What does an average visit cost, in USD?",
+         "label": "What does an average visit cost?",
          "value": 15,
          "basis": "assumed"
         },
@@ -7544,7 +7544,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What is the average dealer order in USD?",
+         "label": "What is the average dealer order?",
          "value": 800,
          "basis": "assumed"
         },
@@ -7652,7 +7652,7 @@
         },
         {
          "key": "avg_order_usd",
-         "label": "What is the average dealer order in USD?",
+         "label": "What is the average dealer order?",
          "value": 800,
          "basis": "assumed"
         },
@@ -7684,12 +7684,13 @@
      "branches": "2-5",
      "staff": "21-100",
      "tools": "paper_phone",
-     "goal": "control"
+     "goal": "control",
+     "budget": "unknown"
     },
     "meta": {
      "brief_no": "QL-2610-136C",
      "lang": "ja",
-     "generated_at": "2026-10-21T12:02:57+05:00",
+     "generated_at": "2026-10-21T13:23:42+05:00",
      "valid_until": "2026-11-20",
      "catalogue_version": "2026-10-20.83240c46",
      "rate": {
@@ -7702,7 +7703,7 @@
     "pick": {
      "status": "ok",
      "heard": {
-      "summary": "3院を持つ歯科医院で、予約を紙の台帳で管理しており、院全体の把握が難しい状況です。",
+      "summary": "3院を展開する歯科医院で、予約を紙の台帳で管理しており、院をまたいだ把握や管理が難しい状況です。",
       "quotes": [
        "3院を持つ歯科医院",
        "予約は紙の台帳で管理している"
@@ -7712,12 +7713,12 @@
      },
      "questions": [
       {
-       "id": "payments",
-       "text": "受付でのお支払いもシステムで管理したいですか",
+       "id": "online_booking",
+       "text": "患者様がWebから直接予約できる仕組みは必要ですか。",
        "options": [
         {
          "id": "yes",
-         "label": "はい、会計も含める",
+         "label": "Web予約も必要",
          "effect": {
           "targets": [
            "ind-clinic"
@@ -7726,18 +7727,18 @@
           "add_modifiers": [],
           "remove_modifiers": [],
           "add_integrations": [
-           "click",
-           "payme",
-           "fiscal"
+           "sms"
           ],
           "drop": []
          }
         },
         {
          "id": "no",
-         "label": "まずは予約とカルテ",
+         "label": "電話受付のみでよい",
          "effect": {
-          "targets": [],
+          "targets": [
+           "ind-clinic"
+          ],
           "size": "keep",
           "add_modifiers": [],
           "remove_modifiers": [],
@@ -7748,12 +7749,12 @@
        ]
       },
       {
-       "id": "patient_channel",
-       "text": "患者様にTelegramから予約していただきたいですか",
+       "id": "card_payment",
+       "text": "会計時のクレジットカード決済の連携は必要ですか。",
        "options": [
         {
          "id": "yes",
-         "label": "はい",
+         "label": "連携したい",
          "effect": {
           "targets": [
            "ind-clinic"
@@ -7762,14 +7763,14 @@
           "add_modifiers": [],
           "remove_modifiers": [],
           "add_integrations": [
-           "telegram"
+           "visa_mc"
           ],
           "drop": []
          }
         },
         {
          "id": "no",
-         "label": "電話受付のみ",
+         "label": "不要",
          "effect": {
           "targets": [
            "ind-clinic"
@@ -7789,8 +7790,8 @@
        "n": 1,
        "catalogue_id": "ind-clinic",
        "based_on": [],
-       "title": "3院共通の予約・カルテ管理システム",
-       "why": "紙の台帳では3院の予約状況を一元的に把握できず、重複や記入漏れが起きやすくなります。予約とカルテを1つのシステムにまとめることで、院長が全院の状況を確認できるようになります。",
+       "title": "3院共通の予約・患者管理システム",
+       "why": "紙の台帳では3院の予約状況を一元的に把握できず、管理が院ごとに分断されます。予約と患者情報を一つのシステムにまとめることで、院長や本部が全院の状況を確認できるようになります。",
        "priority": "must",
        "scope": "mvp",
        "size": "m",
@@ -7799,19 +7800,17 @@
         "roles",
         "migration"
        ],
-       "integrations": [
-        "sms"
-       ],
+       "integrations": [],
        "depends_on": [],
        "difficulty": 4,
-       "difficulty_reason": "3院の予約枠と医師・受付の権限を統一し、紙の台帳から移行する必要があるため。"
+       "difficulty_reason": "3院の予約枠と権限設計、紙台帳からのデータ移行が必要なため。"
       },
       {
        "n": 2,
-       "catalogue_id": "sup-training",
+       "catalogue_id": "biz-bi-dashboards",
        "based_on": [],
-       "title": "受付・医師向けの操作研修とマニュアル",
-       "why": "紙から切り替える際、受付スタッフが新しい予約方法に慣れないと定着しません。各院で同じ運用ができるよう研修を行います。",
+       "title": "院別の予約・稼働状況ダッシュボード",
+       "why": "管理を強化したいというご要望に対し、院ごとの予約数やキャンセル状況を一画面で確認できるようにします。",
        "priority": "should",
        "scope": "mvp",
        "size": "s",
@@ -7820,59 +7819,53 @@
        "depends_on": [
         "ind-clinic"
        ],
-       "difficulty": 1,
-       "difficulty_reason": "既存の受付業務に合わせた手順書作成が中心のため。"
+       "difficulty": 3,
+       "difficulty_reason": "予約データが揃った後に指標を定義し、院別に集計する必要があるため。"
       }
      ],
      "not_recommended": [
       {
        "catalogue_id": "mob-booking-app",
-       "why": "現段階では院内の予約管理を整えることが先決で、患者向け専用アプリはまだ必要ありません。"
-      },
-      {
-       "catalogue_id": "ai-voice-agent",
-       "why": "まず予約データをシステム化しないと、電話の自動応答を導入しても効果が出ません。"
+       "why": "現時点では専用アプリよりも、院内の予約管理を一元化することが優先です。"
       }
      ],
-     "roadmap_note": "まず1院で予約とカルテのMVPを稼働させ、運用を確認したうえで残り2院へ展開し、研修を並行して行います。",
-     "first_step": "今週、3院の紙の台帳の記入項目と予約の流れを写真とメモで整理し、共有してください。",
+     "roadmap_note": "まず3院共通の予約・患者管理システムを導入し、データが蓄積された段階でダッシュボードを追加します。",
+     "first_step": "今週は3院の紙台帳の記載項目と予約受付の流れを書き出し、要件定義の材料をご準備ください。",
      "assumptions": [
-      "3院とも同じ診療科目と似た予約の流れであると想定しました。",
-      "患者様への予約リマインドはSMSで行う想定です。",
-      "現在、電子カルテなど他のシステムは使っていないと想定しました。"
+      "3院とも日本国内にあり、同じ予約ルールで運用できる前提です。",
+      "既存の電子カルテやレセプトコンピュータとの連携は今回の範囲外と想定しています。"
      ]
     },
     "details": {
-     "sup-training": {
+     "biz-bi-dashboards": {
       "deliverables_mvp": [
-       "受付・医師向けの操作研修(オンラインまたは訪問)",
-       "予約登録・変更・キャンセルのクイックスタートガイド",
-       "3院共通の受付運用手順書",
-       "操作手順の録画動画"
+       "院別の予約数・キャンセル数など主要指標10項目以内の定義",
+       "予約管理システムのデータを集計するWebダッシュボード",
+       "3院を並べて比較できる日次・週次の一覧画面",
+       "毎朝の要約をメールで経営者へ配信"
       ],
       "deliverables_full": [
-       "受付・医師・院長など役割別の研修コース",
-       "理解度テストによる習熟確認",
-       "社内向けナレッジベース記事",
-       "各院のキーユーザー育成(トレーナー研修)",
-       "導入1か月後のフォローアップ研修"
+       "会計ソフトや広告など、データ連携元の追加",
+       "院・担当医・診療メニュー別のドリルダウン",
+       "目標値の設定と、未達時のアラート",
+       "役職に応じた閲覧権限の設定"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "現在の紙台帳による受付業務の確認と研修計画の策定"
+        "deliverable": "院長・事務長と見るべき指標を要件定義し、画面案を確定"
        },
        {
         "key": "build",
-        "deliverable": "クイックスタートガイド、手順書、操作動画の作成"
+        "deliverable": "予約データの集計処理とダッシュボード画面の開発"
        },
        {
         "key": "test",
-        "deliverable": "1院の受付スタッフによる試行研修と資料の修正"
+        "deliverable": "紙台帳の実績と集計値を突き合わせて正確性を確認"
        },
        {
         "key": "launch",
-        "deliverable": "3院すべてでの研修実施と紙台帳からの切り替え支援"
+        "deliverable": "3院の管理者へ公開し、毎朝の要約配信を開始"
        }
       ],
       "team": [
@@ -7881,7 +7874,11 @@
         "count": 1
        },
        {
-        "role": "designer",
+        "role": "backend",
+        "count": 1
+       },
+       {
+        "role": "frontend",
         "count": 1
        },
        {
@@ -7891,63 +7888,65 @@
       ],
       "stack": [
        "typescript",
-       "telegram_bot_api"
+       "react",
+       "nodejs",
+       "postgresql"
       ],
       "risks": [
        {
-        "text": "診療が忙しく、受付スタッフが研修時間を確保できない",
-        "mitigation": "短時間の分割研修と録画動画で、空き時間に学べるようにします",
-        "adds_weeks": 1
+        "text": "予約管理システムの導入と定着が遅れ、集計できるデータが揃わない",
+        "mitigation": "予約システムの稼働後、一定期間データが蓄積してから着手する",
+        "adds_weeks": 3
        },
        {
-        "text": "院ごとに受付の進め方が異なり、共通手順が定着しない",
-        "mitigation": "事前に3院の運用差を確認し、共通ルールを院長と合意します",
+        "text": "院ごとにキャンセルや無断欠席の記録方法が異なり、比較ができない",
+        "mitigation": "要件定義の段階で記録ルールを統一し、各院へ周知する",
         "adds_weeks": 1
        }
       ],
       "needs": [
-       "研修対象となる受付スタッフと医師の名簿",
-       "各院の現在の予約受付の流れ(紙台帳の記入例)",
-       "3院共通の運用ルールを決める責任者",
-       "研修日程を調整できる各院の担当者"
+       "指標と画面仕様を決める決裁者(院長または事務長)",
+       "経営判断に使いたい指標の候補リスト",
+       "予約管理システムの稼働とデータへのアクセス権",
+       "要約の配信先となるメールアドレスの一覧"
       ],
       "impact": {
        "model": "none",
-       "summary": "3院の受付が同じ手順で新しい予約システムを使えるようになり、紙台帳への逆戻りや院ごとの運用のばらつきを防げます。",
+       "summary": "3院の予約状況やキャンセル傾向を、集計作業を待たずに比較できるようになり、院ごとの管理判断が早くなります。",
        "inputs": []
       }
      },
      "ind-clinic": {
       "deliverables_mvp": [
-       "3院共通の予約台帳と医師別スケジュール",
-       "Webとテレグラムからのオンライン予約",
-       "患者情報とテンプレート付き診療記録",
-       "受付・医師・院長ごとの権限設定",
-       "紙の台帳からの予約・患者データ移行",
-       "SMSによる予約リマインド"
+       "3院共通の予約台帳と医師・チェアごとの予約枠管理",
+       "患者が自分で空き枠を選べるWeb予約画面",
+       "患者基本情報と来院履歴の管理画面",
+       "テンプレート付きの診療メモ入力",
+       "院長・受付・本部ごとの権限設定",
+       "紙台帳の予約・患者データの移行"
       ],
       "deliverables_full": [
-       "医薬品・歯科材料の在庫管理",
-       "施術内容に応じた医師の歩合計算",
-       "医師別・施術別の分析レポート",
-       "患者向けアプリとAIによる電話リマインド"
+       "予約前日のSMS配信やメールによるリマインド",
+       "医師別・診療内容別の分析レポート",
+       "材料・薬剤の在庫管理",
+       "患者向けスマートフォンアプリ"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "3院の予約枠・権限・移行範囲を定めた要件定義書"
+        "deliverable": "3院の予約運用を確認し、要件定義書と画面設計を作成"
        },
        {
         "key": "build",
-        "deliverable": "予約・カルテ・SMS通知を備えたMVPの開発"
+        "deliverable": "共通予約台帳、Web予約、患者管理、権限機能を開発"
        },
        {
         "key": "test",
-        "deliverable": "1院での試験運用と受付スタッフによる操作確認"
+        "deliverable": "1院で試験運用し、受付スタッフと予約操作を検証"
        },
        {
         "key": "launch",
-        "deliverable": "全3院への展開、データ移行完了、スタッフ研修"
+        "deliverable": "紙台帳のデータ移行を終え、3院で本番リリース"
        }
       ],
       "team": [
@@ -7977,59 +7976,45 @@
        "react",
        "nodejs",
        "postgresql",
-       "telegram_bot_api"
+       "docker"
       ],
       "risks": [
        {
-        "text": "紙の台帳の記載形式が院ごとに異なり、移行作業に時間がかかる",
-        "mitigation": "移行対象を今後の予約と通院中の患者に絞り、過去分は段階的に入力する",
+        "text": "紙台帳の記載が院ごとに異なり、データ移行に手間がかかる",
+        "mitigation": "移行対象を直近と今後の予約、継続患者に絞り、書式を事前に統一する",
         "adds_weeks": 2
        },
        {
-        "text": "受付スタッフが紙の運用に慣れており、新システムの定着が遅れる",
-        "mitigation": "1院で先行導入し、現場の意見を反映してから他院へ展開する",
+        "text": "受付スタッフが紙の運用に慣れており、新システムが定着しない",
+        "mitigation": "1院で先行導入し、操作説明と短い手順書を用意してから全院に展開する",
         "adds_weeks": 1
        },
        {
-        "text": "医療データの保管場所と閲覧権限に関する確認が長引く",
-        "mitigation": "ウズベキスタン国内サーバーでの保管と権限設計を要件定義の段階で確定する",
+        "text": "患者の個人情報・医療情報の取り扱いに関する確認が遅れる",
+        "mitigation": "要件定義の段階で保存場所とアクセス権限の方針を決め、責任者の承認を得る",
         "adds_weeks": 1
        }
       ],
       "needs": [
-       "各院の診療時間、診療台数、医師の勤務表",
-       "紙の予約台帳と患者情報の現物またはコピー",
-       "受付・医師・院長の役割と閲覧範囲の方針",
-       "よく使う診療記録のひな形",
-       "SMS送信サービスの契約",
-       "要件を判断できる窓口担当者"
+       "3院の診療時間、医師・チェア数、予約枠の決まり",
+       "紙の予約台帳と患者情報の写し",
+       "院ごとの受付担当者と、最終判断を行う本部の責任者",
+       "個人情報の取り扱い方針と保存場所の判断"
       ],
       "impact": {
-       "model": "fewer_no_shows",
-       "summary": "予約が3院で一元管理され、SMSのリマインドにより無断キャンセルと予約の重複が減ります。",
+       "model": "hours_saved",
+       "summary": "電話と紙台帳での予約確認や院間の照会が減り、受付の手間が軽くなり、全院の予約状況を一か所で把握できるようになります。",
        "inputs": [
         {
-         "key": "no_shows_per_month",
-         "label": "3院合計で月に何件の無断キャンセルがありますか",
-         "value": 45,
-         "basis": "assumed"
-        },
-        {
-         "key": "uplift_pct",
-         "label": "リマインドで無断キャンセルが何割減ると見込みますか",
+         "key": "hours_per_week",
+         "label": "3院の予約受付・台帳管理に週何時間かかっていますか",
          "value": 30,
          "basis": "assumed"
         },
         {
-         "key": "avg_order_usd",
-         "label": "1回の来院あたりの平均売上はいくらですか（USD）",
-         "value": 40,
-         "basis": "assumed"
-        },
-        {
-         "key": "margin_pct",
-         "label": "売上に対する利益率は何％ですか",
-         "value": 40,
+         "key": "hourly_cost_usd",
+         "label": "受付スタッフの1時間あたりの人件費はいくらですか",
+         "value": 25,
          "basis": "assumed"
         }
        ]
@@ -8040,18 +8025,19 @@
    {
     "id": "restaurant",
     "industry": "restaurants",
-    "text": "デリバリーのある飲食店で、注文は電話とTelegramで受けている",
+    "text": "デリバリーのある飲食店で、注文が電話と複数の宅配アプリに分かれている",
     "intake": {
      "industry": "restaurants",
      "branches": "1",
      "staff": "6-20",
-     "tools": "telegram_group",
-     "goal": "sales"
+     "tools": "paper_phone",
+     "goal": "sales",
+     "budget": "unknown"
     },
     "meta": {
      "brief_no": "QL-2610-46F1",
      "lang": "ja",
-     "generated_at": "2026-10-21T12:02:57+05:00",
+     "generated_at": "2026-10-21T13:23:42+05:00",
      "valid_until": "2026-11-20",
      "catalogue_version": "2026-10-20.83240c46",
      "rate": {
@@ -8064,44 +8050,39 @@
     "pick": {
      "status": "ok",
      "heard": {
-      "summary": "電話とTelegramで注文を受けているデリバリー対応の飲食店（1店舗）で、売上を伸ばしたいというご相談です。",
+      "summary": "デリバリーを行う飲食店で、注文が電話と複数の宅配アプリに分散していることが課題です。",
       "quotes": [
        "デリバリーのある飲食店",
-       "注文は電話とTelegramで受けている"
+       "注文が電話と複数の宅配アプリに分かれている"
       ],
       "industry": "restaurants",
       "size": "small"
      },
      "questions": [
       {
-       "id": "online_payment",
-       "text": "オンライン決済（Click、Payme）を導入しますか",
+       "id": "pos_system",
+       "text": "現在、POSレジや注文管理システムをお使いですか。",
        "options": [
         {
-         "id": "both",
-         "label": "ClickとPayme両方",
+         "id": "none",
+         "label": "使っていない",
          "effect": {
-          "targets": [
-           "tg-order-bot"
-          ],
+          "targets": [],
           "size": "keep",
           "add_modifiers": [],
           "remove_modifiers": [],
-          "add_integrations": [
-           "click",
-           "payme"
-          ],
+          "add_integrations": [],
           "drop": []
          }
         },
         {
-         "id": "cash",
-         "label": "現金・店頭決済のみ",
+         "id": "has_pos",
+         "label": "POSレジがある",
          "effect": {
           "targets": [
-           "tg-order-bot"
+           "biz-1c-integration"
           ],
-          "size": "keep",
+          "size": "m",
           "add_modifiers": [],
           "remove_modifiers": [],
           "add_integrations": [],
@@ -8111,44 +8092,28 @@
        ]
       },
       {
-       "id": "pos_system",
-       "text": "店舗でiikoやR-Keeperを使っていますか",
+       "id": "own_site",
+       "text": "自社サイトからの直接注文も受けたいですか。",
        "options": [
         {
-         "id": "iiko",
-         "label": "iikoを使用",
+         "id": "yes",
+         "label": "受けたい",
          "effect": {
           "targets": [
-           "tg-order-bot"
+           "ind-restaurant"
           ],
           "size": "keep",
           "add_modifiers": [],
           "remove_modifiers": [],
           "add_integrations": [
-           "iiko"
+           "visa_mc"
           ],
           "drop": []
          }
         },
         {
-         "id": "rkeeper",
-         "label": "R-Keeperを使用",
-         "effect": {
-          "targets": [
-           "tg-order-bot"
-          ],
-          "size": "keep",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [
-           "r_keeper"
-          ],
-          "drop": []
-         }
-        },
-        {
-         "id": "none",
-         "label": "使っていない",
+         "id": "no",
+         "label": "今は不要",
          "effect": {
           "targets": [],
           "size": "keep",
@@ -8164,91 +8129,107 @@
      "solutions": [
       {
        "n": 1,
-       "catalogue_id": "tg-order-bot",
+       "catalogue_id": "biz-1c-integration",
        "based_on": [],
-       "title": "デリバリー注文用Telegramボット",
-       "why": "現在Telegramと電話で個別に受けている注文を、メニューから選んで位置情報を送るだけのボットにまとめることで、受注の手間と聞き間違いを減らし、注文しやすくして売上につなげます。",
+       "title": "電話と宅配アプリの注文を一つの画面に集約",
+       "why": "複数の宅配アプリと電話に分かれた注文を一か所に集め、厨房と受付が同じ一覧で対応できるようにします。取りこぼしや二重対応を防ぐことが最初の一歩です。",
        "priority": "must",
        "scope": "mvp",
        "size": "s",
        "modifiers": [],
        "integrations": [
-        "click",
-        "payme",
-        "maps"
+        "marketplaces"
        ],
        "depends_on": [],
-       "difficulty": 2,
-       "difficulty_reason": "メニュー登録と決済・地図連携が中心の標準的な構成のため。"
+       "difficulty": 3,
+       "difficulty_reason": "宅配アプリごとに連携方法や公開APIの有無が異なるため"
       },
       {
        "n": 2,
-       "catalogue_id": "tg-loyalty-bot",
+       "catalogue_id": "ind-restaurant",
        "based_on": [],
-       "title": "常連客向けTelegramキャッシュバック",
-       "why": "注文ボットを利用したお客様に再注文を促し、リピート率を高めることで売上を伸ばします。",
+       "title": "手数料のかからない自社デリバリー注文窓口",
+       "why": "売上を伸ばす目的に対し、自社サイト経由の直接注文を増やすことで宅配アプリへの依存を減らせます。集約した注文画面にそのまま流れ込みます。",
+       "priority": "should",
+       "scope": "mvp",
+       "size": "s",
+       "modifiers": [],
+       "integrations": [
+        "visa_mc",
+        "maps"
+       ],
+       "depends_on": [
+        "biz-1c-integration"
+       ],
+       "difficulty": 3,
+       "difficulty_reason": "配達エリアや決済、厨房表示との連動の設計が必要なため"
+      },
+      {
+       "n": 3,
+       "catalogue_id": "biz-call-centre",
+       "based_on": [],
+       "title": "電話注文の取りこぼしを防ぐ着信管理",
+       "why": "ピーク時の電話注文で不在着信や聞き間違いが起きやすいため、着信記録と折り返し管理で注文を逃さないようにします。",
        "priority": "could",
        "scope": "mvp",
        "size": "s",
        "modifiers": [],
        "integrations": [],
        "depends_on": [
-        "tg-order-bot"
+        "biz-1c-integration"
        ],
        "difficulty": 2,
-       "difficulty_reason": "注文ボットとの顧客データ共有とポイント計算の設計が必要なため。"
+       "difficulty_reason": "既存の電話回線とIP電話の接続設定が必要なため"
       }
      ],
      "not_recommended": [
       {
        "catalogue_id": "mob-customer-app",
-       "why": "1店舗の段階では、すでにお客様が使っているTelegram上のボットで十分であり、専用アプリは費用に見合いません。"
+       "why": "1店舗の段階では専用アプリより自社サイトでの注文受付で十分です。"
       },
       {
        "catalogue_id": "mob-delivery-suite",
-       "why": "配達員の人数が少ないうちは、配車アプリより注文の受付を整えることが先決です。"
+       "why": "配達員の規模が小さいうちは、配送管理アプリを別途作る必要はありません。"
       }
      ],
-     "roadmap_note": "まず注文ボットのMVPをリリースして受注を一本化し、利用状況を見てからロイヤルティ施策を追加する順序をお勧めします。",
-     "first_step": "今週中に、現在のメニュー、価格、配達エリアを一覧表にまとめてください。",
+     "roadmap_note": "まず注文の集約で現場の混乱をなくし、その上に自社注文窓口、最後に電話の着信管理を加える順序をおすすめします。",
+     "first_step": "今週、利用中の宅配アプリの一覧と、1日の注文経路ごとのおおよその件数を書き出してください。",
      "assumptions": [
-      "配達は自店のスタッフで行っていると想定しています。",
-      "電話注文は当面、並行して受け付けると想定しています。",
-      "オンライン決済はClickとPaymeの導入を想定しています。"
+      "店舗は日本国内の1店舗と想定しました。",
+      "利用中の宅配アプリは店舗向け管理画面またはAPIを提供していると想定しました。",
+      "配達は一部を自店スタッフが行っていると想定しました。"
      ]
     },
     "details": {
-     "tg-order-bot": {
+     "biz-1c-integration": {
       "deliverables_mvp": [
-       "カテゴリと写真付きのメニュー（ウズベク語・ロシア語）",
-       "カートと配達・テイクアウトの選択",
-       "位置情報の送信による配達先指定",
-       "ClickとPaymeによるオンライン決済",
-       "スタッフ用Telegramグループへの注文通知",
-       "メニューと価格を編集できる簡易管理画面"
+       "宅配アプリ1社分の注文を自動で取り込む連携",
+       "電話注文を手入力できる受付画面",
+       "全注文を一覧で見られる厨房・受付向け画面",
+       "連携の送受信ログと取り込み失敗時の通知"
       ],
       "deliverables_full": [
-       "配達エリアの地図設定と複数店舗対応",
-       "POSや1Cからの在庫・価格の自動反映",
-       "プロモコードと顧客向け注文ステータス表示",
-       "配達員の割り当てと売上レポート"
+       "複数の宅配アプリを一つの連携サービスで接続",
+       "メニュー・価格・売り切れ情報を各アプリへ一括反映",
+       "クレジットカード決済と注文の自動照合",
+       "連携状況を確認できる監視ダッシュボード"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "要件定義：メニュー構成、配達条件、注文の流れの確定"
+        "deliverable": "利用中の宅配アプリの連携可否を調査し、要件定義書を作成"
        },
        {
         "key": "build",
-        "deliverable": "ボット、決済・地図連携、管理画面の開発"
+        "deliverable": "最初の宅配アプリとの注文連携と注文一覧画面の開発"
        },
        {
         "key": "test",
-        "deliverable": "テスト注文と決済確認、スタッフによる受付手順の検証"
+        "deliverable": "実際のピーク時間帯を想定した注文取り込みテスト"
        },
        {
         "key": "launch",
-        "deliverable": "リリース、既存客への案内、初期運用サポート"
+        "deliverable": "店舗でのリリース、スタッフ向け操作説明と初期運用サポート"
        }
       ],
       "team": [
@@ -8257,11 +8238,11 @@
         "count": 1
        },
        {
-        "role": "bot",
-        "count": 1
+        "role": "backend",
+        "count": 2
        },
        {
-        "role": "backend",
+        "role": "frontend",
         "count": 1
        },
        {
@@ -8270,96 +8251,85 @@
        }
       ],
       "stack": [
-       "telegram_bot_api",
+       "typescript",
+       "react",
        "nodejs",
        "postgresql"
       ],
       "risks": [
        {
-        "text": "ClickやPaymeの加盟店審査に時間がかかり、決済連携が遅れる",
-        "mitigation": "要件定義の段階で申請を開始し、審査中は現金払いで先に稼働させる",
+        "text": "宅配アプリによっては店舗向けAPIが公開されておらず、自動取り込みができない",
+        "mitigation": "要件定義の段階で各社の連携条件を確認し、連携可能なアプリから着手します",
         "adds_weeks": 2
        },
        {
-        "text": "メニュー写真や価格データの準備が遅れ、登録作業が進まない",
-        "mitigation": "最初は主力メニューに絞って登録し、残りは管理画面から順次追加する",
+        "text": "宅配アプリ側の仕様変更で注文の取り込みが止まる",
+        "mitigation": "送受信ログと失敗時の即時通知を用意し、元アプリでの確認手順も残します",
         "adds_weeks": 1
-       },
-       {
-        "text": "常連客が電話注文を続け、ボットの利用が広がらない",
-        "mitigation": "電話対応時にボットを案内し、Telegramチャネルや店頭QRで周知する",
-        "adds_weeks": 0
        }
       ],
       "needs": [
-       "メニュー一覧（品名、価格、説明、写真）",
-       "ClickとPaymeの加盟店契約に必要な事業者書類",
-       "配達エリア、配達料、営業時間のルール",
-       "注文を受けるスタッフ用Telegramグループ",
-       "仕様を決定できる担当者"
+       "利用中の宅配アプリの一覧と各店舗管理アカウント",
+       "各宅配アプリへの API 利用申請や連携の承認",
+       "現在のメニュー表と価格一覧",
+       "電話注文の受け方と厨房への伝え方の現行手順",
+       "仕様を判断できる店舗側の決定者"
       ],
       "impact": {
-       "model": "more_orders",
-       "summary": "Telegramでいつでも迷わず注文と支払いができるようになり、取りこぼしていた注文が増えます。",
+       "model": "fewer_errors",
+       "summary": "注文の取りこぼしや二重対応、アプリ間の転記ミスが減り、ピーク時も落ち着いて対応できるようになります。",
        "inputs": [
         {
-         "key": "orders_per_month",
-         "label": "現在、月に何件ほど注文がありますか",
-         "value": 900,
-         "basis": "assumed"
-        },
-        {
-         "key": "avg_order_usd",
-         "label": "1件あたりの平均注文額はいくらですか（USD）",
-         "value": 10,
-         "basis": "assumed"
-        },
-        {
-         "key": "margin_pct",
-         "label": "売上に対する粗利率は何％ですか",
-         "value": 30,
+         "key": "errors_per_month",
+         "label": "注文の取りこぼしや入力ミスは月に何件ほどありますか",
+         "value": 15,
          "basis": "assumed"
         },
         {
          "key": "uplift_pct",
-         "label": "ボット導入で注文が何％増えると見込みますか",
-         "value": 10,
+         "label": "そのうち何割ほど減らせると見込みますか",
+         "value": 60,
+         "basis": "assumed"
+        },
+        {
+         "key": "cost_per_error_usd",
+         "label": "ミス1件あたりの損失（作り直し・返金など）はいくらですか",
+         "value": 20,
          "basis": "assumed"
         }
        ]
       }
      },
-     "tg-loyalty-bot": {
+     "ind-restaurant": {
       "deliverables_mvp": [
-       "電話番号によるTelegram会員登録",
-       "ボット内のQR会員カード",
-       "スタッフがQRを読み取りキャッシュバックを付与する機能",
-       "お客様向けの残高と利用履歴の表示",
-       "常連客への一斉メッセージ配信"
+       "写真付きの自社Web注文ページ(デリバリー・持ち帰り対応)",
+       "クレジットカード決済とチップの受付",
+       "厨房ディスプレイへの注文自動表示",
+       "住所入力と地図による配達エリア判定",
+       "既存のレジ・販売管理との注文連携"
       ],
       "deliverables_full": [
-       "iikoやR-Keeper、1Cなど POSとの連携",
-       "会員ランクと誕生日特典",
-       "紹介ボーナス",
-       "来店・注文頻度による顧客セグメントとキャンペーン効果レポート",
-       "Mini App形式の会員カード"
+       "宅配アプリの注文を一つの画面に集約",
+       "自社配達員向けの配達管理",
+       "会員・ポイントなどのリピーター施策",
+       "原価と在庫の管理、オーナー向け売上ダッシュボード"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "還元ルールと付与手順の要件定義書"
+        "deliverable": "メニュー構成、配達エリア、注文の流れの要件定義"
        },
        {
         "key": "build",
-        "deliverable": "会員登録、QRカード、付与、配信機能を備えたボット"
+        "deliverable": "注文ページ、カード決済、厨房ディスプレイの開発"
        },
        {
         "key": "test",
-        "deliverable": "店舗スタッフによる付与・利用操作の受入テスト結果"
+        "deliverable": "実店舗のピーク時間を想定した注文から調理までの通しテスト"
        },
        {
         "key": "launch",
-        "deliverable": "本番リリースと既存のお客様への案内配信"
+        "deliverable": "自社注文ページの公開と店舗スタッフへの操作説明"
        }
       ],
       "team": [
@@ -8368,11 +8338,123 @@
         "count": 1
        },
        {
-        "role": "bot",
+        "role": "designer",
+        "count": 1
+       },
+       {
+        "role": "frontend",
         "count": 1
        },
        {
         "role": "backend",
+        "count": 2
+       },
+       {
+        "role": "qa",
+        "count": 1
+       }
+      ],
+      "stack": [
+       "typescript",
+       "react",
+       "nextjs",
+       "nodejs",
+       "postgresql"
+      ],
+      "risks": [
+       {
+        "text": "既存のレジや販売管理ソフトに外部連携の仕組みがなく、注文を自動で取り込めない",
+        "mitigation": "要件定義の段階で連携可否を確認し、不可の場合は厨房ディスプレイ側で注文を一元管理します",
+        "adds_weeks": 2
+       },
+       {
+        "text": "自社注文ページを公開しても認知されず、宅配アプリからの移行が進まない",
+        "mitigation": "店頭、チラシ、宅配の同梱物で自社注文ページへの案内を行う運用を同時に準備します",
+        "adds_weeks": 0
+       }
+      ],
+      "needs": [
+       "メニュー一覧と商品写真、価格、アレルギー表示",
+       "配達エリアと配達料金、営業時間の決定",
+       "クレジットカード決済代行会社のアカウント",
+       "現在使用しているレジ・販売管理ソフトの名称と契約情報",
+       "店舗側で仕様を判断できる責任者"
+      ],
+      "impact": {
+       "model": "more_orders",
+       "summary": "宅配アプリの手数料がかからない自社経由の注文が増え、一件あたりの利益が改善します。",
+       "inputs": [
+        {
+         "key": "orders_per_month",
+         "label": "デリバリーと持ち帰りの注文は月に何件ありますか",
+         "value": 600,
+         "basis": "assumed"
+        },
+        {
+         "key": "uplift_pct",
+         "label": "自社経由の注文はどの程度増えそうですか",
+         "value": 8,
+         "basis": "assumed"
+        },
+        {
+         "key": "avg_order_usd",
+         "label": "一回の注文の平均金額はいくらですか",
+         "value": 20,
+         "basis": "assumed"
+        },
+        {
+         "key": "margin_pct",
+         "label": "注文あたりの利益率はどのくらいですか",
+         "value": 30,
+         "basis": "assumed"
+        }
+       ]
+      }
+     },
+     "biz-call-centre": {
+      "deliverables_mvp": [
+       "既存の店舗番号をつなぐクラウドPBXの設定",
+       "日本語の音声ガイダンスと着信の振り分け",
+       "通話録音と録音告知アナウンス",
+       "発信者情報と通話履歴を表示する顧客カード",
+       "不在着信の一覧と折り返し管理"
+      ],
+      "deliverables_full": [
+       "電話注文を入力して注文管理システムへ送るオペレーター画面",
+       "広告媒体ごとの着信計測",
+       "ピーク時の応対状況をリアルタイムで見る管理ボード",
+       "夜間対応のAI音声エージェントとの連携",
+       "スタッフ別の応対レポート"
+      ],
+      "phases": [
+       {
+        "key": "plan",
+        "deliverable": "電話注文の流れと着信ルールの要件定義"
+       },
+       {
+        "key": "build",
+        "deliverable": "PBX設定、音声ガイダンス、通話履歴と折り返し画面の開発"
+       },
+       {
+        "key": "test",
+        "deliverable": "ピーク時を想定した着信・録音・折り返しのテスト"
+       },
+       {
+        "key": "launch",
+        "deliverable": "番号切替後のリリースと店舗スタッフへの操作説明"
+       }
+      ],
+      "team": [
+       {
+        "role": "pm",
+        "count": 1
+       },
+       {
+        "role": "backend",
+        "count": 1
+       },
+       {
+        "role": "frontend",
         "count": 1
        },
        {
@@ -8381,60 +8463,55 @@
        }
       ],
       "stack": [
-       "telegram_bot_api",
+       "typescript",
+       "react",
        "nodejs",
        "postgresql"
       ],
       "risks": [
        {
-        "text": "デリバリー注文ではQR提示の場面がなく、付与が漏れる",
-        "mitigation": "注文ボットの電話番号と会員を紐付け、配達時や注文確定時に付与する手順を定める",
-        "adds_weeks": 1
+        "text": "既存の電話番号をクラウドPBXへ移す手続きに時間がかかる場合があります",
+        "mitigation": "要件定義の段階で通信事業者に番号移行の可否と期間を確認します",
+        "adds_weeks": 2
        },
        {
-        "text": "還元率の設定が利益を圧迫する、または魅力が足りず登録が伸びない",
-        "mitigation": "要件定義で原価を確認し、小さな還元率から始めて配信で効果を見ながら調整する",
-        "adds_weeks": 0
-       },
-       {
-        "text": "スタッフが忙しい時間帯に付与操作を忘れる",
-        "mitigation": "操作を数タップに絞り、開始前に短い操作研修を行う",
+        "text": "ピーク時にスタッフが折り返し一覧を確認しない運用になるおそれがあります",
+        "mitigation": "折り返し担当と確認タイミングを決め、未対応件数を画面上部に表示します",
         "adds_weeks": 0
        }
       ],
       "needs": [
-       "キャッシュバック率や利用条件など還元ルールの決定",
-       "ボット名、ロゴ、案内文などの掲載内容",
-       "付与操作を担当するスタッフの決定",
-       "ボット用のTelegramアカウントと既存グループの管理権限",
-       "判断と承認を行う責任者の指名"
+       "現在の店舗電話番号と契約中の通信事業者の情報",
+       "電話注文を受けるスタッフと時間帯の一覧",
+       "音声ガイダンスと録音告知の文面の確認",
+       "着信ルールを決める店舗責任者"
       ],
       "impact": {
        "model": "more_orders",
-       "summary": "一度注文したお客様が還元と配信をきっかけに再び注文するようになり、リピート注文が増えます。",
+       "summary": "ピーク時の不在着信を折り返せるようになり、取りこぼしていた電話注文を回収できます。",
        "inputs": [
         {
          "key": "orders_per_month",
-         "label": "月に何件ほど注文がありますか",
-         "value": 900,
-         "basis": "assumed"
-        },
-        {
-         "key": "avg_order_usd",
-         "label": "1回の注文の平均金額はいくらですか（USD）",
-         "value": 10,
-         "basis": "assumed"
-        },
-        {
-         "key": "margin_pct",
-         "label": "注文あたりの粗利率は何%ですか",
-         "value": 30,
+         "label": "電話で受ける注文は月に何件ありますか",
+         "value": 300,
          "basis": "assumed"
         },
         {
          "key": "uplift_pct",
-         "label": "リピート施策で注文は何%増えると見込みますか",
+         "label": "取りこぼしの回収で注文は何割ほど増えそうですか",
          "value": 5,
+         "basis": "assumed"
+        },
+        {
+         "key": "avg_order_usd",
+         "label": "デリバリー注文1件の平均金額はいくらですか",
+         "value": 20,
+         "basis": "assumed"
+        },
+        {
+         "key": "margin_pct",
+         "label": "売上に対する利益率は何パーセントですか",
+         "value": 30,
          "basis": "assumed"
         }
        ]
@@ -8451,12 +8528,13 @@
      "branches": "1",
      "staff": "6-20",
      "tools": "excel",
-     "goal": "payments"
+     "goal": "payments",
+     "budget": "unknown"
     },
     "meta": {
      "brief_no": "QL-2610-A43C",
      "lang": "ja",
-     "generated_at": "2026-10-21T12:02:57+05:00",
+     "generated_at": "2026-10-21T13:23:42+05:00",
      "valid_until": "2026-11-20",
      "catalogue_version": "2026-10-20.83240c46",
      "rate": {
@@ -8469,7 +8547,7 @@
     "pick": {
      "status": "ok",
      "heard": {
-      "summary": "生徒200人のスクールで、授業料の入金管理をExcelで行っており、支払い管理に課題があります。",
+      "summary": "生徒200人のスクールで、授業料の入金管理をExcelで行っており、手間と確認漏れが課題です。",
       "quotes": [
        "生徒200人のスクール",
        "授業料の入金管理はExcel"
@@ -8479,73 +8557,46 @@
      },
      "questions": [
       {
-       "id": "online_pay",
-       "text": "保護者からのオンライン決済を受け付けたいですか。",
+       "id": "payment_method",
+       "text": "授業料の主な支払い方法を教えてください",
        "options": [
         {
-         "id": "yes_click_payme",
-         "label": "Click・Paymeで受けたい",
+         "id": "bank_transfer",
+         "label": "銀行振込が中心",
          "effect": {
-          "targets": [
-           "ind-education-centre"
-          ],
+          "targets": [],
           "size": "keep",
           "add_modifiers": [],
           "remove_modifiers": [],
           "add_integrations": [
-           "click",
-           "payme"
+           "bank_api"
           ],
           "drop": []
          }
         },
         {
-         "id": "no_cash",
-         "label": "現金・振込のみ",
+         "id": "card",
+         "label": "カード決済も導入したい",
+         "effect": {
+          "targets": [],
+          "size": "keep",
+          "add_modifiers": [],
+          "remove_modifiers": [],
+          "add_integrations": [
+           "visa_mc"
+          ],
+          "drop": []
+         }
+        },
+        {
+         "id": "cash",
+         "label": "現金・口座振替が中心",
          "effect": {
           "targets": [],
           "size": "keep",
           "add_modifiers": [],
           "remove_modifiers": [],
           "add_integrations": [],
-          "drop": []
-         }
-        }
-       ]
-      },
-      {
-       "id": "notify",
-       "text": "未納の連絡は保護者にどの手段で送りますか。",
-       "options": [
-        {
-         "id": "tg",
-         "label": "Telegram",
-         "effect": {
-          "targets": [
-           "ind-education-centre"
-          ],
-          "size": "keep",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [
-           "telegram"
-          ],
-          "drop": []
-         }
-        },
-        {
-         "id": "sms",
-         "label": "SMS",
-         "effect": {
-          "targets": [
-           "ind-education-centre"
-          ],
-          "size": "keep",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [
-           "sms"
-          ],
           "drop": []
          }
         }
@@ -8557,72 +8608,84 @@
        "n": 1,
        "catalogue_id": "ind-education-centre",
        "based_on": [],
-       "title": "授業料の入金・未納管理を一元化するスクール管理システム",
-       "why": "Excelで管理している生徒200人分の授業料を、生徒・クラスと紐づけて入金状況と未納を自動で把握できるようにします。保護者への未納通知も自動化でき、確認作業の手間と漏れを減らせます。",
+       "title": "授業料・生徒管理システム",
+       "why": "生徒200人分の授業料の入金状況をExcelではなく一つの画面で確認でき、未納者がすぐに分かるようになります。生徒情報やクラスと入金記録が結び付くため、確認作業と転記ミスが減ります。",
        "priority": "must",
        "scope": "mvp",
        "size": "s",
        "modifiers": [
         "migration"
        ],
-       "integrations": [
-        "telegram"
-       ],
+       "integrations": [],
        "depends_on": [],
        "difficulty": 3,
-       "difficulty_reason": "既存Excelデータの移行と、クラスごとの料金ルールの整理が必要なため。"
+       "difficulty_reason": "Excelの既存データ移行と、スクール独自の料金体系の整理が必要なため。"
+      },
+      {
+       "n": 2,
+       "catalogue_id": "biz-notification-hub",
+       "based_on": [],
+       "title": "未納・支払期日のお知らせ自動配信",
+       "why": "支払期日や未納のお知らせを保護者へメールやSMS配信で自動送信でき、個別の連絡の手間がなくなります。",
+       "priority": "should",
+       "scope": "mvp",
+       "size": "s",
+       "modifiers": [],
+       "integrations": [],
+       "depends_on": [
+        "ind-education-centre"
+       ],
+       "difficulty": 2,
+       "difficulty_reason": "送信タイミングと文面のルールを決めれば、仕組み自体は標準的なため。"
       }
      ],
      "not_recommended": [
       {
        "catalogue_id": "mob-education-app",
-       "why": "入金管理が目的であれば、専用モバイルアプリを作らずとも管理システムとTelegram通知で十分です。"
-      },
-      {
-       "catalogue_id": "biz-crm",
-       "why": "現時点の課題は授業料管理であり、汎用CRMの導入はスクール管理システムで代替できます。"
+       "why": "現在の課題は入金管理であり、専用アプリを作らなくても管理システムで十分に解決できます。"
       }
      ],
-     "roadmap_note": "まず生徒と入金データをExcelから移行して入金管理をMVPとして稼働させ、その後オンライン決済や通知を順に追加します。",
-     "first_step": "今週は現在の授業料管理用Excelと料金体系(コース別・月謝・割引)を整理し、要件定義の材料としてご共有ください。",
+     "roadmap_note": "まず管理システムのMVPで入金管理をExcelから移し、運用が安定してから自動のお知らせ配信を追加する順序をおすすめします。",
+     "first_step": "現在お使いのExcelの入金管理表と、料金体系（月謝、割引、分割など）の一覧をご用意ください。",
      "assumptions": [
-      "拠点は1か所で、スタッフ数は6〜20名と想定しています。",
-      "保護者との連絡手段としてTelegramが使われていると想定しています。"
+      "スクールは日本国内の1教室で運営されていると想定しました。",
+      "保護者への連絡はメールまたはSMSで行うことを想定しました。",
+      "会計ソフトとの連携は現時点では不要と想定しました。"
      ]
     },
     "details": {
      "ind-education-centre": {
       "deliverables_mvp": [
        "生徒・クラス・時間割の管理画面",
-       "授業料の入金記録と未納一覧の自動表示",
-       "講師のスマートフォンからの出欠入力",
-       "保護者向けTelegram Botによる未納・欠席の通知",
-       "既存Excelの生徒・入金データの移行",
-       "入金状況の基本レポート"
+       "講師がスマートフォンで記録する出欠管理",
+       "授業料の入金記録と未納者一覧",
+       "保護者向けの未納・欠席のお知らせ(メール)",
+       "Excelからの生徒・入金データ移行",
+       "月次の入金状況などの基本レポート"
       ],
       "deliverables_full": [
-       "講師給与の自動計算（時間数・生徒数ベース）",
-       "試験結果と学習進捗の記録",
-       "集客経路ごとの分析",
-       "宿題・教材の配信",
+       "複数校舎での一元管理",
+       "講師給与の自動計算(コマ数・生徒数)",
+       "成績・学習進捗の記録",
+       "集客経路の分析",
        "保護者向けモバイルアプリ"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "料金ルールと入金管理の要件定義、Excelデータの確認"
+        "deliverable": "料金体系・入金確認の流れを整理した要件定義書"
        },
        {
         "key": "build",
-        "deliverable": "生徒・入金管理画面と保護者向けTelegram Botの開発"
+        "deliverable": "生徒・クラス・入金・未納管理画面の開発"
        },
        {
         "key": "test",
-        "deliverable": "移行データでの入金・未納表示の検証とテスト"
+        "deliverable": "Excel移行データでの入金照合テスト"
        },
        {
         "key": "launch",
-        "deliverable": "本番リリース、スタッフ説明、保守・運用開始"
+        "deliverable": "本番リリースと事務スタッフ向け操作説明"
        }
       ],
       "team": [
@@ -8643,10 +8706,6 @@
         "count": 1
        },
        {
-        "role": "bot",
-        "count": 1
-       },
-       {
         "role": "qa",
         "count": 1
        }
@@ -8655,249 +8714,76 @@
        "typescript",
        "react",
        "nodejs",
-       "postgresql",
-       "telegram_bot_api"
+       "postgresql"
       ],
       "risks": [
        {
-        "text": "Excelの入金記録に表記ゆれや重複があり、そのままでは移行できない",
-        "mitigation": "要件定義の段階でサンプルを確認し、整形ルールを決めてから移行する",
+        "text": "Excelの入金データの形式が統一されておらず、移行に手作業の確認が必要になる",
+        "mitigation": "要件定義の段階でExcelの実データを確認し、移行ルールと整備範囲を決めます",
         "adds_weeks": 1
        },
        {
-        "text": "割引・兄弟割・途中入会など料金ルールの例外が多く、仕様が固まらない",
-        "mitigation": "MVPでは主要ルールに絞り、例外は手動調整の欄で対応する",
+        "text": "兄弟割引や月謝・回数券など料金体系の例外が多く、仕様が膨らむ",
+        "mitigation": "MVPでは主要な料金パターンに絞り、例外は手動調整で運用します",
         "adds_weeks": 2
-       },
-       {
-        "text": "保護者のTelegram登録が進まず、通知が届かない",
-        "mitigation": "入会時に登録用QRコードを配布し、スタッフが登録状況を確認できるようにする",
-        "adds_weeks": 0
        }
       ],
       "needs": [
-       "現在の生徒・入金管理Excelファイル",
-       "クラス別の授業料と割引のルール一覧",
-       "保護者連絡用のTelegramアカウント方針",
-       "仕様を判断できる責任者1名",
-       "通知文面の確認と承認"
+       "現在の入金管理Excelファイル一式",
+       "授業料・割引など料金体系の一覧",
+       "クラスと時間割の情報",
+       "保護者への連絡方法と文面の方針",
+       "仕様を判断できるご担当者"
       ],
       "impact": {
        "model": "hours_saved",
-       "summary": "入金確認と未納者への連絡を手作業で行う時間が減り、未納の見落としも防げます。",
+       "summary": "入金確認と未納者の洗い出しをExcelで手作業する時間が減り、確認漏れも防げます。",
        "inputs": [
         {
          "key": "hours_per_week",
-         "label": "入金確認と未納連絡に毎週何時間かかっていますか",
+         "label": "入金確認や未納者の確認に週何時間かかっていますか",
          "value": 6,
          "basis": "assumed"
         },
         {
          "key": "hourly_cost_usd",
-         "label": "担当スタッフの1時間あたりの人件費はいくらですか（USD）",
+         "label": "事務スタッフの1時間あたりの人件費はいくらですか",
          "value": 25,
          "basis": "assumed"
         }
        ]
       }
-     }
-    }
-   },
-   {
-    "id": "wholesale",
-    "industry": "distribution",
-    "text": "建材の卸売で、1Cを使っており、代理店からの注文は電話",
-    "intake": {
-     "industry": "distribution",
-     "branches": "1",
-     "staff": "21-100",
-     "tools": "1c",
-     "goal": "sales"
-    },
-    "meta": {
-     "brief_no": "QL-2610-E9CA",
-     "lang": "ja",
-     "generated_at": "2026-10-21T12:03:19+05:00",
-     "valid_until": "2026-11-20",
-     "catalogue_version": "2026-10-20.83240c46",
-     "rate": {
-      "uzs_per_usd": 12012.3,
-      "date": "2026-10-21",
-      "source": "fallback"
      },
-     "source": "sample"
-    },
-    "pick": {
-     "status": "ok",
-     "heard": {
-      "summary": "1Cを使う建材卸売会社で、代理店からの注文を電話で受けており、売上拡大を目指しています。",
-      "quotes": [
-       "建材の卸売",
-       "1Cを使っており",
-       "代理店からの注文は電話"
-      ],
-      "industry": "distribution",
-      "size": "medium"
-     },
-     "questions": [
-      {
-       "id": "dealer_count",
-       "text": "注文してくる代理店はおおよそ何社ありますか",
-       "options": [
-        {
-         "id": "few",
-         "label": "50社未満",
-         "effect": {
-          "targets": [
-           "tg-b2b-ordering"
-          ],
-          "size": "s",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [],
-          "drop": []
-         }
-        },
-        {
-         "id": "many",
-         "label": "50社以上",
-         "effect": {
-          "targets": [
-           "tg-b2b-ordering"
-          ],
-          "size": "m",
-          "add_modifiers": [
-           "roles"
-          ],
-          "remove_modifiers": [],
-          "add_integrations": [],
-          "drop": []
-         }
-        }
-       ]
-      },
-      {
-       "id": "online_pay",
-       "text": "代理店からのオンライン前払いは必要ですか",
-       "options": [
-        {
-         "id": "yes",
-         "label": "Click・Paymeで受けたい",
-         "effect": {
-          "targets": [
-           "tg-b2b-ordering"
-          ],
-          "size": "keep",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [
-           "click",
-           "payme"
-          ],
-          "drop": []
-         }
-        },
-        {
-         "id": "no",
-         "label": "銀行振込のみ",
-         "effect": {
-          "targets": [],
-          "size": "keep",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [],
-          "drop": []
-         }
-        }
-       ]
-      }
-     ],
-     "solutions": [
-      {
-       "n": 1,
-       "catalogue_id": "tg-b2b-ordering",
-       "based_on": [],
-       "title": "代理店向けTelegram注文受付（1C連携）",
-       "why": "電話で受けている代理店からの注文を、代理店自身がTelegramで夜間でも入力でき、自社価格と残高も確認できます。注文は1Cに直接入るため、電話対応と転記の手間が減り、取りこぼしも防げます。",
-       "priority": "must",
-       "scope": "mvp",
-       "size": "m",
-       "modifiers": [],
-       "integrations": [
-        "1c"
-       ],
-       "depends_on": [],
-       "difficulty": 3,
-       "difficulty_reason": "代理店ごとの価格と残高を1Cと正確に同期する必要があるため。"
-      },
-      {
-       "n": 2,
-       "catalogue_id": "biz-bi-dashboards",
-       "based_on": [],
-       "title": "代理店別売上ダッシュボード",
-       "why": "注文がデータ化された後、どの代理店・どの建材が伸びているかを毎朝Telegramで確認でき、売上拡大の打ち手を判断しやすくなります。",
-       "priority": "could",
-       "scope": "mvp",
-       "size": "s",
-       "modifiers": [],
-       "integrations": [
-        "1c",
-        "telegram"
-       ],
-       "depends_on": [
-        "tg-b2b-ordering"
-       ],
-       "difficulty": 2,
-       "difficulty_reason": "1Cの既存データを集計するだけで、新たな業務変更が少ないため。"
-      }
-     ],
-     "not_recommended": [
-      {
-       "catalogue_id": "mob-field-sales",
-       "why": "代理店が自ら注文できればまずは十分で、営業担当向けの専用アプリはまだ必要ありません。"
-      },
-      {
-       "catalogue_id": "biz-erp",
-       "why": "既に1Cで在庫と会計を管理しているため、新しい基幹システムの導入は不要です。"
-      }
-     ],
-     "roadmap_note": "まずTelegram注文受付のMVPを数社の代理店で試し、注文データが溜まってからダッシュボードを追加します。",
-     "first_step": "今週、よく注文する代理店を数社選び、現在の電話注文の内容と1Cの価格表・商品マスタを整理してください。",
-     "assumptions": [
-      "代理店の多くが既にTelegramを日常的に使っていると想定しました。",
-      "1Cで代理店ごとの価格と残高を管理していると想定しました。"
-     ]
-    },
-    "details": {
-     "biz-bi-dashboards": {
+     "biz-notification-hub": {
       "deliverables_mvp": [
-       "1Cの売上データを取り込む連携処理（日次更新）",
-       "代理店別・建材品目別の売上など主要指標10項目以内",
-       "経営者向けWebダッシュボード（一画面で確認）",
-       "毎朝Telegramに届く売上サマリー"
+       "支払期日・未納のお知らせを送る共通の配信基盤",
+       "保護者向けメール・SMS配信の日本語テンプレート",
+       "生徒管理システムからの自動送信ルール設定",
+       "送信結果と未達の確認画面",
+       "SMS配信事業者との接続設定"
       ],
       "deliverables_full": [
-       "広告・銀行など1C以外のデータソースの追加",
-       "代理店・品目・営業担当別のドリルダウン分析",
-       "売上目標の設定と未達時のアラート",
-       "役割別のアクセス権限とデータウェアハウス"
+       "送信コストに応じた配信経路の自動切替",
+       "アプリ向けプッシュ通知",
+       "配信停止に対応した一斉案内の予約配信",
+       "配信状況の分析レポート"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "要件定義：見るべき指標10項目と1Cの対象データを確定"
+        "deliverable": "お知らせの種類、送信タイミング、文面ルールの要件定義"
        },
        {
         "key": "build",
-        "deliverable": "1C連携、集計処理、Webダッシュボード、Telegram通知の開発"
+        "deliverable": "配信基盤、テンプレート、送信ルールの開発"
        },
        {
         "key": "test",
-        "deliverable": "1Cの帳票と数値を突き合わせ、集計の正確性を検証"
+        "deliverable": "テスト用保護者データでの送信・未達確認テスト"
        },
        {
         "key": "launch",
-        "deliverable": "本番リリース、毎朝のTelegramサマリー配信開始と保守体制"
+        "deliverable": "本番リリースと初回の期日案内の送信確認"
        }
       ],
       "team": [
@@ -8922,134 +8808,45 @@
        "typescript",
        "react",
        "nodejs",
-       "postgresql",
-       "telegram_bot_api"
+       "postgresql"
       ],
       "risks": [
        {
-        "text": "1C上の代理店や品目のマスタが不統一で、集計結果が実態と合わない",
-        "mitigation": "要件定義の段階でマスタを点検し、名寄せルールを決めてから開発に入る",
-        "adds_weeks": 2
-       },
-       {
-        "text": "1Cの構成が独自改修されており、データ取得方法の調査に時間がかかる",
-        "mitigation": "初期にテスト環境で1Cの構成を確認し、取得方式を早期に確定する",
+        "text": "保護者の連絡先が古い、または未登録で、お知らせが届かない",
+        "mitigation": "リリース前に連絡先を一括確認し、未達一覧で個別にフォローします",
         "adds_weeks": 1
        },
        {
-        "text": "電話注文が1Cに入力されるまで遅れ、ダッシュボードの数値が古くなる",
-        "mitigation": "Telegram受注の導入を先行させ、注文が自動で1Cに入る状態にしておく",
+        "text": "督促の文面や頻度が保護者に不快感を与える",
+        "mitigation": "文面と送信回数を事前に校長・事務担当と合意し、少数で試行します",
         "adds_weeks": 0
-       }
-      ],
-      "needs": [
-       "1Cのテスト環境またはデータ取得用のアクセス権限",
-       "毎朝確認したい指標の候補リスト",
-       "代理店と建材品目のマスタ一覧",
-       "指標の定義を決められる意思決定者（経営者または営業責任者）",
-       "サマリーを受け取るTelegramアカウント"
-      ],
-      "impact": {
-       "model": "none",
-       "summary": "代理店別・品目別の売上が毎朝自動で見えるようになり、Excel集計を待たずに営業の打ち手を判断できるようになります。",
-       "inputs": []
-      }
-     },
-     "tg-b2b-ordering": {
-      "deliverables_mvp": [
-       "代理店ごとの1C価格表を表示するTelegram Mini Appカタログ",
-       "建材ごとの最小注文数量の設定",
-       "代理店ごとの残高と与信限度額の表示",
-       "注文を1Cへ直接登録する連携",
-       "新規注文と注文状況の通知（社内担当者と代理店）"
-      ],
-      "deliverables_full": [
-       "Bot内での照合書（売掛残高確認書）の発行",
-       "代理店セグメント別のキャンペーン価格",
-       "Click、Payme、銀行振込による請求書払い",
-       "Didoxによる電子請求書の発行",
-       "営業担当別、地域別の売上レポート"
-      ],
-      "phases": [
-       {
-        "key": "plan",
-        "deliverable": "要件定義書：代理店の注文フロー、1C連携項目、価格と残高の同期仕様"
        },
        {
-        "key": "build",
-        "deliverable": "Mini Appカタログ、注文機能、1C連携、通知機能の開発"
-       },
-       {
-        "key": "test",
-        "deliverable": "一部の代理店による試験運用と1C登録データの照合テスト"
-       },
-       {
-        "key": "launch",
-        "deliverable": "全代理店への案内と本番リリース、初期運用サポート"
-       }
-      ],
-      "team": [
-       {
-        "role": "pm",
-        "count": 1
-       },
-       {
-        "role": "bot",
-        "count": 1
-       },
-       {
-        "role": "backend",
-        "count": 1
-       },
-       {
-        "role": "qa",
-        "count": 1
-       }
-      ],
-      "stack": [
-       "telegram_bot_api",
-       "telegram_mini_app",
-       "nodejs",
-       "postgresql",
-       "typescript"
-      ],
-      "risks": [
-       {
-        "text": "1Cの構成が独自に改修されており、価格や残高の取得方法が標準と異なる可能性があります。",
-        "mitigation": "要件定義の段階で1C担当者と構成を確認し、連携方式を早期に確定します。",
+        "text": "生徒管理システムの入金データが揃う前に配信を始められない",
+        "mitigation": "生徒管理システムのMVP完成後に接続し、入金データの整合を先に確認します",
         "adds_weeks": 2
-       },
-       {
-        "text": "電話注文に慣れた代理店がTelegramでの注文に移行しない可能性があります。",
-        "mitigation": "協力的な代理店から先行導入し、営業担当が初回注文を一緒に操作します。",
-        "adds_weeks": 1
-       },
-       {
-        "text": "建材の商品マスタに画像や単位の情報が不足しており、カタログが整わない可能性があります。",
-        "mitigation": "主要商品から段階的に掲載し、マスタ整備の担当者を社内で決めます。",
-        "adds_weeks": 1
        }
       ],
       "needs": [
-       "1Cの管理者権限とテスト用データベース、1C担当者の協力",
-       "代理店一覧と代理店ごとの価格区分、与信限度額のルール",
-       "商品マスタ（品名、単位、最小注文数量、可能であれば画像）",
-       "Telegram Botを運用する社内担当者と承認を行う責任者",
-       "試験運用に協力する代理店の選定"
+       "保護者の氏名・メールアドレス・携帯番号の一覧",
+       "お知らせ文面の原案と送信タイミングの方針",
+       "SMS配信事業者の契約アカウント",
+       "送信元として使うメールアドレスとドメイン",
+       "文面や督促方針を決める責任者"
       ],
       "impact": {
        "model": "hours_saved",
-       "summary": "電話での受注と1Cへの手入力が減り、営業担当者が代理店との商談や新規開拓に時間を使えるようになります。",
+       "summary": "期日案内や未納連絡を個別に行う手間がなくなり、連絡漏れも防げます。",
        "inputs": [
         {
          "key": "hours_per_week",
-         "label": "電話での受注と1Cへの入力に、週に何時間かかっていますか",
-         "value": 25,
+         "label": "支払期日や未納の連絡に週何時間かかっていますか",
+         "value": 3,
          "basis": "assumed"
         },
         {
          "key": "hourly_cost_usd",
-         "label": "受注担当者の1時間あたりの人件費はいくらですか（USD）",
+         "label": "事務スタッフの1時間あたりの人件費はいくらですか",
          "value": 25,
          "basis": "assumed"
         }
@@ -9059,20 +8856,21 @@
     }
    },
    {
-    "id": "beauty",
-    "industry": "beauty",
-    "text": "美容サロンで、予約はInstagramのメッセージで受けている",
+    "id": "wholesale",
+    "industry": "distribution",
+    "text": "建材の卸売で、代理店からの注文は電話とFAX、在庫は販売管理システム",
     "intake": {
-     "industry": "beauty",
+     "industry": "distribution",
      "branches": "1",
-     "staff": "6-20",
-     "tools": "instagram",
-     "goal": "new_customers"
+     "staff": "21-100",
+     "tools": "1c",
+     "goal": "sales",
+     "budget": "unknown"
     },
     "meta": {
-     "brief_no": "QL-2610-DAE0",
+     "brief_no": "QL-2610-E9CA",
      "lang": "ja",
-     "generated_at": "2026-10-21T12:03:19+05:00",
+     "generated_at": "2026-10-21T13:24:05+05:00",
      "valid_until": "2026-11-20",
      "catalogue_version": "2026-10-20.83240c46",
      "rate": {
@@ -9085,38 +8883,59 @@
     "pick": {
      "status": "ok",
      "heard": {
-      "summary": "1店舗の美容サロンで、予約をInstagramのメッセージで受けており、新規顧客の獲得を目指しています。",
+      "summary": "建材の卸売業で、代理店からの注文を電話とFAXで受けており、受注業務の効率化と売上拡大が課題です。",
       "quotes": [
-       "美容サロンで、予約はInstagramのメッセージで受けている"
+       "建材の卸売",
+       "代理店からの注文は電話とFAX",
+       "在庫は販売管理システム"
       ],
-      "industry": "beauty",
-      "size": "small"
+      "industry": "distribution",
+      "size": "medium"
      },
      "questions": [
       {
-       "id": "prepay",
-       "text": "予約時の前払い（デポジット）を導入したいですか。",
+       "id": "agent_count",
+       "text": "注文をくださる代理店はおおよそ何社ですか。",
        "options": [
         {
-         "id": "yes",
-         "label": "導入したい",
+         "id": "few",
+         "label": "50社未満",
          "effect": {
           "targets": [
-           "tg-booking-bot"
+           "web-client-portal"
           ],
-          "size": "keep",
+          "size": "s",
           "add_modifiers": [],
           "remove_modifiers": [],
-          "add_integrations": [
-           "click",
-           "payme"
-          ],
+          "add_integrations": [],
           "drop": []
          }
         },
         {
-         "id": "no",
-         "label": "不要",
+         "id": "many",
+         "label": "50社以上",
+         "effect": {
+          "targets": [
+           "web-client-portal"
+          ],
+          "size": "m",
+          "add_modifiers": [
+           "roles"
+          ],
+          "remove_modifiers": [],
+          "add_integrations": [],
+          "drop": []
+         }
+        }
+       ]
+      },
+      {
+       "id": "fax_volume",
+       "text": "FAX注文は今後も一定数残りそうですか。",
+       "options": [
+        {
+         "id": "yes",
+         "label": "残る",
          "effect": {
           "targets": [],
           "size": "keep",
@@ -9125,6 +8944,20 @@
           "add_integrations": [],
           "drop": []
          }
+        },
+        {
+         "id": "no",
+         "label": "ほぼ移行できる",
+         "effect": {
+          "targets": [],
+          "size": "keep",
+          "add_modifiers": [],
+          "remove_modifiers": [],
+          "add_integrations": [],
+          "drop": [
+           "ai-document-processing"
+          ]
+         }
         }
        ]
       }
@@ -9132,85 +8965,105 @@
      "solutions": [
       {
        "n": 1,
-       "catalogue_id": "tg-booking-bot",
+       "catalogue_id": "web-client-portal",
        "based_on": [],
-       "title": "空き枠から顧客が自分で選べるオンライン予約",
-       "why": "Instagramのメッセージでの予約対応は返信待ちが生じ、新規のお客様を逃しやすくなります。スタイリストと空き時間を顧客自身が選べるようにし、プロフィールからそのまま予約へ誘導します。",
+       "title": "代理店向けWeb受発注ポータル",
+       "why": "電話とFAXで受けている代理店の注文を、代理店自身が夜間でもWebで入力できるようにし、在庫や代理店別価格も確認できるようにします。受注の聞き間違いや転記の手間が減り、営業担当は提案に時間を使えます。",
+       "priority": "must",
+       "scope": "mvp",
+       "size": "s",
+       "modifiers": [
+        "roles"
+       ],
+       "integrations": [],
+       "depends_on": [],
+       "difficulty": 3,
+       "difficulty_reason": "代理店別の価格・掛け条件と在庫表示を正しく出す必要があること"
+      },
+      {
+       "n": 2,
+       "catalogue_id": "biz-1c-integration",
+       "based_on": [],
+       "title": "販売管理システムとの在庫・受注連携",
+       "why": "在庫は販売管理システムにあるため、ポータルの注文と在庫・価格を自動で同期し、二重入力をなくします。",
        "priority": "must",
        "scope": "mvp",
        "size": "s",
        "modifiers": [],
-       "integrations": [
-        "instagram"
+       "integrations": [],
+       "depends_on": [
+        "web-client-portal"
        ],
-       "depends_on": [],
-       "difficulty": 2,
-       "difficulty_reason": "スタイリストごとの空き枠とメニュー所要時間の管理が中心です。"
+       "difficulty": 3,
+       "difficulty_reason": "既存の販売管理システムのデータ連携方式の確認と調整が必要なこと"
       },
       {
-       "n": 2,
-       "catalogue_id": "ai-reviews-reputation",
+       "n": 3,
+       "catalogue_id": "ai-document-processing",
        "based_on": [],
-       "title": "地図サービスの口コミ管理で新規来店を後押し",
-       "why": "新規のお客様は地図アプリの評価を見てサロンを選びます。口コミをすぐに把握し返信できるようにします。",
+       "title": "FAX注文書のAI読み取りと自動入力",
+       "why": "Webに移行しない代理店のFAX注文書をAIで読み取り、販売管理システムへの手入力を減らします。",
        "priority": "should",
        "scope": "mvp",
        "size": "s",
        "modifiers": [],
-       "integrations": [
-        "telegram"
+       "integrations": [],
+       "depends_on": [
+        "biz-1c-integration"
        ],
-       "depends_on": [],
-       "difficulty": 2,
-       "difficulty_reason": "各地図サービスからの口コミ取得と通知設定が主な作業です。"
+       "difficulty": 3,
+       "difficulty_reason": "手書きや代理店ごとに異なる注文書の書式への対応"
       }
      ],
      "not_recommended": [
       {
-       "catalogue_id": "mob-booking-app",
-       "why": "1店舗の規模では専用アプリをダウンロードしてもらう負担が大きく、Telegram予約で十分です。"
+       "catalogue_id": "biz-erp",
+       "why": "在庫は既存の販売管理システムで管理できているため、基幹システムの入れ替えは現時点では不要です。"
+      },
+      {
+       "catalogue_id": "mob-field-sales",
+       "why": "課題は代理店からの受注経路であり、まずWebポータルで十分に解決できます。"
       }
      ],
-     "roadmap_note": "まず予約ボットを導入して予約対応を整え、その後に口コミ管理で集客を強化する順序をお勧めします。",
-     "first_step": "今週中に施術メニュー、所要時間、スタイリストごとの勤務時間を一覧にまとめてください。",
+     "roadmap_note": "まず代理店ポータルと販売管理システム連携をMVPとして一部の代理店で運用し、その後FAX注文のAI読み取りで残る手入力を減らします。",
+     "first_step": "今週、販売管理システムの製品名とデータ連携方法、代理店別の価格体系を整理し、要件定義の打ち合わせを設定してください。",
      "assumptions": [
-      "予約の主な窓口はInstagramのDMのみと想定しました。",
-      "既存の予約管理システムは使っていないと想定しました。"
+      "販売管理システムは外部連携(API・CSV等)が可能と想定しました。",
+      "代理店ごとに価格や取引条件が異なると想定しました。",
+      "事業拠点は日本国内と想定しました。"
      ]
     },
     "details": {
-     "tg-booking-bot": {
+     "web-client-portal": {
       "deliverables_mvp": [
-       "メニュー、スタイリスト、勤務スケジュールの登録",
-       "顧客自身による予約、変更、キャンセル",
-       "前日と1時間前の自動リマインド",
-       "スタッフ用グループへの予約通知",
-       "Instagramプロフィールから予約への導線",
-       "予約を管理する管理画面"
+       "代理店企業ごとのログイン画面",
+       "代理店ごとの注文一覧とステータス確認",
+       "販売管理システムから取り込んだ請求書・納品書の閲覧",
+       "代理店ごとの売掛残高と取引照合の表示",
+       "代理店からの問い合わせ受付フォーム"
       ],
       "deliverables_full": [
-       "ClickやPaymeによる事前決済",
-       "Googleカレンダーとの同期",
-       "来店後の口コミ依頼と再来店リマインド",
-       "無断キャンセルの統計",
-       "Mini App形式の予約画面"
+       "代理店別価格でのWeb注文入力",
+       "代理店社内のユーザー権限設定",
+       "出荷・請求のメール通知",
+       "大口代理店向けの受発注API連携"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "メニュー、所要時間、スタイリスト別の予約ルールの要件定義"
+        "deliverable": "要件定義書と代理店向け画面の設計"
        },
        {
         "key": "build",
-        "deliverable": "予約ボット、リマインド、管理画面の開発"
+        "deliverable": "ポータルの開発と販売管理システムとのデータ連携"
        },
        {
         "key": "test",
-        "deliverable": "スタッフによる実際の予約フローでの受入テスト"
+        "deliverable": "一部代理店による受入テストと修正"
        },
        {
         "key": "launch",
-        "deliverable": "Instagramへの予約リンク設置とリリース、運用説明"
+        "deliverable": "全代理店への展開と操作説明資料の配布"
        }
       ],
       "team": [
@@ -9219,7 +9072,11 @@
         "count": 1
        },
        {
-        "role": "bot",
+        "role": "designer",
+        "count": 1
+       },
+       {
+        "role": "frontend",
         "count": 1
        },
        {
@@ -9232,90 +9089,184 @@
        }
       ],
       "stack": [
-       "telegram_bot_api",
+       "typescript",
+       "nextjs",
        "nodejs",
-       "postgresql"
+       "postgresql",
+       "docker"
       ],
       "risks": [
        {
-        "text": "Instagramで連絡してきた顧客がTelegramへの移動をためらう可能性があります。",
-        "mitigation": "自動返信とプロフィールに予約リンクを置き、メッセージ対応も当面並行します。",
-        "adds_weeks": 0
+        "text": "販売管理システムのデータ出力方法が限られ、連携に手間がかかる",
+        "mitigation": "要件定義の初期にCSV出力やAPIの有無を確認し、連携方式を決める",
+        "adds_weeks": 2
        },
        {
-        "text": "スタイリストごとの勤務や施術時間のルールが曖昧で、要件定義が長引く可能性があります。",
-        "mitigation": "着手前にメニュー表と勤務表を一覧で確定していただきます。",
+        "text": "電話とFAXに慣れた代理店が利用を始めない",
+        "mitigation": "利用頻度の高い代理店から試験導入し、操作説明と問い合わせ窓口を用意する",
+        "adds_weeks": 1
+       },
+       {
+        "text": "代理店別の掛け条件や残高の計算が社内の運用と合わない",
+        "mitigation": "経理担当と照合ルールを事前に文書化し、テストで実データと突き合わせる",
         "adds_weeks": 1
        }
       ],
       "needs": [
-       "メニュー一覧と各施術の所要時間、料金",
-       "スタイリスト一覧と勤務スケジュール",
-       "予約ルール(受付締切、キャンセル規定)の決定",
-       "Instagramアカウントの管理権限",
-       "仕様を決定できるご担当者"
+       "販売管理システムの製品名とデータ出力方法の資料",
+       "代理店一覧と担当者の連絡先",
+       "代理店別の価格・掛け条件のルール",
+       "請求書・納品書の現行フォーマット",
+       "受発注と経理の判断ができる社内責任者"
       ],
       "impact": {
-       "model": "more_orders",
-       "summary": "返信待ちによる取りこぼしが減り、営業時間外でも新規のお客様が予約できるようになります。",
+       "model": "hours_saved",
+       "summary": "代理店からの注文状況や残高の問い合わせ対応が減り、受注担当と営業の手作業の時間が提案や新規開拓に回せるようになります。",
        "inputs": [
         {
-         "key": "orders_per_month",
-         "label": "月に何件の予約がありますか",
-         "value": 300,
+         "key": "hours_per_week",
+         "label": "代理店からの問い合わせや書類送付に週何時間かかっていますか",
+         "value": 20,
          "basis": "assumed"
         },
         {
-         "key": "uplift_pct",
-         "label": "予約が何%増えると見込みますか",
-         "value": 8,
-         "basis": "assumed"
-        },
-        {
-         "key": "avg_order_usd",
-         "label": "1回の来店の平均単価はいくらですか(USD)",
-         "value": 15,
-         "basis": "assumed"
-        },
-        {
-         "key": "margin_pct",
-         "label": "売上に対する利益率は何%ですか",
-         "value": 40,
+         "key": "hourly_cost_usd",
+         "label": "担当者の1時間あたりの人件費はいくらですか",
+         "value": 25,
          "basis": "assumed"
         }
        ]
       }
      },
-     "ai-reviews-reputation": {
+     "biz-1c-integration": {
       "deliverables_mvp": [
-       "Yandex Maps、Google Maps、2GISの店舗情報の確認と整備",
-       "全サービスの口コミを1つのTelegramフィードに集約",
-       "低評価の口コミを担当者へ即時通知",
-       "AIによる返信文案の作成と承認フロー",
-       "来店後にお客様へ評価と口コミリンクを送る案内ボット"
+       "販売管理システムからポータルへの在庫・価格の自動同期",
+       "ポータルの注文を販売管理システムへ自動登録する連携",
+       "連携処理の実行履歴（交換ログ）の画面",
+       "同期エラー発生時の担当者への通知"
       ],
       "deliverables_full": [
-       "評価の推移とテーマ別の分析",
-       "スタッフ名への言及の抽出",
-       "月次レポートと返信時間の可視化",
-       "苦情受付デスクとの連携"
+       "複数システムを一つの連携サービスでつなぐ構成",
+       "銀行入出金明細と受注・請求の自動照合",
+       "ECモールとの在庫・注文連携",
+       "連携状況を一覧できる監視ダッシュボード"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "対象地図サービスと返信ルール、来店後案内の要件定義"
+        "deliverable": "販売管理システムの連携方式と同期項目の要件定義書"
        },
        {
         "key": "build",
-        "deliverable": "口コミ収集、Telegram通知、AI返信文案、案内ボットの開発"
+        "deliverable": "在庫・価格同期と受注登録の連携機能の開発"
        },
        {
         "key": "test",
-        "deliverable": "実際の口コミと来店客でのテスト、文案の調整"
+        "deliverable": "実データに近い注文での連携テストと差異の確認"
        },
        {
         "key": "launch",
-        "deliverable": "リリースとスタッフ向け操作説明、運用開始"
+        "deliverable": "本番切替、交換ログとエラー通知の運用開始"
+       }
+      ],
+      "team": [
+       {
+        "role": "pm",
+        "count": 1
+       },
+       {
+        "role": "backend",
+        "count": 2
+       },
+       {
+        "role": "qa",
+        "count": 1
+       }
+      ],
+      "stack": [
+       "typescript",
+       "nodejs",
+       "postgresql",
+       "docker"
+      ],
+      "risks": [
+       {
+        "text": "販売管理システムにAPIがなく、CSV等のファイル連携しか使えない可能性",
+        "mitigation": "要件定義で連携方式を早期確認し、ファイル連携の定期実行で設計する",
+        "adds_weeks": 2
+       },
+       {
+        "text": "商品コードや代理店別価格のマスタが不統一で同期時に不整合が出る",
+        "mitigation": "開発前にマスタを点検し、変換ルールを決めて担当者と合意する",
+        "adds_weeks": 1
+       },
+       {
+        "text": "システム提供元の協力や仕様書の入手に時間がかかる",
+        "mitigation": "着手時点で提供元へ連絡し、窓口と仕様書の提供時期を確定する",
+        "adds_weeks": 2
+       }
+      ],
+      "needs": [
+       "販売管理システムの製品名・バージョンと提供元の連絡窓口",
+       "連携仕様書またはデータ出力機能の資料",
+       "商品マスタと代理店別価格表のサンプルデータ",
+       "テスト用環境または検証に使えるデータの提供",
+       "受注業務の流れを判断できる社内責任者"
+      ],
+      "impact": {
+       "model": "fewer_errors",
+       "summary": "電話やFAXの注文を手で入力し直す作業がなくなり、在庫違いや入力ミスによる誤出荷や再対応が減ります。",
+       "inputs": [
+        {
+         "key": "errors_per_month",
+         "label": "受注入力や在庫違いによるミスは月に何件ほどありますか",
+         "value": 15,
+         "basis": "assumed"
+        },
+        {
+         "key": "uplift_pct",
+         "label": "連携によりミスはどの程度減ると見込みますか",
+         "value": 60,
+         "basis": "assumed"
+        },
+        {
+         "key": "cost_per_error_usd",
+         "label": "ミス1件あたりの再配送や対応にかかる費用はいくらですか",
+         "value": 150,
+         "basis": "assumed"
+        }
+       ]
+      }
+     },
+     "ai-document-processing": {
+      "deliverables_mvp": [
+       "FAX注文書と注文メモの2〜3書式に対応したAI読み取り",
+       "品番・数量・納期・代理店名などの項目抽出と確信度表示",
+       "確信度の低い項目だけを確認・修正する画面",
+       "販売管理システムへ取り込めるCSV・Excel形式での出力"
+      ],
+      "deliverables_full": [
+       "代理店ごとに異なる多数の書式と手書き注文への対応",
+       "在庫・単価マスタとの自動照合と誤り・重複注文の検出",
+       "受注内容の承認フローと検索できる注文書アーカイブ",
+       "メールやFAXサーバーからの自動取り込み"
+      ],
+      "phases": [
+       {
+        "key": "plan",
+        "deliverable": "対象とする注文書書式と抽出項目の要件定義"
+       },
+       {
+        "key": "build",
+        "deliverable": "読み取りエンジンと確認画面、出力機能の開発"
+       },
+       {
+        "key": "test",
+        "deliverable": "過去のFAX注文書を使った読み取り精度の検証"
+       },
+       {
+        "key": "launch",
+        "deliverable": "受注担当者向け説明と一部代理店からの本番運用開始"
        }
       ],
       "team": [
@@ -9340,58 +9291,46 @@
        "python",
        "llm_api",
        "postgresql",
-       "telegram_bot_api"
+       "react",
+       "docker"
       ],
       "risks": [
        {
-        "text": "一部の地図サービスに返信用APIがなく、自動投稿ができない",
-        "mitigation": "返信文案をTelegramで受け取り、スタッフが手動で投稿する運用にします",
-        "adds_weeks": 0
-       },
-       {
-        "text": "店舗の管理者権限が未取得、または別の人が登録している",
-        "mitigation": "要件定義の段階で各サービスのオーナー確認手続きを進めます",
+        "text": "代理店ごとに書式や手書きの癖が大きく、読み取り精度が想定を下回る",
+        "mitigation": "注文量の多い代理店の書式から対応し、確認画面で人が補正する運用にする",
         "adds_weeks": 2
        },
        {
-        "text": "来店後の案内に必要なお客様の連絡先が集まらない",
-        "mitigation": "会計時にQRコードで案内ボットを開いてもらう方式を用意します",
+        "text": "FAXの画質が粗く、品番や数量の数字を誤認する",
+        "mitigation": "品番マスタとの照合で不一致を警告し、必ず担当者が確認する",
+        "adds_weeks": 1
+       },
+       {
+        "text": "販売管理システムの取り込み形式が不明で連携に手間取る",
+        "mitigation": "要件定義の段階でシステム担当者と取り込み仕様を確定する",
         "adds_weeks": 1
        }
       ],
       "needs": [
-       "Yandex Maps、Google Maps、2GISの店舗管理者アカウント",
-       "返信を承認する担当者の決定",
-       "口コミ通知を受け取るTelegramアカウント",
-       "返信のトーンや定型表現の方針",
-       "来店後の案内を送るタイミングの決定"
+       "代理店ごとの過去のFAX注文書サンプル(個人情報は伏せたもので可)",
+       "販売管理システムの品番・代理店マスタと取り込み形式の資料",
+       "受注業務の流れを説明できる受注担当の責任者",
+       "FAXの受信方法(紙か複合機のデータ化か)の確認"
       ],
       "impact": {
-       "model": "more_orders",
-       "summary": "地図アプリ上の評価と返信が整い、サロンを探している新規のお客様に選ばれやすくなります。",
+       "model": "hours_saved",
+       "summary": "FAX注文書から販売管理システムへの手入力と転記ミスの確認作業が減り、受注担当者が代理店対応に時間を使えるようになります。",
        "inputs": [
         {
-         "key": "orders_per_month",
-         "label": "1か月の来店数はおよそ何件ですか",
-         "value": 400,
-         "basis": "assumed"
-        },
-        {
-         "key": "uplift_pct",
-         "label": "新規来店はどの程度増えると見込みますか",
-         "value": 5,
-         "basis": "assumed"
-        },
-        {
-         "key": "avg_order_usd",
-         "label": "1回の来店の平均単価はいくらですか",
+         "key": "hours_per_week",
+         "label": "FAX注文書の入力と確認に週に何時間かかっていますか",
          "value": 15,
          "basis": "assumed"
         },
         {
-         "key": "margin_pct",
-         "label": "施術の利益率はおよそ何割ですか",
-         "value": 40,
+         "key": "hourly_cost_usd",
+         "label": "受注担当者の1時間あたりの人件費はいくらですか",
+         "value": 25,
          "basis": "assumed"
         }
        ]
@@ -9408,12 +9347,13 @@
      "branches": "1",
      "staff": "21-100",
      "tools": "paper_phone",
-     "goal": "control"
+     "goal": "control",
+     "budget": "unknown"
     },
     "meta": {
      "brief_no": "QL-2610-E6DB",
      "lang": "ja",
-     "generated_at": "2026-10-21T12:03:19+05:00",
+     "generated_at": "2026-10-21T13:24:05+05:00",
      "valid_until": "2026-11-20",
      "catalogue_version": "2026-10-20.83240c46",
      "rate": {
@@ -9426,7 +9366,7 @@
     "pick": {
      "status": "ok",
      "heard": {
-      "summary": "市内で貨物輸送を行う事業者で、ドライバー15人の日報が紙で管理されており、状況の把握が難しい状態です。",
+      "summary": "市内で貨物輸送を行う事業者で、ドライバー15人の日報が紙のため、運行状況の把握と管理が難しい状態です。",
       "quotes": [
        "市内の貨物輸送",
        "ドライバー15人",
@@ -9437,16 +9377,14 @@
      },
      "questions": [
       {
-       "id": "vehicle_gps",
-       "text": "車両にGPSトラッカーは既に搭載されていますか。",
+       "id": "gps_installed",
+       "text": "車両にGPS端末やドラレコは既に搭載されていますか",
        "options": [
         {
          "id": "yes",
          "label": "搭載済み",
          "effect": {
-          "targets": [
-           "iot-fleet-gps"
-          ],
+          "targets": [],
           "size": "keep",
           "add_modifiers": [],
           "remove_modifiers": [],
@@ -9459,54 +9397,44 @@
          "label": "未搭載",
          "effect": {
           "targets": [
-           "iot-fleet-gps"
+           "ind-logistics-tms"
           ],
           "size": "keep",
           "add_modifiers": [],
-          "remove_modifiers": [],
+          "remove_modifiers": [
+           "realtime"
+          ],
           "add_integrations": [],
           "drop": []
-         }
-        },
-        {
-         "id": "not_needed",
-         "label": "位置把握は不要",
-         "effect": {
-          "targets": [],
-          "size": "keep",
-          "add_modifiers": [],
-          "remove_modifiers": [],
-          "add_integrations": [],
-          "drop": [
-           "iot-fleet-gps"
-          ]
          }
         }
        ]
       },
       {
        "id": "accounting",
-       "text": "会計や請求に1Cを使っていますか。",
+       "text": "請求や会計に使っているソフトはありますか",
        "options": [
         {
-         "id": "yes_1c",
-         "label": "1Cを使用",
+         "id": "sheets",
+         "label": "Excel・スプレッドシート",
          "effect": {
           "targets": [
-           "tg-field-reports"
+           "ind-logistics-tms"
           ],
           "size": "keep",
-          "add_modifiers": [],
+          "add_modifiers": [
+           "migration"
+          ],
           "remove_modifiers": [],
           "add_integrations": [
-           "1c"
+           "google_sheets"
           ],
           "drop": []
          }
         },
         {
-         "id": "no_1c",
-         "label": "使っていない",
+         "id": "none",
+         "label": "特になし・紙",
          "effect": {
           "targets": [],
           "size": "keep",
@@ -9522,92 +9450,94 @@
      "solutions": [
       {
        "n": 1,
-       "catalogue_id": "tg-field-reports",
+       "catalogue_id": "ind-logistics-tms",
        "based_on": [],
-       "title": "ドライバー日報のTelegram化",
-       "why": "紙の日報をやめ、ドライバーが配送ごとに写真、位置、メモをTelegramから送れるようにします。管理者は全員の状況を一か所で確認できます。",
+       "title": "紙の日報を置き換える運行管理システム",
+       "why": "受注、車両、ドライバー、日報を一つのシステムにまとめ、紙の日報をスマートフォン入力に置き換えます。管理者はその日の運行状況をすぐに確認できます。",
        "priority": "must",
        "scope": "mvp",
        "size": "s",
        "modifiers": [
+        "roles",
         "analytics"
        ],
        "integrations": [
-        "google_sheets",
         "maps"
        ],
        "depends_on": [],
-       "difficulty": 2,
-       "difficulty_reason": "日報項目の標準化とドライバーへの定着が主な課題です。"
+       "difficulty": 3,
+       "difficulty_reason": "ドライバー向け入力画面を現場で使いやすく設計する必要があるため。"
       },
       {
        "n": 2,
        "catalogue_id": "iot-fleet-gps",
        "based_on": [],
        "title": "車両位置と燃料の見える化",
-       "why": "日報だけでは分からない実際の走行ルートや燃料消費を把握でき、管理を強化できます。",
+       "why": "ドライバー15人の車両がどこにいて、どれだけ走ったかを日報に頼らず把握できます。",
        "priority": "should",
        "scope": "mvp",
        "size": "s",
        "modifiers": [],
        "integrations": [
-        "telegram"
+        "maps"
        ],
-       "depends_on": [],
+       "depends_on": [
+        "ind-logistics-tms"
+       ],
        "difficulty": 3,
-       "difficulty_reason": "車両へのトラッカー設置と既存機器との接続調整が必要です。"
+       "difficulty_reason": "車載端末の選定と取り付け、運行データとの照合が必要なため。"
       }
      ],
      "not_recommended": [
       {
-       "catalogue_id": "ind-logistics-tms",
-       "why": "市内輸送でドライバー15人の規模では、まず日報のデジタル化で十分な管理効果が得られます。"
+       "catalogue_id": "biz-erp",
+       "why": "現段階の課題は運行管理であり、全社的なERPはまだ必要ありません。"
       },
       {
        "catalogue_id": "mob-delivery-suite",
-       "why": "専用アプリを導入しなくても、ドライバーが使い慣れたTelegramで報告業務は賄えます。"
+       "why": "顧客向けアプリまで含む構成は、市内の貨物輸送の管理目的には過剰です。"
       }
      ],
-     "roadmap_note": "まず日報ボットで紙を置き換えて運用を定着させ、その後GPSによる車両管理を追加する順序を推奨します。",
-     "first_step": "今週は現在の紙の日報を数枚集め、記入項目と管理者が確認したい内容を一覧に整理してください。",
+     "roadmap_note": "まず運行管理システムのMVPで日報を電子化し、定着後にGPSによる車両管理を追加します。",
+     "first_step": "現在の紙の日報の様式と記入項目を集め、電子化したい項目を整理してください。",
      "assumptions": [
-      "拠点は1か所で、管理者がドライバー全員を管理していると想定しました。",
-      "ドライバーは全員スマートフォンでTelegramを利用できると想定しました。"
+      "事業所は日本国内の1拠点と想定しました。",
+      "ドライバーはスマートフォンを利用できると想定しました。",
+      "現時点で運行管理用のシステムは導入されていないと想定しました。"
      ]
     },
     "details": {
-     "tg-field-reports": {
+     "ind-logistics-tms": {
       "deliverables_mvp": [
-       "ドライバー向け日報テンプレート（配送完了、待機、トラブル等）",
-       "時刻と位置情報付きの写真報告",
-       "全ドライバーの日報をGoogle Sheetsに自動集計",
-       "管理者向けの日次サマリー（Telegramで配信）",
-       "報告地点を地図リンクで確認できる機能",
-       "報告件数や未提出者を示す簡易レポート"
+       "受注登録と配車計画の管理画面",
+       "自社車両とドライバーの台帳",
+       "ドライバー用アプリ:運行ステータス、写真、電子日報",
+       "配送伝票などの書類作成と保管",
+       "地図上での配送先と運行状況の確認",
+       "管理者向けの日別運行レポート"
       ],
       "deliverables_full": [
-       "必須写真付きのチェックリスト",
-       "電波の弱い場所での送信待ちキュー",
-       "1日の訪問先を示す地図表示",
-       "ドライバーごとのKPI集計",
-       "1Cとの連携による配送データの照合"
+       "荷主向けポータルでの配送状況確認",
+       "運賃表と燃料基準の管理",
+       "運行ごとの経費と荷主別・ルート別の収益分析",
+       "車載GPS端末との連携"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "紙の日報項目を整理し、報告テンプレートの要件定義を確定"
+        "deliverable": "現在の紙の日報と配車業務を整理した要件定義書"
        },
        {
         "key": "build",
-        "deliverable": "報告Bot、Google Sheets連携、日次サマリーの開発"
+        "deliverable": "管理画面とドライバー用アプリの開発"
        },
        {
         "key": "test",
-        "deliverable": "ドライバー数名による実運用テストと項目の調整"
+        "deliverable": "ドライバー数名による実運行での試験運用"
        },
        {
         "key": "launch",
-        "deliverable": "全ドライバーへの展開、説明会の実施、紙日報の廃止"
+        "deliverable": "全ドライバー15人への展開と操作説明"
        }
       ],
       "team": [
@@ -9616,11 +9546,19 @@
         "count": 1
        },
        {
-        "role": "bot",
+        "role": "designer",
+        "count": 1
+       },
+       {
+        "role": "frontend",
         "count": 1
        },
        {
         "role": "backend",
+        "count": 1
+       },
+       {
+        "role": "mobile",
         "count": 1
        },
        {
@@ -9629,66 +9567,80 @@
        }
       ],
       "stack": [
-       "telegram_bot_api",
+       "typescript",
+       "react",
        "nodejs",
-       "postgresql"
+       "postgresql",
+       "flutter"
       ],
       "risks": [
        {
-        "text": "ドライバーが報告を後回しにし、入力が定着しない",
-        "mitigation": "入力をボタン中心にし、未提出者を管理者へ自動通知する",
-        "adds_weeks": 1
+        "text": "ドライバーが紙からアプリ入力への切り替えに慣れず、入力漏れが続く",
+        "mitigation": "入力項目を最小限にし、試験運用で意見を集めて画面を改善する",
+        "adds_weeks": 2
        },
        {
-        "text": "現行の紙日報の項目が人によって異なり、テンプレートが決まらない",
-        "mitigation": "要件定義の段階で配車担当と項目を一つに統一する",
+        "text": "日報や書類の記載項目が社内で統一されておらず、要件が固まらない",
+        "mitigation": "要件定義の初期に現行の帳票を集め、決裁者と項目を確定する",
         "adds_weeks": 1
        }
       ],
       "needs": [
-       "現在使用している紙の日報の見本",
-       "ドライバー全員のTelegramアカウント",
-       "日報の項目を決定できる責任者（配車担当など）",
-       "集計先となるGoogleアカウント"
+       "現在使用している紙の日報と配送伝票の見本",
+       "ドライバーと車両の一覧",
+       "ドライバーが使うスマートフォンの準備方針",
+       "要件を決定できる運行管理の責任者",
+       "主な荷主と配送先の情報"
       ],
       "impact": {
-       "model": "none",
-       "summary": "紙の日報が不要になり、全ドライバーの稼働状況とトラブルをその日のうちに一か所で把握できるようになります。",
-       "inputs": []
+       "model": "hours_saved",
+       "summary": "紙の日報の記入、回収、集計にかかる手間が減り、管理者がその日の運行状況をすぐに把握できるようになります。",
+       "inputs": [
+        {
+         "key": "hours_per_week",
+         "label": "日報の記入、回収、集計に週何時間かかっていますか",
+         "value": 15,
+         "basis": "assumed"
+        },
+        {
+         "key": "hourly_cost_usd",
+         "label": "事務作業の1時間あたりの人件費はいくらですか",
+         "value": 25,
+         "basis": "assumed"
+        }
+       ]
       }
      },
      "iot-fleet-gps": {
       "deliverables_mvp": [
-       "15台の車両へのGPSトラッカー設置または既存機器の接続",
+       "全車両へのGPS端末の設置または既存端末の活用",
        "全車両の現在地を表示するリアルタイム地図",
-       "日ごとの走行ルート、停車地点、停車時間の記録",
-       "配送先や車庫のジオフェンス設定と出入りの記録",
-       "主要車両への燃料センサー設置と燃料消費の表示",
-       "異常停車や燃料急減のTelegram通知"
+       "運行履歴と停車地点の記録",
+       "指定エリアの出入りを検知するジオフェンス",
+       "主要車両への燃料センサー設置と異常時のメール通知"
       ],
       "deliverables_full": [
        "ドライバーごとの運転評価スコア",
-       "車両ごとの整備スケジュール管理",
-       "計画ルートと実際の走行の比較",
-       "運行記録と1Cとの連携",
-       "ドライバー用アプリと車両別・ドライバー別レポート"
+       "車両点検・整備スケジュールの管理",
+       "計画ルートと実走行の比較",
+       "ドライバー用アプリと車両・ドライバー別レポート"
       ],
       "phases": [
        {
         "key": "plan",
-        "deliverable": "車両一覧、監視項目、通知条件、ジオフェンスを決めた要件定義書"
+        "deliverable": "対象車両の確認、端末とセンサーの選定、要件定義書"
        },
        {
         "key": "build",
-        "deliverable": "トラッカーと燃料センサーの設置、地図画面と通知機能の開発"
+        "deliverable": "端末設置、データ受信基盤、地図画面と通知機能の開発"
        },
        {
         "key": "test",
-        "deliverable": "数台で実走行テストを行い、位置と燃料データの精度を確認"
+        "deliverable": "数台で試験運行し、位置・燃料データの精度を確認"
        },
        {
         "key": "launch",
-        "deliverable": "全15台への展開、管理者向け操作説明、運用開始"
+        "deliverable": "全車両へ展開し、管理者向け操作説明を実施"
        }
       ],
       "team": [
@@ -9718,37 +9670,523 @@
        "mqtt",
        "go",
        "postgresql",
-       "react",
-       "telegram_bot_api"
+       "react"
       ],
       "risks": [
        {
-        "text": "車種や年式により燃料センサーの取り付けが難しい車両がある",
-        "mitigation": "事前に全車両を点検し、取り付け可能な車両から優先して設置する",
+        "text": "車種ごとに燃料タンクや配線が異なり、センサー取り付けに時間がかかる",
+        "mitigation": "計画段階で全車種を確認し、主要車両から順に設置する",
         "adds_weeks": 2
        },
        {
-        "text": "ドライバーが監視に抵抗し、機器を外したり電源を切ったりする",
-        "mitigation": "導入目的を事前に説明し、電源切断や機器取り外しを通知する設定にする",
+        "text": "端末の調達や国内の電波認証への対応が遅れる",
+        "mitigation": "日本で認証済みの市販端末を優先して採用する",
+        "adds_weeks": 2
+       },
+       {
+        "text": "ドライバーが位置把握に抵抗を感じ、協力が得られない",
+        "mitigation": "目的と利用範囲を事前に説明し、社内ルールを定める",
         "adds_weeks": 1
-       },
-       {
-        "text": "トラッカーやセンサーの調達・通関に時間がかかる",
-        "mitigation": "要件定義の段階で機器を確定し、早期に発注する",
-        "adds_weeks": 2
        }
       ],
       "needs": [
-       "全車両の一覧(車種、年式、ナンバー、燃料タンク容量)",
-       "機器設置のために車両を順番に預けられる日程",
-       "通知を受け取る管理者のTelegramアカウント",
-       "配送先、車庫、給油所など監視したい地点の一覧",
-       "ドライバーへの説明と導入を決める責任者"
+       "車両一覧（車種、年式、ナンバー）",
+       "端末取り付け作業のための車両の空き日程",
+       "監視したい拠点・配送先のエリア一覧",
+       "通知を受け取る管理者の決定",
+       "社内で判断できる担当責任者"
       ],
       "impact": {
        "model": "none",
-       "summary": "紙の日報では見えなかった実際の走行ルート、停車、燃料消費が把握でき、車両運行の管理と統制が強化されます。",
+       "summary": "紙の日報に頼らず、各車両の位置と運行・燃料の状況を管理者がその場で把握できるようになります。",
        "inputs": []
+      }
+     }
+    }
+   },
+   {
+    "id": "beauty",
+    "industry": "beauty",
+    "text": "美容サロンで、予約はInstagramのメッセージで受けている",
+    "intake": {
+     "industry": "beauty",
+     "branches": "1",
+     "staff": "6-20",
+     "tools": "instagram",
+     "goal": "new_customers",
+     "budget": "unknown"
+    },
+    "meta": {
+     "brief_no": "QL-2610-DAE0",
+     "lang": "ja",
+     "generated_at": "2026-10-21T13:24:48+05:00",
+     "valid_until": "2026-11-20",
+     "catalogue_version": "2026-10-20.83240c46",
+     "rate": {
+      "uzs_per_usd": 12012.3,
+      "date": "2026-10-21",
+      "source": "fallback"
+     },
+     "source": "sample"
+    },
+    "pick": {
+     "status": "ok",
+     "heard": {
+      "summary": "スタッフ6〜20名の美容サロン1店舗で、予約をInstagramのメッセージで受けており、新規顧客の獲得を目指しています。",
+      "quotes": [
+       "美容サロン",
+       "予約はInstagramのメッセージで受けている"
+      ],
+      "industry": "beauty",
+      "size": "small"
+     },
+     "questions": [
+      {
+       "id": "has_site",
+       "text": "現在、サロンのWebサイトはありますか。",
+       "options": [
+        {
+         "id": "yes",
+         "label": "あります",
+         "effect": {
+          "targets": [],
+          "size": "keep",
+          "add_modifiers": [],
+          "remove_modifiers": [],
+          "add_integrations": [],
+          "drop": [
+           "web-landing"
+          ]
+         }
+        },
+        {
+         "id": "no",
+         "label": "ありません",
+         "effect": {
+          "targets": [],
+          "size": "keep",
+          "add_modifiers": [],
+          "remove_modifiers": [],
+          "add_integrations": [],
+          "drop": []
+         }
+        }
+       ]
+      },
+      {
+       "id": "prepay",
+       "text": "予約時にクレジットカードでの事前決済を受けたいですか。",
+       "options": [
+        {
+         "id": "yes",
+         "label": "受けたい",
+         "effect": {
+          "targets": [],
+          "size": "keep",
+          "add_modifiers": [],
+          "remove_modifiers": [],
+          "add_integrations": [
+           "visa_mc"
+          ],
+          "drop": []
+         }
+        },
+        {
+         "id": "no",
+         "label": "不要",
+         "effect": {
+          "targets": [],
+          "size": "keep",
+          "add_modifiers": [],
+          "remove_modifiers": [],
+          "add_integrations": [],
+          "drop": []
+         }
+        }
+       ]
+      }
+     ],
+     "solutions": [
+      {
+       "n": 1,
+       "catalogue_id": "custom",
+       "based_on": [
+        "mob-booking-app",
+        "web-pwa"
+       ],
+       "title": "サロン専用のWeb予約ページ",
+       "why": "Instagramのメッセージでの予約受付は返信の手間がかかり、取りこぼしも起きやすいため、お客様が空き枠を見て自分で予約できる仕組みが必要です。スタッフ別の枠管理とリマインド配信で、予約対応の負担を減らします。",
+       "priority": "must",
+       "scope": "mvp",
+       "size": "s",
+       "modifiers": [
+        "roles"
+       ],
+       "integrations": [
+        "sms"
+       ],
+       "depends_on": [],
+       "difficulty": 3,
+       "difficulty_reason": "スタッフごとのシフトとメニュー所要時間を組み合わせた空き枠計算が必要なため。"
+      },
+      {
+       "n": 2,
+       "catalogue_id": "ai-sales-assistant",
+       "based_on": [],
+       "title": "InstagramのDMに自動で応答し予約へ案内",
+       "why": "Instagramに届く問い合わせへ営業時間外も即答し、メニューや料金を案内して予約ページへ誘導します。新規のお客様を逃さないための仕組みです。",
+       "priority": "should",
+       "scope": "mvp",
+       "size": "s",
+       "modifiers": [],
+       "integrations": [],
+       "depends_on": [],
+       "difficulty": 3,
+       "difficulty_reason": "メニューや料金の情報を正確に学習させ、人への引き継ぎを設計する必要があるため。"
+      },
+      {
+       "n": 3,
+       "catalogue_id": "web-landing",
+       "based_on": [],
+       "title": "新規客向けのサロン紹介ページ",
+       "why": "検索や広告から来た新規のお客様が、メニューと雰囲気を一目で確認して予約できる入口になります。",
+       "priority": "could",
+       "scope": "mvp",
+       "size": "s",
+       "modifiers": [],
+       "integrations": [
+        "web_analytics"
+       ],
+       "depends_on": [],
+       "difficulty": 1,
+       "difficulty_reason": "1ページ構成で、既存の写真やメニューを流用できるため。"
+      }
+     ],
+     "not_recommended": [
+      {
+       "catalogue_id": "mob-booking-app",
+       "why": "1店舗ではアプリのダウンロードを求めるより、Webの予約ページの方がお客様の負担が少なく十分です。"
+      },
+      {
+       "catalogue_id": "mob-loyalty-platform",
+       "why": "まず予約の仕組みを整えて新規客を増やすことが先で、会員プログラムは来店データがたまってから検討する方が効果的です。"
+      }
+     ],
+     "roadmap_note": "まずWeb予約ページを用意してInstagramから誘導し、その後DMの自動応答、紹介ページの順に広げます。",
+     "first_step": "今週、メニュー一覧と所要時間、スタッフごとの担当メニューと勤務パターンを一覧にまとめてください。",
+     "assumptions": [
+      "店舗は日本国内の1店舗と想定しました。",
+      "現在は予約管理システムを使っていないと想定しました。",
+      "リマインドはSMS配信またはメールで送る想定です。"
+     ]
+    },
+    "details": {
+     "custom-1": {
+      "deliverables_mvp": [
+       "メニュー・スタッフ・空き枠を表示するWeb予約ページ（スマートフォン対応）",
+       "スタッフ別シフトと施術時間に基づく空き枠の自動計算",
+       "予約確認とSMS配信による前日リマインド",
+       "スタッフ向けの予約一覧・スケジュール画面",
+       "店舗用の管理画面（メニュー、料金、シフト、予約の管理）"
+      ],
+      "deliverables_full": [
+       "回数券・コース販売とクレジットカード決済による事前決済",
+       "口コミ・評価の表示",
+       "キャンセル待ちの自動案内",
+       "キャンペーン配信とスタッフ別・メニュー別の分析"
+      ],
+      "phases": [
+       {
+        "key": "plan",
+        "deliverable": "メニュー、施術時間、スタッフ権限、予約ルールの要件定義"
+       },
+       {
+        "key": "build",
+        "deliverable": "予約ページ、空き枠計算、管理画面、SMSリマインドの開発"
+       },
+       {
+        "key": "test",
+        "deliverable": "実際のシフトとメニューで予約・変更・キャンセルを検証"
+       },
+       {
+        "key": "launch",
+        "deliverable": "リリースとInstagramプロフィールへの予約リンク設置"
+       }
+      ],
+      "team": [
+       {
+        "role": "pm",
+        "count": 1
+       },
+       {
+        "role": "designer",
+        "count": 1
+       },
+       {
+        "role": "frontend",
+        "count": 1
+       },
+       {
+        "role": "backend",
+        "count": 1
+       },
+       {
+        "role": "qa",
+        "count": 1
+       }
+      ],
+      "stack": [
+       "typescript",
+       "nextjs",
+       "nodejs",
+       "postgresql"
+      ],
+      "risks": [
+       {
+        "text": "メニューごとの施術時間や指名ルールが整理されておらず、空き枠計算の仕様が決まらない",
+        "mitigation": "要件定義の初期に全メニューの所要時間と担当可能スタッフを一覧表で確定する",
+        "adds_weeks": 1
+       },
+       {
+        "text": "Instagramでの予約に慣れたお客様が新しい予約ページを使わない",
+        "mitigation": "移行期間はメッセージで予約リンクを案内し、プロフィールと投稿にも掲載する",
+        "adds_weeks": 0
+       }
+      ],
+      "needs": [
+       "メニュー一覧と各メニューの施術時間・料金",
+       "スタッフ一覧と担当可能メニュー、シフトの決め方",
+       "キャンセル・遅刻・指名に関する予約ルール",
+       "店舗写真やロゴなど予約ページに載せる素材",
+       "仕様を判断できる店舗側の責任者"
+      ],
+      "impact": {
+       "model": "hours_saved",
+       "summary": "Instagramのメッセージでの予約のやり取りが減り、スタッフが施術と接客に時間を使えるようになります。",
+       "inputs": [
+        {
+         "key": "hours_per_week",
+         "label": "予約の返信や日程調整に週何時間かかっていますか",
+         "value": 8,
+         "basis": "assumed"
+        },
+        {
+         "key": "hourly_cost_usd",
+         "label": "スタッフ1時間あたりの人件費はいくらですか",
+         "value": 20,
+         "basis": "assumed"
+        }
+       ]
+      }
+     },
+     "ai-sales-assistant": {
+      "deliverables_mvp": [
+       "Instagram DMへの自動応答（日本語、営業時間外も対応）",
+       "メニュー・料金表に基づく回答と予約ページへの案内",
+       "新規客向けのヒアリング質問（希望メニュー・日時）",
+       "難しい問い合わせのスタッフへの引き継ぎ",
+       "問い合わせ履歴の管理画面"
+      ],
+      "deliverables_full": [
+       "Webサイトのチャット、LINEなど他チャネルへの拡大",
+       "来店後のフォローメッセージ配信",
+       "お客様に合わせたメニュー提案",
+       "チャネル別・スタッフ別の予約転換レポート"
+      ],
+      "phases": [
+       {
+        "key": "plan",
+        "deliverable": "要件定義：メニュー・料金・回答ルールと引き継ぎ条件の整理"
+       },
+       {
+        "key": "build",
+        "deliverable": "Instagram連携、回答ロジック、管理画面の開発"
+       },
+       {
+        "key": "test",
+        "deliverable": "実際の問い合わせ例での回答精度テストと修正"
+       },
+       {
+        "key": "launch",
+        "deliverable": "本番リリース、スタッフ向け操作説明、初期運用の監視"
+       }
+      ],
+      "team": [
+       {
+        "role": "pm",
+        "count": 1
+       },
+       {
+        "role": "ml",
+        "count": 1
+       },
+       {
+        "role": "backend",
+        "count": 1
+       },
+       {
+        "role": "qa",
+        "count": 1
+       }
+      ],
+      "stack": [
+       "python",
+       "llm_api",
+       "postgresql"
+      ],
+      "risks": [
+       {
+        "text": "Instagramのビジネスアカウント設定やMeta側の審査に時間がかかる",
+        "mitigation": "要件定義の段階でアカウント権限と審査申請を先行して進める",
+        "adds_weeks": 2
+       },
+       {
+        "text": "料金やメニューの誤案内によるお客様とのトラブル",
+        "mitigation": "回答範囲を限定し、不明な点は必ずスタッフへ引き継ぐ設計にする",
+        "adds_weeks": 1
+       }
+      ],
+      "needs": [
+       "Instagramビジネスアカウントと関連Facebookページの管理権限",
+       "最新のメニュー・料金表・所要時間の一覧",
+       "よくある質問と現在の返信例",
+       "予約ページまたは予約システムのURL",
+       "回答内容を確認・承認する担当者"
+      ],
+      "impact": {
+       "model": "more_orders",
+       "summary": "営業時間外や繁忙時でも問い合わせに即答できるため、返信待ちで離れていた新規のお客様が予約につながりやすくなります。",
+       "inputs": [
+        {
+         "key": "orders_per_month",
+         "label": "Instagram経由の新規予約は月に何件ありますか",
+         "value": 40,
+         "basis": "assumed"
+        },
+        {
+         "key": "uplift_pct",
+         "label": "即答によって予約はどの程度増えそうですか",
+         "value": 15,
+         "basis": "assumed"
+        },
+        {
+         "key": "avg_order_usd",
+         "label": "1回のご来店の平均単価はいくらですか",
+         "value": 60,
+         "basis": "assumed"
+        },
+        {
+         "key": "margin_pct",
+         "label": "売上のうち利益の割合はどのくらいですか",
+         "value": 40,
+         "basis": "assumed"
+        }
+       ]
+      }
+     },
+     "web-landing": {
+      "deliverables_mvp": [
+       "メニュー・料金・スタイル写真・アクセスをまとめた1ページのサロン紹介",
+       "予約・問い合わせフォームとスタッフへのメール通知",
+       "InstagramのDMや予約導線へのボタン設置",
+       "広告・SNS別の流入元（UTM）計測と予約数の分析設定",
+       "スマートフォンでの高速表示と検索エンジン向けの基本設定"
+      ],
+      "deliverables_full": [
+       "キャンペーン別に複数ページを1つのテンプレートから作成",
+       "A/Bテストによる見出しや写真の比較",
+       "メニュー診断や料金シミュレーター",
+       "オリジナルのイラストやデザイン演出"
+      ],
+      "phases": [
+       {
+        "key": "plan",
+        "deliverable": "掲載メニュー、訴求点、予約導線の要件定義と構成案"
+       },
+       {
+        "key": "build",
+        "deliverable": "デザイン作成、ページ開発、フォームと計測タグの実装"
+       },
+       {
+        "key": "test",
+        "deliverable": "スマートフォン各機種での表示確認とフォーム送信テスト"
+       },
+       {
+        "key": "launch",
+        "deliverable": "公開、Instagramプロフィールへのリンク設置、計測開始"
+       }
+      ],
+      "team": [
+       {
+        "role": "pm",
+        "count": 1
+       },
+       {
+        "role": "designer",
+        "count": 1
+       },
+       {
+        "role": "frontend",
+        "count": 1
+       },
+       {
+        "role": "qa",
+        "count": 1
+       }
+      ],
+      "stack": [
+       "typescript",
+       "nextjs",
+       "cloudflare"
+      ],
+      "risks": [
+       {
+        "text": "掲載する写真やメニュー文の準備が遅れ、デザインが確定しない",
+        "mitigation": "要件定義の段階で必要素材の一覧を共有し、仮素材で並行して制作する",
+        "adds_weeks": 1
+       },
+       {
+        "text": "ページを公開しても新規客の流入が少なく、予約につながらない",
+        "mitigation": "InstagramやGoogleマップからの導線を整え、流入元の計測結果で改善する",
+        "adds_weeks": 0
+       }
+      ],
+      "needs": [
+       "スタイル写真と店内写真、スタッフ紹介の素材",
+       "メニューと料金表、予約時の注意事項",
+       "ドメインと予約通知を受け取るメールアドレス",
+       "Google Analyticsのアカウント",
+       "掲載内容を最終判断する担当者"
+      ],
+      "impact": {
+       "model": "more_orders",
+       "summary": "検索や広告から来た新規のお客様が迷わず予約まで進めるようになり、どの経路から来店したかも把握できます。",
+       "inputs": [
+        {
+         "key": "orders_per_month",
+         "label": "新規のお客様のご予約は月に何件ほどありますか",
+         "value": 40,
+         "basis": "assumed"
+        },
+        {
+         "key": "uplift_pct",
+         "label": "新規予約はどの程度増えると見込みますか",
+         "value": 10,
+         "basis": "assumed"
+        },
+        {
+         "key": "avg_order_usd",
+         "label": "1回のご来店の平均客単価はいくらですか",
+         "value": 55,
+         "basis": "assumed"
+        },
+        {
+         "key": "margin_pct",
+         "label": "売上に対する利益率はどのくらいですか",
+         "value": 30,
+         "basis": "assumed"
+        }
+       ]
       }
      }
     }

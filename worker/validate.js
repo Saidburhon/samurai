@@ -4,6 +4,7 @@
 import { guard, stripMoney } from './guard.js';
 import { pickable } from '../src/shared/catalogue.js';
 import { NEEDS_KEYS } from '../src/shared/price.js';
+import { plainLabel } from '../src/shared/format.js';
 
 const ROLES = ['pm', 'designer', 'frontend', 'backend', 'mobile', 'bot', 'qa', 'devops', 'data', 'ml', 'hardware'];
 const IMPACT_KEYS = ['hours_per_week', 'hourly_cost_usd', 'orders_per_month', 'avg_order_usd', 'margin_pct', 'uplift_pct', 'no_shows_per_month', 'errors_per_month', 'cost_per_error_usd'];
@@ -36,9 +37,9 @@ export function cut(s, n) {
 // tail (and a lone letter of the other script in Latin Uzbek or English) and leaves a clean text exactly as it was.
 const STOPS = '.!?。！？';
 const lastStop = (x) => Math.max(...[...STOPS].map((c) => x.lastIndexOf(c)));
-// a stop that is not a sentence end: only real abbreviations (т.е., т.к., и т.д., e.g., i.e., etc., h.k., va b.),
+// a stop that is not a sentence end: only real abbreviations and their parts (т.е., т.к., и т.д., e.g., i.e., etc., h.k., va b.),
 // never any short last word ("из них.Simple roles.", "hammasi bor.Infos.", "it is new.Roles." are junk tails)
-const ABBR = /(?:^|[^\p{L}])(?:т\.\s?[екдпн]|e\.g|i\.e|h\.k|va b|etc|vs|incl|approx|напр|др|пр|гг?|ул|руб|млн|млрд|тыс|шт|mln|mlrd)\.$/iu;
+const ABBR = /(?:^|[^\p{L}])(?:[тeihb]|т\.\s?[екдпн]|e\.g|i\.e|h\.k|etc|vs|incl|approx|напр|др|пр|гг?|ул|руб|млн|млрд|тыс|шт|mln|mlrd)\.$/iu;
 const TECH = /^(?:js|ts|io|net|com|org|uz|ru|jp|ai|py|me)\b/i; // Next.js, qilich.com
 const OTHER = { uz: /[\u0400-\u04ff]/u, en: /[\u0400-\u04ff]/u };
 function stripQuotes(t) {
@@ -96,9 +97,13 @@ const slug = (s, d) => (String(s || '').toLowerCase().replace(/[^a-z0-9_]+/g, '_
 // quotes are matched after folding case, whitespace and the okina's look-alikes
 export const norm = (s) => String(s).toLowerCase().normalize('NFC').replace(/[ʻʼ'‘’`]/g, "'").replace(/\s+/g, ' ').trim();
 
+// the Japanese page serves a company in Japan unless the visitor says the business is in Uzbekistan: an
+// Uzbekistan-only service (content/solutions-extra.json integrations.*.region "uz") is never added there
+const IN_UZ = /ウズベキスタン|タシケント|サマルカンド|ブハラ|uzbekistan|tashkent|o['ʻ]?zbekiston|узбекистан|ташкент/i;
 export function context(m, { lang, text = '', intake = {} }) {
   const pick = new Set(pickable(m).map((s) => s.id));
-  return { m, lang, text, intake, isSol: (x) => pick.has(x), isMod: (x) => !!m.modifiers[x], isInt: (x) => !!m.integrations[x], isStack: (x) => !!m.pricing.stack[x] };
+  const japan = lang === 'ja' && !IN_UZ.test(text);
+  return { m, lang, text, intake, japan, isSol: (x) => pick.has(x), isMod: (x) => !!m.modifiers[x], isInt: (x) => !!m.integrations[x] && !(japan && m.integrations[x].region === 'uz'), isStack: (x) => !!m.pricing.stack[x] };
 }
 
 export function validateHeard(ctx, h) {
@@ -211,7 +216,8 @@ export function validateDetail(ctx, d) {
   const inputs = [];
   for (const i of Array.isArray(imp.inputs) ? imp.inputs : []) {
     if (!IMPACT_KEYS.includes(i?.key) || inputs.some((x) => x.key === i.key) || typeof i.value !== 'number' || !Number.isFinite(i.value)) continue;
-    inputs.push({ key: i.key, label: textOf(ctx, i.label, 80, { money: false }) || i.key, value: i.value, basis: i.basis === 'from_text' ? 'from_text' : 'assumed' });
+    // the label never names a currency: the page shows the amount in the visitor's currency, with its unit
+    inputs.push({ key: i.key, label: plainLabel(textOf(ctx, i.label, 80, { money: false })) || i.key, value: i.value, basis: i.basis === 'from_text' ? 'from_text' : 'assumed' });
   }
   jaWage(ctx.lang, inputs);
   if (model !== 'none' && NEEDS_KEYS[model].some((k) => !inputs.some((x) => x.key === k))) model = 'none';

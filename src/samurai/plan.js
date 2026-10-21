@@ -19,19 +19,25 @@ export function ganttHtml(C, sols, st, width) {
   if (!p || !sols.length) return '';
   const phone = width < 600;
   // a row: its label, 4 px of air, the blade (its arc rises at most 2.5 px), then the phase strip under the edge
-  const rowH = 52, top = 58, pad = 4, labelY = 12, bladeY = 23, stripY = 36;
+  const rowH = 52, pad = 4, labelY = 12, bladeY = 23, stripY = 36;
   const ends = p.tracks.map((t) => t.end[1]);
   const dlW = st.deadline ? Math.max(0, daysBetween(start, st.deadline) / 7) : 0;
   const maxW = Math.max(4, Math.ceil(Math.max(p.totals.weeks[1], ...ends, dlW) + 3));
   const X = (w) => pad + (w / maxW) * (width - 2 * pad);
-  const H = top + sols.length * rowH + 40;
   const out = [DEFS];
-  // the hatch legend, once; the mono face at 13 px is about 8.6 px a Latin or Cyrillic letter, 13 px a Japanese one
+  // the hatch legend, once; the mono face at 13 px is at most 8.6 px a Latin or Cyrillic letter, 13 px a Japanese one
+  // (a generous measure: items wrap before they could touch)
   const tw = (t) => [...t].reduce((a, c) => a + (c.charCodeAt(0) > 0x2e7f ? 13 : 8.6), 0);
-  // items wrap to a second row when the line is full (phones): the start label sits lower, at top − 10
+  // items wrap to another row when the line is full (phones); the start and deadline labels sit under the last row
   let lx = pad, ly = 0;
   const item = (draw, label) => { const w = 22 + tw(label); if (lx > pad && lx + w > width - pad) { lx = pad; ly += 17; } const g = draw(lx, ly) + `<text x="${lx + 22}" y="${11 + ly}">${h(label)}</text>`; lx += w + 18; return g; };
   out.push(`<g class="leg">${PH.map((k) => item((x, y) => `<rect x="${x}" y="${4 + y}" width="16" height="6" fill="${k === 'launch' ? 'none' : `url(#ph-${k})`}" stroke="#0F0E0C" stroke-width=".5"/>`, S.ph[k])).join('')}${item((x, y) => `<path class="k5" d="M${x} ${7 + y}h16"/>`, S.ph.kaizen)}</g>`);
+  // the start label and the deadline label share a line under the legend; when they would touch, the deadline's
+  // label takes its own line
+  const startLabel = `${S.start} ${F.dateNum(start, lang)}`, dlLabel = st.deadline ? `${S.deadline} ${F.dateNum(st.deadline, lang)}` : '';
+  const dlOwnLine = dlLabel && dlW > 0 && X(dlW) - 4 - tw(dlLabel) < X(0) + 4 + tw(startLabel) + 12;
+  const top = Math.max(58, ly + 41) + (dlOwnLine ? 17 : 0);
+  const H = top + sols.length * rowH + 40;
   sols.forEach((s, i) => {
     const id = solId(s), state = st.sel.get(id) || 'off', y = top + i * rowH;
     const t = p.tracks.find((x) => x.id === id);
@@ -71,22 +77,24 @@ export function ganttHtml(C, sols, st, width) {
   const marksM = [{ x: X(0), m: Number(start.slice(5, 7)) - 1, tick: false }, ...firsts.map((d) => ({ x: X(daysBetween(start, d) / 7), m: Number(d.slice(5, 7)) - 1, tick: true }))];
   let lastEnd = -Infinity;
   marksM.forEach((q, i) => {
-    const name = F.MONTHS_SHORT[lang][q.m], tx = q.x + 3, tw0 = tw(name);
+    const name = S.monthsShort[q.m], tx = q.x + 3, tw0 = tw(name);
     if (q.tick) ax.push(`<path class="mt" d="M${q.x.toFixed(1)} ${ay}v10"/>`);
     const next = marksM[i + 1];
     if (tx < lastEnd + 6 || tx + tw0 > width - pad || (next && tx + tw0 + 6 > next.x + 3 && !q.tick)) return;
     ax.push(`<text x="${tx.toFixed(1)}" y="${ay + 20}">${h(name)}</text>`);
     lastEnd = tx + tw0;
   });
-  const hol = holidaysBetween(start, addDays(start, maxW * 7), lang).map((x) => `<circle class="hol" cx="${X(daysBetween(start, x.date) / 7).toFixed(1)}" cy="${ay}" r="2.4" tabindex="0"><title>${h(`${x.name}, ${F.dateNum(x.date, lang)}`)}</title></circle>`).join('');
-  const marks = [`<g class="mk"><path class="k1" d="M${X(0)} ${top - 6}V${ay}"/><text x="${X(0) + 4}" y="${top - 10}" class="lbl">${h(S.start)} ${h(F.dateNum(start, lang))}</text></g>`];
-  if (st.deadline && dlW > 0) marks.push(`<g class="dl"><path class="k1" d="M${X(dlW).toFixed(1)} ${top - 6}V${ay}"/><text x="${(X(dlW) - 4).toFixed(1)}" y="${top - 10}" text-anchor="end" class="lbl">${h(S.deadline)} ${h(F.dateNum(st.deadline, lang))}</text></g>`);
+  const hol = holidaysBetween(start, addDays(start, maxW * 7)).map((x) => `<circle class="hol" cx="${X(daysBetween(start, x.date) / 7).toFixed(1)}" cy="${ay}" r="2.4" tabindex="0"><title>${h(`${S.hol[x.k]}, ${F.dateNum(x.date, lang)}`)}</title></circle>`).join('');
+  const marks = [`<g class="mk"><path class="k1" d="M${X(0)} ${top - 6}V${ay}"/><text x="${X(0) + 4}" y="${top - 10 - (dlOwnLine ? 17 : 0)}" class="lbl">${h(startLabel)}</text></g>`];
+  // the deadline's label ends at its line, or starts there when it would run off the left edge
+  const dlLeft = X(dlW) - 4 - tw(dlLabel) < pad;
+  if (dlLabel && dlW > 0) marks.push(`<g class="dl"><path class="k1" d="M${X(dlW).toFixed(1)} ${top - 6}V${ay}"/><text x="${(X(dlW) + (dlLeft ? 4 : -4)).toFixed(1)}" y="${top - 10}"${dlLeft ? '' : ' text-anchor="end"'} class="lbl">${h(dlLabel)}</text></g>`);
   const aria = `${S.plan}: ${sols.map((s) => `${s.title}, ${S.sc[st.sel.get(solId(s)) || 'off']}`).join('; ')}`;
   // a text-only Gantt for the printout
   const table = `<table class="gantt-table"><tbody>${sols.filter((s) => (st.sel.get(solId(s)) || 'off') !== 'off').map((s) => {
     const sc = st.sel.get(solId(s)), t = p.tracks.find((x) => x.id === solId(s)), s0 = t?.start[1] || 0;
     let acc = s0;
-    return s.phases[sc].map((ph, k) => { const from = acc; acc += ph.weeks[1]; return `<tr>${k ? '<td></td>' : `<th>${h(s.title)}</th>`}<td>${h(S.ph[ph.key])}</td><td>${h(F.weeks(ph.weeks, lang))}</td><td>${h(F.dateRange(endOfWork(start, Math.max(0.2, from)), endOfWork(start, acc), lang))}</td></tr>`; }).join('');
+    return s.phases[sc].map((ph, k) => { const from = acc; acc += ph.weeks[1]; return `<tr>${k ? '<td></td>' : `<th>${h(s.title)}</th>`}<td>${h(S.ph[ph.key])}</td><td class="nw">${h(F.weeks(ph.weeks, lang))}</td><td class="nw">${h(F.dateRange(endOfWork(start, Math.max(0.2, from)), endOfWork(start, acc), lang, S.months))}</td></tr>`; }).join('');
   }).join('')}</tbody></table>`;
   return `<svg class="gantt" viewBox="0 0 ${width} ${H}" width="${width}" height="${H}" role="img" aria-label="${h(aria)}">${out.join('')}<g class="axis">${ax.join('')}</g>${hol}${marks.join('')}</svg>${table}`;
 }
@@ -95,7 +103,7 @@ export function totalsHtml(C, st) {
   const { S, lang } = C, t = st.plan?.totals;
   if (!t) return '';
   const [main, other] = money(C, t.usd, t.uzs);
-  const launch = t.count ? F.dateRange(endOfWork(st.start, t.weeks[0]), endOfWork(st.start, t.weeks[1]), lang) : '';
+  const launch = t.count ? F.dateRange(endOfWork(st.start, t.weeks[0]), endOfWork(st.start, t.weeks[1]), lang, S.months) : '';
   const mon = money(C, t.monthly_usd, t.monthly_uzs)[0];
   const rows = [
     [S.total, `<b>${R(main)}</b><span>${R(other)}</span><span>${R(F.weeks(t.weeks, lang))}</span>${launch ? `<span>${h(S.launch).replace('{d}', `<span class="nw">${h(launch)}</span>`)}</span>` : ''}`],

@@ -52,9 +52,10 @@ html.clocks-live .nav .clocks { visibility: visible; }
 .lang a[aria-current] { opacity: 1; }
 .lang a[aria-current]::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 3px; height: 3px; margin-left: -1.5px; background: currentColor; border-radius: 50%; }
 .btn { display: inline-flex; align-items: center; gap: 14px; height: 36px; padding: 0 16px; border: 1px solid currentColor; transition: background-color .45s var(--ui), color .45s var(--ui); }
-.btn:hover, .nav .btn[aria-current] { background: var(--sumi); color: var(--washi); }
+.nav .btn[aria-current] { background: var(--sumi); color: var(--washi); }
 .btn svg { width: 30px; height: 8px; fill: currentColor; transition: translate .45s var(--ui); }
-.btn:hover svg { translate: 6px 0; }
+/* the ink fill only where a pointer hovers: a tap on a phone never leaves a filled button behind */
+@media (hover: hover) { .btn:hover { background: var(--sumi); color: var(--washi); } .btn:hover svg { translate: 6px 0; } }
 .call, .menu { display: none; }
 
 /* ---------------- the phone menu sheet ---------------- */

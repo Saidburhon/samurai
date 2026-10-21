@@ -94,8 +94,9 @@ html.no-js .clocks, html.no-js .city time { display: none; } /* without JS no cl
   .nav > .lang .nm { display: inline; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .nav > .lang .cd { display: inline; }
 }
-/* narrower bars close their gaps (en at 1280: "Tashkent · Tokyo" came within 21 px of "Services") */
-@media (max-width: 1399px) { .nav { gap: 22px; } .links { gap: 22px; } }
+/* narrower bars close their gaps (en at 1280: "Tashkent · Tokyo" came within 21 px of "Services"), the bar's own
+   groups keeping 24 px or more between them (fit-check) */
+@media (max-width: 1399px) { .nav { gap: 26px; } .links { gap: 22px; } }
 
 /* ---------------- the hero (B0): the drawing, the h1, the subline, the mei ---------------- */
 .s-mei { position: relative; }

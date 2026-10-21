@@ -83,3 +83,22 @@ test('Telegram: the message, then the link as its own message, or as a file when
     assert.ok(carried.includes(method === 'sendMessage' ? LINKS[k].link : LINKS[k].link.replace(/&/g, '&amp;')), `${k}: the link arrives whole`);
   }
 });
+
+test('without a bot the 501 e-mail text is the estimate, never the lead score or its reasons (rv2a must-fix 2)', async () => {
+  const { lead } = parseLead({ lang: 'ru', name: 'Aziz', phone: '+998901234567', page: '/ru/samurai/', brief: { ...bigBrief(LINKS.short.link, 'Наш текст'), budget_usd: 20000, deadline: '2026-11-20' } });
+  const r = await sendLead({}, lead, '2026-10-21');
+  assert.equal(r.status, 501);
+  assert.equal(r.body.fallback, 'mailto');
+  assert.doesNotMatch(r.body.text, /ISSIQ|ILIQ|SOVUQ|Sabab|Til: |Sahifa: /);
+  assert.match(r.body.text, /^Smeta QL-2610-7F3A\n/);
+  assert.ok(r.body.text.endsWith(LINKS.short.link), 'the link closes the e-mail');
+  assert.match(leadText(lead, '2026-10-21').head, /^(ISSIQ|ILIQ|SOVUQ) · Smeta/, 'the owner\'s chat keeps the score');
+});
+
+test('a local estimate link is kept only under wrangler dev', () => {
+  const b = (link) => ({ lang: 'uz', name: 'A', phone: '+998901234567', brief: { brief_no: 'QL-2610-7F3A', link } });
+  assert.equal(parseLead(b('http://127.0.0.1:9/x')).lead.brief.link, '');
+  assert.equal(parseLead(b('http://localhost:8810/samurai/#r=z1')).lead.brief.link, '');
+  assert.equal(parseLead(b('http://localhost:8810/samurai/#r=z1'), { dev: true }).lead.brief.link, 'http://localhost:8810/samurai/#r=z1');
+  assert.equal(parseLead(b('https://qilich.com/samurai/#r=z1')).lead.brief.link, 'https://qilich.com/samurai/#r=z1');
+});

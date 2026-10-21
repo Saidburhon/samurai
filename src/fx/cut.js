@@ -42,7 +42,7 @@ export class Cut {
     const key = this.key(k, layout);
     if (this.cache.has(key)) return this.cache.get(key);
     const tr = SEQ[layout].trans[k];
-    const d = evalS(k, layout);
+    const d = evalS(k, layout); d.settled = true;
     const fz = this.snapshot(d, tr);
     this.cache.set(key, fz);
     // a few sheets at most (each holds a copy of the canvas)
@@ -169,21 +169,28 @@ export class Cut {
     }
     const one = P.one, rim = P.rim;
     if (this.reduced) { one.style.opacity = (1 - p).toFixed(3); rim.style.opacity = '0'; return; }
-    let mask, rimBg;
+    // the rim of light is one small layer moved and scaled by the compositor (a full-screen gradient re-drawn in
+    // every frame, blended with the page, cost a second per frame in software, G3)
+    let mask, tf;
     if (tr.type === 'wipe' && tr.wipe === 'light') {
       const [cx, cy] = fz.ts, r = 1.2 * P.D * EASES['power2.inOut'](p);
       mask = `radial-gradient(circle at ${cx.toFixed(0)}px ${cy.toFixed(0)}px, transparent ${Math.max(0, r - 70).toFixed(0)}px, #000 ${(r + 70).toFixed(0)}px)`;
-      rimBg = `radial-gradient(circle at ${cx.toFixed(0)}px ${cy.toFixed(0)}px, transparent ${Math.max(0, r - 110).toFixed(0)}px, rgba(255,214,160,.55) ${r.toFixed(0)}px, transparent ${(r + 110).toFixed(0)}px)`;
+      if (!rim.dataset.k) { rim.dataset.k = 'ring'; rim.style.cssText = `left:${(cx - 500).toFixed(0)}px;top:${(cy - 500).toFixed(0)}px;width:1000px;height:1000px;background:radial-gradient(circle closest-side, transparent 82%, rgba(255,214,160,.5) 94%, transparent 100%)`; }
+      tf = `scale(${Math.max(0.001, r / 470).toFixed(4)})`;
     } else {
       // linear fronts: the raking light sweeps from the left; the dusk comes from the right
-      const fromLeft = tr.wipe === 'sweep', dir = fromLeft ? 90 : 270, len = W, soft = fromLeft ? 140 : 240;
-      const x = EASES['power2.inOut'](p) * (len + 2 * soft) - soft;
+      const fromLeft = tr.wipe === 'sweep', dir = fromLeft ? 90 : 270, soft = fromLeft ? 140 : 240;
+      const x = EASES['power2.inOut'](p) * (W + 2 * soft) - soft;
       mask = `linear-gradient(${dir}deg, transparent ${(x - soft / 2).toFixed(0)}px, #000 ${(x + soft / 2).toFixed(0)}px)`;
-      const col = fromLeft ? 'rgba(255,214,160,.5)' : 'rgba(200,116,46,.6)';
-      rimBg = `linear-gradient(${dir}deg, transparent ${(x - soft).toFixed(0)}px, ${col} ${x.toFixed(0)}px, transparent ${(x + soft * 0.6).toFixed(0)}px)`;
+      if (!rim.dataset.k) {
+        rim.dataset.k = 'strip';
+        const col = fromLeft ? 'rgba(255,214,160,.42)' : 'rgba(200,116,46,.5)';
+        rim.style.cssText = `left:0;top:0;width:${soft * 2}px;height:100%;inset:auto;bottom:0;background:linear-gradient(90deg, transparent, ${col} 50%, transparent)`;
+      }
+      tf = `translateX(${((fromLeft ? x : W - x) - soft).toFixed(1)}px)`;
     }
     one.style.webkitMaskImage = one.style.maskImage = mask;
-    rim.style.background = rimBg;
+    rim.style.transform = tf;
     rim.style.opacity = Math.sin(Math.PI * Math.min(1, Math.max(0, p))).toFixed(3);
     void H;
   }
@@ -202,7 +209,7 @@ export class Cut {
       return true;
     }
     // the freeze this hold leads into (or the one about to start) waits mounted
-    const k = d && !d.intro ? (d.atHold ? Math.round(d.pos) : d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe') ? d.k : null) : null;
+    const k = d && !d.intro ? (d.atHold ? (d.settled ? Math.round(d.pos) : null) : d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe') && this.shown && this.shown.k === d.k ? d.k : null) : null;
     const fz = k != null ? this.cache.get(this.key(k, layout)) : null;
     if (fz) { this.prime(fz); return false; }
     this.hide();

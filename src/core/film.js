@@ -20,16 +20,21 @@ const ZERO = { cam: 0, look: 0, mat: 0, sign: 0, ink: 0 };
 // the last frames drawn: [time ms, beat, render ms] (for the probes)
 const flog = (Q.flog = []);
 // a hold as a descriptor (also 'intro', which is not on the track)
-const holdD = (name, layout) => ({ a: name, b: name, k: 0, f: 0, tr: {}, e: ZERO, p: ZERO, freeze: null, live: 'a', push: 0, near: name, atHold: true, hold: name, layout, pos: posOf(name === 'intro' ? 'mei.hero' : name, layout) });
+const holdD = (name, layout) => ({ a: name, b: name, k: 0, f: 0, tr: {}, e: ZERO, p: ZERO, freeze: null, live: 'a', push: 0, near: name, atHold: true, settled: true, hold: name, layout, pos: posOf(name === 'intro' ? 'mei.hero' : name, layout) });
 
-// the effective state of a descriptor: equal keys draw the same frame
+// the effective state of a descriptor: equal keys draw the same frame. A hold is one frame wherever the follower is
+// inside its window; 'settled' (the window held for 300 ms) adds the hold's own work: its resolution, the rays, the
+// crisp stipple
 function stateKey(d) {
+  const s = d.settled ? 1 : 0;
+  // under a freeze the live layers hold the incoming hold still: one GL frame for the whole freeze
+  if (d.freeze && d.live === 'b' && !d.push) return `H|${d.b}|${s}`;
   if (!d.intro && !d.freeze) {
     const vals = Object.values(d.e);
-    if (d.live === 'a' || (d.live === 'mix' && vals.every((v) => v === 0))) return `H|${d.a}|${d.atHold ? 1 : 0}`;
-    if ((d.live === 'b' && !d.push) || (d.live === 'mix' && vals.every((v) => v === 1))) return `H|${d.b}|${d.atHold ? 1 : 0}`;
+    if (d.live === 'a' || (d.live === 'mix' && vals.every((v) => v === 0))) return `H|${d.a}|${s}`;
+    if ((d.live === 'b' && !d.push) || (d.live === 'mix' && vals.every((v) => v === 1))) return `H|${d.b}|${s}`;
   }
-  return `${d.a}|${d.b}|${d.live}|${(d.push || 0).toFixed(4)}|${Object.values(d.e).map((v) => v.toFixed(4)).join(',')}|${d.atHold ? 1 : 0}`;
+  return `${d.a}|${d.b}|${d.live}|${(d.push || 0).toFixed(4)}|${Object.values(d.e).map((v) => v.toFixed(4)).join(',')}|${s}`;
 }
 
 export function parseBeatParam(q, layout) {
@@ -67,10 +72,16 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   const layout = () => dir.layout;
   let stamp = null;
   if (q.has('stamp')) { stamp = document.createElement('i'); stamp.style.cssText = 'position:fixed;left:0;bottom:0;width:8px;height:4px;z-index:99;pointer-events:none'; document.body.appendChild(stamp); }
-  const describe = () => {
+  const describe = (now) => {
     if (fz === 'intro') return holdD('intro', layout());
     if (state.intro) return evalIntro(state.intro.t, layout());
-    return evalS(dir.xp ?? dir.x, layout());
+    const d = evalS(dir.xp ?? dir.x, layout());
+    // settled: the hold window entered at least 300 ms ago (a frozen director is settled at once). The hold's heavy
+    // work waits for it, so the frames around the capture's mid shot stay light (one frame in flight, §6.4)
+    if (!d.atHold) state.windowSince = null;
+    else if (state.windowSince == null) state.windowSince = now;
+    d.settled = d.atHold && (fz != null || dir.frozen != null || now - state.windowSince >= 300);
+    return d;
   };
   // one frame in flight: a software renderer takes 0.1–0.3 s per frame in the GPU process, and frames issued faster
   // than that queue up there (the screen then lags the scroll by seconds, and so does every screenshot). A new frame,
@@ -83,16 +94,27 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   };
   const fence = () => { if (gl.fenceSync) { if (state.fence) gl.deleteSync(state.fence); state.fence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0); gl.flush(); state.fenceT = performance.now(); } };
   const frame = (now, force = false) => {
-    const d = describe();
+    const d = describe(now);
     state.d = d;
     const lay = layout();
     if (busy() && !force) { report(d, lay, false); return; }
     // the resolution: the hold's own inside a hold window (and through the intro), cheaper frames while moving (§6.4)
-    const hr = !!(d.atHold || d.intro || fz != null);
+    // (a frame that keeps a settled hold keeps its resolution)
+    const keepHold = !d.settled && d.atHold === false && state.key && state.key.endsWith('|1') && stateKey(d) === state.key.slice(0, -1) + '0';
+    // under a freeze the live layers show the incoming hold, still: one frame, drawn at once at its hold resolution
+    const underFreeze = !!(d.freeze && d.live === 'b');
+    const hr = !!(d.settled || d.intro || fz != null || keepHold || underFreeze);
     if (hr !== state.holdRes) { state.holdRes = hr; stage.setSize(stage.w, stage.h, hr); state.key = ''; }
+    let key = stateKey(d);
+    // leaving a settled hold draws nothing until the state itself moves (the hold's frame is still the right one)
+    if (!film.dirty && key.startsWith('H|') && key.endsWith('|0') && state.key === key.slice(0, -1) + '1') key = state.key;
+    // the page's own layers (the freeze's halves and masks, the text) move at most every 90 ms on a software
+    // renderer when no GL frame is due: each of their frames is a full software composite in the GPU process
+    if (key === state.key && !film.dirty && stage.tier.tier === 2 && now - (state.lastDom || 0) < 90 && !cut.jumpFz) { report(d, lay, !!cut.shown); return; }
+    state.lastDom = now;
     // the freeze first: preparing one renders its hold, so the live frame is applied after it
     const cutOn = cut.update(d, lay, now);
-    const key = stateKey(d);
+    if (stamp && cutOn) { const b = Math.max(0, beatOf(d.pos, lay)), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
     if (key !== state.key || film.dirty) {
       film.dirty = false;
       const ta = performance.now();

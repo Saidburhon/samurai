@@ -88,9 +88,13 @@ test('tidy drops the junk tails the model left in short fields, and leaves clean
     ['Uch filial, turli rollar va daftardagi maʼlumotni koʻchirish kerak.)', 'uz', 'Uch filial, turli rollar va daftardagi maʼlumotni koʻchirish kerak.'],
     ['Стандартный бот, нужно аккуратно оцифровать меню и зоны доставки.)', 'ru', 'Стандартный бот, нужно аккуратно оцифровать меню и зоны доставки.'],
     ['Uch filial, shifokorlar jadvali va Exceldagi qarzlarni koʻchirish kerak.Infos.', 'uz', 'Uch filial, shifokorlar jadvali va Exceldagi qarzlarni koʻchirish kerak.'],
+    // a short last word is not an abbreviation (jb2a must-fix 2: the live ru car-wash answer)
+    ['Нужно видеть сводку по выручке для каждой из них.Simple roles.', 'ru', 'Нужно видеть сводку по выручке для каждой из них.'],
+    ['Kassa, ombor va mijozlar roʻyxati hammasi bor.Infos.', 'uz', 'Kassa, ombor va mijozlar roʻyxati hammasi bor.'],
+    ['The booking flow is standard and it is new.Roles.', 'en', 'The booking flow is standard and it is new.'],
   ];
   for (const [i, lang, want] of bad) assert.equal(tidy(i, lang), want);
-  for (const [i, lang] of [['Standart bot, menyu va yetkazish manzili, bitta filial', 'uz'], ['Built with Next.js', 'en'], ['Нужно перенести данные, т.е. клиентов', 'ru'], ['He said "hello."', 'en'], ['日報項目の標準化が主な課題です。', 'ja'], ['Hmm...', 'en'], ['Uch filial. Har birida alohida kassa', 'uz'], ['Kassa «Mijoz».', 'uz'], ['Bot (Telegram).', 'uz'], ['Kassa bor. Ha.', 'uz'], ['Works well with Next.js.', 'en'], ['Uses the existing stack, e.g.Telegram.', 'en']]) assert.equal(tidy(i, lang), i);
+  for (const [i, lang] of [['Standart bot, menyu va yetkazish manzili, bitta filial', 'uz'], ['Built with Next.js', 'en'], ['Нужно перенести данные, т.е. клиентов', 'ru'], ['He said "hello."', 'en'], ['日報項目の標準化が主な課題です。', 'ja'], ['Hmm...', 'en'], ['Uch filial. Har birida alohida kassa', 'uz'], ['Kassa «Mijoz».', 'uz'], ['Bot (Telegram).', 'uz'], ['Kassa bor. Ha.', 'uz'], ['Works well with Next.js.', 'en'], ['Uses the existing stack, e.g.Telegram.', 'en'], ['Данные клиентов, заказов и т.д.', 'ru'], ['Mijozlar, buyurtmalar va h.k.', 'uz'], ['Около 5 млн. Это много', 'ru']]) assert.equal(tidy(i, lang), i);
 });
 
 test('a long summary is cut at a clause boundary and ends with "…", never mid-clause (rv2a must-fix 2)', async () => {

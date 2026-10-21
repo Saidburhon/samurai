@@ -5,18 +5,8 @@ export const NB = '\u00a0';
 const DASH = '–';
 const TILDE = '〜';
 
-export const MONTHS = {
-  uz: ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'],
-  ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
-  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  ja: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-};
-export const MONTHS_SHORT = {
-  uz: ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avg', 'sen', 'okt', 'noy', 'dek'],
-  ru: ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
-  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  ja: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-};
+// The month names (src/shared/months.js) are page words: the page passes its own language's list to dateRange(), so
+// the browser carries one language, never four.
 
 // whole numbers grouped: 12 012 (uz, ru, NBSP) or 12,012 (en, ja)
 export function int(n, lang) {
@@ -52,6 +42,17 @@ export function money(usdR, uzsR, cur, lang) {
   return cur === 'usd' ? [usd(usdR, lang), uzs(uzsR, lang)] : [uzs(uzsR, lang), usd(usdR, lang)];
 }
 
+/**
+ * An impact input's label without a currency: the page shows the amount in the visitor's currency and adds the unit
+ * itself. "… qancha (USD)?" → "… qancha?", "…, в долларах?" → "…?", "… in USD?" → "…?", "necha dollarga" → "qanchaga".
+ */
+export const plainLabel = (s) => String(s)
+  .replace(/\s*[(（]\s*(?:US\$|USD|\$|dollar\w*|доллар\p{L}*|米?ドル|so[ʻ']?m|сум|円)\s*[)）]/giu, '')
+  .replace(/,?\s+(?:in|в)\s+(?:USD|US dollars|dollars|долларах|\$)/giu, '')
+  .replace(/necha dollar(ga)?/giu, (m, g) => (g ? 'qanchaga' : 'qancha'))
+  .replace(/何ドル/g, 'いくら')
+  .replace(/\s+([?？])/g, '$1').trim();
+
 let PR = {};
 function plural(lang, n) {
   try { return (PR[lang] ||= new Intl.PluralRules(lang)).select(n); } catch { return n === 1 ? 'one' : 'other'; }
@@ -74,9 +75,10 @@ export function weeks(r, lang) {
   const [a, b] = r.map((x) => Math.round(x * 2) / 2);
   const v = span(a, b, (x) => dec(x, lang), lang);
   if (lang === 'uz') return `${v}${NB}hafta`;
-  if (lang === 'ru') return `${v}${NB}${ruForm('week', Number.isInteger(b) ? b : 2)}`;
+  // a range or a fraction takes the plural of the range: "0,5–1 недели", "0.5–1 weeks" (never "0,5–1 неделя")
+  if (lang === 'ru') return `${v}${NB}${ruForm('week', Number.isInteger(b) && (a === b || b > 1) ? b : 2)}`;
   if (lang === 'ja') return `${v}週間`;
-  return `${v}${NB}${b === 1 ? 'week' : 'weeks'}`;
+  return `${v}${NB}${a === 1 && b === 1 ? 'week' : 'weeks'}`;
 }
 export function months(r, lang) {
   const [a, b] = r;
@@ -89,10 +91,9 @@ export function months(r, lang) {
 
 // dates are 'YYYY-MM-DD' strings or UTC Dates
 const parts = (d) => { const x = typeof d === 'string' ? new Date(`${d}T00:00:00Z`) : d; return [x.getUTCFullYear(), x.getUTCMonth(), x.getUTCDate()]; };
-/** "15–29 dekabr", "28 noyabr–12 dekabr", "15–29 декабря", "15–29 December", "12月15日〜29日" */
-export function dateRange(d1, d2, lang) {
+/** "15–29 dekabr", "28 noyabr–12 dekabr", "15–29 декабря", "15–29 December", "12月15日〜29日"; M: MONTHS[lang] */
+export function dateRange(d1, d2, lang, M) {
   const [y1, m1, a] = parts(d1), [y2, m2, b] = parts(d2);
-  const M = MONTHS[lang] || MONTHS.en;
   const yr = (y) => (y1 !== y2 ? ` ${y}` : '');
   if (lang === 'ja') {
     const j1 = `${y1 !== y2 ? `${y1}年` : ''}${M[m1]}${a}日`;

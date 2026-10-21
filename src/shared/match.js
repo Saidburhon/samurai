@@ -38,12 +38,20 @@ function keywordHits(m, text, lang) {
     .map((x) => x.id);
 }
 
-// Japanese has no spaces between words, so keyword tokens find nothing: the industry comes from its words instead
-// (content/solutions-extra.json industries.*.ja_words), the one with the most hits, ties to the catalogue order
+// The industry the visitor wrote, in any language: the first of its words in the text wins (people name their business
+// first: "goʻzallik saloni…", "Оптовая торговля…", "We run three pharmacies…"); on the same spot the longer word wins
+// ("qurilish mollari" over "qurilish"). Words are stems matched at a word start; a trailing "=" means the whole word
+// (content/solutions-extra.json industries.*.words). Japanese has no spaces: its words (ja_words) match anywhere.
+const spaced = (s) => ` ${tokensAll(s).join(' ')} `;
+const tokensAll = (s) => fold(s).split(/[^\p{L}\p{N}]+/u).filter(Boolean);
 function industryFromText(m, text, lang) {
-  if (lang !== 'ja' || !text) return null;
-  let best = null, top = 0;
-  for (const ind of Object.values(m.industries)) { const n = (ind.ja_words || []).filter((w) => text.includes(w)).length; if (n > top) { top = n; best = ind; } }
+  if (!text) return null;
+  const ja = lang === 'ja', t = ja ? text : spaced(text);
+  let best = null, at = Infinity, len = 0;
+  for (const ind of Object.values(m.industries)) for (const w of (ja ? ind.ja_words : ind.words) || []) {
+    const k = ja ? t.indexOf(w) : t.indexOf(w.endsWith('=') ? spaced(w.slice(0, -1)) : spaced(w).trimEnd());
+    if (k >= 0 && (k < at || (k === at && w.length > len))) { best = ind; at = k; len = w.length; }
+  }
   return best;
 }
 
@@ -54,7 +62,8 @@ export function match(m, { intake = {}, text = '', lang = 'uz', preselected = []
   const ind = m.industries[intake.industry] || m.industries.other;
   const valid = (id) => m.byId.has(id) && m.byId.get(id).billing !== 'monthly';
   const fromText = intake.industry && intake.industry !== 'other' ? [] : keywordHits(m, text, lang);
-  let ids = [...new Set([...preselected.filter(valid), ...fromText, ...(ind?.starter || []).filter(valid)])];
+  // the Japanese page serves a company in Japan: its own starters, never Telegram first (ja_starter)
+  let ids = [...new Set([...preselected.filter(valid), ...fromText, ...((lang === 'ja' && ind?.ja_starter) || ind?.starter || []).filter(valid)])];
   if (intake.tools === 'website') ids = ids.filter((id) => !['web-corporate', 'web-landing'].includes(id));
   if (intake.tools === 'instagram' && !ids.includes('ai-sales-assistant') && valid('ai-sales-assistant') && ids.length < 3) ids.push('ai-sales-assistant');
   // the goal moves the groups that serve it to the front (stable: equal weights keep the starter order)
@@ -70,9 +79,9 @@ export function match(m, { intake = {}, text = '', lang = 'uz', preselected = []
     if (multi) mods.push('multi_branch');
     if (intake.tools === 'excel' && i === 0) mods.push('migration');
     const ints = [];
-    if (intake.tools === '1c' && e.integrations.includes('1c')) ints.push('1c');
+    if (intake.tools === '1c' && lang !== 'ja' && e.integrations.includes('1c')) ints.push('1c');
     if (intake.tools === 'instagram' && e.integrations.includes('instagram')) ints.push('instagram');
-    if (intake.goal === 'payments' && e.integrations.includes('payme')) ints.push('payme', 'click');
+    if (intake.goal === 'payments') ints.push(...(lang === 'ja' ? ['visa_mc'] : ['payme', 'click']).filter((k) => e.integrations.includes(k)));
     return {
       n: i + 1, catalogue_id: id, based_on: [], title: L(e.title, lang) || L(e.title, 'en'), why: L(e.oneliner, lang) || L(e.oneliner, 'en') || '',
       priority: i === 0 ? 'must' : 'should', scope: 'mvp', size, modifiers: mods, integrations: ints.filter((k) => !e.integrations_included.includes(k)),

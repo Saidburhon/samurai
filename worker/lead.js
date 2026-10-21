@@ -1,7 +1,7 @@
 // POST /api/lead (SOLUTIONS-SPEC §6): a visitor sends their estimate (or the contact form) to Qilich. Nothing is
 // stored: the lead goes straight to the owner's Telegram chat through the bot when TELEGRAM_BOT_TOKEN and
-// TELEGRAM_CHAT_ID are set (TG_BOT_TOKEN / TG_CHAT_ID are accepted too), otherwise the answer is 501 with the same text
-// for a prefilled e-mail. The log says only "lead ok" or "lead fail <status>": never a name, a phone or a text.
+// TELEGRAM_CHAT_ID are set (TG_BOT_TOKEN / TG_CHAT_ID are accepted too), otherwise the answer is 501 with the estimate's
+// text for a prefilled e-mail (without the lead score, which only the owner's chat sees). The log says only "lead ok" or "lead fail <status>": never a name, a phone or a text.
 import * as F from '../src/shared/format.js';
 import { NOT_ALLOWED } from './copy-rules.js';
 
@@ -13,7 +13,8 @@ const EMAIL = /^[^\s@<>]{1,64}@[^\s@<>]{1,190}\.[a-z]{2,}$/i;
 const DAY = 864e5;
 // the estimate link is the whole estimate (the hash holds it): never cut, so the owner can open it. Real links with
 // four solutions run to 6–9 000 characters; past LINK_MAX it is dropped whole rather than broken.
-const LINK = /^https:\/\/qilich\.com\/[^\s<>"]*$|^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/[^\s<>"]*$/;
+const LINK = /^https:\/\/qilich\.com\/[^\s<>"]*$/;
+const LINK_DEV = /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/[^\s<>"]*$/; // only under wrangler dev
 export const LINK_MAX = 12000;
 const TG_MAX = 4096; // Telegram's limit for one message's text
 
@@ -37,8 +38,8 @@ export function leadScore(b, { visits = 1, today = new Date().toISOString().slic
 const STATE = { mvp: 'MVP', full: 'Toʻliq', off: 'keyinroq' };
 const host = (u) => { try { return new URL(u).hostname; } catch { return ''; } };
 
-/** Validates the body: { lead } with clean fields, or { error }. */
-export function parseLead(body) {
+/** Validates the body: { lead } with clean fields, or { error }. dev: wrangler dev (a local estimate link is kept). */
+export function parseLead(body, { dev = false } = {}) {
   if (!body || typeof body !== 'object') return { error: 'bad_input' };
   const lang = ['uz', 'ru', 'en', 'ja'].includes(body.lang) ? body.lang : 'uz';
   const name = clean(body.name, 60);
@@ -61,7 +62,7 @@ export function parseLead(body) {
     totals: b.totals ? { usd: (b.totals.usd || []).slice(0, 2).map(Number), uzs: (b.totals.uzs || []).slice(0, 2).map(Number), weeks: (b.totals.weeks || []).slice(0, 2).map(Number) } : null,
     budget_usd: Number(b.budget_usd) || 0, budget_uzs: Number(b.budget_uzs) || 0, deadline: /^\d{4}-\d{2}-\d{2}$/.test(b.deadline || '') ? b.deadline : '',
     answers: (Array.isArray(b.answers) ? b.answers : []).slice(0, 6).map((a) => `${clean(a?.q, 70)}: ${clean(a?.a, 30)}`),
-    text: clean(b.text, 1500), link: LINK.test(String(b.link || '')) && String(b.link).length <= LINK_MAX ? String(b.link) : '',
+    text: clean(b.text, 1500), link: (LINK.test(String(b.link || '')) || (dev && LINK_DEV.test(String(b.link || '')))) && String(b.link).length <= LINK_MAX ? String(b.link) : '',
     source: ['samurai', 'basket'].includes(b.source) ? b.source : 'samurai',
   } : null;
   return {
@@ -111,7 +112,11 @@ export function leadText(l, today) {
     if (esc(head).length > LIMIT) head = [...head].slice(0, LIMIT - 600).join('');
   }
   const plain = link ? `${head}\nSmeta: ${link}` : head;
-  return { head, link, plain, html: esc(head), level: sc?.level || null };
+  // what the visitor's own e-mail carries when there is no bot: the estimate and their words, never Qilich's lead
+  // score, its reasons or the source line (those are for the owner's chat only)
+  const internal = new Set([lines[0], sc?.why.length ? lines[1] : null, lines.find((x) => x.startsWith('Til: '))]);
+  const visitor = [...(b ? [`Smeta ${b.brief_no || '—'}`] : []), ...head.split('\n').filter((x) => !internal.has(x)), ...(link ? [link] : [])].join('\n');
+  return { head, link, plain, visitor, html: esc(head), level: sc?.level || null };
 }
 
 /**
@@ -122,13 +127,13 @@ export async function sendLead(env, lead, today, fetcher = fetch) {
   const token = env.TELEGRAM_BOT_TOKEN || env.TG_BOT_TOKEN, chat = env.TELEGRAM_CHAT_ID || env.TG_CHAT_ID;
   const msg = leadText(lead, today);
   const subject = lead.brief?.brief_no ? `Smeta ${lead.brief.brief_no}` : 'Qilich: soʻrov';
-  if (!token || !chat) return { status: 501, body: { ok: false, fallback: 'mailto', subject, text: msg.plain } };
+  if (!token || !chat) return { status: 501, body: { ok: false, fallback: 'mailto', subject, text: msg.visitor } };
   const api = (method, init) => fetcher(`https://api.telegram.org/bot${token}/${method}`, { method: 'POST', signal: AbortSignal.timeout(8000), ...init });
   const json = (o) => ({ headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(o) });
   try {
     const r = await api('sendMessage', json({ chat_id: chat, text: msg.html, parse_mode: 'HTML', link_preview_options: { is_disabled: true } }));
     const j = await r.json().catch(() => ({}));
-    if (!(r.ok && j.ok)) { console.log(`lead fail ${r.status}`); return { status: 501, body: { ok: false, fallback: 'mailto', subject, text: msg.plain } }; }
+    if (!(r.ok && j.ok)) { console.log(`lead fail ${r.status}`); return { status: 501, body: { ok: false, fallback: 'mailto', subject, text: msg.visitor } }; }
     if (msg.link) {
       const label = `Smeta ${lead.brief?.brief_no || ''}: `;
       let r2;
@@ -148,5 +153,5 @@ export async function sendLead(env, lead, today, fetcher = fetch) {
     console.log('lead ok');
     return { status: 200, body: { ok: true, via: 'telegram', brief_no: lead.brief?.brief_no || null } };
   } catch { console.log('lead fail network'); }
-  return { status: 501, body: { ok: false, fallback: 'mailto', subject, text: msg.plain } };
+  return { status: 501, body: { ok: false, fallback: 'mailto', subject, text: msg.visitor } };
 }

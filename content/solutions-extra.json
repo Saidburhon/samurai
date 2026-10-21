@@ -5,6 +5,9 @@
     "integrations: the business systems SamurAI may add to a solution, each with its add in USD and weeks (the engine",
     "prices them) and the catalogue names that mean it (aliases). industries: the intake sentence's industry blank, with",
     "the starter set the deterministic matcher uses and the example lines under the sentence.",
+    "industries.*.words: uz, ru and en stems the matcher finds the industry by (matched at a word start; a trailing = means the",
+    "whole word); ja_words the same for Japanese; ja_starter the starter set on the Japanese page (a company in Japan).",
+    "integrations.*.region uz: a service that exists only in Uzbekistan, never added for a business in Japan; names.ja: its Japanese page name.",
     "Uzbek: the okina is ʻ (U+02BB), the tutuq belgisi ʼ (U+02BC). The copy rules of scripts/lint-copy.mjs apply to every string."
   ],
   "groups": {
@@ -88,41 +91,41 @@
     "ja": { "plan": "画面と業務フローを設計し、合意する", "build": "主要機能を開発し、毎週デモで確認", "test": "実データでテストし、修正する", "launch": "リリースとご担当者向けトレーニング" }
   },
   "integrations": {
-    "payme": { "name": "Payme", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Payme"], "what": { "uz": "Payme orqali onlayn toʻlov", "ru": "Онлайн-оплата через Payme", "en": "Online payment through Payme", "ja": "Paymeによるオンライン決済" } },
-    "click": { "name": "Click", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Click"], "what": { "uz": "Click orqali onlayn toʻlov", "ru": "Онлайн-оплата через Click", "en": "Online payment through Click", "ja": "Clickによるオンライン決済" } },
-    "uzum": { "name": "Uzum", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Uzum", "Uzum Nasiya"], "what": { "uz": "Uzum orqali toʻlov va muddatli toʻlov", "ru": "Оплата и рассрочка через Uzum", "en": "Payment and instalments through Uzum", "ja": "Uzumによる決済と分割払い" } },
-    "paynet": { "name": "Paynet", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Paynet"], "what": { "uz": "Paynet shoxobchalari orqali toʻlov", "ru": "Оплата через точки Paynet", "en": "Payment at Paynet points", "ja": "Paynet窓口での支払い" } },
-    "uzcard_humo": { "name": "Uzcard / Humo", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [0, 20], "aliases": ["Uzcard", "Humo"], "what": { "uz": "Uzcard va Humo kartalari bilan toʻlov", "ru": "Оплата картами Uzcard и Humo", "en": "Uzcard and Humo card payments", "ja": "Uzcard・Humoカード決済" } },
-    "visa_mc": { "name": "Visa / Mastercard", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 30], "aliases": ["Visa/Mastercard", "Visa/Mastercard processing", "Visa/Mastercard acquiring", "Stripe", "Paddle"], "what": { "uz": "Xalqaro kartalar bilan toʻlov", "ru": "Оплата международными картами", "en": "International card payments", "ja": "国際カード決済" } },
-    "1c": { "name": "1C", "add_usd": [800, 2500], "add_weeks": [1, 3], "monthly_usd": [0, 0], "aliases": ["1C", "MoySklad"], "what": { "uz": "1C bilan qoldiq, narx va hujjatlar almashinuvi", "ru": "Обмен остатками, ценами и документами с 1С", "en": "Stock, prices and documents synced with 1C", "ja": "1Cとの在庫・価格・書類の連携" } },
-    "iiko": { "name": "iiko", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["iiko"], "what": { "uz": "iiko bilan menyu va buyurtmalar", "ru": "Меню и заказы из iiko", "en": "Menu and orders with iiko", "ja": "iikoとのメニュー・注文連携" } },
-    "r_keeper": { "name": "R-Keeper", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["R-Keeper", "Poster"], "what": { "uz": "R-Keeper bilan menyu va buyurtmalar", "ru": "Меню и заказы из R-Keeper", "en": "Menu and orders with R-Keeper", "ja": "R-Keeperとのメニュー・注文連携" } },
-    "amocrm": { "name": "amoCRM", "add_usd": [400, 1000], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["amoCRM"], "what": { "uz": "Mijozlar va bitimlar amoCRMga tushadi", "ru": "Клиенты и сделки попадают в amoCRM", "en": "Customers and deals land in amoCRM", "ja": "顧客と商談をamoCRMに登録" } },
+    "payme": { "name": "Payme", "region": "uz", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Payme"], "what": { "uz": "Payme orqali onlayn toʻlov", "ru": "Онлайн-оплата через Payme", "en": "Online payment through Payme", "ja": "Paymeによるオンライン決済" } },
+    "click": { "name": "Click", "region": "uz", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Click"], "what": { "uz": "Click orqali onlayn toʻlov", "ru": "Онлайн-оплата через Click", "en": "Online payment through Click", "ja": "Clickによるオンライン決済" } },
+    "uzum": { "name": "Uzum", "region": "uz", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Uzum", "Uzum Nasiya"], "what": { "uz": "Uzum orqali toʻlov va muddatli toʻlov", "ru": "Оплата и рассрочка через Uzum", "en": "Payment and instalments through Uzum", "ja": "Uzumによる決済と分割払い" } },
+    "paynet": { "name": "Paynet", "region": "uz", "add_usd": [300, 700], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Paynet"], "what": { "uz": "Paynet shoxobchalari orqali toʻlov", "ru": "Оплата через точки Paynet", "en": "Payment at Paynet points", "ja": "Paynet窓口での支払い" } },
+    "uzcard_humo": { "name": "Uzcard / Humo", "region": "uz", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [0, 20], "aliases": ["Uzcard", "Humo"], "what": { "uz": "Uzcard va Humo kartalari bilan toʻlov", "ru": "Оплата картами Uzcard и Humo", "en": "Uzcard and Humo card payments", "ja": "Uzcard・Humoカード決済" } },
+    "visa_mc": { "name": "Visa / Mastercard", "names": { "ja": "クレジットカード決済" }, "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 30], "aliases": ["Visa/Mastercard", "Visa/Mastercard processing", "Visa/Mastercard acquiring", "Stripe", "Paddle"], "what": { "uz": "Xalqaro kartalar bilan toʻlov", "ru": "Оплата международными картами", "en": "International card payments", "ja": "国際カード決済" } },
+    "1c": { "name": "1C", "region": "uz", "add_usd": [800, 2500], "add_weeks": [1, 3], "monthly_usd": [0, 0], "aliases": ["1C", "MoySklad"], "what": { "uz": "1C bilan qoldiq, narx va hujjatlar almashinuvi", "ru": "Обмен остатками, ценами и документами с 1С", "en": "Stock, prices and documents synced with 1C", "ja": "1Cとの在庫・価格・書類の連携" } },
+    "iiko": { "name": "iiko", "region": "uz", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["iiko"], "what": { "uz": "iiko bilan menyu va buyurtmalar", "ru": "Меню и заказы из iiko", "en": "Menu and orders with iiko", "ja": "iikoとのメニュー・注文連携" } },
+    "r_keeper": { "name": "R-Keeper", "region": "uz", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["R-Keeper", "Poster"], "what": { "uz": "R-Keeper bilan menyu va buyurtmalar", "ru": "Меню и заказы из R-Keeper", "en": "Menu and orders with R-Keeper", "ja": "R-Keeperとのメニュー・注文連携" } },
+    "amocrm": { "name": "amoCRM", "region": "uz", "add_usd": [400, 1000], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["amoCRM"], "what": { "uz": "Mijozlar va bitimlar amoCRMga tushadi", "ru": "Клиенты и сделки попадают в amoCRM", "en": "Customers and deals land in amoCRM", "ja": "顧客と商談をamoCRMに登録" } },
     "bitrix24": { "name": "Bitrix24", "add_usd": [400, 1000], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Bitrix24"], "what": { "uz": "Mijozlar va vazifalar Bitrix24ga tushadi", "ru": "Клиенты и задачи попадают в Bitrix24", "en": "Customers and tasks land in Bitrix24", "ja": "顧客とタスクをBitrix24に登録" } },
     "google_sheets": { "name": "Google Sheets", "add_usd": [150, 400], "add_weeks": [0.5, 0.5], "monthly_usd": [0, 0], "aliases": ["Google Sheets", "Excel"], "what": { "uz": "Maʼlumotlar Google Sheets jadvaliga tushadi", "ru": "Данные выгружаются в Google Sheets", "en": "Data goes to a Google Sheets table", "ja": "データをGoogleスプレッドシートに出力" } },
-    "sms": { "name": "SMS (Eskiz, Play Mobile)", "add_usd": [150, 400], "add_weeks": [0.5, 0.5], "monthly_usd": [5, 40], "aliases": ["Eskiz", "Play Mobile"], "what": { "uz": "SMS orqali eslatma va kodlar", "ru": "SMS-напоминания и коды", "en": "SMS reminders and codes", "ja": "SMSでのリマインドと認証コード" } },
+    "sms": { "name": "SMS (Eskiz, Play Mobile)", "names": { "ja": "SMS配信" }, "add_usd": [150, 400], "add_weeks": [0.5, 0.5], "monthly_usd": [5, 40], "aliases": ["Eskiz", "Play Mobile"], "what": { "uz": "SMS orqali eslatma va kodlar", "ru": "SMS-напоминания и коды", "en": "SMS reminders and codes", "ja": "SMSでのリマインドと認証コード" } },
     "telegram": { "name": "Telegram", "add_usd": [300, 800], "add_weeks": [0.5, 1], "monthly_usd": [0, 0], "aliases": ["Telegram Bot API", "Telegram", "Telegram Business", "Telegram Mini Apps", "Telegram Stars"], "what": { "uz": "Xabarnoma va buyurtmalar Telegram orqali", "ru": "Уведомления и заказы через Telegram", "en": "Notifications and orders through Telegram", "ja": "Telegramでの通知と受注" } },
     "instagram": { "name": "Instagram", "add_usd": [400, 1000], "add_weeks": [1, 1], "monthly_usd": [0, 0], "aliases": ["Instagram (Meta API)"], "what": { "uz": "Instagram xabarlariga javob va yozilish", "ru": "Ответы и запись из сообщений Instagram", "en": "Replies and bookings from Instagram messages", "ja": "Instagramのメッセージへの返信と予約受付" } },
     "whatsapp": { "name": "WhatsApp", "add_usd": [500, 1200], "add_weeks": [1, 1], "monthly_usd": [10, 80], "aliases": ["WhatsApp Business Platform", "WhatsApp Business API"], "what": { "uz": "WhatsApp orqali xabar va javoblar", "ru": "Сообщения и ответы в WhatsApp", "en": "Messages and replies on WhatsApp", "ja": "WhatsAppでのメッセージ送受信" } },
-    "didox": { "name": "Didox", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Didox"], "what": { "uz": "Didox orqali elektron hujjatlar", "ru": "Электронные документы через Didox", "en": "E-documents through Didox", "ja": "Didoxでの電子書類" } },
-    "faktura": { "name": "Faktura.uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Faktura.uz"], "what": { "uz": "Faktura.uz orqali hisob-fakturalar", "ru": "Счета-фактуры через Faktura.uz", "en": "Invoices through Faktura.uz", "ja": "Faktura.uzでの請求書発行" } },
-    "e_imzo": { "name": "E-IMZO", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["E-IMZO"], "what": { "uz": "E-IMZO elektron imzosi", "ru": "Электронная подпись E-IMZO", "en": "E-IMZO digital signature", "ja": "E-IMZO電子署名" } },
-    "myid": { "name": "MyID", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [20, 100], "aliases": ["MyID"], "what": { "uz": "MyID orqali shaxsni tasdiqlash", "ru": "Проверка личности через MyID", "en": "Identity checks through MyID", "ja": "MyIDによる本人確認" } },
-    "oneid": { "name": "OneID", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["OneID"], "what": { "uz": "OneID orqali kirish", "ru": "Вход через OneID", "en": "Sign-in with OneID", "ja": "OneIDによるログイン" } },
-    "soliq": { "name": "soliq.uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["soliq.uz"], "what": { "uz": "Soliq xizmatlari bilan maʼlumot almashish", "ru": "Обмен данными с налоговыми сервисами", "en": "Data exchange with the tax services", "ja": "税務サービスとのデータ連携" } },
-    "fiscal": { "name": "Fiscal module", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 20], "aliases": ["Online cash register (fiscal module)", "POS"], "what": { "uz": "Onlayn kassa va fiskal chek", "ru": "Онлайн-касса и фискальный чек", "en": "Online cash register and fiscal receipts", "ja": "オンラインレジと税務レシート" } },
-    "asl_belgisi": { "name": "Asl belgisi", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Asl belgisi"], "what": { "uz": "Asl belgisi tamgʻalash tizimi", "ru": "Маркировка через Asl belgisi", "en": "Product marking through Asl belgisi", "ja": "Asl belgisiによる製品マーキング" } },
-    "maps": { "name": "Yandex Maps / Google Maps / 2GIS", "add_usd": [300, 800], "add_weeks": [0.5, 1], "monthly_usd": [0, 50], "aliases": ["Yandex Maps", "Google Maps", "2GIS", "Yandex Business", "Google Business Profile"], "what": { "uz": "Xarita, manzillar va marshrutlar", "ru": "Карта, адреса и маршруты", "en": "Maps, addresses and routes", "ja": "地図、住所、ルート" } },
-    "marketplaces": { "name": "Uzum Market / Wildberries / Yandex Market", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Uzum Market", "Wildberries", "Yandex Market"], "what": { "uz": "Marketpleyslarda tovar va buyurtmalar", "ru": "Товары и заказы на маркетплейсах", "en": "Products and orders on marketplaces", "ja": "マーケットプレイスでの商品・注文連携" } },
-    "cameras": { "name": "Hikvision / Dahua", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Hikvision", "Dahua", "RTSP/ONVIF cameras", "Hikvision terminals"], "what": { "uz": "Kameralar va kirish terminallari", "ru": "Камеры и терминалы доступа", "en": "Cameras and access terminals", "ja": "カメラと入退室端末" } },
-    "zkteco": { "name": "ZKTeco", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["ZKTeco"], "what": { "uz": "Biometrik davomat terminallari", "ru": "Биометрические терминалы учёта времени", "en": "Biometric attendance terminals", "ja": "生体認証の勤怠端末" } },
-    "gps": { "name": "Wialon / Teltonika", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [10, 60], "aliases": ["Wialon", "Teltonika"], "what": { "uz": "GPS trekerlar va yoqilgʻi maʼlumoti", "ru": "GPS-трекеры и данные о топливе", "en": "GPS trackers and fuel data", "ja": "GPSトラッカーと燃料データ" } },
-    "sip": { "name": "SIP / Asterisk", "add_usd": [700, 1800], "add_weeks": [1, 2], "monthly_usd": [20, 100], "aliases": ["Asterisk/SIP", "SIP trunks of local operators"], "what": { "uz": "IP-telefoniya va qoʻngʻiroqlar yozuvi", "ru": "IP-телефония и запись звонков", "en": "IP telephony and call recording", "ja": "IP電話と通話録音" } },
+    "didox": { "name": "Didox", "region": "uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Didox"], "what": { "uz": "Didox orqali elektron hujjatlar", "ru": "Электронные документы через Didox", "en": "E-documents through Didox", "ja": "Didoxでの電子書類" } },
+    "faktura": { "name": "Faktura.uz", "region": "uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Faktura.uz"], "what": { "uz": "Faktura.uz orqali hisob-fakturalar", "ru": "Счета-фактуры через Faktura.uz", "en": "Invoices through Faktura.uz", "ja": "Faktura.uzでの請求書発行" } },
+    "e_imzo": { "name": "E-IMZO", "region": "uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["E-IMZO"], "what": { "uz": "E-IMZO elektron imzosi", "ru": "Электронная подпись E-IMZO", "en": "E-IMZO digital signature", "ja": "E-IMZO電子署名" } },
+    "myid": { "name": "MyID", "region": "uz", "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [20, 100], "aliases": ["MyID"], "what": { "uz": "MyID orqali shaxsni tasdiqlash", "ru": "Проверка личности через MyID", "en": "Identity checks through MyID", "ja": "MyIDによる本人確認" } },
+    "oneid": { "name": "OneID", "region": "uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["OneID"], "what": { "uz": "OneID orqali kirish", "ru": "Вход через OneID", "en": "Sign-in with OneID", "ja": "OneIDによるログイン" } },
+    "soliq": { "name": "soliq.uz", "region": "uz", "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["soliq.uz"], "what": { "uz": "Soliq xizmatlari bilan maʼlumot almashish", "ru": "Обмен данными с налоговыми сервисами", "en": "Data exchange with the tax services", "ja": "税務サービスとのデータ連携" } },
+    "fiscal": { "name": "Fiscal module", "names": { "ja": "POSレジ" }, "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 20], "aliases": ["Online cash register (fiscal module)", "POS"], "what": { "uz": "Onlayn kassa va fiskal chek", "ru": "Онлайн-касса и фискальный чек", "en": "Online cash register and fiscal receipts", "ja": "オンラインレジと税務レシート" } },
+    "asl_belgisi": { "name": "Asl belgisi", "region": "uz", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Asl belgisi"], "what": { "uz": "Asl belgisi tamgʻalash tizimi", "ru": "Маркировка через Asl belgisi", "en": "Product marking through Asl belgisi", "ja": "Asl belgisiによる製品マーキング" } },
+    "maps": { "name": "Yandex Maps / Google Maps / 2GIS", "names": { "ja": "地図サービス" }, "add_usd": [300, 800], "add_weeks": [0.5, 1], "monthly_usd": [0, 50], "aliases": ["Yandex Maps", "Google Maps", "2GIS", "Yandex Business", "Google Business Profile"], "what": { "uz": "Xarita, manzillar va marshrutlar", "ru": "Карта, адреса и маршруты", "en": "Maps, addresses and routes", "ja": "地図、住所、ルート" } },
+    "marketplaces": { "name": "Uzum Market / Wildberries / Yandex Market", "names": { "ja": "ECモール" }, "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Uzum Market", "Wildberries", "Yandex Market"], "what": { "uz": "Marketpleyslarda tovar va buyurtmalar", "ru": "Товары и заказы на маркетплейсах", "en": "Products and orders on marketplaces", "ja": "マーケットプレイスでの商品・注文連携" } },
+    "cameras": { "name": "Hikvision / Dahua", "names": { "ja": "カメラ・入退室端末" }, "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["Hikvision", "Dahua", "RTSP/ONVIF cameras", "Hikvision terminals"], "what": { "uz": "Kameralar va kirish terminallari", "ru": "Камеры и терминалы доступа", "en": "Cameras and access terminals", "ja": "カメラと入退室端末" } },
+    "zkteco": { "name": "ZKTeco", "names": { "ja": "勤怠端末" }, "add_usd": [500, 1200], "add_weeks": [1, 2], "monthly_usd": [0, 0], "aliases": ["ZKTeco"], "what": { "uz": "Biometrik davomat terminallari", "ru": "Биометрические терминалы учёта времени", "en": "Biometric attendance terminals", "ja": "生体認証の勤怠端末" } },
+    "gps": { "name": "Wialon / Teltonika", "names": { "ja": "GPS車両管理" }, "add_usd": [600, 1500], "add_weeks": [1, 2], "monthly_usd": [10, 60], "aliases": ["Wialon", "Teltonika"], "what": { "uz": "GPS trekerlar va yoqilgʻi maʼlumoti", "ru": "GPS-трекеры и данные о топливе", "en": "GPS trackers and fuel data", "ja": "GPSトラッカーと燃料データ" } },
+    "sip": { "name": "SIP / Asterisk", "names": { "ja": "IP電話" }, "add_usd": [700, 1800], "add_weeks": [1, 2], "monthly_usd": [20, 100], "aliases": ["Asterisk/SIP", "SIP trunks of local operators"], "what": { "uz": "IP-telefoniya va qoʻngʻiroqlar yozuvi", "ru": "IP-телефония и запись звонков", "en": "IP telephony and call recording", "ja": "IP電話と通話録音" } },
     "llm": { "name": "LLM API", "add_usd": [500, 1500], "add_weeks": [1, 2], "monthly_usd": [20, 300], "aliases": ["Claude API", "Speech-to-text", "Text-to-speech APIs", "Image generation API"], "what": { "uz": "Matn va ovozni tushunadigan AI modeli", "ru": "ИИ-модель, которая понимает текст и голос", "en": "An AI model that reads text and speech", "ja": "テキストと音声を理解するAIモデル" } },
-    "booking_channels": { "name": "Booking.com / Airbnb", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 50], "aliases": ["Booking.com", "Airbnb", "Expedia"], "what": { "uz": "Bron saytlari bilan xonalar va bandlik", "ru": "Номера и занятость на сайтах бронирования", "en": "Rooms and availability on booking sites", "ja": "予約サイトとの客室・空室連携" } },
-    "bank_api": { "name": "Bank API", "add_usd": [1000, 3000], "add_weeks": [2, 3], "monthly_usd": [0, 0], "aliases": ["Bank APIs", "Core banking systems (API)", "Bank statements", "Bank payroll APIs"], "what": { "uz": "Bank bilan toʻlovlar va koʻchirmalar", "ru": "Платежи и выписки банка", "en": "Bank payments and statements", "ja": "銀行の入出金・明細の連携" } },
-    "katm": { "name": "KATM", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 50], "aliases": ["KATM"], "what": { "uz": "Kredit tarixini tekshirish", "ru": "Проверка кредитной истории", "en": "Credit history checks", "ja": "信用情報の照会" } },
-    "web_analytics": { "name": "Google Analytics / Yandex Metrica", "add_usd": [150, 400], "add_weeks": [0.5, 0.5], "monthly_usd": [0, 0], "aliases": ["Google Analytics", "Yandex Metrica"], "what": { "uz": "Tashrif va sotuvlar statistikasi", "ru": "Статистика посещений и продаж", "en": "Visit and sales statistics", "ja": "アクセスと売上の統計" } }
+    "booking_channels": { "name": "Booking.com / Airbnb", "names": { "ja": "予約サイト" }, "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 50], "aliases": ["Booking.com", "Airbnb", "Expedia"], "what": { "uz": "Bron saytlari bilan xonalar va bandlik", "ru": "Номера и занятость на сайтах бронирования", "en": "Rooms and availability on booking sites", "ja": "予約サイトとの客室・空室連携" } },
+    "bank_api": { "name": "Bank API", "names": { "ja": "銀行API" }, "add_usd": [1000, 3000], "add_weeks": [2, 3], "monthly_usd": [0, 0], "aliases": ["Bank APIs", "Core banking systems (API)", "Bank statements", "Bank payroll APIs"], "what": { "uz": "Bank bilan toʻlovlar va koʻchirmalar", "ru": "Платежи и выписки банка", "en": "Bank payments and statements", "ja": "銀行の入出金・明細の連携" } },
+    "katm": { "name": "KATM", "region": "uz", "add_usd": [800, 2000], "add_weeks": [1, 2], "monthly_usd": [0, 50], "aliases": ["KATM"], "what": { "uz": "Kredit tarixini tekshirish", "ru": "Проверка кредитной истории", "en": "Credit history checks", "ja": "信用情報の照会" } },
+    "web_analytics": { "name": "Google Analytics / Yandex Metrica", "names": { "ja": "アクセス解析" }, "add_usd": [150, 400], "add_weeks": [0.5, 0.5], "monthly_usd": [0, 0], "aliases": ["Google Analytics", "Yandex Metrica"], "what": { "uz": "Tashrif va sotuvlar statistikasi", "ru": "Статистика посещений и продаж", "en": "Visit and sales statistics", "ja": "アクセスと売上の統計" } }
   },
   "solutions": {
     "biz-payments": { "integrations_included": ["payme", "click", "uzum", "uzcard_humo"] },
@@ -150,18 +153,22 @@
       "name": { "uz": "restoran", "ru": "ресторан", "en": "a restaurant", "ja": "飲食店" },
       "plural": { "uz": "Restoranlar", "ru": "Рестораны", "en": "Restaurants", "ja": "飲食店" },
       "starter": ["tg-order-bot", "biz-delivery-routing", "biz-1c-integration"],
+      "ja_starter": ["ind-restaurant", "web-booking-engine", "biz-bi-dashboards"],
+      "words": ["restoran", "kafe", "choyxona", "fastfud", "ресторан", "кафе", "кофейн", "столовая", "пиццер", "фастфуд", "общепит", "restaurant", "cafe", "café", "coffee shop", "pizzeria", "canteen", "bistro", "eatery"],
       "ja_words": ["飲食", "レストラン", "カフェ", "居酒屋", "食堂", "厨房"],
       "examples": {
         "uz": ["Yetkazib berishli restoran, buyurtmalar telefon va Telegram orqali", "Ikki filialli kafe, kassa bilan oshxona oʻrtasida chalkashlik"],
         "ru": ["Ресторан с доставкой, заказы по телефону и в Telegram", "Кафе с двумя филиалами, путаница между кассой и кухней"],
         "en": ["A restaurant with delivery, orders by phone and Telegram", "A café with two branches, orders get lost between till and kitchen"],
-        "ja": ["デリバリーのある飲食店で、注文は電話とTelegramで受けている", "2店舗のカフェで、レジと厨房の間で注文の行き違いが起きている"]
+        "ja": ["デリバリーのある飲食店で、注文が電話と複数の宅配アプリに分かれている", "2店舗のカフェで、レジと厨房の間で注文の行き違いが起きている"]
       }
     },
     "clinics": {
       "name": { "uz": "klinika", "ru": "клиника", "en": "a clinic", "ja": "クリニック" },
       "plural": { "uz": "Klinikalar", "ru": "Клиники", "en": "Clinics", "ja": "クリニック" },
       "starter": ["tg-booking-bot", "biz-call-centre", "ind-clinic"],
+      "ja_starter": ["ind-clinic", "web-booking-engine", "biz-call-centre"],
+      "words": ["klinika", "poliklinika", "shifoxona", "stomatolog", "bemor", "shifokor", "tibbiy", "клиник", "поликлиник", "стоматолог", "больниц", "медцентр", "медицинск", "пациент", "врач", "clinic", "dental", "dentist", "hospital", "medical", "patient", "doctor"],
       "ja_words": ["クリニック", "病院", "医院", "歯科", "診療", "患者"],
       "examples": {
         "uz": ["Chilonzorda 3 filialli stomatologiya, yozuvlar daftarda", "Laboratoriya natijalari bemorlarga telefon orqali aytiladi"],
@@ -174,6 +181,8 @@
       "name": { "uz": "oʻquv markazi", "ru": "учебный центр", "en": "a learning centre", "ja": "学習塾・スクール" },
       "plural": { "uz": "Oʻquv markazlari", "ru": "Учебные центры", "en": "Learning centres", "ja": "学習塾・スクール" },
       "starter": ["ind-education-centre", "biz-payments", "tg-course-bot"],
+      "ja_starter": ["ind-education-centre", "web-lms", "biz-crm"],
+      "words": ["oʻquv markaz", "oʻquv kurs", "maktab", "repetitor", "oʻquvchi", "talaba", "litsey", "universitet", "bogʻcha", "akademiya", "учебн", "школ", "курсы=", "репетитор", "ученик", "студент", "университет", "детский сад", "school", "tutor", "courses", "student", "academy", "kindergarten", "learning cent", "training cent", "language cent"],
       "ja_words": ["塾", "学校", "スクール", "教室", "生徒", "受講"],
       "examples": {
         "uz": ["200 oʻquvchili oʻquv markazi, toʻlovlar Excelda", "Ingliz tili kurslari, davomat qogʻozda yuritiladi"],
@@ -186,18 +195,22 @@
       "name": { "uz": "ulgurji savdo kompaniyasi", "ru": "оптовая компания", "en": "a wholesale business", "ja": "卸売業" },
       "plural": { "uz": "Ulgurji savdo kompaniyalari", "ru": "Оптовые компании", "en": "Wholesale businesses", "ja": "卸売業" },
       "starter": ["tg-b2b-ordering", "biz-1c-integration", "biz-wms"],
+      "ja_starter": ["web-client-portal", "biz-wms", "biz-bi-dashboards"],
+      "words": ["ulgurji", "distribyut", "diler", "qurilish mollari", "qurilish material", "оптов", "оптом", "дистрибу", "дилер", "стройматериал", "wholesale", "distribut", "dealer", "building material"],
       "ja_words": ["卸", "問屋", "商社", "取引先", "受発注"],
       "examples": {
         "uz": ["Qurilish materiallari ulgurji savdosi, 1C bor, dilerlar telefon qiladi", "Ichimliklar distribyutori, agentlar buyurtmani WhatsAppda yuboradi"],
         "ru": ["Оптовая торговля стройматериалами, есть 1С, дилеры звонят", "Дистрибьютор напитков, агенты присылают заказы в WhatsApp"],
         "en": ["Wholesale building materials, we use 1C, dealers phone in orders", "A drinks distributor, sales reps send orders on WhatsApp"],
-        "ja": ["建材の卸売で、1Cを使っており、代理店からの注文は電話", "飲料の卸で、営業担当がWhatsAppで注文を送ってくる"]
+        "ja": ["建材の卸売で、代理店からの注文は電話とFAX、在庫は販売管理システム", "飲料の卸で、営業担当がWhatsAppで注文を送ってくる"]
       }
     },
     "beauty": {
       "name": { "uz": "goʻzallik saloni", "ru": "салон красоты", "en": "a beauty salon", "ja": "美容サロン" },
       "plural": { "uz": "Goʻzallik salonlari", "ru": "Салоны красоты", "en": "Beauty salons", "ja": "美容サロン" },
       "starter": ["tg-booking-bot", "ai-sales-assistant", "tg-loyalty-bot"],
+      "ja_starter": ["web-booking-engine", "biz-crm", "ai-sales-assistant"],
+      "words": ["goʻzallik", "sartarosh", "barber", "manikyur", "kosmetolog", "салон красот", "парикмахер", "барбер", "маникюр", "косметолог", "beauty", "hair salon", "nail", "spa=", "salon="],
       "ja_words": ["美容", "サロン", "ネイル", "エステ", "理容"],
       "examples": {
         "uz": ["Goʻzallik saloni, Instagram orqali yozilish", "Barbershop, mijozlar navbatni unutib qoʻyadi"],
@@ -210,6 +223,8 @@
       "name": { "uz": "logistika kompaniyasi", "ru": "логистическая компания", "en": "a logistics company", "ja": "物流会社" },
       "plural": { "uz": "Logistika kompaniyalari", "ru": "Логистические компании", "en": "Logistics companies", "ja": "物流会社" },
       "starter": ["iot-fleet-gps", "tg-field-reports", "ind-logistics-tms"],
+      "ja_starter": ["ind-logistics-tms", "iot-fleet-gps", "biz-bi-dashboards"],
+      "words": ["logistika", "yuk tashish", "ekspeditor", "логисти", "грузоперевоз", "грузовые перевоз", "экспедитор", "logistic", "freight", "trucking", "cargo", "haulage"],
       "ja_words": ["物流", "倉庫", "運送", "トラック"],
       "examples": {
         "uz": ["Shahar ichida yuk tashish, 15 ta haydovchi, hisobotlar qogʻozda", "Ombordan doʻkonlarga yetkazish, reyslar Excelda rejalanadi"],
@@ -222,30 +237,35 @@
       "name": { "uz": "doʻkon", "ru": "магазин", "en": "a shop", "ja": "小売店" },
       "plural": { "uz": "Doʻkonlar", "ru": "Магазины", "en": "Shops", "ja": "小売店" },
       "starter": ["tg-order-bot", "tg-loyalty-bot", "biz-bi-dashboards"],
-      "ja_words": ["小売", "スーパー", "ショップ", "売り場"],
+      "ja_starter": ["biz-pos", "web-ecommerce", "biz-bi-dashboards"],
+      "words": ["doʻkon", "magazin", "supermarket", "minimarket", "магазин", "супермаркет", "минимаркет", "розниц", "бутик", "shop=", "shops=", "stores=", "clothing store", "convenience store", "retail", "boutique", "grocery"],
+      "ja_words": ["小売", "スーパー", "ショップ", "売り場", "衣料品店", "食料品店", "雑貨店", "専門店"],
       "examples": {
         "uz": ["Kiyim doʻkoni, mijozlar Telegramda narx soʻraydi", "Uchta oziq-ovqat doʻkoni, qoldiqlar daftarda"],
         "ru": ["Магазин одежды, клиенты спрашивают цены в Telegram", "Три продуктовых магазина, остатки в тетради"],
         "en": ["A clothes shop, customers ask for prices on Telegram", "Three grocery shops, stock kept in a notebook"],
-        "ja": ["衣料品店で、お客様からTelegramで価格の問い合わせが来る", "食料品店3店舗で、在庫はノートで管理"]
+        "ja": ["衣料品店で、お客様からInstagramのDMで在庫の問い合わせが来る", "食料品店3店舗で、在庫はノートで管理"]
       }
     },
     "ecommerce": {
       "name": { "uz": "internet-doʻkon", "ru": "интернет-магазин", "en": "an online store", "ja": "ECサイト" },
       "plural": { "uz": "Internet-doʻkonlar", "ru": "Интернет-магазины", "en": "Online stores", "ja": "ECサイト" },
       "starter": ["web-ecommerce", "biz-payments", "biz-marketplace-sync"],
+      "words": ["internet doʻkon", "internet magazin", "onlayn doʻkon", "onlayn savdo", "marketpleys", "интернет-магазин", "онлайн-магазин", "маркетплейс", "online store", "online shop", "e-commerce", "ecommerce", "marketplace"],
       "ja_words": ["ネットショップ", "通販", "オンラインショップ", "ECサイト"],
       "examples": {
         "uz": ["Instagramdagi doʻkon, buyurtmalar Directda", "Uzum Marketda sotamiz, qoldiqlar qoʻlda yangilanadi"],
         "ru": ["Магазин в Instagram, заказы в директе", "Продаём на Uzum Market, остатки обновляем вручную"],
         "en": ["An Instagram shop, orders come by direct message", "We sell on Uzum Market and update stock by hand"],
-        "ja": ["Instagramで販売していて、注文はDMで受けている", "Uzum Marketで販売し、在庫は手作業で更新している"]
+        "ja": ["Instagramで販売していて、注文はDMで受けている", "楽天市場とAmazonで販売し、在庫は手作業で更新している"]
       }
     },
     "delivery": {
       "name": { "uz": "yetkazib berish xizmati", "ru": "служба доставки", "en": "a delivery service", "ja": "配達サービス" },
       "plural": { "uz": "Yetkazib berish xizmatlari", "ru": "Службы доставки", "en": "Delivery services", "ja": "配達サービス" },
       "starter": ["tg-order-bot", "biz-delivery-routing", "biz-notification-hub"],
+      "ja_starter": ["mob-delivery-suite", "biz-delivery-routing", "biz-notification-hub"],
+      "words": ["yetkazib berish", "kuryer", "доставк", "курьер", "delivery", "courier"],
       "ja_words": ["デリバリー", "宅配", "出前"],
       "examples": {
         "uz": ["Suv yetkazib berish, kuryerlar manzilni adashtiradi", "Gul yetkazish, buyurtmalar telefon orqali"],
@@ -258,6 +278,8 @@
       "name": { "uz": "dorixona", "ru": "аптека", "en": "a pharmacy", "ja": "薬局" },
       "plural": { "uz": "Dorixonalar", "ru": "Аптеки", "en": "Pharmacies", "ja": "薬局" },
       "starter": ["ind-pharmacy", "tg-order-bot"],
+      "ja_starter": ["ind-pharmacy", "web-ecommerce"],
+      "words": ["dorixona", "apteka", "аптек", "pharmac", "drugstore"],
       "ja_words": ["薬局", "ドラッグストア", "医薬品"],
       "examples": {
         "uz": ["Beshta dorixona, dori qoldigʻini telefon orqali soʻrashadi", "Dorixona, mijozlar dori bor-yoʻqligini bilolmaydi"],
@@ -270,6 +292,8 @@
       "name": { "uz": "fitnes klub", "ru": "фитнес-клуб", "en": "a fitness club", "ja": "フィットネスクラブ" },
       "plural": { "uz": "Fitnes klublar", "ru": "Фитнес-клубы", "en": "Fitness clubs", "ja": "フィットネスクラブ" },
       "starter": ["ind-fitness-sports", "tg-booking-bot"],
+      "ja_starter": ["ind-fitness-sports", "web-booking-engine"],
+      "words": ["fitnes", "sport zal", "sport klub", "sport maktab", "trenajyor", "фитнес", "спортзал", "тренажер", "тренажёр", "спортивный клуб", "спортивная школа", "fitness", "gym=", "gyms=", "sports club", "yoga"],
       "ja_words": ["フィットネス", "ジム", "スポーツクラブ"],
       "examples": {
         "uz": ["Fitnes klub, abonementlar daftarda yoziladi", "Sport maktabi, ota-onalar toʻlovni naqd qiladi"],
@@ -282,30 +306,34 @@
       "name": { "uz": "mehmonxona", "ru": "гостиница", "en": "a hotel", "ja": "ホテル" },
       "plural": { "uz": "Mehmonxonalar", "ru": "Гостиницы", "en": "Hotels", "ja": "ホテル" },
       "starter": ["ind-hotel-kit", "web-booking-engine"],
+      "words": ["mehmonxona", "hostel", "otel", "гостиниц", "отел", "хостел", "hotel", "guest house", "guesthouse", "inn="],
       "ja_words": ["ホテル", "旅館", "宿泊", "ホステル"],
       "examples": {
         "uz": ["Buxorodagi 20 xonali mehmonxona, bronlar Booking.com orqali", "Mehmonxona, xonalar jadvali Excelda"],
         "ru": ["Гостиница на 20 номеров в Бухаре, брони через Booking.com", "Гостиница, шахматка номеров в Excel"],
         "en": ["A 20-room hotel in Bukhara, bookings through Booking.com", "A hotel, the room chart is in Excel"],
-        "ja": ["ブハラの客室20室のホテルで、予約はBooking.com経由", "ホテルで、客室の予約表をExcelで管理している"]
+        "ja": ["京都の客室20室の旅館で、予約はBooking.comと電話", "ホテルで、客室の予約表をExcelで管理している"]
       }
     },
     "tourism": {
       "name": { "uz": "turistik kompaniya", "ru": "турфирма", "en": "a tour company", "ja": "旅行会社" },
       "plural": { "uz": "Turistik kompaniyalar", "ru": "Турфирмы", "en": "Tour companies", "ja": "旅行会社" },
       "starter": ["web-corporate", "ind-tour-operator"],
+      "words": ["turistik", "turizm", "turoperator", "турфирм", "туроператор", "туризм", "туристическ", "экскурси", "tour operator", "travel agen", "tourism", "tour compan", "tours="],
       "ja_words": ["旅行", "ツアー", "観光"],
       "examples": {
         "uz": ["Xorijlik turistlar uchun turlar, soʻrovlar elektron pochtada", "Turfirma, gidlar jadvali Telegram guruhda"],
         "ru": ["Туры для иностранцев, заявки приходят на почту", "Турфирма, расписание гидов в группе Telegram"],
         "en": ["Tours for foreign visitors, requests arrive by email", "A tour company, the guides' schedule lives in a Telegram group"],
-        "ja": ["外国人向けツアーで、問い合わせはメールで届く", "旅行会社で、ガイドの予定はTelegramのグループで共有"]
+        "ja": ["外国人向けツアーで、問い合わせはメールで届く", "旅行会社で、ガイドの予定はLINEのグループで共有"]
       }
     },
     "transport": {
       "name": { "uz": "transport kompaniyasi", "ru": "транспортная компания", "en": "a transport company", "ja": "運送会社" },
       "plural": { "uz": "Transport kompaniyalari", "ru": "Транспортные компании", "en": "Transport companies", "ja": "運送会社" },
       "starter": ["iot-fleet-gps", "tg-field-reports", "biz-delivery-routing"],
+      "ja_starter": ["iot-fleet-gps", "biz-delivery-routing", "biz-bi-dashboards"],
+      "words": ["taksi", "avtobus", "yoʻlovchi", "такси", "автобус", "пассажир", "taxi", "bus=", "buses=", "passenger"],
       "ja_words": ["交通", "バス", "タクシー", "運行"],
       "examples": {
         "uz": ["40 ta yuk mashinasi, yoqilgʻi sarfini nazorat qilolmaymiz", "Avtobus parki, haydovchilar hisobotni kechiktiradi"],
@@ -318,6 +346,8 @@
       "name": { "uz": "qurilish kompaniyasi", "ru": "строительная компания", "en": "a construction company", "ja": "建設会社" },
       "plural": { "uz": "Qurilish kompaniyalari", "ru": "Строительные компании", "en": "Construction companies", "ja": "建設会社" },
       "starter": ["ind-construction", "tg-field-reports"],
+      "ja_starter": ["ind-construction", "mob-inspection-app"],
+      "words": ["qurilish", "строител", "стройк", "ремонт квартир", "construction", "contractor", "builder"],
       "ja_words": ["建設", "工事", "施工", "現場"],
       "examples": {
         "uz": ["Uchta obyekt, materiallar sarfi Excelda", "Qurilish, prorablar hisobotni ovozli xabar bilan yuboradi"],
@@ -330,6 +360,7 @@
       "name": { "uz": "quruvchi kompaniya", "ru": "девелоперская компания", "en": "a property developer", "ja": "不動産デベロッパー" },
       "plural": { "uz": "Quruvchi kompaniyalar", "ru": "Девелоперы", "en": "Property developers", "ja": "不動産デベロッパー" },
       "starter": ["ind-developer-sales", "web-apartment-picker"],
+      "words": ["koʻchmas mulk", "turar joy majmua", "quruvchi kompaniya", "недвижим", "застройщик", "девелоп", "жилой комплекс", "real estate", "property", "realtor", "apartments"],
       "ja_words": ["不動産", "賃貸", "入居者", "物件"],
       "examples": {
         "uz": ["Turar joy majmuasi, xonadonlar jadvali Excelda, muddatli toʻlov bor", "Quruvchi, sotuv boʻlimi mijozlarni yoʻqotadi"],
@@ -342,6 +373,7 @@
       "name": { "uz": "ishlab chiqarish korxonasi", "ru": "производство", "en": "a factory", "ja": "製造業" },
       "plural": { "uz": "Ishlab chiqarish korxonalari", "ru": "Производства", "en": "Factories", "ja": "製造業" },
       "starter": ["iot-factory-monitoring", "biz-wms", "biz-bi-dashboards"],
+      "words": ["ishlab chiqar", "zavod", "fabrika", "sex=", "sexi=", "производств", "завод", "фабрик", "цех", "factory", "manufactur", "production line"],
       "ja_words": ["製造", "工場", "メーカー", "生産", "設備"],
       "examples": {
         "uz": ["Plastik idishlar zavodi, dastgohlar toʻxtab qolishini bilmaymiz", "Mebel ishlab chiqarish, buyurtmalar daftarda"],
@@ -354,6 +386,7 @@
       "name": { "uz": "tikuv sexi", "ru": "швейное производство", "en": "a garment workshop", "ja": "縫製工場" },
       "plural": { "uz": "Tikuv sexlari", "ru": "Швейные производства", "en": "Garment workshops", "ja": "縫製工場" },
       "starter": ["ind-textile", "biz-hr-payroll"],
+      "words": ["tikuv", "tekstil", "швейн", "текстил", "пошив", "garment", "textile", "sewing", "apparel"],
       "ja_words": ["縫製", "アパレル", "繊維", "衣料"],
       "examples": {
         "uz": ["120 tikuvchili sex, ish haqi dona boʻyicha qoʻlda hisoblanadi", "Eksport uchun tikuv, buyurtma bosqichlari koʻrinmaydi"],
@@ -366,18 +399,21 @@
       "name": { "uz": "fermer xoʻjaligi", "ru": "фермерское хозяйство", "en": "a farm", "ja": "農業法人" },
       "plural": { "uz": "Fermer xoʻjaliklari", "ru": "Фермерские хозяйства", "en": "Farms", "ja": "農業法人" },
       "starter": ["ind-agro-farm", "iot-irrigation"],
+      "words": ["fermer", "dehqon", "issiqxona", "chorvachilik", "bogʻdorchilik", "фермер", "агро", "теплиц", "сельхоз", "животновод", "птицефабрик", "farm=", "farms=", "farming", "agricultur", "greenhouse", "livestock", "orchard"],
       "ja_words": ["農業", "農場", "農園", "畜産"],
       "examples": {
         "uz": ["300 gektar bogʻ, sugʻorish qoʻlda boshqariladi", "Issiqxona, harorat kechasi kuzatilmaydi"],
         "ru": ["Сад на 300 гектаров, полив вручную", "Теплица, ночью температуру никто не видит"],
         "en": ["A 300-hectare orchard, irrigation run by hand", "A greenhouse, nobody watches the temperature at night"],
-        "ja": ["300ヘクタールの果樹園で、灌水は手作業", "温室で、夜間の温度を誰も監視していない"]
+        "ja": ["30ヘクタールの果樹園で、灌水は手作業", "温室で、夜間の温度を誰も監視していない"]
       }
     },
     "auto": {
       "name": { "uz": "avtoservis", "ru": "автосервис", "en": "a car service", "ja": "自動車整備工場" },
       "plural": { "uz": "Avtoservislar", "ru": "Автосервисы", "en": "Car services", "ja": "自動車整備工場" },
       "starter": ["ind-auto-service", "tg-booking-bot"],
+      "ja_starter": ["ind-auto-service", "web-booking-engine"],
+      "words": ["avtoservis", "avtomoyka", "moyka", "avtosalon", "avto ehtiyot", "avto taʼmir", "shinomontaj", "автосервис", "автомойк", "мойк", "автосалон", "автозапчаст", "шиномонтаж", "сто=", "car service", "car wash", "auto repair", "auto parts", "car dealer"],
       "ja_words": ["自動車整備", "整備工場", "洗車", "ディーラー", "カー用品"],
       "examples": {
         "uz": ["Avtoservis va avtoyuvish, mijozlar navbat kutib ketib qoladi", "Ehtiyot qismlar doʻkoni, qoldiqlar Excelda"],
@@ -390,6 +426,8 @@
       "name": { "uz": "xizmat koʻrsatish biznesi", "ru": "сервисный бизнес", "en": "a service business", "ja": "サービス業" },
       "plural": { "uz": "Xizmat koʻrsatish bizneslari", "ru": "Сервисные компании", "en": "Service businesses", "ja": "サービス業" },
       "starter": ["tg-booking-bot", "biz-crm", "web-corporate"],
+      "ja_starter": ["web-booking-engine", "biz-crm", "web-corporate"],
+      "words": ["tozalash", "taʼmirlash", "клининг", "химчистк", "cleaning", "laundry", "repair"],
       "ja_words": ["清掃", "修理", "クリーニング"],
       "examples": {
         "uz": ["Tozalash xizmati, buyurtmalar telefon orqali, ustalar adashadi", "Yuridik firma, mijoz soʻrovlari pochtada yoʻqoladi"],
@@ -402,11 +440,12 @@
       "name": { "uz": "boshqa biznes", "ru": "другой бизнес", "en": "another kind of business", "ja": "その他の事業" },
       "plural": { "uz": "Bizneslar", "ru": "Компании", "en": "Businesses", "ja": "企業" },
       "starter": ["biz-crm", "web-corporate", "tg-lead-bot"],
+      "ja_starter": ["biz-crm", "web-corporate", "web-landing"],
       "examples": {
         "uz": ["Mijozlar soʻrovlari Telegram va telefonda tarqalib ketadi", "Hisobotlarni har oy qoʻlda yigʻamiz"],
         "ru": ["Заявки клиентов теряются между Telegram и телефоном", "Каждый месяц собираем отчёты вручную"],
         "en": ["Customer requests get lost between Telegram and the phone", "Every month we put the reports together by hand"],
-        "ja": ["顧客からの依頼がTelegramと電話に散らばっている", "毎月のレポートを手作業でまとめている"]
+        "ja": ["顧客からの依頼がメールと電話に散らばっている", "毎月のレポートを手作業でまとめている"]
       }
     }
   },

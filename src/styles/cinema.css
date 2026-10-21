@@ -177,7 +177,7 @@ html.cinema #cut.primed { display: block; opacity: .002; }
 #cut .fz-story > .scene { position: absolute; inset: 0; display: block; opacity: 1; }
 #cut .fz-story > .foot { position: absolute; }
 #cut .fz-slash { position: absolute; height: 1.5px; transform-origin: 50% 50%; background: linear-gradient(90deg, transparent, #F6F1E6 30%, #fff 50%, #F6F1E6 70%, transparent); }
-#cut .fz-rim { position: absolute; inset: 0; mix-blend-mode: screen; pointer-events: none; }
+#cut .fz-rim { position: absolute; pointer-events: none; will-change: transform, opacity; transform-origin: 50% 50%; }
 
 /* 銘 B1 and 映: as G1; 焼 B7–B10: the step word and its line top-left, the hakogaki in the strip */
 html.film .s-yaki > .kick { position: absolute; left: var(--m); top: 112px; padding: 0; }

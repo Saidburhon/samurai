@@ -158,7 +158,7 @@ export class Film {
         this.softKey = key;
       }
     }
-    this.raysOn = !!H.rays && !!d.atHold;
+    this.raysOn = !!H.rays && !!d.settled;
     // the paper
     this.inkFrame(A, B, e, d, reveal, isRev, front);
     if (dom) this.paper(A, B, e, d);
@@ -286,7 +286,7 @@ export class Film {
       const h = ia ? A : B, x = h.ink;
       pose = h.inkPose; draw = x.draw || 'hero'; alpha = (x.alpha ?? 1) * (ia ? 1 - t : t); annot = x.annot !== false;
     }
-    this.ink.film(this.st, pose, { draw, alpha, reveal: isRev ? reveal : 2, front, annot, crisp: !!d.atHold });
+    this.ink.film(this.st, pose, { draw, alpha, reveal: isRev ? reveal : 2, front, annot, crisp: !!d.settled });
   }
 
   // the DOM part of the paper: the ground sheets, the dial, the plaster's light
@@ -295,7 +295,7 @@ export class Film {
     // at a hold the grounds of the neighbouring holds are displayed too, all but invisible, so their tiles are
     // rasterised before a transition needs them (§3.1: the current and the incoming sheet)
     const pre = new Set();
-    if (d.atHold && d.layout && !d.intro && ga === gb) for (const n of this.neighbours(d)) pre.add(n.ground);
+    if (d.settled && d.layout && !d.intro && ga === gb) for (const n of this.neighbours(d)) pre.add(n.ground);
     pre.delete(ga);
     for (const s of this.sheets) {
       const g = s.dataset.g, on = g === ga || g === gb || pre.has(g);
@@ -331,7 +331,7 @@ export class Film {
     if (!(da || db) || !st.td) {
       // near Toki the dial stays on screen, all but invisible, at its B17 place: its first raster (about a second in
       // software) happens at a hold, not inside the light wipe
-      const near = d.atHold && d.layout && !d.intro ? this.neighbours(d).find((h) => h.dial) : null;
+      const near = d.settled && d.layout && !d.intro ? this.neighbours(d).find((h) => h.dial) : null;
       if (near && this.dialR && near.hubPx) {
         w.style.visibility = ''; w.style.opacity = '0.002';
         const rpx = this.dialR * near.paperK;

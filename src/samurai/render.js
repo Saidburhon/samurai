@@ -34,7 +34,7 @@ function fold(text) {
   }
   return { out, map };
 }
-export function markQuotes(text, quotes = []) {
+export function markQuotes(text, quotes = [], on = false) {
   const f = fold(text), spans = [];
   for (const q of quotes) {
     const k = f.out.indexOf(fold(q).out);
@@ -44,13 +44,13 @@ export function markQuotes(text, quotes = []) {
   }
   spans.sort((x, y) => x[0] - y[0]);
   let html = '', at = 0;
-  spans.forEach(([a, b], i) => { html += h(text.slice(at, a)) + `<mark style="--i:${i}">${h(text.slice(a, b))}</mark>`; at = b; });
+  spans.forEach(([a, b], i) => { html += h(text.slice(at, a)) + `<mark${on ? ' class="on"' : ''} style="--i:${i}">${h(text.slice(a, b))}</mark>`; at = b; });
   return html + h(text.slice(at));
 }
 
 export function briefHtml(C, st) {
   const { S } = C, heard = st.pick?.heard;
-  const words = st.text ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${markQuotes(st.text, heard?.quotes)}</p><button class="tlink more" type="button" data-act="more">${h(S.showText)}</button>`
+  const words = st.text ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${markQuotes(st.text, heard?.quotes, st.marked)}</p><button class="tlink more" type="button" data-act="more">${h(S.showText)}</button>`
     : heard?.quotes?.length ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${heard.quotes.map((q, i) => `${C.lang === 'ja' ? '「' : '«'}<mark class="on" style="--i:${i}">${h(q)}</mark>${C.lang === 'ja' ? '」' : '»'}`).join(C.lang === 'ja' ? '' : SEP)}</p>` : '';
   return `<aside class="brief${st.briefOpen ? ' open' : ''}" aria-label="${h(S.res)}">
     ${st.source === 'sample' ? `<p class="mono note k">${h(S.sample)}</p>` : ''}
@@ -64,7 +64,7 @@ export function briefHtml(C, st) {
 export function questionsHtml(C, st) {
   const qs = st.pick?.questions || [];
   if (!qs.length) return '';
-  return `<div class="questions">${qs.map((q) => `<div class="qline" data-q="${h(q.id)}"><p>${h(q.text)}</p><div class="qopts" role="group" aria-label="${h(q.text)}">${q.options.map((o) => `<button type="button" data-act="answer" data-q="${h(q.id)}" data-o="${h(o.id)}" aria-pressed="${st.answers[q.id] === o.id}">${h(o.label)}</button>`).join('')}</div>${st.qnote?.q === q.id ? `<p class="qnote mono">${h(C.S.narrow)} ${R(st.qnote.from)} ${KISSAKI} ${R(st.qnote.to)}</p>` : ''}</div>`).join('')}${st.pick.status === 'need_more' ? `<p class="run-answers"><button class="btn" type="button" data-act="run-answers"><span>${h(C.S.runAnswers)}</span>${KISSAKI}</button></p>` : ''}</div>`;
+  return `<div class="questions">${qs.map((q) => `<div class="qline" data-q="${h(q.id)}"><p>${h(q.text)}</p><div class="qopts" role="group" aria-label="${h(q.text)}">${q.options.map((o) => `<button type="button" data-act="answer" data-q="${h(q.id)}" data-o="${h(o.id)}" aria-pressed="${st.answers[q.id] === o.id}">${h(o.label)}</button>`).join('')}</div>${st.qnote?.q === q.id ? `<p class="qnote mono">${h(st.qnote.narrows ? C.S.narrow : C.S.changed)} ${R(st.qnote.from)} ${KISSAKI} ${R(st.qnote.to)}</p>` : ''}</div>`).join('')}${st.pick.status === 'need_more' ? `<p class="run-answers"><button class="btn" type="button" data-act="run-answers"><span>${h(C.S.runAnswers)}</span>${KISSAKI}</button></p>` : ''}</div>`;
 }
 
 // the one-line value a closed row shows, and its body
@@ -121,7 +121,8 @@ function rows(C, s, st, entry) {
     impBody = `<p>${h(imp.summary)}</p><p class="formula">${inputs.map((i) => {
       const isMoney = i.unit === 'usd' || i.unit === 'usd_per_hour';
       const v = isMoney ? money1(i.value) : i.value;
-      return `<label>${h(i.label)} <input inputmode="decimal" class="${i.basis === 'assumed' ? 'assumed' : ''}" data-act="impact" data-k="${h(`${id}:${i.key}`)}" data-money="${isMoney ? 1 : ''}" value="${h(F.int(v, lang === 'ja' ? 'en' : lang).replace(/\u00a0/g, ' '))}" aria-label="${h(i.label)}"><span class="tag">${isMoney ? h(C.cur === 'usd' ? '$' : S.cur.uzs) : ''} ${h(i.basis === 'assumed' ? S.assumed : S.fromText)}</span></label>`;
+      const lb = F.plainLabel(i.label);
+      return `<label>${h(lb)} <input inputmode="decimal" class="${i.basis === 'assumed' ? 'assumed' : ''}" data-act="impact" data-k="${h(`${id}:${i.key}`)}" data-money="${isMoney ? 1 : ''}" value="${h(F.int(v, lang === 'ja' ? 'en' : lang).replace(/\u00a0/g, ' '))}" aria-label="${h(lb)}"><span class="tag">${isMoney ? h(C.cur === 'usd' ? '$' : S.cur.uzs) : ''} ${h(i.basis === 'assumed' ? S.assumed : S.fromText)}</span></label>`;
     }).join('')}</p><p class="res">${h(S.gain)} ≈ ${R(one(gain))} − ${h(S.running)} ${R(one(run))} = ${gain - run < 0 ? '−' : ''}${R(one(Math.abs(gain - run)))}</p><p class="res verdict">${R(verdict)}</p>`;
   }
   row('impact', impSum, impBody, waiting);
@@ -157,8 +158,8 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
     <h3 id="t-${h(id)}">${h(s.title)}</h3>
     ${plate}
     <dl class="sfacts">
-      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
-      <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
+      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn ? ' still' : ''}">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
+      <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was${st.wasDrawn ? ' still' : ''}">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
       <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div>
       <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
       <div><dt>${h(S.row.why)}</dt><dd class="why">${h(s.why)}</dd></div>
@@ -205,7 +206,7 @@ export function notNeededHtml(C, st) {
 export function refineHtml(C, st) {
   const { S } = C;
   return `<section class="refine" aria-labelledby="rf-h"><h2 id="rf-h">${h(S.refine)}</h2><p class="chips">${Object.entries(S.chips).map(([k, v]) => `<button type="button" data-act="chip" data-k="${k}" aria-pressed="${st.chips.has(k)}">${h(v)}</button>`).join('')}</p>
-    <form data-act="refine"><label class="vh" for="rf-t">${h(S.refineText)}</label><input id="rf-t" name="t" maxlength="200" placeholder="${h(S.refineText)}"><button class="btn" type="submit"><span>${h(S.refineRun)}</span>${KISSAKI}</button></form>
+    <form data-act="refine"><label class="vh" for="rf-t">${h(S.refineText)}</label><input id="rf-t" name="t" maxlength="200" placeholder="${h(S.refineText)}"><button class="btn" type="submit"><span>${h(S.refineRun)}</span>${KISSAKI}</button><div class="rf-status" aria-live="polite"></div></form>
     ${st.removed?.length ? `<p class="removed mono">${h(S.removed)}: ${st.removed.map((t) => `<s>${h(t)}</s>`).join('')}</p>` : ''}</section>`;
 }
 
@@ -220,7 +221,7 @@ export function stampHtml(C, st) {
   return `<div class="stamp${signed ? ' signed' : ''}">
     <div><p>${h(fill(S.stampNo, { no: m.brief_no, date })).replace(/ · /g, SEP)}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>
     ${st.expired ? `<p>${h(S.expired)}${SEP}<button class="tlink" type="button" data-act="reprice">${h(S.reprice)}</button></p>` : ''}${st.repriced ? `<p>${h(S.repriced)}</p>` : ''}</div>
-    ${sig ? `<p class="sig">${h(sig)}${signed ? `<i class="hanko" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i>` : ''}</p>` : ''}
+    ${sig ? `<p class="sig">${h(sig)}${signed ? `<i class="hanko${st.stamped ? ' still' : ''}" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i>` : ''}</p>` : ''}
   </div>`;
 }
 

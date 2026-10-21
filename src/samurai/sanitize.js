@@ -4,11 +4,12 @@
 // lengths, dates that are dates. What does not fit is dropped. A genuine payload passes unchanged, so its signature
 // still verifies; a changed one fails verification and loses the hanko, or loses the field.
 // Pure, no DOM: node --test runs it (src/shared/price.test.js) against real and hostile payloads.
-const LANGS = ['uz', 'ru', 'en', 'ja'];
+// The lists come from the engine and the catalogue the page already holds (no second copy to drift).
+import { NEEDS_KEYS, PHASES } from '../shared/price.js';
+import { LANGS } from '../shared/catalogue.js';
 const STATES = ['off', 'mvp', 'full'];
-const ROLES = ['pm', 'designer', 'frontend', 'backend', 'mobile', 'bot', 'qa', 'devops', 'data', 'ml', 'hardware'];
-const IMPACT_KEYS = ['hours_per_week', 'hourly_cost_usd', 'orders_per_month', 'avg_order_usd', 'margin_pct', 'uplift_pct', 'no_shows_per_month', 'errors_per_month', 'cost_per_error_usd'];
-const IMPACT_MODELS = ['hours_saved', 'more_orders', 'fewer_no_shows', 'fewer_errors', 'none'];
+const IMPACT_KEYS = [...new Set(Object.values(NEEDS_KEYS).flat())];
+const IMPACT_MODELS = [...Object.keys(NEEDS_KEYS), 'none'];
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[+-]\d{2}:\d{2}|Z)$/;
 const BRIEF = /^QL-\d{4}-[0-9A-F]{4}(?:·\d{1,2})?$/;
@@ -84,8 +85,8 @@ export function cleanDetail(d, model) {
     .map((i) => ({ key: i.key, label: s(i.label, 90) || i.key, value: i.value, basis: i.basis === 'from_text' ? 'from_text' : 'assumed' }));
   return {
     deliverables_mvp: list(d.deliverables_mvp, 80, 6), deliverables_full: list(d.deliverables_full, 80, 5),
-    phases: ['plan', 'build', 'test', 'launch'].map((key) => ({ key, deliverable: s(arr(d.phases).find((p) => obj(p) && p.key === key)?.deliverable, 80) })),
-    team: arr(d.team).filter((t) => obj(t) && ROLES.includes(t.role) && int(t.count, 1, 3) != null).slice(0, 6).map((t) => ({ role: t.role, count: t.count })),
+    phases: PHASES.map((key) => ({ key, deliverable: s(arr(d.phases).find((p) => obj(p) && p.key === key)?.deliverable, 80) })),
+    team: arr(d.team).filter((t) => obj(t) && model.pricing.roles?.[t.role] && int(t.count, 1, 3) != null).slice(0, 6).map((t) => ({ role: t.role, count: t.count })),
     stack: arr(d.stack).filter((x) => typeof x === 'string' && model.pricing.stack?.[x]).slice(0, 6),
     risks: arr(d.risks).filter((r) => obj(r) && s(r.text, 110)).slice(0, 3).map((r) => ({ text: r.text, mitigation: s(r.mitigation, 110), adds_weeks: int(r.adds_weeks, 0, 4) ?? 0 })),
     needs: list(d.needs, 110, 6),

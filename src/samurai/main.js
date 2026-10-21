@@ -2,7 +2,7 @@
 // The page works without this file (the poster, the sentence, the contacts). With it: a live estimate from the Worker,
 // the catalogue matcher when SamurAI is unavailable, samples, shared links, the plan builder, refine, print and leads.
 // Every number comes from src/shared/price.js, the same engine the Worker uses.
-import '../pages/main.js';
+import '../pages/chrome.js'; // the shared chrome (the page has no contact form)
 import { expand, solutionUrl } from '../shared/catalogue.js';
 import { priceResult, plan as planOf, fit, preset as presetOf, applyEffect, solId, uzsRange } from '../shared/price.js';
 import { match } from '../shared/match.js';
@@ -11,8 +11,8 @@ import { firstMonday, snapMonday, tashkentToday, endOfWork, addDays, daysBetween
 import { streamSamurai } from './stream.js';
 import { h, fill, money, SEP, briefHtml, questionsHtml, sheetHtml, skeletonHtml, notNeededHtml, refineHtml, stampHtml, actionsHtml } from './render.js';
 import { planHtml } from './plan.js';
-// the link sanitizer loads only when a link or the last estimate is opened (it is not on the page's first load)
-const sanitizer = () => import('./sanitize.js');
+// a link or the reopened last estimate is data anyone can type: only the shapes Qilich writes get through
+import { cleanPayload } from './sanitize.js';
 import { hamonStrip } from './plate.js';
 import { encode, decode, verify } from './share.js';
 import { openLead, deckleFor } from '../ui/lead.js';
@@ -32,7 +32,7 @@ const C = {
   S, lang, cfg, rate: cfg.rate, cur: store.get('qilich.cur') || (lang === 'ja' ? 'usd' : 'uzs'),
   get model() { return model; },
   uzs: (u) => uzsRange(u, C.rate.uzs_per_usd),
-  dates: (_s, end) => F.dateRange(endOfWork(st.start, Math.max(0.2, end[0])), endOfWork(st.start, Math.max(0.2, end[1])), lang),
+  dates: (_s, end) => F.dateRange(endOfWork(st.start, Math.max(0.2, end[0])), endOfWork(st.start, Math.max(0.2, end[1])), lang, S.months),
 };
 const sam = $('#sam'), form = $('#intake'), result = $('#result'), statusEl = form.querySelector('.status'), go = form.querySelector('.go-btn'), text = $('#sam-text');
 const live = document.createElement('p');
@@ -110,8 +110,12 @@ function paint() {
     + (hasSols && (st.done || st.source !== 'model') ? stampHtml(C, st) + actionsHtml(C) : '')
     + `<p class="print-foot">${h(cfg.phone)}${SEP}${h(cfg.email)}${SEP}qilich.com${h(location.pathname)}${SEP}${h(S.res)} ${h(st.meta?.brief_no || '')}</p>`;
   st.fresh.clear(); st.newIds.clear();
-  if (!reduced) result.querySelectorAll('.letter mark').forEach((m, i) => setTimeout(() => m.classList.add('on'), 120 + i * 450));
-  else result.querySelectorAll('.letter mark').forEach((m) => m.classList.add('on'));
+  // what draws once draws once: the quote underlines, the hanko and the strikes are static on every later repaint
+  // (a currency switch, a scope switch, a resize), so nothing moves without a cause
+  if (!reduced && !st.marked) result.querySelectorAll('.letter mark').forEach((m, i) => setTimeout(() => m.classList.add('on'), 120 + i * 450));
+  if (result.querySelector('.letter mark')) st.marked = true;
+  if (result.querySelector('.signed .hanko')) st.stamped = true;
+  if (st.was) st.wasDrawn = true;
   if (focus) restore(focus);
   strip(hasPlan);
 }
@@ -165,6 +169,7 @@ let t0 = 0, tick = 0;
 function busy(on) {
   form.classList.toggle('busy', on);
   go.disabled = on;
+  result.querySelectorAll('.refine button, .run-answers button').forEach((b) => (b.disabled = on));
   clearInterval(tick);
   if (on) {
     t0 = performance.now();
@@ -174,9 +179,15 @@ function busy(on) {
       ink.style.setProperty('--pool', (1 - Math.exp(-t / 6)).toFixed(3));
       if (reduced && !st.pick) statusEl.textContent = `${st.statusText || ''}${SEP}${Math.round(t)}\u00a0s`;
     }, 250);
-  } else statusEl.textContent = '';
+  } else { statusEl.textContent = ''; result.querySelectorAll('.rf-status').forEach((el) => (el.innerHTML = '')); }
 }
-function status(t) { st.statusText = t; if (!st.pick) statusEl.textContent = t; else { const el = $('.res-status', result); if (el) el.innerHTML = t ? `<p class="status mono">${h(t)}</p>` : ''; } }
+// the status line: in the form before a result; at the result's head and beside the refine button once one shows
+// (a refine keeps the estimate it started from on screen until the new one arrives)
+function status(t) {
+  st.statusText = t;
+  if (!sam.classList.contains('has-result')) statusEl.textContent = t;
+  result.querySelectorAll('.res-status, .rf-status').forEach((el) => { el.innerHTML = t ? `<p class="status mono">${h(t)}</p>` : ''; });
+}
 // the form folds away when a result first shows; scroll anchoring would otherwise keep the page at the bottom
 function show() { const first = !sam.classList.contains('has-result'); sam.classList.add('has-result'); result.hidden = false; if (first) window.scrollTo({ top: 0, behavior: 'auto' }); }
 
@@ -187,7 +198,7 @@ async function run(body, { refine = false } = {}) {
   const prev = st;
   if (refine) {
     st.was = new Map(st.sols.map((s) => { const sc = st.sel.get(solId(s)) === 'full' ? 'full' : 'mvp'; return [solId(s), { big: money(C, s.usd[sc], s.uzs[sc])[0], weeks: F.weeks(s.weeks[sc], lang) }]; }));
-    st = { ...fresh(), text: prev.text, intake: prev.intake, preselected: prev.preselected, was: st.was, inked: new Set(prev.inked), start: prev.start, deadline: prev.deadline, budgetUsd: prev.budgetUsd, prevSols: prev.sols };
+    st = { ...fresh(), text: body.text, intake: body.intake, preselected: body.preselected, was: st.was, inked: new Set(prev.inked), start: prev.start, deadline: prev.deadline, budgetUsd: prev.budgetUsd, prevSols: prev.sols };
   } else st = { ...fresh(), text: body.text, intake: body.intake, preselected: body.preselected };
   busy(true);
   status(refine ? S.st.refining : S.st.reading);
@@ -280,7 +291,7 @@ async function shareUrl() { return `${location.origin}${location.pathname}#r=${a
 async function openPayload(raw, { last = false } = {}) {
   await dataReady;
   // a link is data anyone can type: only the shapes Qilich writes get through (src/samurai/sanitize.js)
-  const p = (await sanitizer()).cleanPayload(raw, model);
+  const p = cleanPayload(raw, model);
   if (!p) return false;
   st = fresh();
   st.meta = p.meta; st.pick = p.pick; st.details = p.details; st.sig = p.sig;
@@ -315,6 +326,13 @@ async function renderSample(x) {
 function request(extra = {}) {
   return { v: 1, lang, intake: intakeOf(), text: text.value.trim(), preselected: pre, answers: [], refine: null, ...extra };
 }
+// a second request about the estimate on screen (refine, answers, retry): the business is the estimate's own, never
+// the form's untouched default sentence. A reopened or shared estimate carries no text or intake: its industry
+// comes from what SamurAI understood, and the earlier pick travels with a refine.
+function again(extra = {}) {
+  const ind = st.pick?.heard?.industry, own = st.intake && Object.keys(st.intake).length ? st.intake : ind && ind !== 'other' ? { industry: ind } : {};
+  return { v: 1, lang, intake: own, text: st.text || '', preselected: st.preselected || [], answers: [], refine: null, ...extra };
+}
 let pre = [];
 form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -342,13 +360,13 @@ result.addEventListener('click', async (e) => {
   else if (act === 'more') { st.briefOpen = !st.briefOpen; el.closest('.brief').classList.toggle('open', st.briefOpen); }
   else if (act === 'cur') { C.cur = el.dataset.k; store.set('qilich.cur', C.cur); paint(); }
   else if (act === 'answer') answer(el.dataset.q, el.dataset.o);
-  else if (act === 'run-answers') run(request({ answers: answersList() }));
+  else if (act === 'run-answers') run(again({ answers: answersList() }));
   else if (act === 'int') { st.intOpen = st.intOpen?.k === el.dataset.k && st.intOpen?.s === el.dataset.s ? null : { k: el.dataset.k, s: el.dataset.s }; st.open.add(`${el.dataset.s}:int`); paint(); }
   else if (act === 'legend') legend();
   else if (act === 'preset') { st.sel = new Map(presetOf(st.sols, el.dataset.k).map((x) => [x.id, x.state])); st.preset = el.dataset.k; st.struck.clear(); st.fitMsg = ''; st.nextStage = []; paint(); }
   else if (act === 'quick') { const f = el.closest('form'); f.elements.deadline.value = addDays(st.start, Number(el.dataset.m) * 30); showDate(f.elements.deadline); }
   else if (act === 'chip') { const k = el.dataset.k; st.chips.has(k) ? st.chips.delete(k) : st.chips.add(k); el.setAttribute('aria-pressed', st.chips.has(k)); }
-  else if (act === 'retry') run(request());
+  else if (act === 'retry') run(again());
   else if (act === 'reprice') { C.rate = cfg.rate; st.meta = { ...st.meta, rate: cfg.rate }; st.expired = false; st.repriced = true; paint(); }
   else if (act === 'lead') lead();
   else if (act === 'pdf') { result.querySelectorAll('.rows details').forEach((d) => (d.open = true)); window.print(); }
@@ -383,7 +401,7 @@ result.addEventListener('submit', (e) => {
   if (f.dataset.act === 'fit') fitNow(f);
   else if (f.dataset.act === 'refine') {
     if (!st.chips.size && !f.elements.t.value.trim()) return;
-    run(request({ answers: answersList(), refine: { chips: [...st.chips], text: f.elements.t.value.trim(), previous: st.pick, brief_no: st.meta?.brief_no } }), { refine: true });
+    run(again({ answers: answersList(), refine: { chips: [...st.chips], text: f.elements.t.value.trim(), previous: st.pick, brief_no: st.meta?.brief_no } }), { refine: true });
   }
 });
 
@@ -397,7 +415,8 @@ function answer(q, o) {
   const after = st.plan?.totals;
   if (before && after) {
     const a = money(C, before.usd, before.uzs)[0], b = money(C, after.usd, after.uzs)[0];
-    st.qnote = a !== b ? { q, from: a, to: b } : null;
+    const narrows = after.usd[0] >= before.usd[0] && after.usd[1] <= before.usd[1] && after.usd[1] - after.usd[0] < before.usd[1] - before.usd[0];
+    st.qnote = a !== b ? { q, from: a, to: b, narrows } : null;
     if (st.qnote) setTimeout(() => { st.qnote = null; const n = result.querySelector('.qnote'); if (n) n.remove(); }, 3000);
   }
   paint();
@@ -457,8 +476,8 @@ async function lead() {
 
 // ---------------------------------------------------------------------------------------------------------------
 // start: a shared link, the prefill, the draft, the last estimate
-let resizeT = 0;
-addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (st.pick && !result.hidden) paint(); }, 200); });
+let resizeT = 0, lastW = innerWidth;
+addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(resizeT); resizeT = setTimeout(() => { if (st.pick && !result.hidden) paint(); }, 200); });
 (async () => {
   const q = new URLSearchParams(location.search);
   const draft = (() => { try { return JSON.parse(store.get('qilich.samurai.draft') || 'null'); } catch { return null; } })();
@@ -485,7 +504,7 @@ addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout((
     try {
       const raw = await decode(last);
       await dataReady;
-      const p = (await sanitizer()).cleanPayload(raw, model);
+      const p = cleanPayload(raw, model);
       if (p && p.pick.solutions.length) {
         const el = $('.reopen');
         el.innerHTML = `<span>${h(fill(S.reopen, { no: p.meta.brief_no, date: F.dateNum(p.meta.generated_at.slice(0, 10), lang) }))}</span><button class="tlink" type="button">${h(S.open)}</button>`;
