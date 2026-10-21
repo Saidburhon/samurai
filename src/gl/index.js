@@ -1,12 +1,11 @@
-// The GL chunk's entry (§6.2): renderer -> meshes -> first frame -> glReady -> bakes (one per frame) -> sign atlas.
+// The GL chunk's entry (§6.2): geometries -> renderer -> meshes -> first frame -> glReady -> bakes (one per frame) -> sign atlas.
 // Imported by main.js only in cinema mode (after the intro drawing has finished, or at once with ?beat).
 // On the boot path the first frame is the reveal pose with nothing revealed (§4.1), so it needs no texture: it
 // renders with 1 × 1 stand-ins, which keeps the bakes (and their program) off the critical path to glReady; the
 // baked textures are swapped in (uniform values, no recompile) before the steel appears.
 import { DataTexture, RGBAFormat, LinearFilter } from 'three';
-import { Stage } from './stage.js';
-import { bakeAll, girihTexture } from './bake.js';
-import { wordAtlas } from './sign.js';
+import { Stage, buildGeometries } from './stage.js';
+import { bakeAll } from './bake.js';
 
 const px = (r, g, b, a) => { const t = new DataTexture(new Uint8Array([r, g, b, a]), 1, 1, RGBAFormat); t.magFilter = t.minFilter = LinearFilter; t.needsUpdate = true; return t; };
 
@@ -25,6 +24,10 @@ function adopt(canvas, tier) {
 
 export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true }) {
   const t0 = performance.now();
+  // the geometries first: CPU work that overlaps the GPU process finishing the page's last intro frames (on a
+  // software renderer it is busy until about 1.1 s, and the renderer's first GL calls wait for it anyway)
+  const geo = buildGeometries();
+  log('geo', performance.now() - t0);
   const { canvas, context } = adopt(el, tier);
   log('adopted', context ? 1 : 0); log('adoptMs', performance.now() - t0);
   const stage = new Stage(canvas, tier, context);
@@ -39,12 +42,22 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true 
   let B = null;
   if (bakeFirst) B = await bakeAll(r, opt);
   const t1 = performance.now();
-  stage.build({ ...T0, ...(B || {}), girih: (B && B.girih) || girihTexture(Math.min(tier.aniso, r.capabilities.getMaxAnisotropy())) });
+  stage.build({ ...T0, ...(B || {}) }, geo);
   stage.setSize(W, H, true);
   log('build', performance.now() - t1);
+  // The steel program, the largest, is issued now and not awaited: the GPU process compiles it while the caller
+  // puts the first hold in place (CPU work). warm() then compiles the fittings program (the grip is one of its kinds; the oval tubes are
+  // indexed, the extruded fittings are not: both layouts of the metal) and makes one round trip (§6.3 prewarm).
+  stage.blade.name = 'steel';
+  const pw = stage.prewarm([stage.blade], { finish: false });
+  const t2 = performance.now();
+  const warm = () => {
+    Object.assign(pw, stage.prewarm([stage.parts.tsuba, stage.parts.tsuka, stage.parts.fuchi]));
+    log('compile', performance.now() - t2);
+    if (window.__qilich) window.__qilich.prewarm = pw;
+    return pw;
+  };
   // the bakes after the first frame (the boot path): one per frame, swapped in as they land
   stage.bake = async () => { const T = await bakeAll(r, opt); stage.swapTextures(T); return T; };
-  // the sign atlas waits for its two faces; it is not needed for the hero
-  stage.atlas = wordAtlas(r).then((t) => { stage.mat.steelU.uWords.value = t; return t; });
-  return { stage };
+  return { stage, warm };
 }

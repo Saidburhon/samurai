@@ -11,6 +11,18 @@ import { Rays } from './rays.js';
 import { LOOKS, UNIFORM_KEYS } from '../core/looks.js';
 import { pixelRatio } from '../core/tier.js';
 import { holdStudio } from './studio.js';
+import { girihTexture } from './bake.js';
+import { wordAtlas } from './sign.js';
+
+// Every geometry of the sword, the koshirae and the saya: CPU only (no GL), so the GL boot (gl/index.js) builds them
+// while the GPU process is still busy with the page's last intro frames.
+export function buildGeometries() {
+  return {
+    blade: GM.buildBlade(), habaki: GM.buildHabaki(), seppa1: GM.buildSeppa('seppa1'), tsuba: GM.buildTsuba(), seppa2: GM.buildSeppa('seppa2'),
+    fuchi: GM.buildFuchi(), tsuka: GM.buildTsuka(), kashira: GM.buildKashira(), mekugi: GM.buildMekugi(), nakago: GM.buildNakago(),
+    saya: GM.buildSaya(), kurikata: GM.buildKurikata(),
+  };
+}
 
 const D = Math.PI / 180;
 const v3 = (x = 0, y = 0, z = 0) => new Vector3(x, y, z);
@@ -30,28 +42,29 @@ export class Stage {
     this.w = 1; this.h = 1;
   }
 
-  build(T) {
+  // geo: the geometries (buildGeometries)
+  build(T, geo = buildGeometries()) {
     this.T = T;
     const M = (this.mat = makeMaterials(this.U, T));
     const sw = (this.sword = new Group()); sw.rotation.order = 'YZX'; this.scene.add(sw);
-    this.blade = new Mesh(GM.buildBlade(), M.steel); this.blade.frustumCulled = false; this.blade.renderOrder = 2; sw.add(this.blade);
+    this.blade = new Mesh(geo.blade, M.steel); this.blade.frustumCulled = false; this.blade.renderOrder = 2; sw.add(this.blade);
     const hg = (this.handle = new Group()); hg.matrixAutoUpdate = false; sw.add(hg);
     const add = (geo, mat, name) => { const m = new Mesh(geo, mat); m.name = name; m.frustumCulled = false; hg.add(m); return m; };
     this.parts = {
-      habaki: add(GM.buildHabaki(), M.copper, 'habaki'), seppa1: add(GM.buildSeppa('seppa1'), M.gold, 'seppa1'),
-      tsuba: add(GM.buildTsuba(), M.iron, 'tsuba'), seppa2: add(GM.buildSeppa('seppa2'), M.gold, 'seppa2'),
-      fuchi: add(GM.buildFuchi(), M.shakudo, 'fuchi'), tsuka: add(GM.buildTsuka(), M.silk, 'tsuka'),
-      kashira: add(GM.buildKashira(), M.shakudo, 'kashira'), mekugi: add(GM.buildMekugi(), M.gold, 'mekugi'),
+      habaki: add(geo.habaki, M.copper, 'habaki'), seppa1: add(geo.seppa1, M.gold, 'seppa1'),
+      tsuba: add(geo.tsuba, M.iron, 'tsuba'), seppa2: add(geo.seppa2, M.gold, 'seppa2'),
+      fuchi: add(geo.fuchi, M.shakudo, 'fuchi'), tsuka: add(geo.tsuka, M.silk, 'tsuka'),
+      kashira: add(geo.kashira, M.shakudo, 'kashira'), mekugi: add(geo.mekugi, M.gold, 'mekugi'),
     };
-    this.nakagoMesh = add(GM.buildNakago(), M.nakago, 'nakago'); this.nakagoMesh.visible = false;
+    this.nakagoMesh = add(geo.nakago, M.nakago, 'nakago'); this.nakagoMesh.visible = false;
     this.sayaG = new Group(); sw.add(this.sayaG);
-    this.saya = new Mesh(GM.buildSaya(), M.lacquer); this.saya.frustumCulled = false; this.sayaG.add(this.saya);
-    this.kurikata = new Mesh(GM.buildKurikata(), M.kurikata); this.kurikata.frustumCulled = false; this.sayaG.add(this.kurikata);
+    this.saya = new Mesh(geo.saya, M.lacquer); this.saya.frustumCulled = false; this.sayaG.add(this.saya);
+    this.kurikata = new Mesh(geo.kurikata, M.kurikata); this.kurikata.frustumCulled = false; this.sayaG.add(this.kurikata);
     M.lacquer.uniforms.uSayaLen.value = GM.SAYA_LEN;
     this.sayaG.visible = false;
     // the floor (Tsuba): a plane in the tsuba's frame, on the edge side of the guard
     this.floorU = {
-      ...this.U, tGirih: { value: T.girih }, uDiscL: { value: v3() }, uTsubaC: { value: v3() }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) },
+      ...this.U, tGirih: { value: T.girih || null }, uDiscL: { value: v3() }, uTsubaC: { value: v3() }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) },
       uDiscR: { value: 0.335 }, uGain: { value: 0.4 }, uFloorWarm: { value: 0 }, uVig: { value: 1 }, uPxPerUnit: { value: 100 },
       uFloorBase: { value: v3(0.0070, 0.0115, 0.037) }, uLightCol: { value: v3(2.1, 1.42, 0.70) }, uVigC: { value: new Vector2(1.5, 0) }, uVigR: { value: 6 }, uFloorZ: { value: 0.65 },
     };
@@ -99,6 +112,7 @@ export class Stage {
     }
     const s = this.mat.steelU;
     s.uNie.value = lk.nie; s.uNieAvg.value = lk.nieAvg; s.uShinogiSheen.value = lk.shinogiSheen; s.uShinogiRough.value = lk.shinogiRough; s.uEdgeLine.value = lk.edgeLine;
+    s.uMacro.value = lk.macro; s.uLampSpec.value = lk.lampSpec;
     this.mat.iron.uniforms.uBackGlow.value.set(...lk.backGlow);
     this.mat.iron.uniforms.uBase.value.set(...lk.ironBase);
   }
@@ -115,6 +129,8 @@ export class Stage {
   }
   setVis(v) {
     Object.assign(this.vis, v);
+    // the floor's girih mask is drawn the first time the floor is shown (B14), never on the boot path
+    if (this.vis.floor && !this.floorU.tGirih.value) this.floorU.tGirih.value = girihTexture(Math.min(this.tier.aniso || 4, this.renderer.capabilities.getMaxAnisotropy()));
     const ko = !!this.vis.koshirae;
     for (const k in this.parts) this.parts[k].visible = ko;
     this.nakagoMesh.visible = !!this.vis.nakago;
@@ -187,13 +203,17 @@ export class Stage {
     }
     if (off[0] || off[1]) c.setViewOffset(this.w, this.h, off[0] * this.w, off[1] * this.h, this.w, this.h);
   }
-  // the opponent's view of the tsuba (B14): (a) on the guard's normal; (b) 14° off the axis to the edge side, 8° above
+  // The opponent's view of the tsuba (B14, §2.5). (a) On the axis: the camera looks back along the blade's chord
+  // (guard centre -> tip), so the bent blade (sori 0.3 in this scene) folds onto itself and reads as a short,
+  // straight spike seen point-on; along the guard's own normal (the base tangent) the same blade spread into the
+  // frame-04 crescent (the tip leaves the tangent by 4 sagittae). (b) Off the axis: 14° towards the edge side and
+  // 8° above. (p) The prototype's camera of frame 04, for reference.
   solveGuard({ cand = 'a', frac = 0.47, off = [0, 0], dist = 30, side = 14, up = 8 }) {
     const c = this.camera;
     const tc = this.point('tsuba');
     const axis = this.dirH(v3(1, 0, 0)).normalize();
     let dir;
-    if (cand === 'a') dir = axis.clone().add(v3(0, 0.014, -0.006)).normalize();
+    if (cand === 'a') dir = this.point('T').sub(tc).normalize();
     else if (cand === 'p') { // the prototype's camera, between the guard normal and the tip direction (frame 04)
       const tipW = this.world(v3(G.B.L, 0, 0.02)), tipDir = tipW.clone().sub(tc).normalize();
       dir = axis.clone().lerp(tipDir, 0.5).normalize().add(v3(0, 0.014, -0.006)).normalize();
@@ -264,6 +284,12 @@ export class Stage {
     st.uBladeN.value.copy(nB); st.uFlatten.value = flatten;
   }
 
+  // the word atlas (gl/sign.js), drawn on first use: the hero never needs it, the boot path starts it after the bakes
+  atlas() {
+    if (!this._atlas) this._atlas = wordAtlas(this.renderer).then((t) => { this.mat.steelU.uWords.value = t; return t; });
+    return this._atlas;
+  }
+
   // the studio rotation (uStudio): a roll of the studio about the blade axis (the reveal's −0.60), else identity
   setStudio(roll = 0, yaw = 0) { this.studioM = holdStudio(roll, yaw); this.U.uStudio.value.setFromMatrix4(this.studioM); }
 
@@ -276,14 +302,20 @@ export class Stage {
     this.rays.disc.visible = !!rays;
     if (rays) this.rays.occlude(this.scene, this.camera, this.sword, [this.floor]);
     if (shadow) this.soft.draw(this.camera);
+    // the reveal at 0 (the intro's first frame, the bookend before its fill): every fragment of the sword would be
+    // discarded, so the sword is not drawn at all (§3.6: what is invisible is not drawn)
+    const none = this.U.uReveal.value <= 1e-4;
+    if (none) this.sword.visible = false;
     r.render(this.scene, this.camera);
+    if (none) this.sword.visible = true;
     if (rays) this.rays.draw();
     r.autoClear = true;
     return performance.now() - t0;
   }
   // Prewarm (§6.3): draw each mesh once into the default framebuffer with a 1 × 1 scissor, with its own blend and
   // depth state, so a software renderer builds the real pipeline now and not inside a scene. Returns ms per mesh.
-  prewarm(meshes) {
+  // finish = false: the draws are only issued, so the main thread goes on while the GPU process compiles
+  prewarm(meshes, { finish = true } = {}) {
     const r = this.renderer, gl = r.getContext(), out = {};
     const vis = [];
     this.scene.traverse((o) => { if (o.isMesh) { vis.push([o, o.visible]); o.visible = false; } });
@@ -291,7 +323,7 @@ export class Stage {
     for (const m of meshes) {
       const t0 = performance.now();
       m.visible = true; r.render(this.scene, this.camera); m.visible = false;
-      this.finish();
+      if (finish) this.finish();
       out[m.name || m.material.type] = Math.round(performance.now() - t0);
     }
     r.setScissorTest(false);

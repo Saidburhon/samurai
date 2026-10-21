@@ -14,6 +14,8 @@ uniform float uShinogiSheen;      // the burnished shinogi-ji's own faint sheen 
 uniform float uShinogiRough;
 uniform float uEdgeLine;          // the bright habuchi along the cutting edge
 uniform float uNieAvg;            // the sparkle that sub-pixel nie average to
+uniform float uMacro;             // 1: the macro treatment up close (sunagashi, grain, a sharper mirror); 0: the prototype's mist
+uniform float uLampSpec;          // the lamp's specular lobe on the steel (a magnified view shows it as a blob)
 // reflected sign (utsuri)
 uniform sampler2D uWords;
 uniform float uWordAlpha, uWordRowA, uWordRowB, uWordMix, uWordStretch, uWordSlide;
@@ -26,7 +28,7 @@ const float U0 = -0.05, U1 = 1.0;
 void facet(float rr, float hada, float mistW, out vec3 F, out float ro){
   if (rr < .5)      { F = vec3(.40,.41,.43); ro = .16; }
   else if (rr < 1.5){ F = vec3(.33,.345,.36); ro = uShinogiRough; }
-  else if (rr < 2.5){ F = vec3(.55,.565,.58); ro = .06 + hada*.07*mistW; }
+  else if (rr < 2.5){ F = vec3(.55,.565,.58); ro = mix(.03, .06, mistW) + hada*.07*mistW; }
   else              { F = vec3(.62,.63,.64); ro = .05; }
 }
 float uTex(float u){ return (u - U0) / (U1 - U0); }
@@ -64,7 +66,7 @@ void main(){
 
   // the scale of the view: 1 at hero scale and wider, 0 in the macros (B12): up close the coarse mist would read as
   // smoke and the grain-driven roughness as clouds, so they hand over to the sunagashi streaks and a visible grain
-  float mistW = smoothstep(0.0003, 0.0009, fwidth(u) * uAA);
+  float mistW = 1. - uMacro * (1. - smoothstep(0.0003, 0.0009, fwidth(u) * uAA));
   vec3 F0; float rough;
   facet(r, hada, mistW, F0, rough);
   // The creases (contract 2): mune | shinogi-ji | ji | ha are separate facets meeting at hard polygon edges (v 0.035,
@@ -78,7 +80,9 @@ void main(){
   if (wo > 0.) {
     vec3 Gv = dFdx(vWPos) * dFdx(v) + dFdy(vWPos) * dFdy(v);    // towards the edge, in the surface
     Gv = normalize(Gv - N * dot(Gv, N) + vec3(1e-7));
-    float ang = cr < .1 ? 1.04 : (cr < .5 ? .20 : .14);         // the crease angles of the section (geom-core PROFILE)
+    // the crease angles of the section (geom-core PROFILE); the mune's 60° crease is not bent: its in-between normal
+    // catches the studio's strip as a sub-pixel line that the buffer samples into dots (B6), so it only blends
+    float ang = cr < .1 ? 0. : (cr < .5 ? .20 : .14);
     N = normalize(N + Gv * ((up * 2. - 1.) * tan(ang * wo)));
     vec3 Fo; float rgo;
     facet(ro, hada, mistW, Fo, rgo);
@@ -107,7 +111,7 @@ void main(){
   float NoV = clamp(dot(N,V), 0., 1.);
   vec3 F = F0 + (1.-F0)*pow(1.-NoV, 5.);
   vec3 spec = studio(R, rough) * F;
-  spec += lampSpec(N, V, vWPos, F, rough);
+  spec += lampSpec(N, V, vWPos, F, rough) * uLampSpec;
   // itame: up close the folded grain shows as faint wood-grain streaks in the mirror of the ji
   spec *= 1. + hada * .55 * (1. - mistW) * onJi * (1. - frost) * pol;
   // the shinogi-ji is a dark mirror, but burnished: it carries a faint broad sheen of the studio around its streak

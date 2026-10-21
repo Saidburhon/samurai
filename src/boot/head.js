@@ -3,6 +3,7 @@
 //   cinema   the WebGL scroll film: only with a real WebGL2 context, never with ?tier=0 (flow-forced);
 //            the build ships it to visitors once the director exists (__CINEMA__); until then the dev hooks
 //            ?beat=k (one hold, G1 poster test) and ?cinema=1 (the boot path, GL timing) turn it on
+//   sw       the renderer is software (SwiftShader, llvmpipe): tier T2, whose grain holds still
 //   intro    the drawing inks itself (not with a hash, ?nointro, ?beat, ?og or reduced motion)
 // It also anchors the intro to navigation start: if this ran late, the CSS animations are compressed (--k).
 /* global __CINEMA__ */
@@ -30,6 +31,8 @@
     } catch (e) { cinema = false; }
   }
   if (cinema) d.classList.add('cinema');
+  // a software renderer (T2): the grain holds still (its 12.5 Hz full-screen re-composite is a software render too)
+  if (glKeep) d.classList.add('sw');
   if (q.has('og')) d.classList.add('og');
   const intro = !reduce && !location.hash && !q.has('nointro') && !q.has('beat') && !q.has('og');
   if (intro) d.classList.add('intro');

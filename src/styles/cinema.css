@@ -57,7 +57,7 @@ html.cinema .ruler { position: fixed; top: auto; bottom: 0; }
 html.cinema.dark { --fg: var(--washi); --fg2: var(--hagane); --line: rgba(236, 230, 218, .18); }
 html.cinema.dark .nav, html.cinema.dark .ruler { color: var(--washi); --line: rgba(236, 230, 218, .18); }
 html.cinema.dark .nav .btn { border-color: rgba(236, 230, 218, .5); }
-html.cinema.dark .grain { mix-blend-mode: screen; opacity: .05; }
+html.cinema.dark .grain { background-image: var(--grain-w, none); opacity: .05; }
 /* the grain holds still while the GL programs compile (main.js, gate -> glReady, about a second) */
 html.gl-boot .grain { animation-play-state: paused; }
 
@@ -67,6 +67,8 @@ html.cinema .b-promise { position: absolute; left: var(--m); top: 128px; display
 html.cinema .b-promise .st { font-size: clamp(40px, calc(72 * var(--fit)), 72px); }
 html.cinema .b-promise .st-sub { margin-top: 20px; max-width: 26em; font-size: clamp(16px, calc(18 * var(--fit)), 18px); }
 html.cinema[data-beat="mei.promise"] .s-mei > .mei, html.cinema[data-beat="mei.promise"] .s-mei > .hanko { display: none; }
+/* the film's hanko stamps at 5.6 s, after the lift (§4.1); the flow hero stamps at 0.9 s */
+html.cinema.intro .hanko { animation-delay: 5.6s; }
 html.cinema[data-beat="intro"] .b-hero .sub, html.cinema[data-beat="intro"] .s-mei > .hanko, html.cinema[data-beat="intro"] .cue { display: none; }
 
 /* 映 B2–B6: the h2 top-left, the full list bottom-right (the active items lit), the hakogaki at the right edge */

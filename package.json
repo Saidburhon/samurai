@@ -14,7 +14,11 @@
     "indexnow": "node scripts/indexnow.mjs",
     "qa:seo": "node scripts/qa/seo-check.mjs",
     "qa:pages": "node scripts/qa/pages-probe.cjs",
-    "qa:ja": "node scripts/qa/ja-review.mjs"
+    "qa:ja": "node scripts/qa/ja-review.mjs",
+    "test": "node --test \"src/shared/*.test.js\" \"worker/*.test.js\"",
+    "samples": "node scripts/samurai-samples.mjs",
+    "eval:samurai": "node scripts/eval-samurai.mjs",
+    "qa:samurai": "node scripts/qa/samurai-probe.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",

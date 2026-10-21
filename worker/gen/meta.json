@@ -1,0 +1,9 @@
+{
+ "_readme": "Written by scripts/build.mjs (scripts/pages/samurai-build.mjs): the catalogue fingerprint and the last good CBU rate. Do not edit by hand.",
+ "catalogue_version": "2026-10-20.83240c46",
+ "rate_fallback": {
+  "uzs_per_usd": 12012.3,
+  "date": "2026-10-21"
+ },
+ "built_at": "2026-10-21"
+}

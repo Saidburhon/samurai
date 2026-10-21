@@ -1,0 +1,52 @@
+{
+  "_readme": [
+    "The price engine's table (src/shared/price.js). SamurAI never writes a price, a week or a percentage: it picks",
+    "a catalogue entry, a size (s, m, l), modifiers and integrations, and this table turns them into weeks, USD and soʻm.",
+    "The same engine runs in the Worker and in the browser, so the same choices always give the same price.",
+    "owner_review: these are conservative defaults; the owner tunes them. After editing run: npm test && npm run build"
+  ],
+  "version": 1,
+  "owner_review": true,
+  "validity_days": 30,
+  "size_band": { "s": [0, 0.5], "m": [0.25, 0.75], "l": [0.5, 1] },
+  "max_mult": 1.6,
+  "integration_weeks_overlap": 0.5,
+  "custom_factor": 1.0,
+  "parallel_overhead": 0.1,
+  "shared": { "backend": 0.15, "admin": 0.10, "auth": 0.05, "design": 0.05 },
+  "phase_split": { "default": { "plan": 0.15, "build": 0.55, "test": 0.20, "launch": 0.10 } },
+  "round": { "usd": 100 },
+  "modifiers": {
+    "multi_branch": { "mult": 1.15, "weeks_mult": 1.10, "label": { "uz": "Bir nechta filial", "ru": "Несколько филиалов", "en": "Several branches", "ja": "複数拠点" }, "when": "the business has 2 or more branches or locations that must share the system" },
+    "roles": { "add_usd": [400, 900], "add_weeks": [0.5, 1], "label": { "uz": "Koʻp rollar va huquqlar", "ru": "Много ролей и прав", "en": "Many roles and permissions", "ja": "多数の役割と権限" }, "when": "many staff roles with different permissions (owner, manager, cashier, courier, branch admin)" },
+    "languages_3": { "add_usd": [200, 500], "add_weeks": [0.5, 1], "label": { "uz": "Uch til: oʻzbek, rus, ingliz", "ru": "Три языка: узбекский, русский, английский", "en": "Three languages: Uzbek, Russian, English", "ja": "3言語対応（ウズベク語・ロシア語・英語）" }, "when": "the users need the interface in three languages" },
+    "offline": { "mult": 1.20, "weeks_mult": 1.15, "label": { "uz": "Internetsiz ishlash", "ru": "Работа без интернета", "en": "Works offline", "ja": "オフライン動作" }, "when": "staff work where the internet drops (fields, warehouses, roads) and data must sync later" },
+    "high_load": { "mult": 1.25, "weeks_mult": 1.15, "label": { "uz": "Katta yuklama", "ru": "Высокая нагрузка", "en": "High load", "ja": "高負荷対応" }, "when": "tens of thousands of users or orders a day, or sharp peaks" },
+    "migration": { "add_usd": [300, 1200], "add_weeks": [1, 2], "label": { "uz": "Eski maʼlumotlarni koʻchirish", "ru": "Перенос старых данных", "en": "Moving old data", "ja": "既存データの移行" }, "when": "existing data in Excel, paper registers or an old system must be moved in" },
+    "custom_design": { "mult": 1.10, "weeks_mult": 1.10, "label": { "uz": "Oʻz dizayn tizimi", "ru": "Собственная дизайн-система", "en": "A custom design system", "ja": "独自デザインシステム" }, "when": "the brand needs its own design system, not a clean standard interface" },
+    "analytics": { "add_usd": [500, 1500], "add_weeks": [1, 2], "label": { "uz": "Hisobotlar va tahlil", "ru": "Отчёты и аналитика", "en": "Reports and analytics", "ja": "レポートと分析" }, "when": "the owner wants reports and dashboards beyond the basic lists" },
+    "realtime": { "mult": 1.15, "weeks_mult": 1.10, "label": { "uz": "Jonli kuzatuv", "ru": "Отслеживание в реальном времени", "en": "Live tracking", "ja": "リアルタイム追跡" }, "when": "live positions, statuses or counters that update by themselves (couriers, queues, machines)" }
+  },
+  "stack": {
+    "swift": "Swift", "kotlin": "Kotlin", "flutter": "Flutter", "react_native": "React Native", "typescript": "TypeScript",
+    "react": "React", "nextjs": "Next.js", "nodejs": "Node.js", "go": "Go", "python": "Python", "postgresql": "PostgreSQL",
+    "redis": "Redis", "telegram_bot_api": "Telegram Bot API", "telegram_mini_app": "Telegram Mini App", "cloudflare": "Cloudflare",
+    "docker": "Docker", "mqtt": "MQTT", "esp32": "ESP32", "electron": "Electron", "tauri": "Tauri", "dotnet": ".NET",
+    "llm_api": "LLM API", "unity": "Unity", "threejs": "Three.js", "clickhouse": "ClickHouse", "kubernetes": "Kubernetes"
+  },
+  "roles": {
+    "pm": { "uz": "PM", "ru": "PM", "en": "PM", "ja": "PM" },
+    "designer": { "uz": "Dizayner", "ru": "Дизайнер", "en": "Designer", "ja": "デザイナー" },
+    "frontend": { "uz": "Frontend", "ru": "Фронтенд", "en": "Frontend", "ja": "フロントエンド" },
+    "backend": { "uz": "Backend", "ru": "Бэкенд", "en": "Backend", "ja": "バックエンド" },
+    "mobile": { "uz": "Mobil", "ru": "Мобильный", "en": "Mobile", "ja": "モバイル" },
+    "bot": { "uz": "Bot", "ru": "Бот", "en": "Bot", "ja": "ボット" },
+    "qa": { "uz": "QA", "ru": "QA", "en": "QA", "ja": "QA" },
+    "devops": { "uz": "DevOps", "ru": "DevOps", "en": "DevOps", "ja": "DevOps" },
+    "data": { "uz": "Maʼlumotlar", "ru": "Данные", "en": "Data", "ja": "データ" },
+    "ml": { "uz": "AI", "ru": "ИИ", "en": "AI", "ja": "AI" },
+    "hardware": { "uz": "Qurilma", "ru": "Железо", "en": "Hardware", "ja": "ハードウェア" }
+  },
+  "monthly_default": { "telegram": [20, 80], "web": [10, 60], "mobile": [30, 150], "business": [30, 200], "cloud": [30, 200], "iot": [20, 100], "ai": [50, 500], "games": [10, 80], "industry": [50, 250], "support": [0, 30] },
+  "office": null
+}

@@ -128,12 +128,15 @@ html.no-js .clocks, html.no-js .city time { display: none; } /* without JS no cl
 .ruler .ink { display: none; }
 
 /* ---------------- grain ---------------- */
-.grain { position: fixed; inset: -128px; z-index: 20; pointer-events: none; background: var(--grain-tile, none) 0 0 / 128px 128px; opacity: .06; mix-blend-mode: multiply; }
+/* multiply at .06 on light grounds, screen at .05 on dark ones, drawn as alpha tiles with normal blending (boot/tiles.js) */
+.grain { position: fixed; inset: -128px; z-index: 20; pointer-events: none; background: var(--grain-k, none) 0 0 / 128px 128px; opacity: .06; }
 @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .grain { animation: grain .8s steps(10) infinite; }
   @keyframes grain { 0% { transform: translate(0, 0); } 10% { transform: translate(-37px, 21px); } 20% { transform: translate(53px, -66px); } 30% { transform: translate(-8px, 91px); } 40% { transform: translate(74px, 14px); } 50% { transform: translate(-95px, -42px); } 60% { transform: translate(28px, 63px); } 70% { transform: translate(-61px, -9px); } 80% { transform: translate(11px, -88px); } 90% { transform: translate(86px, 47px); } }
 }
-@media (pointer: coarse) { .grain { opacity: .04; mix-blend-mode: normal; } }
+@media (pointer: coarse) { .grain { opacity: .04; } }
+/* T2, any software renderer (§6.4): a static grain, like the phones' (each jump is a full-screen software composite) */
+html.sw .grain { animation: none; }
 
 /* ---------------- the intro (with JS, no reduced motion): the drawing inks itself by 0.80 s ---------------- */
 html.intro #osh-hero path[pathLength] { stroke-dasharray: 1 1; animation: draw calc(var(--d, .55s) * var(--k)) cubic-bezier(.45, 0, .55, 1) calc(var(--t, .05s) * var(--k)) both; }
@@ -141,7 +144,7 @@ html.intro #osh-hero .o-blade path { --t: .05s; --d: .6s; }
 html.intro #osh-hero .o-kosh path { --t: .14s; --d: .5s; }
 html.intro #osh-hero .o-annot path, html.intro #osh-detail path { --t: .40s; --d: .36s; }
 html.intro #osh-hero .fill, html.intro #osh-hero path:not([pathLength]), html.intro .ol { animation: tick calc(.3s * var(--k)) linear calc(.42s * var(--k)) both; }
-html.intro #osh-detail .fill { animation-delay: calc(.6s * var(--k)); }
+html.intro #osh-detail .fill { animation-delay: calc(.48s * var(--k)); }
 html.intro .h1 .ln > span { animation: rise calc(.6s * var(--k)) var(--hone) calc(.1s * var(--k)) both; }
 html.intro .h1 .ln + .ln > span { animation-delay: calc(.18s * var(--k)); }
 html.intro .mei { animation: tick calc(.4s * var(--k)) linear calc(.4s * var(--k)) both; }

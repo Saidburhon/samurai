@@ -3,7 +3,7 @@
 // from G3 the director drives the same apply() every frame from evalS(beat).
 //   ?beat=mei.hero | 0          a hold by name or number
 //   ?beat=intro&reveal=0.755    the intro's reveal state (the 3 s frame)
-//   ?cand=a|b|p                 B14: the horn candidate (p = the prototype camera of frame 04)
+//   ?cand=a|b|p                 B14: the horn candidate (a, chosen at G1: on the axis; b: off it; p: frame 04's camera)
 import { Vector3 } from 'three';
 import { BEATS, PHONE, SCENE_OF, hold } from './shots.js';
 import { Ink } from '../fx/ink.js';
@@ -111,8 +111,8 @@ export class Poster {
     for (const m of [M.iron, R.iron]) { m.uniforms.uAxisW.value.copy(ax); m.uniforms.uFaceU.value.copy(st.dirH(new Vector3(0, 0, 1)).normalize()); m.uniforms.uFaceV.value.copy(st.dirH(new Vector3(0, 1, 0)).normalize()); }
     // the reflected sign
     if (S.sign) {
-      await st.atlas;
-      st.solveSign({ s: S.sign.s, zf: S.sign.zf });
+      await st.atlas();
+      st.solveSign({ s: S.sign.s, zf: S.sign.zf, ...(S.sign.width ? { width: S.sign.width } : {}), ...(S.sign.dist ? { dist: S.sign.dist } : {}) });
       sU.uWordAlpha.value = S.sign.alpha; sU.uWordRowA.value = S.sign.row; sU.uWordMix.value = 0;
     } else sU.uWordAlpha.value = 0;
     // the floor and the lamp disc (Tsuba)
@@ -176,8 +176,10 @@ export async function runPoster(stage, log) {
   if (q.has('prewarm')) { const st = stage; st.blade.name = 'steel'; Q.prewarm = st.prewarm([st.blade, st.parts.habaki, st.parts.tsuka, st.saya, st.floor]); }
   // first frame: programs compile here (the prewarm queue of G2 moves this out of the scenes)
   const t0 = performance.now(); p.render(); stage.finish(); const first = performance.now() - t0;
-  // the steady hold frame: measured once the page itself has settled (its own first raster shares the GPU process
-  // with this frame on a software renderer, which is not the state of a hold window inside the film)
+  // the steady hold frame: measured once the page itself has settled (its own first raster, and the paper tiles the
+  // boot script draws at 2.5 s, share the GPU process with this frame on a software renderer, which is not the state
+  // of a hold window inside the film)
+  for (let i = 0; i < 80 && !(Q.boot && Q.boot.tiles); i++) await new Promise((r) => setTimeout(r, 50));
   await nextFrame(); await nextFrame(); await new Promise((r) => setTimeout(r, 400));
   let hold = 1e9;
   for (let i = 0; i < 3; i++) { const t1 = performance.now(); p.render(); stage.finish(); hold = Math.min(hold, performance.now() - t1); await nextFrame(); }

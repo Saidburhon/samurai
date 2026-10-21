@@ -5,14 +5,17 @@
 //   - the live clocks (Asia/Tashkent, Asia/Tokyo), aligned to the minute
 import { stipple, frame, ANCHORS, SC } from '../sword/drawing.js';
 import { axisEnds, bp2 } from '../sword/geom-core.js';
-import { paperTile, grainTile, toVar } from './tiles.js';
+import { paperTile, grainTiles, toVar } from './tiles.js';
 
 const Q = window.__qilich || (window.__qilich = { boot: {} });
 const idle = window.requestIdleCallback || ((f) => setTimeout(f, 60));
 
 // ---------- paper ----------
 toVar(paperTile('washi'), '--washi-tile');
-idle(() => { toVar(grainTile(), '--grain-tile'); idle(() => { toVar(paperTile('ganch'), '--ganch-tile'); idle(() => toVar(paperTile('togi'), '--togi-tile')); }); });
+idle(() => { const g = grainTiles(); toVar(g.k, '--grain-k'); toVar(g.w, '--grain-w'); });
+// the ganch and togi grounds lie far down the page: their tiles (about 50 ms of main thread each) wait until the
+// intro and the GL boot are over, so they never delay the drawing or the GL gate (§4.1); until then a flat colour
+setTimeout(() => idle(() => { toVar(paperTile('ganch'), '--ganch-tile'); idle(() => { toVar(paperTile('togi'), '--togi-tile'); Q.boot.tiles = Math.round(performance.now()); }); }), 2500);
 
 // ---------- the stipple ----------
 const cv = document.getElementById('stip');
@@ -40,23 +43,29 @@ function placement(r) {
   const c = Math.cos(ang) * k, s = Math.sin(ang) * k;
   return { a: c, b: s, c: -s, d: c, e: Ks[0], f: Ks[1], k };
 }
+// A CPU canvas (willReadFrequently): on a software renderer an accelerated 2D canvas of this size keeps the GPU
+// process busy for about a second after the intro (measured: the GL boot then waits behind it, §4.1). Whoever asks
+// for the context first fixes its kind, so fx/ink.js gets the same one.
+const ink2d = () => cv.getContext('2d', { willReadFrequently: true });
 let sig = '';
 function layout() {
   const r = stageEl.getBoundingClientRect();
   const p = placement(r);
-  const dpr = Math.min(3, Math.max(1.5, (window.devicePixelRatio || 1) * 1.5));
+  // one canvas pixel per device pixel (at most 2 per CSS px): the dots are drawn with analytic coverage,
+  // so a finer canvas adds nothing on screen, only upload work (each of the 12 batches re-uploads the canvas)
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
   cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
   place = { ...p, dpr };
   sig = [r.width, r.height, p.a, p.b, p.e, p.f].map((v) => v.toFixed(1)).join();
   Q.boot.place = sig; Q.boot.layouts = (Q.boot.layouts || 0) + 1; // for the probes
   drawn = 0;
-  const ctx = cv.getContext('2d');
+  const ctx = ink2d();
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cv.width, cv.height);
 }
 function drawTo(n) {
   if (!place || n <= drawn) return;
-  const ctx = cv.getContext('2d'), { a, b, c, d, e, f, k } = place, rk = Math.min(1.6, Math.max(0.7, k));
+  const ctx = ink2d(), { a, b, c, d, e, f, k } = place, rk = Math.min(1.6, Math.max(0.7, k));
   ctx.fillStyle = '#0F0E0C';
   for (let j = drawn; j < n; j++) {
     const i = order[j], [u, v] = pts[j];
@@ -71,6 +80,18 @@ if (cv && stageEl) {
   layout();
   const kk = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--k')) || 1;
   if (Q.intro) {
+    // The drawing ends by 0.80 s after navigation start (§4.1). The head script guessed --k from its own time, but
+    // the CSS animations start at the first frame: in that frame's animation callback (before its style and paint)
+    // --k is set so that the longest of them (0.80 s at k = 1: the annotations, the detail plate, the mei) ends at
+    // 0.78 s; never below 0.375.
+    // Their start time is pinned to that callback's time (a CSS animation otherwise starts when its first frame
+    // commits, which a software renderer can delay by 0.2 s).
+    requestAnimationFrame(() => {
+      const c = performance.now(), k = Math.max(0.375, Math.min(kk, (780 - c) / 800));
+      if (k < kk - 0.005) document.documentElement.style.setProperty('--k', k.toFixed(3));
+      for (const a of document.getAnimations()) if (/^(draw|tick|rise)$/.test(a.animationName) && a.effect && a.effect.target && a.effect.target.closest('#osh-paper, .h1, .mei')) a.startTime = c;
+      Q.boot.animStart = Math.round(c); Q.boot.k = +k.toFixed(3);
+    });
     // 12 batches, tang to tip, from 0.05 s to 0.70 s after navigation start (compressed with the CSS when late)
     const N = order.length;
     const tick = () => {

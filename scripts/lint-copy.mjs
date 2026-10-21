@@ -33,17 +33,12 @@ function visible(html) {
   return out.map((s) => s.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'"));
 }
 
-const BANNED = [
-  [/yarat/i, 'a form of "yaratish"'],
-  [/hoglt|pool\s*timer|club\s*time|tikoncha/i, 'a product name'],
-  [/t\.me\/|telegram\.me\//i, 'a Telegram link'],
-  [/(^|[^\w."])@(?!qilich\.com)[a-z0-9_]{3,}/i, 'an @handle'],
-  [/\b(we craft|craft(ing)? digital|innovative|cutting-edge|seamless|empower|elevate|synergy|world-class|next-level|unleash)\b/i, 'a generated-copy tell'],
-];
+// one list for the site and for SamurAI's copy guard (worker/guard.js)
+import { BANNED, OKINA_BAD, APOS_BAD } from '../worker/copy-rules.js';
 function checkText(where, text, { uz = false, ru = false } = {}) {
   for (const [re, what] of BANNED) { const m = text.match(re); if (m) say(where, what, text.slice(Math.max(0, m.index - 30), m.index + 40)); }
-  if (uz) { const m = text.match(/[oOgG]['‘’`]/); if (m) say(where, 'a quote instead of the okina (U+02BB)', text.slice(Math.max(0, m.index - 20), m.index + 20)); }
-  if (uz) { const m = text.match(/[A-Za-z]['’`][a-z]/); if (m) say(where, 'an apostrophe in Uzbek (ʻ U+02BB after o/g, ʼ U+02BC elsewhere)', text.slice(Math.max(0, m.index - 20), m.index + 20)); }
+  if (uz) { const m = text.match(OKINA_BAD); if (m) say(where, 'a quote instead of the okina (U+02BB)', text.slice(Math.max(0, m.index - 20), m.index + 20)); }
+  if (uz) { const m = text.match(APOS_BAD); if (m) say(where, 'an apostrophe in Uzbek (ʻ U+02BB after o/g, ʼ U+02BC elsewhere)', text.slice(Math.max(0, m.index - 20), m.index + 20)); }
   if (ru) { const m = text.match(/[^ ]—/); if (m && !/^\s*—/.test(text)) say(where, 'a Russian dash without a non-breaking space before it', text.slice(Math.max(0, m.index - 20), m.index + 20)); }
 }
 
@@ -61,6 +56,16 @@ for (const [slug, def] of Object.entries(PAGES)) for (const lang of ['uz', 'ru',
 const facts = JSON.parse(readFileSync('content/site.json', 'utf8'));
 for (const [lang, v] of Object.entries(facts.description)) checkText(`site.json description.${lang}`, v, OPT(lang));
 for (const [lang, m] of Object.entries(META)) for (const [k, v] of Object.entries(m)) for (const s of [].concat(v)) checkText(`META ${lang}.${k}`, s, { uz: lang === 'uz', ru: lang === 'ru' });
+// SamurAI and the catalogue overlay: every string per language (content/solutions-extra.json, content/pricing.json,
+// content/samurai-samples.json); the samples were guarded when they were made, this checks them again
+for (const f of ['content/solutions-extra.json', 'content/pricing.json']) {
+  const walkJ = (v, lang, where) => { if (typeof v === 'string') checkText(`${f} ${where}`, v, OPT(lang)); else if (Array.isArray(v)) v.forEach((x, i) => walkJ(x, lang, `${where}[${i}]`)); else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walkJ(x, ['uz', 'ru', 'en', 'ja'].includes(k) ? k : lang, `${where}.${k}`); };
+  walkJ(JSON.parse(readFileSync(f, 'utf8')), 'en', '');
+}
+if (existsSync('content/samurai-samples.json')) {
+  const S = JSON.parse(readFileSync('content/samurai-samples.json', 'utf8'));
+  for (const [lang, list] of Object.entries(S.samples || {})) for (const x of strings(list)) checkText(`samurai-samples ${lang}`, x, OPT(lang));
+}
 for (const f of ['public/404.html']) if (existsSync(f)) for (const t of visible(readFileSync(f, 'utf8'))) checkText(f, t);
 
 // ---- the built site (npm run lint) ----

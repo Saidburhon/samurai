@@ -1,113 +1,73 @@
-// SamuraiGuard: the one place that decides whether a SamurAI request may reach the Claude API.
-// A single global Durable Object (SQLite-backed), so every check and count is atomic across all data centres:
-//   - the day's spend in USD (Tashkent day) stays under DAILY_USD (env SAMURAI_DAILY_USD, default 15);
-//   - each visitor key (an IPv4 address or an IPv6 /64) gets PER_KEY_WINDOW answers per 10 minutes and PER_KEY_DAY a day;
-//   - each key has one answer being written at a time.
-// reserve() books RESERVE_USD for the answer before the call; settle() swaps it for the real cost from the usage
-// when the stream ends. A reservation that is never settled (the isolate died) keeps its booking and its key is free
-// again after LIVE_MS. Called over RPC from worker/index.js; when the guard cannot answer, the Worker refuses (fails
-// closed). Old keys are removed by an alarm.
-import { DurableObject } from 'cloudflare:workers';
+// The copy guard (SOLUTIONS-SPEC §2.8.6): every string the model writes passes through guard() before it reaches
+// a page, a share link or the owner's Telegram. The rules are worker/copy-rules.js (shared with the build's lint).
+//   1. NFC, the allowed characters only
+//   2. Uzbek: the okina after o/g, the tutuq between letters
+//   3. every language: yarat- → qur- (Latin and Cyrillic), keeping case and suffix
+//   4. no @handles (but inbox@qilich.com), no URLs, no t.me, no product names, no phone numbers but Qilich's
+//   5. dashes: Russian NBSP before —, English " — " → ", "
+//   6. the BANNED list again: a string that still fails is dropped (null), and its card shows the catalogue text
+import { BANNED, NOT_ALLOWED } from './copy-rules.js';
 
-export const GUARD = {
-  DAILY_USD: 15,
-  RESERVE_USD: 0.6, // the worst cold request: a 1-hour cache write of the ~56k-token prompt ($0.45) + 6k output ($0.12)
-  PER_KEY_WINDOW: 15,
-  WINDOW_S: 600,
-  PER_KEY_DAY: 30,
-  LIVE_MS: 150_000, // longer than the Worker's 90-second deadline for one answer
-};
+const EMAIL = 'inbox@qilich.com';
+const PHONE = '+998 97 270 70 07';
+const rev = (x) => [...x].reverse().join('');
+// product names that never appear on the site, kept reversed so no build artefact carries them
+const PRODUCTS = new RegExp(['tlgoh', 'remit*s\\loop', 'emit*s\\bulc', 'ahcnokit'].map(rev).join('|'), 'gi');
+const URLS = /\b(?:https?:\/\/|www\.)\S+|\b(?:t|telegram)\.me\/?\S*/gi;
+const EMAILS = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
+const HANDLES = /(^|[^\w.@])@[\p{L}\p{N}_]{2,}/gu;
+const PHONES = /\+\d[\d\s().-]{7,}\d|\b\d{2}[\s-]\d{3}[\s-]\d{2}[\s-]\d{2}\b/g;
+const BUZZ = [
+  [/\bseamless(ly)?\b/gi, (m, ly) => (ly ? 'smoothly' : 'smooth')],
+  [/\binnovative\b/gi, 'new'],
+  [/\bcutting-edge\b/gi, 'modern'],
+  [/\bworld-class\b/gi, 'solid'],
+  [/\bnext-level\b/gi, 'better'],
+  [/\bempower(s|ing)?\b/gi, 'help$1'],
+  [/\b(unleash|elevate)(s)?\b/gi, 'improve$2'],
+  [/\bsynergy\b/gi, 'shared work'],
+  [/\bwe craft\b/gi, 'we build'],
+];
+const caseOf = (m, to) => (m === m.toUpperCase() ? to.toUpperCase() : m[0] === m[0].toUpperCase() ? to[0].toUpperCase() + to.slice(1) : to);
 
-const TZ_MS = 5 * 3600e3; // Tashkent, UTC+5, no daylight saving
-const dayOf = (ms) => new Date(ms + TZ_MS).toISOString().slice(0, 10);
-const secondsToMidnight = (ms) => {
-  const d = new Date(ms + TZ_MS);
-  const next = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1) - TZ_MS;
-  return Math.max(Math.ceil((next - ms) / 1000), 1);
-};
-const round6 = (x) => Math.round(x * 1e6) / 1e6;
+export const stats = { guarded: 0, changed: 0, dropped: 0 };
 
-export class SamuraiGuard extends DurableObject {
-  /**
-   * { key, dailyUsd? } → { ok: true, rid } or { ok: false, reason: "live" | "window" | "day" | "budget", retry }.
-   * Storage calls only between the reads and the writes, so no other request interleaves (input gates).
-   */
-  async reserve({ key, dailyUsd }) {
-    const limit = Number(dailyUsd) > 0 ? Number(dailyUsd) : GUARD.DAILY_USD;
-    const now = Date.now();
-    const day = dayOf(now);
-    const slot = Math.floor(now / 1000 / GUARD.WINDOW_S);
-    const k = {
-      usd: `usd:${day}`,
-      n: `n:${day}:${key}`,
-      w: `w:${slot}:${key}`,
-      live: `live:${key}`,
-    };
-    const s = this.ctx.storage;
-    const got = await s.get(Object.values(k));
-    const usd = Number(got.get(k.usd)) || 0;
-    const n = Number(got.get(k.n)) || 0;
-    const w = Number(got.get(k.w)) || 0;
-    const live = got.get(k.live);
-
-    if (live && live.until > now) return { ok: false, reason: 'live', retry: Math.min(Math.ceil((live.until - now) / 1000), 30) };
-    if (w >= GUARD.PER_KEY_WINDOW) return { ok: false, reason: 'window', retry: Math.max(Math.ceil((slot + 1) * GUARD.WINDOW_S - now / 1000), 1) };
-    if (n >= GUARD.PER_KEY_DAY) return { ok: false, reason: 'day', retry: secondsToMidnight(now) };
-    if (usd + GUARD.RESERVE_USD > limit) return { ok: false, reason: 'budget', retry: secondsToMidnight(now) };
-
-    const rid = crypto.randomUUID();
-    await s.put({
-      [k.usd]: round6(usd + GUARD.RESERVE_USD),
-      [k.n]: n + 1,
-      [k.w]: w + 1,
-      [k.live]: { rid, until: now + GUARD.LIVE_MS },
-      [`r:${rid}`]: { key, day, usd: GUARD.RESERVE_USD, at: now },
-    });
-    if ((await s.getAlarm()) == null) await s.setAlarm(now + 3600e3);
-    return { ok: true, rid };
+/** Returns the cleaned string, or null when it still breaks a rule (the caller then drops the field). */
+export function guard(input, lang) {
+  if (input == null) return null;
+  stats.guarded++;
+  let s = String(input).normalize('NFC');
+  const before = s;
+  // every field is one line: line breaks and separators become spaces (a dropped U+2028 would glue two sentences)
+  s = s.replace(/[\t\n\r\v\f\u0085\u2028\u2029]+/g, ' ').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/[\u200b-\u200f\u2060\ufeff]/g, '');
+  s = s.replace(/\*\*|__|`|[{}<>]/g, '');
+  if (lang === 'uz') {
+    s = s.replace(/([oOgG])['‘’`ʼ]/g, '$1ʻ');
+    s = s.replace(/(\p{L})['’`](\p{L})/gu, '$1ʼ$2');
   }
+  s = s.replace(lang === 'ja' ? NOT_ALLOWED.ja : NOT_ALLOWED.base, '');
+  // the forbidden root takes the same suffixes as qur-: yaratamiz → quramiz, yaratilgan → qurilgan
+  s = s.replace(/(y)(arat)/giu, (m, y, a) => caseOf(y, 'q') + (a === a.toUpperCase() ? 'UR' : 'ur'));
+  s = s.replace(/(я)(рат)/giu, (m, y, a) => caseOf(y, 'қ') + (a === a.toUpperCase() ? 'УР' : 'ур'));
+  s = s.replace(URLS, '').replace(PRODUCTS, '');
+  s = s.replace(EMAILS, (m) => (m.toLowerCase() === EMAIL ? m : ''));
+  s = s.replace(HANDLES, '$1');
+  s = s.replace(PHONES, (m) => (m.replace(/\D/g, '') === '998972707007' ? PHONE : m.replace(/\D/g, '').length >= 9 ? '' : m));
+  if (lang === 'en') for (const [re, to] of BUZZ) s = s.replace(re, to);
+  if (lang === 'ru') s = s.replace(/ +—/g, '\u00a0—');
+  if (lang === 'en') s = s.replace(/\s+—\s+/g, ', ');
+  s = s.replace(/[ \t]{2,}/g, ' ').replace(/ +([,.;:!?])/g, '$1').trim();
+  if (s !== before) stats.changed++;
+  for (const [re] of BANNED) if (re.test(s)) { stats.dropped++; return null; }
+  return s;
+}
 
-  /** { rid, usd } → the reservation is replaced by the real cost (or kept when usd is not a number); the key is free. */
-  async settle({ rid, usd }) {
-    const s = this.ctx.storage;
-    const r = await s.get(`r:${rid}`);
-    if (!r) return { ok: false };
-    const cost = Number.isFinite(usd) && usd >= 0 ? usd : r.usd;
-    const k = `usd:${r.day}`;
-    const total = Number(await s.get(k)) || 0;
-    const live = await s.get(`live:${r.key}`);
-    await s.put(k, round6(Math.max(total - r.usd + cost, 0)));
-    if (live?.rid === rid) await s.delete(`live:${r.key}`);
-    await s.delete(`r:${rid}`);
-    return { ok: true, usd_today: round6(Math.max(total - r.usd + cost, 0)) };
-  }
-
-  /** The day's spend so far, for logs. */
-  async today() {
-    const day = dayOf(Date.now());
-    return { day, usd: Number(await this.ctx.storage.get(`usd:${day}`)) || 0 };
-  }
-
-  /** Every hour while there is state: drop earlier days, past windows, expired streams and stale reservations. */
-  async alarm() {
-    const s = this.ctx.storage;
-    const now = Date.now();
-    const day = dayOf(now);
-    const slot = Math.floor(now / 1000 / GUARD.WINDOW_S);
-    const drop = [];
-    let kept = 0;
-    for (const [key, value] of await s.list()) {
-      const [kind, a] = key.split(':');
-      const old =
-        (kind === 'usd' && a < day) ||
-        (kind === 'n' && a < day) ||
-        (kind === 'w' && Number(a) < slot) ||
-        (kind === 'live' && !(value?.until > now)) ||
-        (kind === 'r' && !(value?.at > now - 6 * 3600e3));
-      if (old) drop.push(key);
-      else kept++;
-    }
-    for (let i = 0; i < drop.length; i += 128) await s.delete(drop.slice(i, i + 128));
-    if (kept) await s.setAlarm(now + 3600e3);
-  }
+// a sentence that names money or a percentage the visitor did not write is dropped: the engine writes every number
+const MONEY = /(\$\s?\d|\d[\d\s.,]*\s?(?:\$|usd|dollar|долл|mln|млн|million|ming|тыс|thousand|so[ʻ'’]?m|сум|uzs|万|円|ドル|スム|%|процент|foiz))/i;
+export function stripMoney(s, visitorText = '') {
+  if (!s || !MONEY.test(s)) return s;
+  const digits = new Set((String(visitorText).match(/\d[\d\s.,]*/g) || []).map((x) => x.replace(/\D/g, '')));
+  const parts = s.split(/(?<=[.!?。])\s*/);
+  const kept = parts.filter((p) => { const m = p.match(MONEY); if (!m) return true; const d = m[0].replace(/\D/g, ''); return d && digits.has(d); });
+  return kept.join(' ').trim();
 }

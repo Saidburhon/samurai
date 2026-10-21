@@ -13,9 +13,14 @@
     "not_found_handling": "404-page"
   },
   "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
-  "vars": { "SAMURAI_DAILY_USD": "15" },
-  "ratelimits": [{ "name": "SAMURAI_LIMITER", "namespace_id": "7001", "simple": { "limit": 10, "period": 60 } }],
+  "vars": { "SAMURAI_DAILY_USD": "15", "SAMURAI_EFFORT": "low", "SAMURAI_FAST": "0" },
+  "ratelimits": [
+    { "name": "RL_IP", "namespace_id": "1101", "simple": { "limit": 5, "period": 60 } },
+    { "name": "RL_ALL", "namespace_id": "1102", "simple": { "limit": 60, "period": 60 } },
+    { "name": "RL_LEAD", "namespace_id": "1103", "simple": { "limit": 3, "period": 60 } }
+  ],
   "durable_objects": { "bindings": [{ "name": "SAMURAI_GUARD", "class_name": "SamuraiGuard" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SamuraiGuard"] }],
+  "observability": { "enabled": true },
   "routes": [{ "pattern": "qilich.com", "custom_domain": true }]
 }

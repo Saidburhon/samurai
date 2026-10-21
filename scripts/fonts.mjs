@@ -13,6 +13,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { FONT_EXTRA } from '../worker/copy-rules.js';
 
 const CACHE = '.cache/fonts', OUT = 'public/assets/fonts';
 const GF = 'https://raw.githubusercontent.com/google/fonts/main/ofl';
@@ -48,7 +49,11 @@ export function pageText(html) {
   const h = html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ').replace(/<head>[\s\S]*?<\/head>/, (m) => (m.match(/<title[^>]*>[^<]*<\/title>/) || [''])[0]);
   let t = '';
   for (const m of h.matchAll(/>([^<]+)</g)) t += m[1];
-  for (const m of h.matchAll(/\s(?:aria-label|data-copy|title|alt)="([^"]*)"/g)) t += m[1];
+  for (const m of h.matchAll(/\s(?:aria-label|data-copy|title|alt|placeholder)="([^"]*)"/g)) t += m[1];
+  // the words a page's script shows (SamurAI: <script type="application/json">): every string value in them
+  for (const m of html.matchAll(/<script type="application\/json"[^>]*>([\s\S]*?)<\/script>/g)) {
+    try { const walk = (v) => (typeof v === 'string' ? v : Array.isArray(v) ? v.map(walk).join(' ') : v && typeof v === 'object' ? Object.values(v).map(walk).join(' ') : ''); t += ' ' + walk(JSON.parse(m[1])); } catch { /* not JSON */ }
+  }
   return decode(t);
 }
 const JP = (c) => (c >= 0x3000 && c <= 0x30ff) || (c >= 0x3400 && c <= 0x9fff) || (c >= 0xf900 && c <= 0xfaff) || (c >= 0xff00 && c <= 0xffef);
@@ -72,7 +77,8 @@ export async function buildFonts(extra = []) {
   // which every other page carries too (mei, hakogaki, part labels, 日本語 in the switch)
   const isJa = Object.fromEntries(Object.entries(html).map(([k, h]) => [k, /<html lang="ja"/.test(h)]));
   const text = Object.fromEntries(Object.entries(html).map(([k, h]) => [k, pageText(h)]));
-  const always = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('') + ' ·—–’“”«»…';
+  // plus every glyph SamurAI's copy guard lets a model string keep (worker/copy-rules.js), so its answers never fall back
+  const always = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('') + ' ·—–’“”«»…' + FONT_EXTRA;
   // text-transform makes capitals (and lowercase) the HTML never contains: every character comes with its other
   // case, and the whole Russian alphabet ships in the cyrl subsets, so no UI label can fall back to a platform face
   const ruAlphabet = String.fromCodePoint(0x401, 0x451, ...Array.from({ length: 64 }, (_, i) => 0x410 + i));

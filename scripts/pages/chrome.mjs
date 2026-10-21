@@ -34,6 +34,7 @@ const mail = () => `<a href="mailto:${site.email}">${site.email}</a>`;
 const MENU = (lang) => [
   { href: HOME[lang], key: 'home' },
   { href: `${HOME[lang]}#xizmatlar`, key: 'svc' },
+  { href: pathOf(lang, 'samurai'), key: 'ai', slug: 'samurai' },
   { href: pathOf(lang, 'about'), key: 'about', slug: 'about' },
   { href: pathOf(lang, 'contact'), key: 'contact', slug: 'contact' },
   { href: pathOf(lang, 'press'), key: 'press', slug: 'press' },
@@ -69,7 +70,7 @@ ${ldScript(ld)}
 <!-- gen:preload -->
 <!-- /gen:preload -->
 <style data-gen="fonts"></style>
-<link rel="stylesheet" href="${p.assets.css}">
+<link rel="stylesheet" href="${p.assets.css}">${p.assets.css2 ? `\n<link rel="stylesheet" href="${p.assets.css2}">` : ''}
 <script>document.documentElement.className=document.documentElement.className.replace('no-js','js')</script>
 </head>
 <body>
@@ -78,7 +79,7 @@ ${SPRITE}
 <header class="nav" id="nav">
   <a class="brand" href="${HOME[lang]}" aria-label="${esc(L('homeLabel'))}"><svg class="mon" aria-hidden="true"><use href="#mon"/></svg><span class="word">QILICH</span></a>
   <p class="clocks mono" aria-hidden="true"><span>${L('tas')}</span> <time class="t-tas">00:00</time> <i>·</i> <span>${L('tok')}</span> <time class="t-tok">00:00</time></p>
-  <nav class="links" aria-label="${esc(L('sections'))}"><a href="${HOME[lang]}#xizmatlar">${L('svc')}</a><a href="${pathOf(lang, 'about')}"${cur('about', slug)}>${L('about')}</a></nav>
+  <nav class="links" aria-label="${esc(L('sections'))}"><a href="${HOME[lang]}#xizmatlar">${L('svc')}</a><a href="${pathOf(lang, 'samurai')}"${cur('samurai', slug)}>${L('ai')}</a><a href="${pathOf(lang, 'about')}"${cur('about', slug)}>${L('about')}</a></nav>
   ${sw}
   <a class="btn" href="${pathOf(lang, 'contact')}" data-cta="nav"${cur('contact', slug)}><span>${L('cta')}</span></a>
   <a class="call" href="${telHref(site.telephone)}" aria-label="${esc(L('call'))}"><svg aria-hidden="true"><use href="#i-call"/></svg></a>
@@ -98,7 +99,7 @@ ${p.main}
 
 <footer class="foot" id="foot">
   <p class="annot mono"><span>${L('tel')}</span> ${phone()} <span>${L('mail')}</span> ${mail()}</p>
-  <nav class="foot-links" aria-label="${esc(L('pages'))}">${MENU(lang).slice(2).map((m) => `<a href="${m.href}"${cur(m.slug, slug)}>${L(m.key)}</a>`).join('')}</nav>
+  <nav class="foot-links" aria-label="${esc(L('pages'))}">${MENU(lang).filter((m) => m.slug).map((m) => `<a href="${m.href}"${cur(m.slug, slug)}>${L(m.key)}</a>`).join('')}</nav>
   <div class="colophon"><span class="mei-s" lang="ja"><span>タシケント住</span><span>キリチ作</span></span><i class="hanko-s" aria-hidden="true">${HANKO}</i><span class="copy-r">© 2026 ${site.brand}</span>
     ${sw}
     <a class="top" href="#nav">${L('top')}</a></div>

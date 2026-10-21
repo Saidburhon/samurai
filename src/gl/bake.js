@@ -44,7 +44,6 @@ export async function bakeAll(renderer, { big = true, onEach, maxAniso = 16 } = 
   };
   const order = Object.keys(jobs);
   for (let i = 0; i < order.length; i++) { jobs[order[i]](); if (i < order.length - 1) await nextFrame(); }
-  out.girih = girihTexture(aniso);
   mat.dispose(); quad.geometry.dispose();
   return out;
 }
@@ -52,7 +51,7 @@ export async function bakeAll(renderer, { big = true, onEach, maxAniso = 16 } = 
 // the girih mask in tsuba face units [-0.41, 0.41]^2 (x across the blade, y the thickness), white = light passes
 export function girihTexture(aniso = 1) {
   const N = 1024, c = document.createElement('canvas'); c.width = c.height = N;
-  const x = c.getContext('2d');
+  const x = c.getContext('2d', { willReadFrequently: true }); // a CPU canvas: uploaded without a GPU readback
   x.fillStyle = '#000'; x.fillRect(0, 0, N, N);
   x.fillStyle = '#fff';
   const k = N / 0.82;

@@ -32,20 +32,28 @@ function startCinema() {
   let mods = null;
   const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js')]).then((m) => { log('fetched', performance.now()); return m; }));
   requestAnimationFrame(() => log('raf1', performance.now()));
-  // GL work starts when the drawing's animations have ended, checked from 0.80 s, at most 0.40 s later (§4.1)
+  // GL work starts when the drawing's animations have ended, checked from 0.80 s, at most 0.40 s later (§4.1).
+  // "Ended" is read from their scheduled end on the document timeline, not from their play state: a software
+  // renderer runs few frames here, so the play state lags the clock by up to a frame (~0.2 s).
   const when = q.has('beat') ? Promise.resolve() : new Promise((res) => {
-    const last = [...document.querySelectorAll('#osh-hero path[pathLength], #osh-hero .fill, .osh-labels .ol')].pop();
-    let done = false; const go = () => { if (!done) { done = true; res(); } };
     const at = Math.max(0, (+q.get('gate') || 800) - performance.now());
-    const busy = () => (document.getAnimations ? document.getAnimations().some((a) => a.playState === 'running' && a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('#osh-paper')) : false);
-    // (polled: the last element in the list is not always the last to finish)
-    const t0 = performance.now() + at;
-    const check = () => {
-      const b = !!(html.classList.contains('intro') && last && busy());
-      if (!Q.timing.gate) { load(); log('gate', performance.now()); log('gateBusy', b ? 1 : 0); }
-      if (!b || performance.now() - t0 > 400) go(); else setTimeout(check, 40);
+    const lastEnd = () => {
+      if (!html.classList.contains('intro') || !document.getAnimations) return 0;
+      let end = 0;
+      for (const a of document.getAnimations()) {
+        const el = a.effect && a.effect.target;
+        if (!el || !el.closest || !el.closest('#osh-paper')) continue;
+        const t = a.effect.getComputedTiming().endTime;
+        if (Number.isFinite(t)) end = Math.max(end, (a.startTime == null ? performance.now() : +a.startTime) + t);
+      }
+      return end;
     };
-    setTimeout(check, at);
+    setTimeout(() => {
+      load();
+      const now = performance.now(), wait = Math.max(0, Math.min(lastEnd() - now, 400));
+      log('gate', now); log('gateBusy', wait > 0 ? 1 : 0);
+      setTimeout(res, wait);
+    }, at);
   });
   when.then(async () => {
     log('import', performance.now());
@@ -56,23 +64,24 @@ function startCinema() {
     // wait for the cinema stylesheet (app_css loads without blocking the first paint)
     for (let i = 0; i < 200 && !getComputedStyle(html).getPropertyValue('--cinema-css'); i++) await new Promise((r) => setTimeout(r, 15));
     const canvas = document.getElementById('gl');
-    const { stage } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst') });
+    const { stage, warm } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst') });
     Q.stage = stage;
     if (q.has('beat')) {
+      warm();
       await poster.runPoster(stage, log);
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
     } else {
       // the boot path (G2 animates from here): the first frame at the reveal pose with nothing revealed yet
       const p = new poster.Poster(stage);
       let t = performance.now();
-      await p.apply('intro', { reveal: 0 });
-      log('apply', performance.now() - t); t = performance.now();
-      // dev: ?prewarm splits the first frame into each program's first draw (1 x 1 scissor) and the frame itself
-      if (q.has('prewarm')) { stage.blade.name = 'steel'; Q.prewarm = stage.prewarm([stage.blade, stage.parts.tsuba, stage.parts.tsuka]); if (q.get('prewarm') === '2') Q.prewarm2 = stage.prewarm([stage.blade]); log('prewarm', performance.now() - t); t = performance.now(); }
+      await p.apply('intro', { reveal: 0 });   // while the GPU process compiles the steel
+      log('apply', performance.now() - t);
+      warm(); t = performance.now();
       p.render(); stage.finish();
       log('frame1', performance.now() - t);
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
       await stage.bake(); log('baked', performance.now());
+      stage.atlas().then(() => log('atlas', performance.now()));
     }
   }).catch((e) => { Q.glError = String(e && e.stack || e); console.error(e); }).finally(() => html.classList.remove('gl-boot'));
 }

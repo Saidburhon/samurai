@@ -13,6 +13,7 @@ Contact: inbox@qilich.com, +998 97 270 70 07. The site is in four languages: Oʻ
 - [Press kit: Qilich in one sentence, facts and logo files](https://qilich.com/en/press/): For journalists and partners: Qilich in one sentence, a short boilerplate, the company facts and the logo files, all ready to use as they are.
 - [Contact Qilich: phone, email and project enquiry form](https://qilich.com/en/contact/): Need an app, a website, a bot or a system? Call Qilich on +998 97 270 70 07, write to inbox@qilich.com or fill in the form. The team is in Tashkent.
 - [Privacy policy: how Qilich handles your personal data](https://qilich.com/en/privacy/): What personal data qilich.com collects, why, who receives it and how to have it corrected or deleted. Covers the Uzbek law on personal data and Japan’s APPI.
+- [SamurAI: estimate the price and timeline of IT work · Qilich](https://qilich.com/en/samurai/): Describe your business in a sentence or two: SamurAI picks solutions from Qilich’s catalogue and estimates the timeline and price in UZS and USD. Free.
 
 ## 日本語 (for Japanese companies looking for an offshore development partner)
 
@@ -21,6 +22,7 @@ Contact: inbox@qilich.com, +998 97 270 70 07. The site is in four languages: Oʻ
 - [プレス向け情報｜会社紹介文・会社データ・ロゴデータ Qilich](https://qilich.com/ja/press/): 報道関係者やパートナー企業の方に向けて、Qilich（キリチ）の短い紹介文、会社紹介文、会社データ、ロゴデータをまとめました。記事や資料に、そのまま転載してご利用いただけます。
 - [お問い合わせ｜オフショア開発・システム開発のご相談 Qilich](https://qilich.com/ja/contact/): アプリ、Webシステム、業務システムのオフショア開発をご検討中の方は、メール、お電話、フォームからお気軽にご相談ください。ウズベキスタン・タシケントの開発チームよりご返信いたします。
 - [プライバシーポリシー｜個人情報の取り扱いと利用目的 Qilich](https://qilich.com/ja/privacy/): Qilich（キリチ）がqilich.comで取得する個人情報の種類と利用目的、外国にある第三者への提供、開示・訂正・利用停止のご請求方法を説明します。日本の個人情報保護法を踏まえて作成しています。
+- [SamurAI｜開発費用と期間をAIで概算｜Qilich](https://qilich.com/ja/samurai/): 事業や課題を数行で入力すると、SamurAIがQilichのサービス一覧から最適なシステムを選び、開発期間と費用を米ドルで概算します。無料・登録不要です。
 
 ## Oʻzbekcha (Uzbek, the primary market)
 
@@ -29,6 +31,7 @@ Contact: inbox@qilich.com, +998 97 270 70 07. The site is in four languages: Oʻ
 - [Matbuot uchun: Qilich haqida qisqacha, faktlar va logotip](https://qilich.com/press/): Jurnalistlar va hamkorlar uchun Qilich haqida bir jumlada, qisqa matn, asosiy faktlar va logotip fayllari. Matnni oʻzgartirmasdan ishlatishingiz mumkin.
 - [Qilich bilan aloqa: telefon, email va soʻrov shakli](https://qilich.com/contact/): Ilova, sayt, bot yoki tizim kerakmi? Qilichga qoʻngʻiroq qiling: +998 97 270 70 07, inbox@qilich.com manziliga yozing yoki shaklni toʻldiring. Jamoa Toshkentda.
 - [Maxfiylik siyosati: shaxsiy maʼlumotlaringiz va Qilich](https://qilich.com/privacy/): qilich.com qanday shaxsiy maʼlumotlarni yigʻadi, nima uchun, kimga uzatadi va ularni qanday tuzatish yoki oʻchirish mumkin. Oʻzbekiston qonuni va Yaponiya APPI.
+- [SamurAI: IT yechim narxi va muddatini hisoblash · Qilich](https://qilich.com/samurai/): Biznesingizni bir-ikki jumlada yozing: SamurAI Qilich katalogidan mos IT yechimlarni tanlaydi, muddat va narxni soʻm va dollarda hisoblaydi. Bepul.
 
 ## Русский (Russian)
 
@@ -37,3 +40,4 @@ Contact: inbox@qilich.com, +998 97 270 70 07. The site is in four languages: Oʻ
 - [Для прессы: Qilich в одном предложении, факты и логотип](https://qilich.com/ru/press/): Для журналистов и партнёров: Qilich в одном предложении, короткая справка, основные факты и файлы логотипа. Их можно использовать без изменений.
 - [Контакты Qilich: телефон, почта и заявка на проект](https://qilich.com/ru/contact/): Нужно приложение, сайт, бот или система? Позвоните в Qilich: +998 97 270 70 07, напишите на inbox@qilich.com или заполните форму. Команда в Ташкенте.
 - [Политика конфиденциальности и персональные данные · Qilich](https://qilich.com/ru/privacy/): Какие персональные данные собирает qilich.com, зачем, кому их передаёт и как их исправить или удалить. Закон Узбекистана о персональных данных и японский APPI.
+- [SamurAI: расчёт цены и сроков IT-решения для бизнеса · Qilich](https://qilich.com/ru/samurai/): Опишите бизнес в паре фраз: SamurAI подберёт решения из каталога Qilich и посчитает срок и цену в сумах и долларах. Бесплатно, без регистрации.

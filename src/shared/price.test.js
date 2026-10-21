@@ -1,0 +1,208 @@
+// node --test src/shared/   (npm test): the price engine's acceptance checks (SOLUTIONS-SPEC §8, T1, T28, T29)
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync, readdirSync } from 'node:fs';
+import { normalise, compact, expand, pickable } from './catalogue.js';
+import { enrichSolution, plan, fit, preset, applyEffect, payback, monthlyGain, priceResult, uzsRange, roundUsd, defaultSelection, solId, riskUsd } from './price.js';
+import { match, fold } from './match.js';
+import * as F from './format.js';
+import { endOfWork, isWorkday, firstMonday, holidaysBetween } from './holidays.js';
+import { canon } from './canon.js';
+
+const J = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), 'utf8'));
+const pricing = J('content/pricing.json');
+const m = normalise(J('content/solutions.json'), J('content/solutions-extra.json'), pricing);
+const rate = { uzs_per_usd: 12012.3, date: '2026-10-21', source: 'cbu' };
+const ids = pickable(m).map((s) => s.id);
+const MODS = Object.keys(m.modifiers), INTS = Object.keys(m.integrations);
+
+// a seeded generator, so a failure reproduces
+function rng(seed) { return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
+const pickOf = (r, arr, n) => { const out = new Set(); for (let i = 0; i < n; i++) out.add(arr[Math.floor(r() * arr.length)]); return [...out]; };
+function randomSol(r, n) {
+  return { n, catalogue_id: ids[Math.floor(r() * ids.length)], based_on: [], title: 't', why: 'w', priority: ['must', 'should', 'could'][Math.floor(r() * 3)], scope: r() < 0.7 ? 'mvp' : 'full', size: ['s', 'm', 'l'][Math.floor(r() * 3)], modifiers: pickOf(r, MODS, Math.floor(r() * 4)), integrations: pickOf(r, INTS, Math.floor(r() * 4)), depends_on: [], difficulty: 1 + Math.floor(r() * 5), difficulty_reason: '' };
+}
+
+test('same input gives an identical output over 1,000 random choices', () => {
+  const r = rng(42);
+  for (let i = 0; i < 1000; i++) {
+    const s = randomSol(r, 1);
+    assert.deepEqual(enrichSolution(m, s, { lang: 'uz', rate }), enrichSolution(m, structuredClone(s), { lang: 'uz', rate }));
+  }
+});
+
+test('every range stays inside the catalogue bounds, mvp ≤ full, and rounding follows §2.6.5', () => {
+  const r = rng(7);
+  for (let i = 0; i < 1000; i++) {
+    const s = randomSol(r, 1), e = m.byId.get(s.catalogue_id), x = enrichSolution(m, s, { lang: 'en', rate });
+    const ints = s.integrations.filter((k) => !e.integrations_included.includes(k));
+    const addUsd = [...s.modifiers.map((k) => m.modifiers[k].add_usd?.[1] || 0), ...ints.map((k) => m.integrations[k].add_usd[1])].reduce((a, b) => a + b, 0);
+    const addW = [...s.modifiers.map((k) => m.modifiers[k].add_weeks?.[1] || 0), ...ints.map((k) => m.integrations[k].add_weeks[1] * pricing.integration_weeks_overlap)].reduce((a, b) => a + b, 0);
+    const band = pricing.size_band[s.size];
+    for (const sc of ['mvp', 'full']) {
+      const lo = e[sc].usd[0] + band[0] * (e[sc].usd[1] - e[sc].usd[0]);
+      assert.ok(x.usd[sc][0] >= Math.floor(lo / 100) * 100 - 1e-6, `${s.catalogue_id} ${sc} usd min ${x.usd[sc][0]} < ${lo}`);
+      if (sc === 'mvp') assert.ok(x.usd[sc][1] <= Math.ceil((e[sc].usd[1] * pricing.max_mult + addUsd) / 100) * 100, `${s.catalogue_id} usd max`);
+      if (sc === 'mvp') assert.ok(x.weeks[sc][1] <= Math.ceil(e[sc].weeks[1] * pricing.max_mult + addW), `${s.catalogue_id} weeks max`);
+      assert.ok(x.usd[sc][0] % 100 === 0 && x.usd[sc][1] % 100 === 0, 'USD rounded to 100');
+      assert.ok(Number.isInteger(x.weeks[sc][0]) && x.weeks[sc][0] >= 1 && x.weeks[sc][0] <= x.weeks[sc][1], 'whole weeks, min ≥ 1');
+      assert.ok(x.usd[sc][0] <= x.usd[sc][1]);
+    }
+    for (const k of [0, 1]) { assert.ok(x.usd.mvp[k] <= x.usd.full[k], 'usd mvp ≤ full'); assert.ok(x.weeks.mvp[k] <= x.weeks.full[k], 'weeks mvp ≤ full'); }
+    // the breakdown lines sum to the price before rounding
+    const sum = x.price_lines.mvp.reduce((a, l) => [a[0] + l.usd[0], a[1] + l.usd[1]], [0, 0]);
+    assert.ok(Math.abs(Math.floor(sum[0] / 100) * 100 - x.usd.mvp[0]) <= 100 && Math.abs(Math.ceil(sum[1] / 100) * 100 - x.usd.mvp[1]) <= 100, 'lines sum to the price');
+  }
+});
+
+test('UZS steps: 0.1 mln under 2 mln, 0.5 under 50, 1 under 200, 5 above; thousands under 1 mln', () => {
+  assert.deepEqual(uzsRange([100, 120], 12000), [1200000, 1500000]);
+  assert.deepEqual(uzsRange([1000, 1500], 12000), [12000000, 18000000]);
+  assert.deepEqual(uzsRange([1010, 1530], 12000), [12000000, 18500000]);
+  assert.deepEqual(uzsRange([5000, 9000], 12012.3), [60000000, 109000000]);
+  assert.deepEqual(uzsRange([20000, 30000], 12012.3), [240000000, 365000000]);
+  assert.deepEqual(uzsRange([20, 75], 12000), [240000, 900000]);
+  assert.deepEqual(roundUsd([1234, 5678]), [1200, 5700]);
+});
+
+const sol = (n, id, extra = {}) => ({ n, catalogue_id: id, based_on: [], title: id, why: '', priority: 'must', scope: 'mvp', size: 'm', modifiers: [], integrations: [], depends_on: [], difficulty: 2, difficulty_reason: '', ...extra });
+
+test('shared savings apply only when two or more selected entries share a part', () => {
+  const one = [enrichSolution(m, sol(1, 'tg-order-bot'), { lang: 'uz', rate })];
+  assert.deepEqual(plan(m, one, defaultSelection(one), rate).totals.shared_saving_usd, [0, 0]);
+  const two = [enrichSolution(m, sol(1, 'tg-order-bot'), { lang: 'uz', rate }), enrichSolution(m, sol(2, 'tg-loyalty-bot'), { lang: 'uz', rate })];
+  const p = plan(m, two, defaultSelection(two), rate).totals;
+  // both share backend (.15) and admin (.10): .25 × the smaller price
+  const small = Math.min(two[0].usd.mvp[0], two[1].usd.mvp[0]);
+  assert.equal(p.shared_saving_usd[0], Math.floor(0.25 * small / 100) * 100);
+  const off = plan(m, two, [{ id: 'tg-order-bot', state: 'mvp' }, { id: 'tg-loyalty-bot', state: 'off' }], rate).totals;
+  assert.deepEqual(off.shared_saving_usd, [0, 0]);
+});
+
+test('the schedule respects depends_on: a dependant starts at its dependency’s MVP end', () => {
+  const a = enrichSolution(m, sol(1, 'ind-clinic'), { lang: 'uz', rate });
+  const b = enrichSolution(m, sol(2, 'tg-booking-bot', { depends_on: ['ind-clinic'], priority: 'should' }), { lang: 'uz', rate });
+  const p = plan(m, [a, b], defaultSelection([a, b]), rate);
+  const ta = p.tracks.find((t) => t.id === 'ind-clinic'), tb = p.tracks.find((t) => t.id === 'tg-booking-bot');
+  assert.deepEqual(tb.start, ta.mvp_end);
+  assert.ok(p.totals.weeks[1] >= tb.end[1]);
+});
+
+test('fit never exceeds the budget or the deadline on the max values; presets select as specified', () => {
+  const r = rng(99);
+  for (let i = 0; i < 200; i++) {
+    const sols = [1, 2, 3].map((n) => enrichSolution(m, randomSol(r, n), { lang: 'uz', rate })).filter((s, k, a) => a.findIndex((x) => x.catalogue_id === s.catalogue_id) === k);
+    const budgetUsd = 2000 + Math.floor(r() * 60000), deadlineWeeks = 2 + Math.floor(r() * 30);
+    const f = fit(m, sols, { budgetUsd, deadlineWeeks }, rate);
+    const t = plan(m, sols, f.selection, rate).totals;
+    if (t.count) { assert.ok(t.usd[1] <= budgetUsd, `budget ${t.usd[1]} > ${budgetUsd}`); assert.ok(t.weeks[1] <= deadlineWeeks, `deadline ${t.weeks[1]} > ${deadlineWeeks}`); }
+    for (const id of f.dropped) assert.equal(f.selection.find((x) => x.id === id).state, 'off');
+  }
+  const sols = [enrichSolution(m, sol(1, 'tg-order-bot'), { lang: 'uz', rate }), enrichSolution(m, sol(2, 'web-corporate', { priority: 'should' }), { lang: 'uz', rate }), enrichSolution(m, sol(3, 'tg-loyalty-bot', { priority: 'could' }), { lang: 'uz', rate })];
+  assert.deepEqual(preset(sols, 'lean').map((x) => x.state), ['mvp', 'off', 'off']);
+  assert.deepEqual(preset(sols, 'balanced').map((x) => x.state), ['full', 'mvp', 'off']);
+  assert.deepEqual(preset(sols, 'full').map((x) => x.state), ['full', 'full', 'full']);
+  const none = fit(m, sols, { budgetUsd: 100 }, rate);
+  assert.equal(none.fits, false);
+  assert.equal(none.closest.id, 'tg-order-bot');
+});
+
+test('applyEffect changes only the targeted choices, and the price moves as the engine says', () => {
+  const pick = { solutions: [sol(1, 'tg-order-bot', { size: 's' }), sol(2, 'web-corporate', { size: 's' })] };
+  const { pick: p2, off } = applyEffect(pick, { targets: ['tg-order-bot'], size: 'l', add_modifiers: ['multi_branch'], remove_modifiers: [], add_integrations: ['payme'], drop: ['web-corporate'] });
+  assert.equal(p2.solutions[0].size, 'l');
+  assert.deepEqual(p2.solutions[0].modifiers, ['multi_branch']);
+  assert.deepEqual(p2.solutions[0].integrations, ['payme']);
+  assert.deepEqual(p2.solutions[1], pick.solutions[1]);
+  assert.deepEqual(off, ['web-corporate']);
+  const before = enrichSolution(m, pick.solutions[0], { lang: 'uz', rate }), after = enrichSolution(m, p2.solutions[0], { lang: 'uz', rate });
+  assert.ok(after.usd.mvp[0] > before.usd.mvp[0] && after.usd.mvp[1] > before.usd.mvp[1]);
+  const keep = applyEffect(pick, { targets: [], size: 'keep', add_modifiers: [], remove_modifiers: [], add_integrations: [], drop: [] });
+  assert.deepEqual(keep.pick, pick);
+});
+
+test('payback formulas match hand-computed cases; net ≤ 0 or a missing input gives null', () => {
+  assert.equal(monthlyGain('hours_saved', [{ key: 'hours_per_week', value: 12 }, { key: 'hourly_cost_usd', value: 4 }]), 12 * 4.33 * 4);
+  assert.equal(monthlyGain('more_orders', [{ key: 'orders_per_month', value: 1000 }, { key: 'uplift_pct', value: 10 }, { key: 'avg_order_usd', value: 10 }, { key: 'margin_pct', value: 30 }]), 300);
+  assert.equal(monthlyGain('fewer_errors', [{ key: 'errors_per_month', value: 50 }, { key: 'uplift_pct', value: 50 }, { key: 'cost_per_error_usd', value: 8 }]), 200);
+  assert.deepEqual(payback('more_orders', [{ key: 'orders_per_month', value: 1000 }, { key: 'uplift_pct', value: 10 }, { key: 'avg_order_usd', value: 10 }, { key: 'margin_pct', value: 30 }], [2000, 3000], [20, 80]), [8, 12]);
+  assert.equal(payback('hours_saved', [{ key: 'hours_per_week', value: 1 }], [2000, 3000], [0, 0]), null);
+  assert.equal(payback('hours_saved', [{ key: 'hours_per_week', value: 1 }, { key: 'hourly_cost_usd', value: 1 }], [2000, 3000], [100, 200]), null);
+  // clamps: pct ≤ 100, hours ≤ 168, hourly cost ≤ 50
+  assert.equal(monthlyGain('hours_saved', [{ key: 'hours_per_week', value: 999 }, { key: 'hourly_cost_usd', value: 999 }]), 168 * 4.33 * 50);
+  assert.deepEqual(riskUsd(2, [2000, 3000], [4, 6]), [600, 1500]);
+});
+
+test('the compact page data prices exactly like the full model (the browser and the Worker agree)', () => {
+  for (const lang of ['uz', 'ru', 'en', 'ja']) {
+    const b = expand(JSON.parse(JSON.stringify(compact(m, lang))));
+    const r = rng(3);
+    for (let i = 0; i < 200; i++) {
+      const s = randomSol(r, 1);
+      const x = enrichSolution(m, s, { lang, rate }), y = enrichSolution(b, s, { lang, rate });
+      assert.deepEqual([y.usd, y.weeks, y.uzs, y.monthly_usd, y.phases.mvp.map((p) => p.weeks)], [x.usd, x.weeks, x.uzs, x.monthly_usd, x.phases.mvp.map((p) => p.weeks)]);
+    }
+    assert.equal(b.version, m.version);
+  }
+});
+
+test('the Worker and the browser import the same engine file', () => {
+  const worker = readdirSync(new URL('../../worker/', import.meta.url)).filter((f) => f.endsWith('.js')).map((f) => readFileSync(new URL(`../../worker/${f}`, import.meta.url), 'utf8')).join('\n');
+  assert.match(worker, /from '\.\.\/src\/shared\/price\.js'/);
+  const page = readdirSync(new URL('../samurai/', import.meta.url)).filter((f) => f.endsWith('.js')).map((f) => readFileSync(new URL(`../samurai/${f}`, import.meta.url), 'utf8')).join('\n');
+  assert.match(page, /from '\.\.\/shared\/price\.js'/);
+});
+
+test('the matcher is deterministic and follows the intake (§2.8.8)', () => {
+  const a = match(m, { intake: { industry: 'restaurants', branches: '2-5', staff: '21-100', tools: '1c', goal: 'sales' }, lang: 'uz' });
+  assert.deepEqual(a, match(m, { intake: { industry: 'restaurants', branches: '2-5', staff: '21-100', tools: '1c', goal: 'sales' }, lang: 'uz' }));
+  assert.equal(a.status, 'ok');
+  assert.ok(a.solutions.length >= 2 && a.solutions.length <= 3);
+  assert.equal(a.solutions[0].priority, 'must');
+  for (const s of a.solutions) { assert.equal(s.size, 'm'); assert.ok(s.modifiers.includes('multi_branch')); }
+  const ex = match(m, { intake: { industry: 'education', tools: 'excel' }, lang: 'ru' });
+  assert.ok(ex.solutions[0].modifiers.includes('migration'));
+  const kw = match(m, { intake: {}, text: 'нужен телеграм бот для заказов', lang: 'ru' });
+  assert.ok(kw.solutions.some((s) => s.catalogue_id.startsWith('tg-')), JSON.stringify(kw.solutions.map((s) => s.catalogue_id)));
+  assert.equal(fold('Oʻquv'), fold("o'quv"));
+  assert.equal(fold('ўқув'), 'oquv');
+});
+
+test('working days skip weekends and holidays (Navroʻz, 1 September)', () => {
+  assert.equal(isWorkday('2027-03-22'), true);
+  assert.equal(isWorkday('2027-03-21'), false); // Sunday and Navroʻz
+  assert.equal(isWorkday('2028-03-21'), false); // Tuesday, Navroʻz
+  assert.equal(isWorkday('2027-09-01'), false); // Wednesday, Independence Day
+  // one week from Monday 2028-03-20: 20, (21 Navroʻz), 22, 23, 24, 27 → Monday 27
+  assert.equal(endOfWork('2028-03-20', 1), '2028-03-27');
+  // one week from Monday 2027-08-30: 30, 31, (1 Sep), 2, 3, 6
+  assert.equal(endOfWork('2027-08-30', 1), '2027-09-06');
+  assert.equal(firstMonday('2026-10-21'), '2026-11-02');
+  assert.deepEqual(holidaysBetween('2028-03-20', '2028-03-24', 'uz').map((h) => h.date), ['2028-03-21']);
+});
+
+test('formatting: soʻm first, NBSP only (no U+202F or U+2009), Russian plural on the upper bound', () => {
+  assert.equal(F.uzs([38e6, 52e6], 'uz'), '38–52 mln soʻm');
+  assert.equal(F.uzs([38e6, 52e6], 'ru'), '38–52 млн\u00a0сум');
+  assert.equal(F.uzs([38e6, 52e6], 'en'), 'UZS 38–52 mln');
+  assert.equal(F.uzs([4.5e6, 6e6], 'uz'), '4,5–6 mln soʻm');
+  assert.equal(F.uzs([4.5e6, 6e6], 'en'), 'UZS 4.5–6 mln');
+  assert.equal(F.usd([3000, 4100], 'uz'), '$3\u00a0000–4\u00a0100');
+  assert.equal(F.usd([3000, 4100], 'en'), '$3,000–4,100');
+  assert.equal(F.weeks([2, 3], 'ru'), '2–3\u00a0недели');
+  assert.equal(F.weeks([4, 21], 'ru'), '4–21\u00a0неделя');
+  assert.equal(F.weeks([1, 1], 'en'), '1\u00a0week');
+  for (const l of ['uz', 'ru', 'en', 'ja']) for (const s of [F.uzs([1e5, 9e9], l), F.usd([1, 1e6], l), F.weeks([1, 30], l), F.rateLine(rate, l), F.dateRange('2026-12-30', '2027-01-12', l)]) assert.doesNotMatch(s, /[\u202f\u2009]/);
+});
+
+test('canon sorts keys at every depth', () => {
+  assert.equal(canon({ b: 1, a: { d: [3, { y: 1, x: 2 }], c: null } }), '{"a":{"c":null,"d":[3,{"x":2,"y":1}]},"b":1}');
+});
+
+test('priceResult is the same in two calls and its totals equal plan()', () => {
+  const pick = match(m, { intake: { industry: 'clinics', branches: '2-5' }, lang: 'en' });
+  const a = priceResult(m, { pick, lang: 'en', rate }), b = priceResult(m, { pick, lang: 'en', rate });
+  assert.deepEqual(a, b);
+  assert.deepEqual(a.plan.totals, plan(m, a.solutions, defaultSelection(a.solutions), rate).totals);
+  assert.ok(a.solutions.every((s) => solId(s) === s.catalogue_id));
+});

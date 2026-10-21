@@ -59,6 +59,21 @@ export function grainTile(size = 128) {
   x.putImageData(img, 0, 0);
   return c;
 }
+// The grain as two alpha tiles for normal blending, the same pixels as the gray tile multiplied (light grounds) or
+// screened (dark grounds) at the element's opacity a: multiply gives base·(1 − a(1 − g)), which is black laid over
+// base at alpha a(1 − g); screen gives base + a·g(1 − base), which is white at alpha a·g. A blend mode needs an
+// isolated render surface of everything under the full-screen grain on every composite; normal blending does not
+// (on a software renderer that surface cost ~0.1 s per frame during the GL boot, §4.1).
+export function grainTiles(size = 128) {
+  const mk = (rgb, alpha) => {
+    const c = document.createElement('canvas'); c.width = c.height = size;
+    const x = c.getContext('2d', { willReadFrequently: true }), img = x.createImageData(size, size), r = mulberry(5);
+    for (let i = 0; i < size * size; i++) { const g = (110 + r() * 145) / 255; img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = rgb; img.data[i * 4 + 3] = Math.round(255 * alpha(g)); }
+    x.putImageData(img, 0, 0);
+    return c;
+  };
+  return { k: mk(0, (g) => 1 - g), w: mk(255, (g) => g) };
+}
 // canvas -> blob URL -> CSS custom property on <html>
 export function toVar(canvas, name) {
   const set = (url) => document.documentElement.style.setProperty(name, `url(${url})`);

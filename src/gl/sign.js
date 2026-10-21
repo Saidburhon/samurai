@@ -10,7 +10,7 @@ export async function wordAtlas(renderer) {
   const kz = (document.querySelector('#strings [data-k="sign.kaizen"]') || {}).textContent || '改善';
   const w = 2048, h = 256, rows = 6;
   const c = document.createElement('canvas'); c.width = w; c.height = h * rows;
-  const x = c.getContext('2d');
+  const x = c.getContext('2d', { willReadFrequently: true }); // a CPU canvas: uploaded without a GPU readback
   x.fillStyle = '#000'; x.fillRect(0, 0, c.width, c.height);
   x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
   const fit = (word, face, max) => {

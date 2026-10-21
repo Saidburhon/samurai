@@ -3,7 +3,7 @@
 // wrapper. The stipple is redrawn crisp from its dot list in sword space; the reveal clips the ink along the axial
 // front and draws the luminous front (svg#front).
 import * as G from '../sword/geom-core.js';
-import { stipple, frame, SC } from '../sword/drawing.js';
+import { stipple, frame, SC, WEIGHTS } from '../sword/drawing.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const { K, T } = G.axisEnds(1);
@@ -23,8 +23,20 @@ export function inkPose(td, W, H, Ks, Ts, off = [0, 0], scaleOff = 1) {
 // svg (u, v) -> paper (x, z) for a pose
 const svgToPaper = (pose, u, v) => { const c = Math.cos(pose.a), s = Math.sin(pose.a), k = pose.k / SC; return [pose.O[0] + (u * c - v * s) * k, pose.O[1] + (u * s + v * c) * k]; };
 
+// In the film the drawing's strokes do not scale (vector-effect: non-scaling-stroke), so a 0.5–0.9 CSS px hairline
+// is 0.4–0.7 device px at DPR 0.75: rasterised with multisampling it breaks into dots along a diagonal. Each weight
+// under one device px is widened to one and dimmed by the same factor (the AA contract of §2.1, for the ink).
+function hairlines() {
+  const dpr = window.devicePixelRatio || 1, px = (1 / dpr).toFixed(3);
+  const rules = Object.entries({ ...WEIGHTS, dot: [1.1, 0.55] }).map(([k, [w, o]]) => (w * dpr < 1 ? `html.cinema #osh .${k}{stroke-width:${px}px;opacity:${(o * w * dpr).toFixed(3)}}` : '')).join('');
+  let el = document.getElementById('osh-hair');
+  if (!el) { el = document.createElement('style'); el.id = 'osh-hair'; document.head.appendChild(el); }
+  if (el.textContent !== rules) el.textContent = rules;
+}
+
 export class Ink {
   constructor() {
+    hairlines();
     this.paper = document.getElementById('osh-paper');
     this.svg = document.getElementById('osh');
     this.stip = document.getElementById('stip');
@@ -77,11 +89,11 @@ export class Ink {
       const F = frame(K, T);
       dots = st.s.map((s, i) => { const p = F(G.bp2(s, st.v[i], 1)); return [p[0], p[1], st.r[i], st.a[i]]; });
     }
-    const dpr = Math.min(3, Math.max(1.5, (window.devicePixelRatio || 1) * 2));
+    const dpr = Math.min(2, window.devicePixelRatio || 1); // one canvas px per device px, as boot.js
     const W = stage.w, H = stage.h, cv = this.stip;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
-    const ctx = cv.getContext('2d');
+    const ctx = cv.getContext('2d', { willReadFrequently: true }); // a CPU canvas, as the boot script made it
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#0F0E0C';
     const { e0, ex, ey, k } = this.m, u0 = reveal < 1.5 ? reveal * LKT : -1e9;

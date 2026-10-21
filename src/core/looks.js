@@ -9,6 +9,8 @@ const DEF = {
   uGlintCol: [0, 0, 0], uGlintSize: 0.03, uExposure: 1,
   // scene extras
   nie: 520, nieAvg: 0.05, shinogiSheen: 0, shinogiRough: 0.045, edgeLine: 0,
+  // the steel's macro treatment (sunagashi streaks, the folded grain, a sharper mirror up close) and its lamp lobe
+  macro: 0, lampSpec: 1,
   shadowCol: [0.16, 0.13, 0.10], shadowA: 0.68, shadowSoft: 0.14, shadowBase: 0.02,
   backGlow: [0, 0, 0], ironBase: [0.055, 0.048, 0.042],
 };
@@ -20,7 +22,7 @@ L.washi = {
   shinogiSheen: 0.3, shinogiRough: 0.1,
 };
 L.reveal = { ...L.washi, uGlintCol: [0, 0, 0], nie: 420 };
-L['washi-macro'] = { ...L.washi, uKeySoft: 0.02, uGlintSize: 0.004, nie: 700 };
+L['washi-macro'] = { ...L.washi, uKeySoft: 0.02, uGlintSize: 0.004, nie: 700, macro: 1 };
 L.sumi = {
   ...DEF, uCeil: [0.003, 0.0035, 0.005], uCeilHi: [0.06, 0.064, 0.075], uCeilA: [-0.9, 0.2], uCeilB: [0.1, 1.0],
   uFloor: [0.02, 0.02, 0.024], uKey: [0.9, 0.92, 1.0], uKeyA: [-0.86, -0.66], uKeyB: [0.25, 0.95], uKeySoft: 0.03,
@@ -38,7 +40,7 @@ L.ai = {
 L.togi = {
   ...L.washi, uCeil: [0.02, 0.02, 0.022], uCeilHi: [0.30, 0.30, 0.31], uFloor: [0.92, 0.90, 0.86], uKey: [2.0, 2.0, 1.95],
   uKeySoft: 0.02, uFrostLight: 1.35, uFrostAmb: [0.12, 0.12, 0.12], uGlintCol: [24, 22, 19], uGlintSize: 0.005, nie: 700,
-  shadowCol: [0.20, 0.18, 0.15], shadowA: 0.55,
+  shadowCol: [0.20, 0.18, 0.15], shadowA: 0.55, macro: 1,
 };
 L.noto = {
   ...L.sumi, uCeil: [0.003, 0.003, 0.004], uStrip: [1.8, 1.75, 1.7], uStripA: [0.95, 1.5], uKey: [0.6, 0.6, 0.65],
