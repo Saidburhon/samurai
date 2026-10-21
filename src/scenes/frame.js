@@ -107,7 +107,7 @@ export class Film {
     if (d.atHold && d.layout && !d.intro && d.pos != null) this.neighbours(d);
     if (!this.dialR) {
       const h17 = this.R('toki.0900', layout);
-      this.dialR = (layout === 'land' ? 0.31 * st.h : 0.40 * st.w) / (h17.sol.td.f / h17.sol.td.Hc);
+      this.dialR = (layout === 'land' ? 0.31 * st.h : 0.36 * st.w) / (h17.sol.td.f / h17.sol.td.Hc);
     }
     const sw = same || p.cam >= (tr.swap || 0.5);
     const H = sw ? B : A; // the hold whose discrete keys (visibility, programs) are live
@@ -115,13 +115,15 @@ export class Film {
     const ec = e.cam;
     const roll = lerp(A.pose.roll, B.pose.roll, ec) + (!same && tr.spin ? tr.spin * ec : 0);
     const sori = !same && tr.type === 'spin' ? lerp(A.pose.sori, B.pose.sori, ease('cam')(Math.min(1, p.cam * 2))) : lerp(A.pose.sori, B.pose.sori, ec);
-    const sheath = lerp(A.sheath, B.sheath, e.mat);
+    // (final pass: past the last beat the wheel pushes the tsuba off the koiguchi, d.koi cm of the 70 cm blade; core/film.js)
+    const sheath = lerp(A.sheath, B.sheath, e.mat) - (d.koi && H.saya ? d.koi / 70 : 0);
     this.pose(roll, lerp(A.pose.pitch, B.pose.pitch, ec), sori, lerp(A.lift, B.lift, ec), H, sheath);
     // Y2 (§2.3): the Yaki holds are ink plates on the paper (scenes/plates.js); the sword is not drawn there
     st.sword.visible = !H.hide;
     // look (every value mixed in linear space)
     const L = same ? A.L : mixLook(A.L, B.L, e.look);
     st.applyLook(H.look, L);
+    if (!same) st.rollGuard(Math.abs(B.pose.roll - A.pose.roll), ec); // item 8: no white-out mid-roll (gl/stage.js)
     // camera
     this.camera(A, B, ec, d.push || 0);
     // the studio: carried by the camera between holds, M[k] exactly at a hold (§3.5)
@@ -290,7 +292,10 @@ export class Film {
     if (ia && ib && (ia.draw || 'hero') === (ib.draw || 'hero') && A.inkPose && B.inkPose) {
       const a = A.inkPose, b = B.inkPose;
       pose = A === B ? a : { O: lerpA(a.O, b.O, t), a: angLerp(a.a, b.a, t), k: logLerp(a.k, b.k, t) };
-      draw = ia.draw || 'hero'; alpha = lerp(ia.alpha ?? 1, ib.alpha ?? 1, t); annot = (t < 0.5 ? ia : ib).annot !== false;
+      // (final pass r2: the annotations go as soon as the move starts towards a hold without them; at t .5 the tsuba
+      // roundel and its label still stood under the rising B1 headline)
+      const an = (x) => x.annot !== false;
+      draw = ia.draw || 'hero'; alpha = lerp(ia.alpha ?? 1, ib.alpha ?? 1, t); annot = an(ia) === an(ib) ? an(ia) : t <= 0.001 ? an(ia) : t >= 0.999 ? an(ib) : false;
       blade = lerp(ia.blade ?? 1, ib.blade ?? 1, t);
     } else if (ia || ib) {
       const h = ia ? A : B, x = h.ink;
@@ -335,6 +340,13 @@ export class Film {
     const nearG = d.pre || d.live === 'a' ? ga : d.live === 'b' ? gb : d.f < 0.5 ? ga : gb;
     const html = this.html;
     if (html.dataset.ground !== nearG) { html.dataset.ground = nearG; html.classList.toggle('dark', !!DARK[nearG]); }
+    // (final pass r2) the drawing's annotations leave with the page's layers, not with the next GL frame: a frame in
+    // flight kept the tsuba roundel and its label under the rising B1 headline (d-step-01-mid). Only hidden here; the
+    // GL frame shows them again (inkFrame)
+    if (d.a !== 'intro' && d.live === 'mix' && d.a !== d.b && this.ink && this.ink.paper) {
+      const ia = holdOf(d.a, lay, this.opt).ink, ib = holdOf(d.b, lay, this.opt).ink, t = d.e.ink;
+      if (ia && ib && (ia.annot !== false) !== (ib.annot !== false) && t > 0.001 && t < 0.999) this.ink.paper.classList.add('no-annot');
+    }
   }
   // the grounds of the holds next to the nearest one (pure: from the shot list, nothing is resolved)
   groundsNear(d) {

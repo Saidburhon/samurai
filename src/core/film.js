@@ -29,6 +29,7 @@ function stateKey(d) {
   const s = d.settled ? 1 : 0;
   // under a freeze the live layers hold the incoming hold still: one GL frame for the whole freeze
   if (d.freeze && d.live === 'b' && !d.push) return `H|${d.b}|${s}`;
+  if (d.koi) return `H|${d.hold}@${d.koi.toFixed(2)}|${s}`;
   if (!d.intro && !d.freeze) {
     const vals = Object.values(d.e);
     if (d.live === 'a' || (d.live === 'mix' && vals.every((v) => v === 0))) return `H|${d.a}|${s}`;
@@ -123,6 +124,18 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     const c = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`;
     if (stamp.__c !== c) { stamp.__c = c; stamp.style.background = c; }
   };
+  const koi = { t: 0, v: 0, y: null };
+  const atEnd = () => fz == null && dir.frozen == null && !state.intro && dir.target() >= dir.n - 1.02 && (dir.xp ?? dir.x) >= dir.n - 1.04;
+  const thumb = (cm) => {
+    if (!(cm > 0) || !atEnd()) return;
+    const t = Math.min(3, koi.t + cm);
+    if (t === koi.t) return;
+    koi.t = t; gsap.to(koi, { v: t, duration: 0.7, ease: 'power2.out', overwrite: true });
+  };
+  addEventListener('wheel', (e) => thumb((e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY) / 480), { passive: true });
+  addEventListener('touchstart', (e) => { koi.y = e.touches[0] ? e.touches[0].clientY : null; }, { passive: true });
+  addEventListener('touchmove', (e) => { const y = e.touches[0] ? e.touches[0].clientY : null; if (y != null && koi.y != null) thumb((koi.y - y) / 520); koi.y = y; }, { passive: true });
+  addEventListener('keydown', (e) => { if (['ArrowDown', 'PageDown', ' ', 'End'].includes(e.key)) thumb(1); });
   const describe = (now) => {
     if (fz === 'intro') return holdD('intro', layout());
     if (state.intro) return evalIntro(state.intro.t, layout());
@@ -133,6 +146,12 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     else if (state.windowSince == null) state.windowSince = now;
     d.settled = d.atHold && (fz != null || dir.frozen != null || now - state.windowSince >= 300);
     d.calm = d.atHold && Math.abs(dir.v) < 0.6;
+    // the end of the film (final pass, r2: steps 24-26 were one frame): at the last hold the wheel, a swipe or a key
+    // pushes the tsuba off the koiguchi with the thumb, 1 cm per turn up to 3 cm, and the copper habaki shows
+    // (koiguchi wo kiru); leaving the last hold seats the sword again
+    const last = SEQ[layout()].names.at(-1);
+    if (d.atHold && d.hold === last && !d.intro) d.koi = koi.v > 0.004 ? koi.v : 0;
+    else if (koi.t || koi.v) { koi.t = 0; gsap.killTweensOf(koi); koi.v = 0; }
     // a freeze about to be entered forwards (the scroll's target at least half a beat on): its sheet goes up closed
     // over the hold and the live layers draw the incoming hold under it (fx/cut.js). The frame is the hold's own, so
     // seeking, scrolling and jumping still agree; the cost of the cut's first frame moves to the start of the scroll

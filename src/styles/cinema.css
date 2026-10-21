@@ -241,7 +241,7 @@ html.film .s-yaki, html.film .s-yaki .beat { --fg: var(--sumi); --fg2: var(--kur
 html.film .s-yaki .big { color: var(--sumi); }
 html.film .s-yaki .line { color: var(--kurogane); }
 html.film .s-yaki .plate.pl { display: block; position: absolute; left: 0; top: 0; width: 0; height: 0; margin: 0; padding: 0; overflow: visible; pointer-events: none; grid-column: auto; }
-html.film .s-yaki .pl-in { position: absolute; left: 0; top: 0; transform-origin: 0 0; color: var(--sumi); }
+html.film .s-yaki .pl-in { position: absolute; left: 0; top: 0; transform-origin: 0 0; color: var(--sumi); will-change: transform; }
 html.film .s-yaki .pl-in svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 html.film .s-yaki .pl-in g { stroke: #1A1714; }
 /* (heavier than the flow page's white ink: sumi on paper, read at the capture's 0.75 DPR) */
@@ -313,6 +313,8 @@ html.film .foot .colophon { padding-top: 14px; }
   html.film .s-noto .pre { font-size: 16px; }
   html.film .foot { bottom: 16px; gap: 10px; font-size: 12px; }
   html.film .foot .foot-links { display: none; }
+  /* B21: the seal at the foot of the wrapped number, under the end of the vertical gloss (r2: it sat on it, m-16) */
+  html.cinema .contact .hanko-c { align-self: flex-end; margin-top: 0; margin-bottom: 12px; }
 }
 /* the rub hint names the gesture of the visitor's own pointer */
 @media (pointer: coarse) { html.film .s-togi .hint .ptr { display: none; } html.film .s-togi .hint .tch { display: inline; } }

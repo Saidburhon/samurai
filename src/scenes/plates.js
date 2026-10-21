@@ -111,9 +111,13 @@ export class Plates {
       it.st = st;
       it.fig.style.visibility = mode === 'off' ? 'hidden' : '';
       it.fig.classList.toggle('now', mode === 'rest');
-      if (mode === 'leave') { it.box.style.clipPath = `inset(0 0 0 ${(front * 100).toFixed(2)}%)`; it.stx.style.clipPath = ''; this.dash(it, 1); }
-      else if (mode === 'arrive') { it.box.style.clipPath = ''; it.stx.style.clipPath = `inset(0 ${((1 - front) * 100).toFixed(2)}% 0 0)`; this.dash(it, line); }
-      else { it.box.style.clipPath = ''; it.stx.style.clipPath = ''; this.dash(it, 1); }
+      // (final pass r2: the clip is on the two drawings, never on the scaled box itself: an animated clip-path on the
+      // box left stale raster tiles of an earlier state of the plate on the paper, d-step-08)
+      if (mode === 'leave') { const c = `inset(0 0 0 ${(front * 100).toFixed(2)}%)`; it.stx.style.clipPath = c; it.so.style.clipPath = c; this.dash(it, 1); }
+      else if (mode === 'arrive') { it.so.style.clipPath = ''; it.stx.style.clipPath = `inset(0 ${((1 - front) * 100).toFixed(2)}% 0 0)`; this.dash(it, line); }
+      else { it.so.style.clipPath = ''; it.stx.style.clipPath = ''; this.dash(it, 1); }
+      // at rest the plate's layer is painted afresh once (a new raster, not the tiles of its last moving state)
+      if (mode === 'rest') requestAnimationFrame(() => { if (it.st !== st) return; it.box.style.outline = '1px solid transparent'; requestAnimationFrame(() => { it.box.style.outline = ''; }); });
     }
   }
   dash(it, p) {

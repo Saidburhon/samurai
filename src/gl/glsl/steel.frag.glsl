@@ -245,7 +245,7 @@ void main(){
 
   // the drawing -> steel wipe front (the intro and the bookend; uFront 0 everywhere else)
   float fr = vAxial - uReveal;
-  if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(fr, 0., 0.0011)*5.0 + exp(-pow(fr/0.012,2.))*.25);
+  if (uFront > 0.) col += uFront * smoothstep(0., .03, uReveal) * vec3(.86,.93,1.) * (thinLine(fr, 0., 0.0011)*5.0 + exp(-pow(fr/0.012,2.))*.25);
   col *= uExposure;
   // coverage (contract 2): the outline ramps to 0 over a pixel, so the diagonal is anti-aliased without MSAA. At an
   // outer row (a true silhouette: no fragment exists outside it) the ramp is inset over 1.2 px; at a crease that is

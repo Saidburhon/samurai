@@ -130,6 +130,23 @@ export class Stage {
     for (const m of [this.mat.iron, this.mat.ironFull]) { m.uniforms.uBackGlow.value.set(...lk.backGlow); m.uniforms.uBase.value.set(...lk.ironBase); }
   }
 
+  // A roll of more than about a radian between two holds (utsuri.telegram -> utsuri.backend turns the blade over)
+  // sweeps the face through the strip light's mirror direction: the whole face read as flat white chrome with a ghost
+  // word (review item 8, d-step-05-mid; isolated by zeroing each term: it is uStrip, about 1.6, far over the white
+  // point, so a 0.55 scale still clipped). After applyLook, while the roll is under way (between 15 % and 85 % of the
+  // camera's ease, ramped), the strip goes down to 0.12 and the softbox, the ceiling's bright patch, the rim and the
+  // lamp's lobe on the steel to 0.55; the holds themselves are untouched.
+  rollGuard(dRoll, e) {
+    const w = Math.min(1, Math.max(0, (dRoll - 1.0) / 1.5));
+    const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+    const g = w * sm(0, 0.15, e) * (1 - sm(0.85, 1, e));
+    if (g <= 0.001) return;
+    const k = 1 - 0.45 * g;
+    this.U.uStrip.value.multiplyScalar(1 - 0.88 * g);
+    for (const n of ['uKey', 'uCeilHi', 'uRim']) if (this.U[n]) this.U[n].value.multiplyScalar(k);
+    this.mat.steelU.uLampSpec.value *= k;
+  }
+
   // ---------- the pose ----------
   setPose({ roll = 0, pitch = 0, sori = 1, lift = 0 } = {}) {
     Object.assign(this.pose, { roll, pitch, sori, lift });

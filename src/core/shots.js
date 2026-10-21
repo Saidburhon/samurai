@@ -62,7 +62,9 @@ S['utsuri.ios'] = {
   lampPos: { at: { s: 0.74, zf: 0.6 }, add: [1.2, 2.6, -2.0] },
   sign: { row: 0, s: 0.50, alpha: 1 },
   land: { cam: { mode: 'orbit', target: { s: 0.53 }, vec: [-1.50, 1.72, 0.60], fov: 26, ang: -18, chord: [0.40, 0.66], off: [0, 0] } },
-  port: { cam: { mode: 'orbit', target: { s: 0.22 }, az: -60, el: 50, dist: 2.6, fov: 30, ang: -62, off: [0, 0] } },
+  // (final pass r2: the phone's blade lies across the middle band, under the nav and above the list, with its word on
+  // the visible segment; at -62 deg the spine ran up through the nav and the word was off screen, m-03)
+  port: { cam: { mode: 'orbit', target: { s: 0.26 }, az: -60, el: 50, dist: 1.9, fov: 34, ang: -24, off: [0, 0] }, sign: { row: 0, s: 0.26, width: 2.7, alpha: 1 } },
 };
 // B6: the other flat (ura): the blade is rolled over, so the hamon runs along the top of the band and the ridge
 // along the bottom; seen from the edge side, the tip to the right, the kissaki and the yokote entering at x ~ .93
@@ -114,7 +116,7 @@ const utsuri = (row, s, roll, cam, extra = {}) => ({
 });
 S['utsuri.web'] = utsuri(1, 0.34, 0.057, { mode: 'orbit', target: { s: 0.34 }, az: -68, el: 46.8, dist: 1.30, fov: 24, ang: -18, off: [0, -0.08] });
 S['utsuri.telegram'] = utsuri(2, 0.30, -0.10, { mode: 'orbit', target: { s: 0.28 }, az: -68, el: 46.8, dist: 3.6, fov: 26, ang: -24, off: [-0.15, 0] });
-S['utsuri.telegram'].port = { cam: { mode: 'orbit', target: { s: 0.50 }, az: -60, el: 50, dist: 1.9, fov: 34, ang: -24, off: [0, 0] } };
+S['utsuri.telegram'].port = { cam: { mode: 'orbit', target: { s: 0.50 }, az: -60, el: 50, dist: 1.9, fov: 34, ang: -24, off: [0, 0] }, sign: { row: 2, s: 0.50, alpha: 1 } };
 // B5: the other flat (ura), reached by rolling the blade over (as B6, G1), so the word changes flat under the turn
 S['utsuri.backend'] = utsuri(3, 0.64, Math.PI + 0.057, { mode: 'orbit', target: { s: 0.64 }, az: -68, el: 46.8, dist: 2.36, fov: 26, ang: -18, off: [0, 0.02] }, { studioRoll: 0.8 });
 S['utsuri.backend'].sign = { row: 3, s: 0.64, zf: 0.72, width: 3.4, alpha: 1 };
@@ -148,24 +150,31 @@ S['yaki.launch'] = {
 const togi = { ...BASE, look: 'togi', pose: { roll: 0, pitch: 0, sori: 1 }, shadow: 1, ground: 'togi', nakago: 1, koshirae: 0 };
 S['togi.stone'] = {
   ...togi, polishFront: 0.40, glint: { s: 0.30, zf: 0.55, dist: 7 },
-  land: { cam: { mode: 'td', A: { s: 0 }, a: [0.10, 0.745], B: 'T', b: [0.92, 0.32], fov: 20, lift: 0.12 } },
+  // (final pass r2: the blade enters from the frame's edge beyond the machi; the bare tang at the lower left read as a
+  // flat brown slab, d-step-11)
+  land: { cam: { mode: 'td', A: { s: 0.07 }, a: [0.0, 0.785], B: 'T', b: [0.92, 0.32], fov: 20, lift: 0.12 } },
 };
 S['togi.mirror'] = {
   ...togi, polishFront: 1.05, lookOver: { uGlintCol: [0, 0, 0], lampSpec: 0.3 }, glint: { s: 0.85, zf: 0.55, dist: 7 },
-  sign: { row: 5, s: 0.70, alpha: 1 },
+  // (final pass r2: smaller and lower, wholly in the ji under the shinogi; the ridge cut 改善 in half, d-step-13)
+  sign: { row: 5, s: 0.70, zf: 0.70, width: 3.2, alpha: 1 },
   land: { cam: { mode: 'td', A: { s: 0.40 }, a: [0.04, 0.84], B: 'T', b: [0.95, 0.40], fov: 20, lift: 0.12 } },
 };
 
 // 鍔 Tsuba: the crane up and over the girih light on the indigo floor (the orbits of B15–B16 are taken in the floor's
 // frame: up is the floor's normal, so el 90° looks straight down onto it)
-const carpet = { ...BASE, pose: { roll: 0, pitch: 0, sori: 0.3 }, ground: 'ai', floor: 1, rays: 0, lampPos: { tsuba: true }, glintDir: 'axis-', lookOver: { uGlintCol: [0, 0, 0] } };
+// (final pass r2: the blade rolled 0.95 rad, so its ji catches the pool instead of a needle seen edge-on (0.5 still
+// read as a dark needle); the pool itself a third dimmer, d-step-15/16)
+const carpet = { ...BASE, pose: { roll: -0.95, pitch: 0, sori: 0.3 }, ground: 'ai', floor: 1, rays: 0, lampPos: { tsuba: true }, glintDir: 'axis-', lookOver: { uGlintCol: [0, 0, 0] } };
 S['tsuba.carpet'] = {
-  ...carpet, look: 'ai-carpet', floorGain: 1,
+  ...carpet, look: 'ai-carpet', floorGain: 0.65,
   land: { cam: { mode: 'orbit', frame: 'floor', target: { s: 0.25 }, az: -35, el: 64, dist: 12, fov: 30, ang: -18, off: [0, 0] } },
-  port: { cam: { mode: 'orbit', frame: 'floor', target: { s: 0.25 }, az: -20, el: 70, dist: 13, fov: 36, ang: 90, off: [0, 0] } },
+  // (final pass r2: on the phone the sword lies on the diagonal, the tsuba well under the nav and the blade clear of the
+  // headline; upright, its grip ran up through the nav and the blade touched the headline, m-11)
+  port: { cam: { mode: 'orbit', frame: 'floor', target: { s: 0.25 }, az: -20, el: 70, dist: 17, fov: 36, ang: 62, off: [0.04, -0.02] } },
 };
 S['tsuba.team'] = {
-  ...carpet, look: 'ai-warm', floorGain: 1.6, floorWarm: 1,
+  ...carpet, look: 'ai-warm', floorGain: 1.05, floorWarm: 1,
   land: { cam: { mode: 'orbit', frame: 'floor', target: { s: 0.25 }, az: -35, el: 89.9, dist: 16, fov: 30, ang: -18, off: [0, 0] } },
 };
 
@@ -179,12 +188,14 @@ const toki = (hour, sun, land, port) => ({
 });
 // (final pass: the dial is 0.31 H on the desktop, the hand 0.25 H, so its numerals and arcs stay clear of the nav and the
 // rail, r1)
-S['toki.0900'] = toki(9, { az: 135, el: 45 }, { hub: [0.62, 0.545], len: 0.25 }, { hub: [0.5, 0.62], lenW: 0.40 });
+// (final pass r2: the phone's dial is 0.36 W, its hand scaled with it, so the outer numerals stay inside the screen, m-12)
+S['toki.0900'] = toki(9, { az: 135, el: 45 }, { hub: [0.62, 0.545], len: 0.25 }, { hub: [0.5, 0.62], lenW: 0.36 });
 // (G3: B18 keeps B17's framing; its push-in on the hub, camera height × 0.55 at (.70, .56), waits for the dial drawn
 // into a canvas at G4: the SVG dial re-rasterised every frame of a zoom cost 0.5–2 s per frame on a software renderer)
 S['toki.1130'] = toki(11.5, { az: 172, el: 58 }, { hub: [0.62, 0.545], len: 0.25 });
-// (phone: the dial's push-in is milder and its hub lower, so the numerals stay clear of the clocks and their line, r1)
-S['toki.1400'] = toki(14, { az: 210, el: 40 }, { hub: [0.62, 0.545], len: 0.25 }, { hub: [0.5, 0.665], lenW: 0.52 });
+// (phone: no push-in, only the hub lower, so the numerals stay clear of the clocks and their line, r1, and of the
+// screen's edges, r2 m-13)
+S['toki.1400'] = toki(14, { az: 210, el: 40 }, { hub: [0.62, 0.545], len: 0.25 }, { hub: [0.5, 0.665], lenW: 0.36 });
 
 // Addendum 1, the Temur poster: the carved plaster lit low from the left; the sheathed sword along the bottom edge
 S['temur.quote'] = {
@@ -246,7 +257,9 @@ export const TRANS = {
   'tsuba.team': { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } },
   'toki.0900': { type: 'cam' },
   'toki.1130': { type: 'cam' },
-  'toki.1400': { type: 'wipe', wipe: 'sweep' },
+  // (final pass r2: the sweep's hard vertical front sliced the dial and the saya at its mid frame: the house cut, at
+  // -24 deg, as the neighbouring cuts are -18)
+  'toki.1400': { type: 'cut', cut: { ang: -24, at: [0.5, 0.5] } },
   // (final pass: the shadow wipe's hard vertical front sliced the quote, r1: the house cut)
   'temur.quote': { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } },
   'noto.sheath': { type: 'cam', groups: { mat: [0.15, 0.85, 'seat'] } },

@@ -43,7 +43,9 @@ export class Dom {
       }
     }
     const foot = document.getElementById('foot');
-    if (foot) this.add(foot, ['bookend.steel'], null);
+    // (final pass: the footer, its mei and hanko, rises with the bookend drawing, so B23 is the closing plate, not a
+    // bare line drawing, r2)
+    if (foot) this.add(foot, ['bookend.drawing', 'bookend.steel'], null);
     this.items = [...document.querySelectorAll('.svc li')];
     // the hanko stands beside the phone number in the contact poster (cloned from the hero's; it carries no text)
     const row = document.querySelector('.contact .row');

@@ -119,7 +119,9 @@ void main(){
   // B14 (the opponent's view): the copper habaki and the gilt seppa face the viewer and the dark room; a soft warm
   // light in front (the girih light thrown back by the floor) lets them read as metal, one gradient across each
   if (uKind < 1.5 && !silk && uFill.r > 0.) col += uFill * F * pow(max(dot(R, normalize(transpose(mat3(viewMatrix)) * uFillDir)), 0.), 6.);
-  if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(vAxial - uReveal, 0., 0.0022)*3.0);
+  // the wipe front lights only steel that exists: it fades in over the first 3 % of the reveal (item 9: at a reveal of
+  // 1e-4 the front alone lit a sliver of the kashira cap, a white streak on the bare drawing in the 3 s frame)
+  if (uFront > 0.) col += uFront * smoothstep(0., .03, uReveal) * vec3(.86,.93,1.) * (thinLine(vAxial - uReveal, 0., 0.0022)*3.0);
   col *= uExposure;
   // round parts (the fuchi, the kashira, the grip, the tsuba's rim): their silhouette (N.V -> 0) ramps to 0 over
   // a pixel; the tsuba's faces ramp to 0 over a pixel at the outer edge of the guard (the outline of a face seen at a
@@ -143,6 +145,8 @@ void main(){
     float rs = length(vec2(lp.z / .205, lp.y / .112));
     alpha = mix(1., clamp((1. - rs) / max(fwidth(rs), 1e-5) + .5, 0., 1.), smoothstep(.5, .8, abs(dot(N0, uAxisW))));
   }
+  // the reveal's edge ramps over a pixel, as the steel's does
+  if (uReveal < 1.5) alpha *= smoothstep(0., fwidth(vAxial) * 1.2, uReveal - vAxial + fwidth(vAxial) * .6);
   gl_FragColor = vec4(col, 1.);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
