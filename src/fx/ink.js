@@ -206,12 +206,15 @@ export class Ink {
       this.frontKey = key;
       const w0 = this.frontW0 = wpx, half = 1.6 * w0, pad = 40, f1 = (v) => v.toFixed(1);
       this.frontBox = [half + pad, pad];
+      // the blur's region in user space: the strokes are level here, and a level path's bounding box has no height,
+      // so a region in bounding-box units (x/y/width/height in %) is empty and the blurred strokes are not drawn
+      const reg = `filterUnits="userSpaceOnUse" x="${f1(-half - pad)}" y="${-pad}" width="${f1(2 * (half + pad))}" height="${2 * pad}"`;
       fr.setAttribute('viewBox', `${f1(-half - pad)} ${-pad} ${f1(2 * (half + pad))} ${2 * pad}`);
       fr.setAttribute('width', f1(2 * (half + pad))); fr.setAttribute('height', String(2 * pad));
       fr.innerHTML = `<defs><linearGradient id="fg" gradientUnits="userSpaceOnUse" x1="${f1(half)}" y1="0" x2="${f1(-half)}" y2="0">
       <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <filter id="fb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
-      <filter id="fb2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
+      <filter id="fb" ${reg}><feGaussianBlur stdDeviation="9"/></filter>
+      <filter id="fb2" ${reg}><feGaussianBlur stdDeviation="2.2"/></filter></defs>
       <g class="front"><path d="M${f1(half)} 0L${f1(-half)} 0" stroke="url(#fg)" stroke-width="26" filter="url(#fb)" opacity=".9"/>
       <path d="M${f1(half)} 0L${f1(-half)} 0" stroke="url(#fg)" stroke-width="7" filter="url(#fb2)"/>
       <path d="M${f1(0.75 * w0)} 0L${f1(-0.75 * w0)} 0" stroke="#fff" stroke-width="1.4"/></g>`;

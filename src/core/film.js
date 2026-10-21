@@ -130,6 +130,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     if (!d.atHold) state.windowSince = null;
     else if (state.windowSince == null) state.windowSince = now;
     d.settled = d.atHold && (fz != null || dir.frozen != null || now - state.windowSince >= 300);
+    d.calm = d.atHold && Math.abs(dir.v) < 0.6;
     // a freeze about to be entered forwards (the scroll's target at least half a beat on): its sheet goes up closed
     // over the hold and the live layers draw the incoming hold under it (fx/cut.js). The frame is the hold's own, so
     // seeking, scrolling and jumping still agree; the cost of the cut's first frame moves to the start of the scroll

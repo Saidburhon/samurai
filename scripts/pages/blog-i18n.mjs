@@ -19,7 +19,7 @@ export const B = {
     prev: 'Oldingi maqola', next: 'Keyingi maqola', pn: 'Boshqa maqolalar', all: 'Barcha maqolalar',
     feedTitle: 'Qilich blogi', feedDesc: 'Biznes egalari uchun: narxlar, muddatlar va qarorlar.',
     clusters: { cost: 'Narx', automation: 'Avtomatlashtirish', ai: 'AI', apps: 'Ilovalar', ux: 'Qulaylik', integrations: 'Integratsiyalar', process: 'Ish tartibi', security: 'Xavfsizlik' },
-    toc: 'Mundarija',
+    toc: 'Mundarija', table: 'Jadval',
   },
   ru: {
     crumb: 'Блог', h1: 'Блог',
@@ -37,7 +37,7 @@ export const B = {
     prev: 'Предыдущая статья', next: 'Следующая статья', pn: 'Другие статьи', all: 'Все статьи',
     feedTitle: 'Блог Qilich', feedDesc: 'Для владельцев бизнеса: цены, сроки, решения.',
     clusters: { cost: 'Цены', automation: 'Автоматизация', ai: 'ИИ', apps: 'Приложения', ux: 'Удобство', integrations: 'Интеграции', process: 'Процесс', security: 'Безопасность' },
-    toc: 'Содержание',
+    toc: 'Содержание', table: 'Таблица',
   },
   en: {
     crumb: 'Blog', h1: 'Blog',
@@ -55,7 +55,7 @@ export const B = {
     prev: 'Previous article', next: 'Next article', pn: 'More articles', all: 'All articles',
     feedTitle: 'Qilich blog', feedDesc: 'For business owners: prices, timelines, decisions.',
     clusters: { cost: 'Cost', automation: 'Automation', ai: 'AI', apps: 'Apps', ux: 'Usability', integrations: 'Integrations', process: 'Process', security: 'Security' },
-    toc: 'Contents',
+    toc: 'Contents', table: 'Table',
   },
   ja: {
     crumb: 'ブログ', h1: 'ブログ',
@@ -64,7 +64,7 @@ export const B = {
     lede: 'タシケントの開発チームQilichが、オフショア開発をご検討中の企業の方に向けて、進め方、費用の考え方、品質の守り方を解説します。',
     read: '{n}分で読めます', published: '公開日', updated: '更新日', by: 'Qilichチーム',
     count: '{n}本の記事', rss: 'RSS', rssLabel: 'RSSで新しい記事を受け取る',
-    gloss: '記録',
+    gloss: 'しるす',
     related: '関連する開発領域', relatedLead: '記事に関係する開発領域です。期間と費用はQilichのカタログによる目安です。',
     mvp: 'MVP', full: '完全版', inCat: 'カタログ', solutions: '{n}件', open: '詳しく見る',
     aiH: '自社の案件で試算する',
@@ -85,6 +85,6 @@ export const B = {
       industry: '業種ごとの専用システムを開発します。',
     },
     clusters: { offshore: 'オフショア開発', cost: '費用', process: '進め方', quality: '品質', contract: '契約', communication: 'コミュニケーション' },
-    toc: '目次',
+    toc: '目次', table: '表',
   },
 };

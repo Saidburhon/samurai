@@ -26,6 +26,10 @@ import { BLOG_SRC, blogIndex, feedPath } from './blog-feed.mjs';
 const J = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+// an Uzbek word quoted on a Russian, English or Japanese page (a post about bilingual interfaces quotes oʻ, gʻ,
+// «lagʻmon») is marked lang="uz": screen readers and fonts treat it as Uzbek, and the lint knows it is meant
+const UZ_WORD = /[^\s<>"«»“”„()[\],.;:!?]*[ʻʼ][^\s<>"«»“”„()[\],.;:!?]*/g;
+export const markUz = (html, lang) => (lang === 'uz' ? html : html.replace(/>([^<]+)</g, (m, t) => `>${t.replace(UZ_WORD, (w) => `<span lang="uz">${w}</span>`)}<`));
 const fill = (s, o) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in o ? o[k] : m));
 
 export function b(lang, key) {
@@ -121,7 +125,7 @@ function shortcodes(C, lang, post) {
   const L = (k) => b(lang, k);
   const sol = (id, where) => { const s = C.model.byId.get(id); if (!s) throw new MdError(`${where}: unknown solution id «${id}»`); return s; };
   const kv = (args) => Object.fromEntries(args.split(/[\s,]+/).filter(Boolean).map((p) => p.split('=')));
-  const table = (head, rows) => `<div class="tbl" role="region" tabindex="0" aria-label="${esc(head.join(' · '))}"><table><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c) => `<td class="mono">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const table = (head, rows) => `<div class="tbl" role="region" tabindex="0" aria-label="${esc(L('table'))}"><table><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c) => `<td class="mono">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   return (name, args, { where, inline }) => {
     if (name === 'solution') {
       const s = sol(args, where);
@@ -264,7 +268,7 @@ function renderPost(C, p, ctx) {
   // the micro blades of one page share one scale: the longest full version among the solutions it shows
   const shown = [...p.related, ...[...p.body.matchAll(/\{\{\s*solution:([\w-]+)/g)].map((m) => m[1])].map((id) => C.model.byId.get(id)).filter(Boolean);
   SCALE = Math.max(8, ...shown.map((s) => s.full.weeks[1]));
-  const conv = convert(p.body, { file: p.file, line: p.bodyLine, link, shortcode: shortcodes(C, lang, p) });
+  const conv = convert(p.body, { file: p.file, line: p.bodyLine, link, shortcode: shortcodes(C, lang, p), tableLabel: L('table') });
   // consecutive {{solution:…}} sheets read as one ruled list
   conv.html = conv.html.replace(/<\/ul>\n<ul class="rel sc">/g, '');
   const mins = minutesOf(p, conv);
@@ -279,7 +283,7 @@ function renderPost(C, p, ctx) {
   // the index's order, top to bottom: the entry above is the previous article, the one below the next
   const i = ctx.list.indexOf(p), prev = ctx.list[i - 1], next = ctx.list[i + 1];
   const pn = (q, k, rel2) => (q ? `<a class="pn-${k}" href="${q.path}" rel="${rel2}"><span class="mono">${L(k)}</span><b>${esc(q.title)}</b></a>` : '<span></span>');
-  const main = `<article class="post" aria-labelledby="post-h">
+  const main = markUz(`<article class="post" aria-labelledby="post-h">
   <header class="post-head">
     <h1 id="post-h">${esc(p.title)}</h1>
     <p class="lede">${esc(p.description)}</p>
@@ -296,7 +300,7 @@ ${conv.html}
   ${p.inlineBox ? '' : aiBox(C, lang, p)}
   <nav class="pn" aria-label="${esc(L('pn'))}">${pn(prev, 'prev', 'prev')}${pn(next, 'next', 'next')}</nav>
   <p class="all mono"><a class="u" href="${blogIndex(lang)}">${L('all')}</a></p>
-</article>`;
+</article>`, lang);
   const url = abs(p.path);
   const article = {
     '@type': 'BlogPosting', '@id': `${url}#article`, headline: p.title, description: p.description,
@@ -331,7 +335,7 @@ function renderIndex(C, lang, list, mins) {
   <p class="e-m mono">${time(p.date, lang)}<i aria-hidden="true">·</i><span>${fill(L('read'), { n: mins.get(p) })}</span><span class="rule" style="--n:${mins.get(p)}" aria-hidden="true"></span></p>
 </li>`;
   }).join('\n');
-  return `<header class="pg-head blog-head">
+  return markUz(`<header class="pg-head blog-head">
     <h1>${L('h1')}</h1>
     <p class="lede">${L('lede')}</p>
     <p class="meta mono">${fill(L('count'), { n: list.length })}</p>
@@ -339,7 +343,7 @@ function renderIndex(C, lang, list, mins) {
   <ol class="daftar">
 ${rows}
   </ol>
-  <p class="feed mono"><a class="u" href="${feedPath(lang)}" type="application/rss+xml">${L('rss')}</a> <span>${L('rssLabel')}</span></p>`;
+  <p class="feed mono"><a class="u" href="${feedPath(lang)}" type="application/rss+xml">${L('rss')}</a> <span>${L('rssLabel')}</span></p>`, lang);
 }
 
 // RFC 822 dates for RSS, at noon Tashkent time so the day never shifts

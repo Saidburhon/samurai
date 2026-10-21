@@ -11,7 +11,7 @@
 /* a topic starts with a full ink rule, the way a ledger opens a new heading */
 .entry.first { border-top-color: var(--sumi); }
 .e-side { grid-column: 1 / span 2; grid-row: 1 / span 3; padding-top: 10px; color: var(--fg2); }
-.e-side .cl { display: block; text-transform: lowercase; letter-spacing: .06em; }
+.e-side .cl { display: block; letter-spacing: .06em; }
 html[lang=ja] .e-side .cl { text-transform: none; font-family: var(--jp); font-size: 14px; letter-spacing: .08em; }
 .e-t { grid-column: 3 / span 7; font-weight: 280; font-size: clamp(26px, calc(34 * var(--fit)), 34px); line-height: 1.12; letter-spacing: -.02em; font-variation-settings: "SHRP" 100; text-wrap: balance; }
 html[lang=ja] .e-t { font-weight: 400; font-size: clamp(21px, calc(26 * var(--fit)), 26px); line-height: 1.45; letter-spacing: .01em; }

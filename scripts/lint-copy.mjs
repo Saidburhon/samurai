@@ -99,7 +99,8 @@ if (built) {
     for (const t of visible(html)) checkText(f, t, opt);
     // the other pages carry no Uzbek: an okina outside lang="uz" text means an untranslated string
     if (!opt.uz) {
-      const body = html.replace(/<head>[\s\S]*?<\/head>/, '').replace(/<a [^>]*lang="uz"[^>]*>[\s\S]*?<\/a>/g, '');
+      // Uzbek marked as such (the switch's link, a quoted word in a blog post: <span lang="uz">) is meant
+      const body = html.replace(/<head>[\s\S]*?<\/head>/, '').replace(/<a [^>]*lang="uz"[^>]*>[\s\S]*?<\/a>/g, '').replace(/<span lang="uz">[^<]*<\/span>/g, '');
       for (const t of visible(body)) if (t.includes('ʻ')) say(f, 'Uzbek text on a translated page', t);
     }
     // a landing key that fell back to English on the Japanese page (build-langs marks it lang="en")

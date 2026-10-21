@@ -131,7 +131,8 @@ function blocks(lines, opt, ctx, base) {
       // the first column names the row: a row header, so a phone reader keeps the label with its values
       const th = head.map((c, k) => `<th scope="col"${al(k)}>${inline(c, opt, w)}</th>`).join('');
       const tb = rows.map((r) => `<tr>${head.map((_, k) => (k === 0 ? `<th scope="row">${inline(r[k] || '', opt, w)}</th>` : `<td${al(k)}>${inline(r[k] || '', opt, w)}</td>`)).join('')}</tr>`).join('');
-      out.push(`<div class="tbl" role="region" aria-label="${escHtml(head.filter(Boolean).join(' · ').replace(/[*_`]/g, ''))}" tabindex="0"><table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></div>`);
+      // the scrollable region's name: the page's word for a table (header cells may hold another language's words)
+      out.push(`<div class="tbl" role="region" aria-label="${escHtml(opt.tableLabel || head.filter(Boolean).join(' · ').replace(/[*_`]/g, ''))}" tabindex="0"><table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></div>`);
       continue;
     }
     if (LIST.test(line)) {

@@ -275,7 +275,9 @@ export class Cut {
       if (fz) { this.show(fz, 0); return true; }
     }
     // the freeze this hold leads into (or the one about to start) waits mounted
-    const k = d && !d.intro ? (d.atHold ? (d.settled ? Math.round(d.pos) : null) : d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe') && this.shown && this.shown.k === d.k ? d.k : null) : null;
+    // (as soon as the director is slowing inside the window, d.calm: the sheet's first raster is done on the way in,
+    // not when the next scroll starts)
+    const k = d && !d.intro ? (d.atHold ? (d.settled || d.calm ? Math.round(d.pos) : null) : d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe') && this.shown && this.shown.k === d.k ? d.k : null) : null;
     const fz = k != null ? this.cache.get(this.key(k, layout)) : null;
     if (fz) { this.prime(fz); return false; }
     this.hide();

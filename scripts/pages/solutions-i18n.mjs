@@ -41,7 +41,7 @@ export const SOL = {
       ['Buning uchun bizdan nima kerak?', '{needs}.'],
     ],
     faqGroup: [
-      ['{t} qancha turadi?', 'Bu guruhdagi yechimlarning MVP versiyasi {usd} ({uzs}), toʻliq versiyasi {fusd}gacha. Aniq narx tanlangan yechim, integratsiyalar va hajmga bogʻliq.'],
+      ['{t} qancha turadi?', 'Bu guruhdagi yechimlarning MVP versiyasi {usd} ({uzs}), toʻliq versiyaning eng yuqori narxi {fusd}. Aniq narx tanlangan yechim, integratsiyalar va hajmga bogʻliq.'],
       ['Qancha vaqtda tayyor boʻladi?', 'MVP {weeks}, toʻliq versiya {fweeks}.'],
       ['Buning uchun bizdan nima kerak?', '{needs}.'],
     ],

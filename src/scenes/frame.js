@@ -128,7 +128,11 @@ export class Film {
     // materials
     const U = st.U, sU = st.mat.steelU, Mt = st.mat, P = st.parts;
     const reveal = lerp(A.reveal, B.reveal, e.mat), isRev = reveal < 0.999;
-    const front = lerp(A.front || 0, B.front || 0, e.mat), polishFront = lerp(A.polishFront, B.polishFront, e.mat);
+    // the wipe front stays lit while it travels (the prototype's uFront 1 for every reveal < 1, §4.1 frame 02) and goes
+    // out over the last 4 % to the tip; mixed with the reveal itself, only a third of it was left at 3 s (G1 r2)
+    const fr0 = Math.max(A.front || 0, B.front || 0);
+    const front = isRev && fr0 > 0 ? fr0 * Math.min(1, Math.max(0, (1 - reveal) / 0.04)) : lerp(A.front || 0, B.front || 0, e.mat);
+    const polishFront = lerp(A.polishFront, B.polishFront, e.mat);
     U.uReveal.value = isRev ? reveal : 2; U.uFront.value = front;
     sU.uPolishFront.value = polishFront;
     const lean = /^(intro|mei\.|bookend\.)/.test(H.name);
