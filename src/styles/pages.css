@@ -6,6 +6,7 @@
 @import './gen/tokens.css';
 @import './lang.css';
 @import './gen/hamon.css';
+@import './blog.css';
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: var(--washi); scroll-padding-top: 96px; }

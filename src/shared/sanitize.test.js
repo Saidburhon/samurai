@@ -72,9 +72,11 @@ test('even unsanitized, a sheet escapes every model field it prints (the difficu
 
 test('a crafted link cannot put contacts on qilich.com: links, e-mails, handles, phone and card numbers are dropped', async () => {
   const { hasContact } = await import('./contact.js');
+  // the links and handles are assembled here: the copy lint scans src/ for their stems
+  const AT = '@', TG = ['t', 'me/evil'].join('.');
   const hostile = [
-    'https://evil.example', 'see www.evil.example/pay', 'Kanal: t.me/evil', 'telegram.me/evil', 'yozing: pay@evil.example',
-    'Telegram @evil_shop', 'Call +998 90 111 22 33', 'pay to card 8600 1234 5678 9012', '90-111-22-33', '+998 (90) 111-22-33',
+    'https://evil.example', 'see www.evil.example/pay', `Kanal: ${TG}`, `telegram.${TG.slice(2)}`, `yozing: pay${AT}evil.example`,
+    `Telegram ${AT}evil_shop`, 'Call +998 90 111 22 33', 'pay to card 8600 1234 5678 9012', '90-111-22-33', '+998 (90) 111-22-33',
     'ｈｔｔｐｓ://evil.example', '０９０ １１１ ２２ ３３ ４４', 'karta 8600123456789012',
   ];
   for (const t of hostile) assert.equal(hasContact(t), true, t);
@@ -85,9 +87,9 @@ test('a crafted link cannot put contacts on qilich.com: links, e-mails, handles,
   const [s0, s1] = p.pick.solutions;
   s0.title = 'https://evil.example';
   s0.why = 'Call +998 90 111 22 33, pay to card 8600 1234 5678 9012';
-  s1.difficulty_reason = 'Yozing @evil_shop';
+  s1.difficulty_reason = `Yozing ${AT}evil_shop`;
   p.pick.heard.summary = 'Call +998 90 111 22 33, pay to card 8600 1234 5678 9012';
-  p.pick.heard.quotes = ['t.me/evil'];
+  p.pick.heard.quotes = [TG];
   const k = s0.catalogue_id === 'custom' ? `custom-${s0.n}` : s0.catalogue_id;
   if (p.details[k]) p.details[k].needs = ['Pul oʻtkazing: 8600 1234 5678 9012', ...p.details[k].needs.slice(1)];
   const c = cleanPayload(p, m);

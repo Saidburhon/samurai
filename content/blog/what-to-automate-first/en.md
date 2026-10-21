@@ -5,7 +5,7 @@ title: "What to automate first in a small business"
 description: "Where to start with automation: find the repetitive work, rank it by cost and risk, and don't pay for software where a spreadsheet will do."
 date: 2026-10-21
 tags: [automation, small-business, telegram, payments, 1c]
-related: [telegram, backend, ai]
+related: [telegram, business, ai]
 reading_minutes: 8
 ---
 

@@ -5,7 +5,7 @@ title: "Что автоматизировать в малом бизнесе в 
 description: "С чего начать автоматизацию: как найти повторяющуюся работу, расставить приоритеты и не платить за программу там, где хватит таблицы."
 date: 2026-10-21
 tags: [automation, small-business, telegram, payments, 1c]
-related: [telegram, backend, ai]
+related: [telegram, business, ai]
 reading_minutes: 8
 ---
 

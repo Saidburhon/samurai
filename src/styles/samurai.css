@@ -117,8 +117,12 @@ html[lang] .sam.has-result h1 { font-size: 26px; max-width: none; }
 .broken p { max-width: 30em; }
 .broken .acts { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 24px; }
 .broken .acts a { box-shadow: inset 0 -1px 0 var(--line); }
-.desk.nb { grid-column: 1 / span 7; padding-top: 8px; }
-.rtop > .nb-plate { grid-column: 8 / -1; margin: -24px 0 0; }
+.desk.nb { grid-column: 1 / span 6; padding-top: 8px; }
+/* the empty appraisal form at the poster's own scale (its words at 13 px): beside the line on a wide desk, under it
+   below 1440 px, gone on a phone */
+.rtop > .nb-plate { grid-column: 7 / -1; margin: -24px 0 0 -24px; }
+.rtop > .nb-plate svg { width: 640px; max-width: none; }
+@media (max-width: 1439px) { .result > .rtop:has(> .desk.nb) { display: block; } .rtop > .nb-plate { margin: 40px 0 0 -24px; } }
 .nb-line { font-weight: 300; font-size: clamp(21px, calc(26 * var(--fit)), 26px); line-height: 1.4; letter-spacing: -.01em; max-width: 26em; outline: none; text-wrap: pretty; }
 .desk.nb .tlink { margin-top: 18px; font-size: 15px; }
 
@@ -200,7 +204,9 @@ html[lang] .sam.has-result h1 { font-size: 26px; max-width: none; }
 .needs input:checked + .t::after { content: ""; position: absolute; left: -2px; right: -2px; top: 55%; height: 1.4px; background: var(--sumi); opacity: .7; transform: rotate(-1.2deg); }
 .impact p { margin-top: 6px; }
 .formula { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 26px; line-height: 2.1; }
-.formula label { white-space: nowrap; }
+/* a question and its number: on one line when it fits, else the words wrap and the number moves under them (a long
+   label never runs past the column: it overflowed a phone screen by 330 px with every row open) */
+.formula label { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; max-width: 100%; }
 .res.verdict { margin-top: 2px; }
 .formula input { width: 6.5em; padding: 0 2px 1px; border: 0; border-bottom: 1px solid rgba(15, 14, 12, .5); background: transparent; font: 400 15px/1.3 var(--mono); font-stretch: 87.5%; font-variant-numeric: tabular-nums; text-align: right; border-radius: 0; }
 .formula input.assumed { border-bottom-style: dotted; }

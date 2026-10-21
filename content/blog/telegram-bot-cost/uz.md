@@ -79,7 +79,7 @@ Savollarning koʻpchiligi takrorlanadigan boʻlsa, tugmalar va “Koʻp beriladi
 Telegram Bot API dan foydalanishning oʻzi bepul, lekin ishlab turgan botning oʻz xarajatlari bor. Bot bir oy ishlashi qanchaga tushishini oldindan soʻrang va buni ishlab chiqish narxiga qoʻshib hisoblang.
 
 - **Server.** Oylik toʻlov. Oddiy botga kichik server yetadi; foydalanuvchilar, fayllar va AI soʻrovlari koʻpaygani sari yuklama ham oshadi.
-- **Domen va sertifikat** admin panel uchun. Domen odatda yiliga bir marta toʻlanadi, sertifikatni esa bepul olish mumkin (Let's Encrypt).
+- **Domen va sertifikat** admin panel uchun. Domen odatda yiliga bir marta toʻlanadi, sertifikatni esa bepul olish mumkin (Letʼs Encrypt).
 - **AI.** Qancha ishlatsangiz, shuncha toʻlaysiz. Kutilmagan hisob kelmasligi uchun oylik limit qoʻying.
 - **Toʻlov tizimi komissiyasi.** Uni dasturchi emas, Click, Payme yoki Uzum bilan tuzilgan shartnoma belgilaydi.
 - **Monitoring va zaxira nusxalar.** Bot juma kuni kechqurun javob bermay qolsa, buni mijozlar yozishidan oldin kimdir bilishi kerak.

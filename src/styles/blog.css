@@ -1,0 +1,179 @@
+/* The blog (SOLUTIONS-SPEC §5.2), imported by pages.css: the index is a printed ledger (daftar), a post is a page of
+   a well-set book on the same washi. Geologica for the words, Martian Mono for dates, labels and figures, the one
+   kanji element is the chrome's 記 hakogaki. Hairline rules, no boxes, no shadows, no rounded corners, no cards.
+   Desktop: the text column is columns 3–9 (max 680 px, 18/1.6); the index title sits on columns 3–9 with the topic
+   in the margin and the date and reading time on the right. Phone: one column. */
+
+/* ---------------- the index: a ledger ---------------- */
+.blog-head .meta { color: var(--fg2); }
+.daftar { grid-column: 1 / -1; list-style: none; margin-top: 96px; border-bottom: 1px solid var(--line); }
+.entry { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); padding: 30px 0 34px; border-top: 1px solid var(--line); }
+/* a topic starts with a full ink rule, the way a ledger opens a new heading */
+.entry.first { border-top-color: var(--sumi); }
+.e-side { grid-column: 1 / span 2; grid-row: 1 / span 3; padding-top: 10px; color: var(--fg2); }
+.e-side .cl { display: block; text-transform: lowercase; letter-spacing: .06em; }
+html[lang=ja] .e-side .cl { text-transform: none; font-family: var(--jp); font-size: 14px; letter-spacing: .08em; }
+.e-t { grid-column: 3 / span 7; font-weight: 280; font-size: clamp(26px, calc(34 * var(--fit)), 34px); line-height: 1.12; letter-spacing: -.02em; font-variation-settings: "SHRP" 100; text-wrap: balance; }
+html[lang=ja] .e-t { font-weight: 400; font-size: clamp(21px, calc(26 * var(--fit)), 26px); line-height: 1.45; letter-spacing: .01em; }
+.e-t a { background: var(--hamon-k) no-repeat 0 100% / 0 5px; padding-bottom: 4px; transition: background-size .55s var(--ui); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+/* the whole row opens the post; the title stays the one link a reader and a crawler see */
+.e-t a::after { content: ""; position: absolute; inset: 0; }
+.entry:hover .e-t a, .e-t a:focus-visible { background-size: 100% 5px; }
+.e-d { grid-column: 3 / span 7; margin-top: 12px; max-width: 40em; color: var(--kurogane); text-wrap: pretty; }
+.e-m { grid-column: 10 / span 3; grid-row: 1 / span 2; justify-self: end; display: grid; justify-items: end; align-content: start; gap: 6px; padding-top: 10px; color: var(--fg2); white-space: nowrap; }
+.e-m i { display: none; }
+/* the reading time drawn as a measuring rule: one tick a minute, on the same scale in every row */
+.rule { display: block; width: calc(var(--n) * 7px + 1px); height: 6px; margin-top: 2px; border-bottom: 1px solid currentColor; background: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 7px) 0 100% / 100% 4px no-repeat; opacity: .55; }
+.pg > .feed { grid-column: 3 / span 8; margin-top: 28px; color: var(--fg2); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.feed a { color: var(--sumi); box-shadow: inset 0 -1px 0 var(--line); }
+
+/* ---------------- a post ---------------- */
+.post { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); }
+.post > * { grid-column: 3 / span 7; }
+.post-head { grid-column: 3 / span 8; margin-top: 72px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.pg .post-head h1 { font-weight: 280; font-size: clamp(34px, calc(54 * var(--fit)), 54px); line-height: 1.04; letter-spacing: -.03em; font-variation-settings: "SHRP" 100; text-wrap: balance; max-width: 15em; }
+html[lang=ru] .pg .post-head h1 { font-size: clamp(32px, calc(50 * var(--fit)), 50px); }
+html[lang=ja] .pg .post-head h1 { font-weight: 500; font-size: clamp(26px, calc(40 * var(--fit)), 40px); line-height: 1.38; letter-spacing: .01em; max-width: 19em; }
+.post-head .lede { margin-top: 26px; max-width: 34em; }
+.post-meta { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 12px; color: var(--fg2); }
+.post-meta i { font-style: normal; opacity: .4; }
+
+.prose { margin-top: 48px; max-width: 680px; font-size: 18px; line-height: 1.6; }
+html[lang=ja] .prose { font-size: 17px; line-height: 1.9; letter-spacing: .02em; }
+.prose > * + * { margin-top: 1em; }
+.prose p, .prose li { text-wrap: pretty; }
+.prose h2 { margin-top: 2.1em; font-weight: 300; font-size: clamp(25px, calc(30 * var(--fit)), 30px); line-height: 1.16; letter-spacing: -.018em; font-variation-settings: "SHRP" 100; text-wrap: balance; scroll-margin-top: 96px; }
+.prose h3 { margin-top: 1.7em; font-weight: 460; font-size: 22px; line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; scroll-margin-top: 96px; }
+html[lang=ja] .prose h2 { font-weight: 500; font-size: clamp(22px, calc(26 * var(--fit)), 26px); line-height: 1.45; letter-spacing: .02em; }
+html[lang=ja] .prose h3 { font-weight: 600; font-size: 19px; line-height: 1.5; }
+.prose h2 + *, .prose h3 + * { margin-top: .7em; }
+.prose strong { font-weight: 560; font-variation-settings: "SHRP" 60; }
+.prose em { font-style: italic; }
+.prose a { box-shadow: inset 0 -1px 0 var(--line); background: var(--hamon-k) no-repeat 0 100% / 0 5px; transition: background-size .45s var(--ui), box-shadow .45s var(--ui); }
+.prose a:hover { background-size: 100% 5px; box-shadow: none; }
+.prose code { font: 400 .84em/1 var(--mono); font-stretch: 87.5%; letter-spacing: .02em; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.4em 0; }
+/* lists: a hairline dash, as on the company pages; numbers in mono where the order is real */
+.prose ul, .prose ol { list-style: none; }
+.prose li { position: relative; padding-left: 30px; }
+.prose li + li { margin-top: .5em; }
+.prose li > ul, .prose li > ol { margin-top: .5em; }
+.prose ul > li::before { content: ""; position: absolute; left: 2px; top: .8em; width: 14px; height: 1px; background: currentColor; opacity: .55; }
+.prose ol { counter-reset: n; }
+.prose ol > li { counter-increment: n; }
+.prose ol > li::before { content: counter(n); position: absolute; left: 0; top: .28em; font: 400 13px/1.4 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--fg2); }
+/* tables: ruled with hairlines, figures and labels in mono; on a phone only the table scrolls, its first column stays */
+.tbl { margin-top: 1.6em; overflow-x: auto; overscroll-behavior-x: contain; }
+.tbl:focus-visible { outline-offset: 6px; }
+.tbl table { width: 100%; border-collapse: collapse; font-size: 15.5px; line-height: 1.45; }
+html[lang=ja] .tbl table { font-size: 14.5px; line-height: 1.6; }
+.tbl th, .tbl td { padding: 11px 18px 12px 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+.tbl thead th { border-top: 1px solid var(--sumi); padding-top: 10px; font: 400 12.5px/1.35 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--fg2); }
+.tbl tbody tr:last-child > * { border-bottom: 1px solid var(--line); }
+.tbl tbody th { font-weight: 520; font-variation-settings: "SHRP" 60; }
+.tbl .r { text-align: right; } .tbl .c { text-align: center; }
+.tbl td.mono { font-size: 13px; white-space: nowrap; }
+/* blockquotes: an indented gloss in mono, hung on a vertical hairline */
+.prose blockquote { margin-top: 1.5em; padding: 2px 0 2px 22px; border-left: 1px solid var(--sumi); font: 400 14.5px/1.65 var(--mono); font-stretch: 87.5%; letter-spacing: .01em; color: var(--kurogane); }
+.prose blockquote > * + * { margin-top: .8em; }
+.prose blockquote strong { font-weight: 600; }
+/* a fenced block is a form the reader copies (a weekly report, a brief): set on ruled paper */
+.prose pre.form { margin-top: 1.6em; padding: 0 0 0 22px; border-left: 1px solid var(--sumi); overflow-x: auto; font: 400 14px/28px var(--mono); font-stretch: 87.5%; letter-spacing: .01em; white-space: pre-wrap; color: var(--kurogane);
+  background: repeating-linear-gradient(to bottom, transparent 0 27px, var(--line) 27px 28px) 22px 0 / calc(100% - 22px) 100% no-repeat; }
+.prose pre.form code { font: inherit; }
+
+/* after the text: the solutions it talks about, the SamurAI box, the neighbours */
+.related { grid-column: 3 / span 8; margin-top: 112px; padding-top: 26px; border-top: 1px solid var(--sumi); }
+.related h2, .ai-box h2 { font-weight: 280; font-size: clamp(25px, calc(30 * var(--fit)), 30px); line-height: 1.12; letter-spacing: -.02em; font-variation-settings: "SHRP" 100; }
+html[lang=ja] :is(.related, .ai-box) h2 { font-weight: 500; font-size: 22px; line-height: 1.45; letter-spacing: .02em; }
+.rel-lead { margin-top: 10px; max-width: 40em; font-size: 14px; line-height: 1.5; color: var(--fg2); }
+.rel { list-style: none; margin-top: 28px; }
+.rel-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 32px; row-gap: 6px; padding: 20px 0 22px; border-top: 1px solid var(--line); }
+.rel-t { grid-column: 1; font-weight: 420; font-size: 20px; line-height: 1.25; letter-spacing: -.01em; }
+html[lang=ja] .rel-t { font-weight: 600; font-size: 17px; line-height: 1.5; }
+.rel-t a { box-shadow: inset 0 -1px 0 var(--line); }
+.rel-t a:hover { box-shadow: none; }
+.rel-v { grid-column: 1; max-width: 36em; font-size: 15.5px; line-height: 1.5; color: var(--kurogane); }
+.rel-f { grid-column: 2; grid-row: 1 / span 3; display: grid; gap: 6px; align-content: start; padding-top: 4px; color: var(--fg2); }
+.rel-f div { display: grid; grid-template-columns: 4.6em auto; gap: 10px; }
+.rel-f dt { color: var(--sumi); }
+.rel-f dd { white-space: nowrap; }
+.mb { grid-column: 1; margin-top: 6px; overflow: visible; }
+.mb path { fill: none; stroke: currentColor; stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.mb .mv { opacity: .6; }
+.rel.sc { margin: 1.6em 0 0; border-bottom: 1px solid var(--line); }
+.rel.sc .rel-row { padding-left: 0; }
+.rel.sc .rel-t { margin: 0; }
+.sc-int .mono, .sc-mods .mono { margin-left: 8px; color: var(--fg2); white-space: nowrap; }
+
+.ai-box { grid-column: 3 / span 8; margin-top: 88px; padding: 30px 0 40px; border-top: 1px solid var(--sumi); border-bottom: 1px solid var(--line); display: grid; justify-items: start; gap: 14px; }
+.ai-line { max-width: 32em; font-size: 20px; line-height: 1.45; color: var(--kurogane); text-wrap: pretty; }
+html[lang=ja] .ai-line { font-size: 17px; line-height: 1.8; }
+.ai-pre { max-width: 52em; color: var(--fg2); line-height: 1.6; }
+.ai-box .btn { margin-top: 12px; }
+
+.pn { grid-column: 3 / span 8; margin-top: 72px; display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--g); }
+.pn a { display: grid; gap: 8px; align-content: start; padding: 18px 0 4px; border-top: 1px solid var(--line); }
+.pn a .mono { color: var(--fg2); }
+.pn a b { font-weight: 380; font-size: 18px; line-height: 1.3; text-wrap: balance; background: var(--hamon-k) no-repeat 0 100% / 0 5px; transition: background-size .45s var(--ui); justify-self: start; }
+.pn a:hover b { background-size: 100% 5px; }
+.pn .pn-next { text-align: right; justify-items: end; }
+.pn .pn-next b { justify-self: end; }
+.all { grid-column: 3 / span 8; margin-top: 40px; }
+.all a { box-shadow: inset 0 -1px 0 var(--line); }
+
+/* the breadcrumb of a post ends with its long title: one line on a phone */
+.pg-blog-post .crumbs li:last-child { min-width: 0; }
+.pg-blog-post .crumbs li:last-child span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 46ch; display: block; }
+
+@media (min-width: 1240px) {
+  /* a wide table may use two more columns than the text */
+  .prose .tbl { width: calc(100% + 200px); }
+}
+@media (max-width: 1100px) {
+  .post > *, .post-head, .related, .ai-box, .pn, .all { grid-column: 2 / span 10; }
+  .e-t, .e-d { grid-column: 3 / span 8; }
+  .e-m { grid-column: 11 / span 2; }
+}
+@media (max-width: 760px) {
+  .daftar { margin-top: 56px; }
+  .entry { grid-template-columns: minmax(0, 1fr); padding: 22px 0 26px; }
+  .e-side { grid-column: 1; grid-row: auto; padding: 0 0 10px; }
+  .e-side:empty { display: none; }
+  .e-t, .e-d, .e-m, .pg > .feed { grid-column: 1; }
+  .e-t { font-size: 24px; line-height: 1.16; padding-right: 36px; }
+  html[lang=ja] .e-t { font-size: 19px; }
+  .e-d { font-size: 16px; line-height: 1.5; }
+  .e-m { grid-row: auto; justify-self: start; justify-items: start; display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 0; }
+  .e-m i { display: inline; opacity: .4; font-style: normal; }
+  .rule { margin: 0; }
+  .post > *, .post-head, .related, .ai-box, .pn, .all { grid-column: 1 / -1; }
+  .post { grid-template-columns: minmax(0, 1fr); }
+  .post-head { margin-top: 44px; padding-right: 40px; padding-bottom: 26px; }
+  .pg .post-head h1 { font-size: 30px; line-height: 1.1; }
+  html[lang=ru] .pg .post-head h1 { font-size: 29px; }
+  html[lang=ja] .pg .post-head h1 { font-size: 23px; line-height: 1.45; }
+  .post-head .lede { margin-top: 18px; font-size: 17px; }
+  .prose { margin-top: 36px; font-size: 17px; line-height: 1.62; }
+  html[lang=ja] .prose { font-size: 16px; }
+  .prose h2 { font-size: 24px; }
+  .prose h3 { font-size: 19px; }
+  .tbl { margin-right: calc(-1 * var(--m)); padding-right: var(--m); }
+  .tbl table { min-width: 560px; font-size: 14.5px; }
+  .tbl tbody th { position: sticky; left: 0; z-index: 1; background: var(--washi); padding-right: 14px; max-width: 42vw; }
+  .related { margin-top: 80px; }
+  .rel-row { grid-template-columns: minmax(0, 1fr); }
+  .rel-f { grid-column: 1; grid-row: auto; margin-top: 6px; }
+  .rel-f dd { white-space: normal; }
+  .ai-box { margin-top: 64px; }
+  .ai-line { font-size: 18px; }
+  .ai-box .btn { width: 100%; justify-content: center; height: 48px; }
+  .pn { grid-template-columns: minmax(0, 1fr); margin-top: 56px; }
+  .pn .pn-next { text-align: left; justify-items: start; }
+  .pn .pn-next b { justify-self: start; }
+  .pg-blog-post .crumbs li:last-child span { max-width: 52vw; }
+}
+@media print {
+  .ai-box, .pn, .all, .feed { display: none !important; }
+  .prose { max-width: none; }
+}

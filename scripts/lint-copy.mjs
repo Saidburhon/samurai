@@ -68,6 +68,25 @@ if (existsSync('content/samurai-samples.json')) {
   for (const [lang, list] of Object.entries(S.samples || {})) for (const x of strings(list)) checkText(`samurai-samples ${lang}`, x, OPT(lang));
 }
 for (const f of ['public/404.html']) if (existsSync(f)) for (const t of visible(readFileSync(f, 'utf8'))) checkText(f, t);
+// the blog: every post (front matter and Markdown, per its language) and the blog's own words (scripts/pages/blog-i18n.mjs)
+{
+  const { B } = await import('./pages/blog-i18n.mjs');
+  for (const [lang, d] of Object.entries(B)) for (const [k, v] of Object.entries(d)) for (const x of strings(v)) checkText(`blog-i18n ${lang}.${k}`, x, OPT(lang));
+  for (const dir of ['content/blog', 'content/blog-ja']) {
+    if (!existsSync(dir)) continue;
+    for (const id of readdirSync(dir)) {
+      if (!statSync(join(dir, id)).isDirectory()) continue;
+      for (const f of readdirSync(join(dir, id)).filter((n) => /^[a-z]{2}\.md$/.test(n))) {
+        const lang = f.slice(0, 2);
+        // code spans and fenced forms are text too; a line at a time, so the message points at it
+        // a table row is checked a cell at a time (a lone "—" in a cell means "none", as on the page)
+        readFileSync(join(dir, id, f), 'utf8').split('\n').forEach((line, i) => {
+          for (const part of /^\s*\|/.test(line) ? line.split('|') : [line]) if (part.trim()) checkText(`${dir}/${id}/${f}:${i + 1}`, part.trim(), OPT(lang));
+        });
+      }
+    }
+  }
+}
 
 // ---- the built site (npm run lint) ----
 if (built) {

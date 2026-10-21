@@ -5,7 +5,7 @@ title: "Kichik biznesda birinchi navbatda nimani avtomatlashtirish kerak"
 description: "Avtomatlashtirishni qayerdan boshlash kerak: takroriy ishlarni topish, ularni muhimligiga qarab saralash va jadval yetadigan joyda dasturga pul sarflamaslik."
 date: 2026-10-21
 tags: [automation, small-business, telegram, payments, 1c]
-related: [telegram, backend, ai]
+related: [telegram, business, ai]
 reading_minutes: 8
 ---
 

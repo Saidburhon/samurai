@@ -115,7 +115,7 @@ Sayt ishga tushgandan keyin ham pul talab qiladi. Pudratchidan bu xarajatlarni y
 
 - **Domen.** .uz zonasidagi domen akkreditatsiyalangan registrator orqali roʻyxatdan oʻtkaziladi, uning muddatini esa oʻz vaqtida uzaytirib turish kerak. Domenni oʻz kompaniyangiz nomiga rasmiylashtiring, registrator kabinetiga kirish sizda boʻlsin. Muddati oʻtgan domen — ishlamay qolgan sayt va pochta degani.
 - **Hosting.** Landing va korporativ saytga arzon hosting yetadi, 1C bilan almashinadigan doʻkonga alohida server yoki bulut kerak. Sayt mijozlarning shaxsiy maʼlumotlarini yigʻsa, ular Oʻzbekistondagi serverlarda saqlanishi shart. Bundan tashqari, mahalliy foydalanuvchilarga bunday sayt odatda tezroq ochiladi.
-- **SSL sertifikati.** HTTPS boʻlmasa, brauzer saytni xavfsiz emas deb belgilaydi. Bepul sertifikatlar (masalan, Let's Encrypt) avtomatik uzaytiriladi, lekin avtomatik uzaytirish ishlayotganini kimdir kuzatib turishi kerak.
+- **SSL sertifikati.** HTTPS boʻlmasa, brauzer saytni xavfsiz emas deb belgilaydi. Bepul sertifikatlar (masalan, Letʼs Encrypt) avtomatik uzaytiriladi, lekin avtomatik uzaytirish ishlayotganini kimdir kuzatib turishi kerak.
 - **Zaxira nusxalar.** Har kuni, sayt turgan serverdan boshqa joyda. Hech boʻlmasa bir marta saytni nusxadan haqiqatan tiklab koʻring.
 - **Yangilanishlar.** CMS, plaginlar va serverni yangilab turish kerak: bir yil hech kim tegmagan sayt buzgʻunchilar uchun oson nishon.
 - **Mayda tuzatishlar.** Yangi sahifa, Navroʻz banneri, telefon raqamini almashtirish. Oldindan kelishib oling: oyiga soatlar paketi yoki har bir vazifa uchun alohida toʻlov.
