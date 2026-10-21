@@ -10,29 +10,14 @@ import { enrichSolution, plan, defaultSelection } from '../../src/shared/price.j
 import { usd as fUsd, uzs as fUzs, weeks as fWeeks } from '../../src/shared/format.js';
 import { LANGS, HOME, pathOf, site } from '../site.mjs';
 import { SOL } from './solutions-i18n.mjs';
+import { postLinks } from './blog-feed.mjs';
 import { view, rowsFile, renderCatalogue, renderGroup, renderSolution, renderPrices, metaSolution, metaGroup, metaCatalogue, metaPrices, groupFacts, groupUrl, PRICES } from './solutions.mjs';
 
 const J = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
-// the blog posts that exist as built pages, per language, with the solutions they name (front matter `related`)
-function blogPosts() {
-  const out = Object.fromEntries(LANGS.map((l) => [l, []]));
-  if (!existsSync('content/blog')) return out;
-  for (const dir of readdirSync('content/blog')) {
-    for (const lang of LANGS) {
-      const f = `content/blog/${dir}/${lang}.md`;
-      if (!existsSync(f)) continue;
-      const fm = (readFileSync(f, 'utf8').match(/^---\n([\s\S]*?)\n---/) || [])[1] || '';
-      if (/^draft:\s*true/m.test(fm)) continue;
-      const slug = (fm.match(/^slug:\s*"?([^"\n]+)"?/m) || [])[1]?.trim() || dir;
-      const title = (fm.match(/^title:\s*"?(.*?)"?\s*$/m) || [])[1];
-      const related = ((fm.match(/^related:\s*\[([^\]]*)\]/m) || [])[1] || '').split(',').map((x) => x.trim()).filter(Boolean);
-      const url = pathOf(lang, `blog/${slug}`);
-      if (title && related.length && existsSync(`public${url}index.html`)) out[lang].push({ title, related, url });
-    }
-  }
-  return out;
-}
+// the blog posts per language with every catalogue id they name (front matter `related` plus their {{solution:…}} and
+// {{prices:group=…}} shortcodes), content/blog and content/blog-ja, from the blog's own loader (scripts/pages/blog-feed.mjs)
+const blogPosts = () => postLinks();
 
 export function buildSolutions({ assets, page, t, plates, jaPhrases }) {
   const cat = J('content/solutions.json');

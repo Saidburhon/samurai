@@ -48,7 +48,7 @@ html.clocks-live .nav .clocks { visibility: visible; }
 .links a { padding: 6px 0; background: var(--hamon-k) no-repeat 0 100% / 0 5px; transition: background-size .45s var(--ui); }
 .links a:hover, .links a[aria-current] { background-size: 100% 5px; }
 .lang { display: flex; gap: 2px; font: 400 13px/1 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; }
-.lang a { padding: 6px 6px; opacity: .45; position: relative; transition: opacity .3s var(--ui); }
+.lang a { padding: 6px 6px; opacity: .64; position: relative; transition: opacity .3s var(--ui); } /* 5.4:1 on washi (AA) */
 .lang a:hover { opacity: .8; }
 .lang a[aria-current] { opacity: 1; }
 .lang a[aria-current]::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 3px; height: 3px; margin-left: -1.5px; background: currentColor; border-radius: 50%; }
@@ -202,6 +202,17 @@ html[lang=ja] .fld label { font-family: var(--sans); font-size: 14px; letter-spa
    only there and after 、。, in every browser, so no まと／める, 取り／扱い or お問い／合わせ (a phrase wider than its
    line still breaks: overflow-wrap on the body) */
 html[lang=ja] main :is(h1, h2, h3, p, li, dt, dd, label, figcaption, .c-note):has(wbr) { word-break: keep-all; }
+
+/* the bar's language links show their codes below 1600 px, as on the landing (critical.css), so the clocks keep their
+   distance from the section links (B2c: at 1440 the names left 13 px); the name stays each link's accessible name,
+   visually hidden rather than display: none (the code is aria-hidden, so the link would have no name) */
+@media (max-width: 1599px) {
+  .nav > .lang .nm { display: inline; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .nav > .lang .cd { display: inline; }
+}
+/* the clocks keep 28 px or more from the section links (bar sweep 1101–1600 px, uz/ru/en/ja): the Uzbek links reach
+   them below 1240 px, so the bar drops its decorative clocks there (lang.css drops them below 1180) */
+@media (max-width: 1239px) { header.nav p.clocks { display: none; } }
 
 /* ---------------- narrow desktops and tablets ---------------- */
 @media (max-width: 1100px) {

@@ -132,7 +132,9 @@ function blocks(lines, opt, ctx, base) {
       const th = head.map((c, k) => `<th scope="col"${al(k)}>${inline(c, opt, w)}</th>`).join('');
       const tb = rows.map((r) => `<tr>${head.map((_, k) => (k === 0 ? `<th scope="row">${inline(r[k] || '', opt, w)}</th>` : `<td${al(k)}>${inline(r[k] || '', opt, w)}</td>`)).join('')}</tr>`).join('');
       // the scrollable region's name: the page's word for a table (header cells may hold another language's words)
-      out.push(`<div class="tbl" role="region" aria-label="${escHtml(opt.tableLabel || head.filter(Boolean).join(' · ').replace(/[*_`]/g, ''))}" tabindex="0"><table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></div>`);
+      // a table of three or more columns keeps its width on a phone and scrolls (with a cue); two columns wrap in place
+      const wide = head.length > 2;
+      out.push(`<div class="tbl${wide ? ' wide' : ''}" role="region" aria-label="${escHtml(opt.tableLabel || head.filter(Boolean).join(' · ').replace(/[*_`]/g, ''))}" tabindex="0"${wide && opt.tableCue ? ` data-cue="${escHtml(opt.tableCue)}"` : ''}><table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></div>`);
       continue;
     }
     if (LIST.test(line)) {

@@ -22,6 +22,7 @@ import { usd, uzs, weeks, dateNum, NB, plForm } from '../../src/shared/format.js
 import { convert, frontMatter, MdError } from './blog-md.mjs';
 import { B } from './blog-i18n.mjs';
 import { BLOG_SRC, blogIndex, feedPath } from './blog-feed.mjs';
+import { typeset, typeText } from './blog-type.mjs';
 
 const J = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -61,11 +62,15 @@ function target(C, id, lang) {
 }
 
 // ---- figures, as the catalogue prints them --------------------------------------------------------------------------
-function money(C, r, lang) {
-  if (lang === 'ja') return usd(r, lang);
+function moneyParts(C, r, lang) {
+  if (lang === 'ja') return [usd(r, lang)];
   const s = uzs(uzsRange(r, C.rate.uzs_per_usd), lang), d = usd(r, lang);
-  return lang === 'en' ? `${d} · ${s}` : `${s} · ${d}`;
+  return lang === 'en' ? [d, s] : [s, d];
 }
+const money = (C, r, lang) => moneyParts(C, r, lang).join(' · ');
+// a figure line: each value whole on its line (a nowrap span), the dot bound to the value before it, so a phone line
+// never starts with «·» and «млн сум» never leaves its number
+const fig = (...v) => v.map((x) => `<span class="fg">${x}</span>`).join(`${NB}· `);
 const pick = (o, lang) => (o ? o[lang] ?? o.en ?? o.uz ?? '' : '');
 
 // the micro blade: one scale for every glyph in the blog (length = the full version's top weeks), a tick at the
@@ -84,7 +89,7 @@ function solutionRow(C, s, lang, tag = 'h3') {
   return `<li class="rel-row" data-id="${s.id}">
   <${tag} class="rel-t"><a class="u" href="${tg.href}">${esc(pick(s.title, lang))}</a></${tag}>
   <p class="rel-v">${esc(pick(s.oneliner, lang))}</p>
-  <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${weeks(s.mvp.weeks, lang)} · ${money(C, s.mvp.usd, lang)}</dd></div><div><dt>${L('full')}</dt><dd>${weeks(s.full.weeks, lang)} · ${money(C, s.full.usd, lang)}</dd></div></dl>
+  <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${fig(weeks(s.mvp.weeks, lang), ...moneyParts(C, s.mvp.usd, lang))}</dd></div><div><dt>${L('full')}</dt><dd>${fig(weeks(s.full.weeks, lang), ...moneyParts(C, s.full.usd, lang))}</dd></div></dl>
   ${blade(s)}
 </li>`;
 }
@@ -116,7 +121,7 @@ function groupRow(C, gid, lang) {
   return `<li class="rel-row rel-g" data-group="${gid}">
   <h3 class="rel-t"><a class="u" href="${tg.href}">${esc(pick(g.title, lang))}</a></h3>
   <p class="rel-v">${esc(line)}</p>
-  <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${fromWeeks(minW, lang)} · ${fromMoney(C, minU, lang)}</dd></div><div><dt>${L('inCat')}</dt><dd>${plForm(L('solutions'), all.length, lang).replace('{n}', all.length)}</dd></div></dl>
+  <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${fig(fromWeeks(minW, lang), fromMoney(C, minU, lang))}</dd></div><div><dt>${L('inCat')}</dt><dd>${plForm(L('solutions'), all.length, lang).replace('{n}', all.length)}</dd></div></dl>
 </li>`;
 }
 
@@ -125,7 +130,8 @@ function shortcodes(C, lang, post) {
   const L = (k) => b(lang, k);
   const sol = (id, where) => { const s = C.model.byId.get(id); if (!s) throw new MdError(`${where}: unknown solution id «${id}»`); return s; };
   const kv = (args) => Object.fromEntries(args.split(/[\s,]+/).filter(Boolean).map((p) => p.split('=')));
-  const table = (head, rows) => `<div class="tbl" role="region" tabindex="0" aria-label="${esc(L('table'))}"><table><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c) => `<td class="mono">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  // an empty column head still names its column (visually hidden), for a screen reader's table navigation
+  const table = (head, rows, first) => `<div class="tbl${head.length > 2 ? ' wide' : ''}" role="region" tabindex="0" aria-label="${esc(L('table'))}"${head.length > 2 ? ` data-cue="${esc(L('cue'))}"` : ''}><table><thead><tr>${head.map((h, k) => `<th scope="col">${h || (k === 0 && first ? `<span class="vh">${first}</span>` : '')}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c) => `<td class="mono">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   return (name, args, { where, inline }) => {
     if (name === 'solution') {
       const s = sol(args, where);
@@ -140,12 +146,12 @@ function shortcodes(C, lang, post) {
         post.links.add(o.group);
         const rows = C.model.solutions.filter((s) => s.group === o.group && s.billing !== 'monthly')
           .map((s) => [`<a class="u" href="${target(C, s.id, lang).href}">${esc(pick(s.title, lang))}</a>`, weeks(s.mvp.weeks, lang), money(C, s.mvp.usd, lang), weeks(s.full.weeks, lang), money(C, s.full.usd, lang)]);
-        return table(['', `${L('mvp')}`, '', L('full'), ''], rows);
+        return table(['', `${L('mvp')}`, '', L('full'), ''], rows, L('solCol'));
       }
       if (args === 'monthly') {
         const rows = Object.entries(C.model.pricing.monthly_default).filter(([g]) => C.model.groups[g])
           .map(([g, r]) => [esc(pick(C.model.groups[g].title, lang)), money(C, r, lang)]);
-        return table(['', lang === 'uz' ? 'Oyiga' : lang === 'ru' ? 'В месяц' : lang === 'ja' ? '月額' : 'Per month'], rows);
+        return table(['', lang === 'uz' ? 'Oyiga' : lang === 'ru' ? 'В месяц' : lang === 'ja' ? '月額' : 'Per month'], rows, L('groupCol'));
       }
       throw new MdError(`${where}: unknown prices shortcode «${args}»`);
     }
@@ -153,7 +159,8 @@ function shortcodes(C, lang, post) {
       const it = C.model.integrations[args];
       if (!it) throw new MdError(`${where}: unknown integration id «${args}»`);
       const add = `+${weeks(it.add_weeks, lang)} · +${money(C, it.add_usd, lang)}`;
-      return inline ? `${esc(it.name)} (${add})` : `<p class="sc-int"><b>${esc(it.name)}</b> ${esc(pick(it.what, lang))} <span class="mono">${add}</span></p>`;
+      const mp = moneyParts(C, it.add_usd, lang);
+      return inline ? `${esc(it.name)} (${add})` : `<p class="sc-int"><b>${esc(it.name)}</b> ${esc(pick(it.what, lang))} <span class="mono">${fig(`+${weeks(it.add_weeks, lang)}`, `+${mp[0]}`, ...mp.slice(1))}</span></p>`;
     }
     if (name === 'modifiers') {
       const rows = Object.values(C.model.modifiers).map((m) => {
@@ -221,7 +228,7 @@ function load(C) {
         if (data.industry && !C.model.industries[data.industry]) bad(`industry «${data.industry}» is not in the catalogue`);
         const meta = order[`${dir}/${id}`] || { n: 999, cluster: data.cluster };
         posts.push({
-          key: `${dir}/${id}`, lang, file, slug: data.slug, title: data.title, description: data.description,
+          key: `${dir}/${id}`, lang, file, slug: data.slug, title: typeText(data.title, lang), description: typeText(data.description, lang),
           date: data.date, updated: data.updated && data.updated !== data.date ? data.updated : null, related,
           industry: data.industry || null, tags: data.tags || [], minutes: Number(data.reading_minutes) || 0,
           cluster: data.cluster || meta.cluster || null, n: meta.n, body, bodyLine, path: `${blogIndex(lang)}${data.slug}/`, links: new Set(),
@@ -268,7 +275,7 @@ function renderPost(C, p, ctx) {
   // the micro blades of one page share one scale: the longest full version among the solutions it shows
   const shown = [...p.related, ...[...p.body.matchAll(/\{\{\s*solution:([\w-]+)/g)].map((m) => m[1])].map((id) => C.model.byId.get(id)).filter(Boolean);
   SCALE = Math.max(8, ...shown.map((s) => s.full.weeks[1]));
-  const conv = convert(p.body, { file: p.file, line: p.bodyLine, link, shortcode: shortcodes(C, lang, p), tableLabel: L('table') });
+  const conv = convert(p.body, { file: p.file, line: p.bodyLine, link, shortcode: shortcodes(C, lang, p), tableLabel: L('table'), tableCue: L('cue') });
   // consecutive {{solution:…}} sheets read as one ruled list
   conv.html = conv.html.replace(/<\/ul>\n<ul class="rel sc">/g, '');
   const mins = minutesOf(p, conv);
@@ -276,14 +283,14 @@ function renderPost(C, p, ctx) {
     `<span>${L('published')} ${time(p.date, lang)}</span>`,
     p.updated ? `<span>${L('updated')} ${time(p.updated, lang)}</span>` : '',
     `<span>${fill(L('read'), { n: mins })}</span>`,
-    `<span>${ctx.author.name[lang] || L('by')}</span>`,
+    `<span><a class="u" href="${pathOf(lang, 'about')}">${ctx.author.name[lang] || L('by')}</a></span>`,
   ].filter(Boolean).join('<i aria-hidden="true">·</i>');
   const rel = p.related.map((id) => (C.model.groups[id] ? groupRow(C, id, lang) : solutionRow(C, C.model.byId.get(id), lang))).join('\n');
   for (const id of p.related) p.links.add(id);
   // the index's order, top to bottom: the entry above is the previous article, the one below the next
   const i = ctx.list.indexOf(p), prev = ctx.list[i - 1], next = ctx.list[i + 1];
   const pn = (q, k, rel2) => (q ? `<a class="pn-${k}" href="${q.path}" rel="${rel2}"><span class="mono">${L(k)}</span><b>${esc(q.title)}</b></a>` : '<span></span>');
-  const main = markUz(`<article class="post" aria-labelledby="post-h">
+  const main = markUz(typeset(`<article class="post" aria-labelledby="post-h">
   <header class="post-head">
     <h1 id="post-h">${esc(p.title)}</h1>
     <p class="lede">${esc(p.description)}</p>
@@ -300,7 +307,7 @@ ${conv.html}
   ${p.inlineBox ? '' : aiBox(C, lang, p)}
   <nav class="pn" aria-label="${esc(L('pn'))}">${pn(prev, 'prev', 'prev')}${pn(next, 'next', 'next')}</nav>
   <p class="all mono"><a class="u" href="${blogIndex(lang)}">${L('all')}</a></p>
-</article>`, lang);
+</article>`, lang), lang);
   const url = abs(p.path);
   const article = {
     '@type': 'BlogPosting', '@id': `${url}#article`, headline: p.title, description: p.description,
@@ -323,8 +330,11 @@ ${conv.html}
 function renderIndex(C, lang, list, mins) {
   const L = (k) => b(lang, k);
   const clusters = B[lang].clusters || {};
-  let last = null;
+  let last = null, lastDate = null;
   const rows = list.map((p) => {
+    // the date where it changes, as a ledger writes it: the rows of one day share the first row's date
+    const day = p.date !== lastDate ? `${time(p.date, lang)}<i aria-hidden="true">·</i>` : '';
+    lastDate = p.date;
     const c = p.cluster && clusters[p.cluster] ? p.cluster : null;
     const mark = c && c !== last ? `<span class="cl">${clusters[c]}</span>` : '';
     last = c;
@@ -332,10 +342,10 @@ function renderIndex(C, lang, list, mins) {
   <p class="e-side mono">${mark}</p>
   <h2 class="e-t"><a href="${p.path}">${esc(p.title)}</a></h2>
   <p class="e-d">${esc(p.description)}</p>
-  <p class="e-m mono">${time(p.date, lang)}<i aria-hidden="true">·</i><span>${fill(L('read'), { n: mins.get(p) })}</span><span class="rule" style="--n:${mins.get(p)}" aria-hidden="true"></span></p>
+  <p class="e-m mono">${day}<span>${fill(L('read'), { n: mins.get(p) })}</span><span class="rule" style="--n:${mins.get(p)}" aria-hidden="true"></span></p>
 </li>`;
   }).join('\n');
-  return markUz(`<header class="pg-head blog-head">
+  return markUz(typeset(`<header class="pg-head blog-head">
     <h1>${L('h1')}</h1>
     <p class="lede">${L('lede')}</p>
     <p class="meta mono">${fill(L('count'), { n: list.length })}</p>
@@ -343,7 +353,7 @@ function renderIndex(C, lang, list, mins) {
   <ol class="daftar">
 ${rows}
   </ol>
-  <p class="feed mono"><a class="u" href="${feedPath(lang)}" type="application/rss+xml">${L('rss')}</a> <span>${L('rssLabel')}</span></p>`, lang);
+  <p class="feed mono"><a class="u" href="${feedPath(lang)}" type="application/rss+xml">${L('rssLabel')}</a></p>`, lang), lang);
 }
 
 // RFC 822 dates for RSS, at noon Tashkent time so the day never shifts

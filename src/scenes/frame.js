@@ -309,7 +309,8 @@ export class Film {
       if (s.style.opacity !== op) s.style.opacity = op;
       if (s.style.zIndex !== z) s.style.zIndex = z;
     }
-    this.colours(d);
+    // (a frame the GL draws ahead of the page, d.gl, leaves the page's colours to the page's own state)
+    if (!d.gl) this.colours(d);
     this.dial(A, B, e, d);
     // the plaster's raking light and the dial's engraving follow the sun: exact at a hold, in 5° steps between holds
     // (each step re-rasterises the plaster and the dial)

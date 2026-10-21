@@ -257,8 +257,16 @@ function faqBlock(V, qa) {
   return `<section class="row faq" aria-labelledby="faq-h"><h2 id="faq-h">${esc(V.T.faq)}</h2><div class="row-body"><dl class="qa">${qa.map(([q, a]) => `<div><dt>${esc(q)}</dt><dd>${esc(a)}</dd></div>`).join('')}</dl></div></section>`;
 }
 const faqLd = (url, qa) => ({ '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: qa.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
-function postsBlock(V, ids) {
-  const list = V.posts[V.lang].filter((p) => p.related.some((r) => ids.includes(r))).slice(0, 4);
+// the posts about this page: those that name the page's own id first (`own`), then those about its group or its
+// solutions, the latter rotated by `turn` (a solution's place in its group) so each post is linked from some page
+function postsBlock(V, ids, own = ids, turn = 0) {
+  const all = V.posts[V.lang].filter((p) => p.related.some((r) => ids.includes(r)));
+  // a post that prints this page's figures (a shortcode) first, then by how early it names the page in `related`
+  const rank = (p) => (p.named?.some((r) => ids.includes(r)) ? 0 : 10) + Math.min(...own.map((r) => (p.related.includes(r) ? p.related.indexOf(r) : 9)));
+  const first = all.filter((p) => p.related.some((r) => own.includes(r))).sort((a, b) => rank(a) - rank(b));
+  const rest = all.filter((p) => !first.includes(p));
+  const k = rest.length ? turn % rest.length : 0;
+  const list = [...first, ...rest.slice(k), ...rest.slice(0, k)].slice(0, 4);
   if (!list.length) return '';
   return `<section class="row posts" aria-labelledby="po-h"><h2 id="po-h">${esc(V.T.posts)}</h2><div class="row-body"><ul class="list">${list.map((p) => `<li><a class="u" href="${p.url}">${esc(p.title)}</a></li>`).join('')}</ul></div></section>`;
 }
@@ -289,7 +297,7 @@ export function renderGroup(gid, V) {
   <div class="register reg-group">${chapter(gid, V, { open: true, head: false, full: true })}</div>
   <section class="row" aria-labelledby="rs-h"><h2 id="rs-h">${esc(T.dl.raises)}</h2><div class="row-body">${raises(V, gid, sols)}<p class="fine"><a class="u" href="${PRICES[lang]}">${esc(T.pricesCrumb)}</a></p></div></section>
   ${faqBlock(V, qa)}
-  ${postsBlock(V, sols.map((s) => s.id))}
+  ${postsBlock(V, [gid, ...sols.map((s) => s.id)], [gid])}
   ${tray(V)}
   ${pageData(V)}`;
   const list = { '@type': 'ItemList', '@id': `${url}#list`, name: V.gTitle(gid), numberOfItems: sols.length, itemListElement: sols.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(solutionUrl(s, lang)) })) };
@@ -361,7 +369,7 @@ export function renderSolution(s, V) {
   ${mon ? '' : `<section class="row" aria-labelledby="rs-h"><h2 id="rs-h">${esc(T.dl.raises)}</h2><div class="row-body">${raises(V, s.group, [s])}</div></section>`}
   ${faqBlock(V, qa)}
   ${rel.length ? `<section class="row rel" aria-labelledby="rl-h"><h2 id="rl-h">${esc(next.length ? T.next : T.related)}</h2><div class="row-body"><ul class="rel-list">${rel.map((x) => `<li><a href="${solutionUrl(x, lang)}"><span class="t">${esc(V.L(x.title))}</span><span class="f mono">${esc(figures(x, V)[0])}</span></a></li>`).join('')}</ul></div></section>` : ''}
-  ${postsBlock(V, [s.id])}
+  ${postsBlock(V, [s.id, s.group], [s.id], V.byGroup[s.group].indexOf(s))}
   ${tray(V)}
   ${pageData(V)}`;
   const spec = (r) => [{ '@type': 'PriceSpecification', minPrice: r[0], maxPrice: r[1], priceCurrency: 'USD' }, { '@type': 'PriceSpecification', minPrice: V.uzsR(r)[0], maxPrice: V.uzsR(r)[1], priceCurrency: 'UZS' }];

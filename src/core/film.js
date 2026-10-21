@@ -145,7 +145,12 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   const gl = stage.renderer.getContext();
   const busy = () => {
     if (!state.fence) return false;
-    if (gl.isContextLost() || gl.getSyncParameter(state.fence, gl.SYNC_STATUS) === gl.SIGNALED) { gl.deleteSync(state.fence); state.fence = null; Q.gpuMs = Math.round(performance.now() - state.fenceT); return false; }
+    if (gl.isContextLost() || gl.getSyncParameter(state.fence, gl.SYNC_STATUS) === gl.SIGNALED) {
+      gl.deleteSync(state.fence); state.fence = null; Q.gpuMs = Math.round(performance.now() - state.fenceT);
+      // how long a moving frame takes to reach the screen (hold-resolution frames are not moving frames)
+      if (state.fenceMoving) state.movLat = state.movLat == null ? Q.gpuMs : 0.6 * state.movLat + 0.4 * Q.gpuMs;
+      return false;
+    }
     return true;
   };
   const fence = () => { if (gl.fenceSync) { if (state.fence) gl.deleteSync(state.fence); state.fence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0); gl.flush(); state.fenceT = performance.now(); } };
@@ -173,7 +178,18 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     // software GPU busy for most of the freeze, and the halves could not move meanwhile)
     const hr = !!(d.settled || d.intro || fz != null || keepHold);
     if (hr !== state.holdRes) { state.holdRes = hr; stage.setSize(stage.w, stage.h, hr); state.key = ''; }
-    let key = stateKey(d);
+    // a slow GPU (a moving frame reaches the screen 0.2 s or more after it is issued: a software renderer under load):
+    // the GL draws where the follower will be by then, the page's layers where it is now. Never across a freeze or
+    // inside a hold window (what the frozen sheet and the hold show is decided by the page's own state)
+    let dg = d;
+    const slow = state.movLat ? Math.min(0.3, Math.max(0, 0.8 * (state.movLat - 200) / 1000)) : 0;
+    if (slow > 0.02 && dir.v && !d.intro && !d.atHold && !d.pre && fz == null && dir.frozen == null && !isFreeze(d.tr)) {
+      const x = dir.xp ?? dir.x, t = Math.max(0, Math.min(dir.n - 1, dir.target()));
+      const xg = Math.max(Math.min(x, t), Math.min(Math.max(x, t), x + dir.v * slow));
+      const g = Math.abs(xg - x) > 1e-3 ? evalS(xg, lay) : null;
+      if (g && !isFreeze(g.tr) && !g.atHold) { g.settled = false; g.gl = true; dg = g; }
+    }
+    let key = stateKey(dg);
     // leaving a settled hold draws nothing until the state itself moves (the hold's frame is still the right one)
     if (!film.dirty && key.startsWith('H|') && key.endsWith('|0') && state.key === key.slice(0, -1) + '1') key = state.key;
     // the page's own layers (the freeze's halves and masks, the text) move at most every 90 ms on a software
@@ -185,19 +201,20 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     if (key !== state.key || film.dirty) {
       film.dirty = false;
       const ta = performance.now();
-      film.apply(d);
+      film.apply(dg);
+      if (dg !== d) film.colours(d);
       dom.apply(d);
       labels.update(d, lay);
       Q.applyMs = Math.round(performance.now() - ta);
       const ms = film.render();
-      fence(); state.fresh = true;
+      fence(); state.fresh = dg === d; state.fenceMoving = !hr;
       // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
       if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.3 * Math.min(0.5, (now - state.lastIssue) / 1000));
       state.lastIssue = now;
-      state.key = key; state.drawn = d;
+      state.key = key; state.drawn = dg;
       Q.frameMs = Math.round(ms);
       // the beat of the frame on screen: a hold key is the hold itself, whatever the follower's last decimals
-      state.drawnBeat = key.startsWith('H|') ? beatOf(posOf(key.split('|')[1], lay), lay) : beatOf(d.pos, lay);
+      state.drawnBeat = key.startsWith('H|') ? beatOf(posOf(key.split('|')[1], lay), lay) : beatOf(dg.pos, lay);
       flog.push([Math.round(now), +state.drawnBeat.toFixed(4), Math.round(ms), Q.applyMs, Q.gpuMs]); if (flog.length > 600) flog.splice(0, 200);
     } else { film.colours(d); dom.apply(d); if (!d.atHold) labels.update(d, lay); }
     mark(d, lay);

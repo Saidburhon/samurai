@@ -68,7 +68,7 @@ html[lang=ja] .prose h3 { font-weight: 600; font-size: 19px; line-height: 1.5; }
 .tbl table { width: 100%; border-collapse: collapse; font-size: 15.5px; line-height: 1.45; }
 html[lang=ja] .tbl table { font-size: 14.5px; line-height: 1.6; }
 .tbl th, .tbl td { padding: 11px 18px 12px 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
-.tbl thead th { border-top: 1px solid var(--sumi); padding-top: 10px; font: 400 12.5px/1.35 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--fg2); }
+.tbl thead th { border-top: 1px solid var(--sumi); padding-top: 10px; font: 400 13px/1.35 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--fg2); }
 .tbl tbody tr:last-child > * { border-bottom: 1px solid var(--line); }
 .tbl tbody th { font-weight: 520; font-variation-settings: "SHRP" 60; }
 .tbl .r { text-align: right; } .tbl .c { text-align: center; }
@@ -108,9 +108,21 @@ html[lang=ja] .rel-t { font-weight: 600; font-size: 17px; line-height: 1.5; }
 .rel.sc { margin: 1.6em 0 0; border-bottom: 1px solid var(--line); }
 .rel.sc .rel-t { margin: 0; font-size: 19px; }
 .prose .rel.sc .rel-v { margin: 0; }
-.sc-int .mono, .sc-mods .mono { margin-left: 8px; color: var(--fg2); white-space: nowrap; }
+.sc-mods .mono { margin-left: 8px; color: var(--fg2); white-space: nowrap; }
+.sc-int .mono { margin-left: 8px; color: var(--fg2); }
 
-.ai-box { grid-column: 3 / span 8; margin-top: 88px; padding: 30px 0 40px; border-top: 1px solid var(--sumi); border-bottom: 1px solid var(--line); display: grid; justify-items: start; gap: 14px; }
+/* typesetting (scripts/pages/blog-type.mjs): the drawn arrow, a figure kept whole, a hidden column name */
+.to { display: inline-block; width: 1.25em; height: .34em; margin: 0 .08em; vertical-align: .16em; fill: currentColor; overflow: visible; }
+.fg { white-space: nowrap; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* Japanese text runs to the full measure (kinsoku by line-break: strict); phrase breaking stays for the h1, the h2s,
+   the lede and the tables, where a split word would show */
+html[lang=ja] main .prose.prose :is(p, li, blockquote) { word-break: normal; line-break: strict; }
+html[lang=ja] main .prose.prose p { text-align: justify; }
+html[lang=ja] .tbl :is(th, td) { word-break: keep-all; line-break: strict; }
+html[lang=ja] .tbl tbody th { min-width: 6.5em; }
+
+.ai-box { grid-column: 3 / span 8; margin-top: 88px; padding: 30px 0 40px; border-top: 1px solid var(--sumi); display: grid; justify-items: start; gap: 14px; }
 .ai-line { max-width: 32em; font-size: 20px; line-height: 1.45; color: var(--kurogane); text-wrap: pretty; }
 html[lang=ja] .ai-line { font-size: 17px; line-height: 1.8; }
 .ai-pre { max-width: 52em; color: var(--fg2); line-height: 1.6; }
@@ -163,7 +175,13 @@ html[lang=ja] .ai-line { font-size: 17px; line-height: 1.8; }
   .prose h2 { font-size: 24px; }
   .prose h3 { font-size: 19px; }
   .tbl { margin-right: calc(-1 * var(--m)); padding-right: var(--m); }
-  .tbl table { min-width: 560px; font-size: 14.5px; }
+  .tbl table { font-size: 14.5px; }
+  /* two columns wrap inside the column; three or more keep their width and scroll, under a cue drawn with the kissaki */
+  .tbl.wide table { min-width: 560px; }
+  .tbl.wide[data-cue]::before { content: attr(data-cue); position: sticky; left: 0; display: block; width: max-content; margin-bottom: 10px; padding-right: 42px; font: 400 12px/1.4 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--fg2);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 8'%3E%3Cpath fill='%232A2724' d='M0 4.4h20.5l.6-.8h1.4l.5.5c2.4-.2 4.6-.7 6.6-1.6c-1.7 1.6-4 2.6-7.4 2.9h-1.7l-.4-.5H0z'/%3E%3C/svg%3E") no-repeat 100% 60% / 30px 8px; }
+  .tbl:not(.wide) tbody th { position: static; max-width: none; width: 38%; }
+  .tbl.wide tbody th { min-width: 9em; }
   .tbl tbody th { position: sticky; left: 0; z-index: 1; background: var(--washi); padding-right: 14px; max-width: 42vw; }
   .related { margin-top: 80px; }
   .rel-row { grid-template-columns: minmax(0, 1fr); }

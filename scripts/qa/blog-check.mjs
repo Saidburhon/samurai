@@ -14,7 +14,7 @@
 //   - the converter refuses raw HTML, an h1/h4, an unknown shortcode and an unknown catalogue id (the build fails)
 //   - no "yarat-" and no product name in any article (the copy lint's list)
 // Usage: node scripts/qa/blog-check.mjs [report.json]
-import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, existsSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname } from 'node:path';
 import { LANGS, SITE, HOME } from '../site.mjs';
@@ -50,6 +50,7 @@ for (const lang of LANGS) {
   const wantIdx = [...LANGS.filter((l) => byLang[l].length), 'x-default'].sort().join(',');
   if (idxAlts !== wantIdx) fail(blogIndex(lang), `hreflang ${idxAlts}, expected ${wantIdx}`);
   if (!idx.includes(`type="application/rss+xml"`)) fail(blogIndex(lang), 'no RSS alternate link');
+  if (/[\u2190-\u21ff]/u.test(idx)) fail(blogIndex(lang), 'a typed arrow glyph (U+2190–21FF)');
   // RSS
   const feed = `public${feedPath(lang)}`;
   try { execFileSync('xmllint', ['--noout', feed], { stdio: 'pipe' }); } catch (e) { fail(feedPath(lang), `not well-formed: ${String(e.stderr).slice(0, 200)}`); }
@@ -113,16 +114,40 @@ for (const lang of LANGS) {
       rows++;
       const s = C.model.byId.get(m[1]);
       if (!s) { fail(W, `row for unknown id ${m[1]}`); continue; }
-      const dd = [...m[2].matchAll(/<dd>([\s\S]*?)<\/dd>/g)].map((d) => text(d[1]));
-      const exp = [`${_qa.weeks(s.mvp.weeks, lang)} · ${_qa.money(C, s.mvp.usd, lang)}`, `${_qa.weeks(s.full.weeks, lang)} · ${_qa.money(C, s.full.usd, lang)}`];
+      // no-break spaces bind the figures (blog.mjs fig): compared as plain spaces
+      const sp = (v) => v.replace(/\u00a0/g, ' ');
+      const dd = [...m[2].matchAll(/<dd>([\s\S]*?)<\/dd>/g)].map((d) => sp(text(d[1])));
+      const exp = [`${_qa.weeks(s.mvp.weeks, lang)} · ${_qa.money(C, s.mvp.usd, lang)}`, `${_qa.weeks(s.full.weeks, lang)} · ${_qa.money(C, s.full.usd, lang)}`].map(sp);
       figures += 2;
       if (dd[0] !== exp[0] || dd[1] !== exp[1]) fail(W, `${m[1]} figures «${dd.join(' | ')}» ≠ catalogue «${exp.join(' | ')}»`);
     }
+    // typesetting (B2c): no typed arrow anywhere on the page (the drawn mark instead); English without straight quotes
+    if (/[\u2190-\u21ff]/u.test(h)) fail(W, `a typed arrow glyph (U+2190–21FF): «${h.match(/.{0,30}[\u2190-\u21ff].{0,10}/u)[0]}»`);
+    if (lang === 'en') {
+      const t = text(main.replace(/<(code|pre|svg|script)\b[\s\S]*?<\/\1>/g, ''));
+      const q = t.match(/.{0,24}["'].{0,12}/u);
+      if (q) fail(W, `a straight quote in the text: «${q[0]}»`);
+    }
+    const ruT = lang === 'ru' ? text(main.replace(/<(code|pre|svg|script)\b[\s\S]*?<\/\1>/g, '')) : '';
+    if (lang === 'ru' && /[\s>](?:в|к|с|у|о|и|а|на|по|за|из|от|до|не|но) [А-Яа-яЁё]/u.test(ruT)) fail(W, `a short Russian word not bound to the next one: «${ruT.match(/.{0,16}[\s](?:в|к|с|у|о|и|а|на|по|за|из|от|до|не|но) [А-Яа-яЁё].{0,8}/u)?.[0]}»`);
     // internal links answer
     for (const m of main.matchAll(/href="(\/[^"]*)"/g)) {
       const href = dec(m[1]);
       if (!existsSync(file(href))) fail(W, `link ${href} has no built page`);
     }
+  }
+}
+
+// every post is linked from at least one group or solution page of its language (§5.3 internal linking)
+{
+  const walk = (d) => (existsSync(d) ? readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(`${d}/${e.name}`) : e.name === 'index.html' ? [`${d}/${e.name}`] : [])) : []);
+  const BASE = { uz: 'public/yechimlar', ru: 'public/ru/resheniya', en: 'public/en/solutions', ja: 'public/ja/solutions' };
+  for (const lang of LANGS) {
+    if (!byLang[lang].length) continue;
+    const linked = new Set();
+    for (const f of walk(BASE[lang])) for (const m of readFileSync(f, 'utf8').matchAll(/<section class="row posts"[\s\S]*?<\/section>/g)) for (const a of m[0].matchAll(/href="([^"]+)"/g)) linked.add(a[1]);
+    for (const p of byLang[lang]) if (!linked.has(p.path)) fail(p.path, `no group or solution page in ${BASE[lang].slice(6)} links this post`);
+    notes.push(`${lang}: ${linked.size} posts linked from the Solutions pages`);
   }
 }
 
