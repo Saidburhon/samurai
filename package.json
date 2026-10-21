@@ -7,6 +7,7 @@
     "lint": "node scripts/lint-copy.mjs --built",
     "qa:fit": "node scripts/qa/fit-check.cjs",
     "qa:flow": "node scripts/qa/flow-probe.cjs",
+    "qa:poster": "node scripts/qa/poster-test.cjs",
     "dev": "wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "deploy:www": "wrangler deploy -c workers/www-redirect/wrangler.json",

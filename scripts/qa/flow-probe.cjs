@@ -1,8 +1,8 @@
 // flow-probe (G0): the skeleton and its content, in flow mode (?tier=0) and with JavaScript off.
-// For uz/ru/en, desktop 1440 × 900 (DPR 0.75, as the capture) and phone 390 × 844 (DPR 1.5):
+// For uz/ru/en/ja, desktop 1440 × 900 (DPR 0.75, as the capture) and phone 390 × 844 (DPR 1.5):
 //   - console errors and warnings, failed requests (4xx/5xx)
 //   - <html lang>, exactly one h1, the title
-//   - all copy present: every data-i18n element of /ru/ and /en/ carries its dictionary text; no Uzbek left there
+//   - all copy present: every data-i18n element of /ru/, /en/ and /ja/ carries its dictionary text; no Uzbek left there
 //   - no "yarat-", no product names, no Telegram handle in the rendered text
 //   - the okina (U+02BB) renders through QOkina / QOkinaMono (CDP platform fonts), with zoomed crops to look at
 //   - no JS: the hero drawing lies on its diagonal (K and T within 1.5 px of the anchors), the page is complete
@@ -10,7 +10,9 @@
 //   - with JS: the hero's hamon stipple (canvas#stip) is fully inked and its dots lie inside the drawn blade outline
 //   - every visible text node on every page (404 included, the phone menu opened) is drawn with the site's own faces
 //     (CDP platform fonts): any platform fallback (Liberation, Arial, DejaVu, ...) fails, e.g. a capital that
-//     text-transform made and the font subset lacks
+//     text-transform made and the font subset lacks; on /ja/ the Japanese system gothic of the stack is ours too
+//     (Hiragino Sans, Noto Sans JP, Yu Gothic, Meiryo), and so is whatever the stack's sans-serif reaches on this
+//     machine for Japanese characters only: an element's other-font glyphs may not outnumber its kana and kanji
 //   - before app_css arrives (it loads async; here it is held back): no overflow, no visual-viewport zoom-out, and
 //     the stipple still on the blade (a phone zooms the page out when anything is wider than the viewport)
 //   - screenshots down the page, as contact sheets, for the "printed catalogue" review
@@ -23,16 +25,17 @@ const { chromium } = require(execSync('npm root -g').toString().trim() + '/playw
 const base = (process.argv[2] || 'http://localhost:8800').replace(/\/$/, '');
 const out = path.resolve(process.argv[3] || '.cache/qa/flow');
 fs.mkdirSync(out, { recursive: true });
-const PAGES = { uz: '/', ru: '/ru/', en: '/en/' };
+const PAGES = { uz: '/', ru: '/ru/', en: '/en/', ja: '/ja/' };
 const VIEWS = { desktop: { width: 1440, height: 900, dpr: 0.75, phone: false }, phone: { width: 390, height: 844, dpr: 1.5, phone: true } };
 const ANCH = { land: { K: [0.072, 0.698], T: [0.921, 0.258] }, port: { K: [0.626, 0.955], T: [0.856, 0.123] } };
 const BANNED = [/yarat/i, /hoglt|pool\s*timer|club\s*time|tikoncha/i, /t\.me\//i];
 // CDP names the instance it drew with ("Geologica Thin", "Martian Mono SemiExpanded", "Zen Old Mincho Black")
 const OWN_FONTS = ['Geologica', 'Martian Mono', 'Zen Old Mincho', 'QOkina', 'QOkinaMono', 'GeologicaSign'];
-const own = (name) => OWN_FONTS.some((f) => name === f || name.startsWith(f + ' '));
+const JA_FONTS = ['Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Noto Sans CJK JP', 'Yu Gothic', 'YuGothic', 'Meiryo', 'IPAGothic', 'IPAPGothic'];
+const own = (name, lang) => [...OWN_FONTS, ...(lang === 'ja' ? JA_FONTS : [])].some((f) => name === f || name.startsWith(f + ' '));
 
 // every element with its own visible text, through CDP: the platform fonts that drew it; anything not ours is a fallback
-async function fontAudit(page, ctx, scope = 'body') {
+async function fontAudit(page, ctx, scope = 'body', lang) {
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(150);
   const n = await page.evaluate((scope) => {
@@ -43,6 +46,7 @@ async function fontAudit(page, ctx, scope = 'body') {
       if (![...el.childNodes].some((c) => c.nodeType === 3 && c.textContent.trim())) continue;
       if (!el.getClientRects().length || getComputedStyle(el).visibility === 'hidden') continue;
       el.setAttribute('data-fc', String(i++));
+      el.setAttribute('data-cjk', String([...el.childNodes].filter((c) => c.nodeType === 3).map((c) => c.textContent).join('').match(/[\u3000-\u30ff\u4e00-\u9fff\uff00-\uffef]/gu)?.length || 0));
     }
     return i;
   }, scope);
@@ -54,9 +58,11 @@ async function fontAudit(page, ctx, scope = 'body') {
   for (const id of nodeIds) {
     const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId: id });
     for (const f of fonts) used[f.familyName] = (used[f.familyName] || 0) + f.glyphCount;
-    const alien = fonts.filter((f) => !own(f.familyName));
+    const alien = fonts.filter((f) => !own(f.familyName, lang));
     if (!alien.length) continue;
     const { attributes } = await cdp.send('DOM.getAttributes', { nodeId: id });
+    // Japanese: the platform's own Japanese face for kana and kanji is the system gothic the stack asks for
+    if (lang === 'ja' && alien.reduce((n, f) => n + f.glyphCount, 0) <= +attributes[attributes.indexOf('data-cjk') + 1]) continue;
     const k = attributes[attributes.indexOf('data-fc') + 1];
     const what = await page.evaluate((k) => { const e = document.querySelector(`[data-fc="${k}"]`); return `<${e.tagName.toLowerCase()}${e.className && typeof e.className === 'string' ? '.' + e.className.split(' ').join('.') : ''}> "${e.textContent.trim().slice(0, 40)}"`; }, k);
     off.push(`${what}: ${alien.map((f) => `${f.familyName}×${f.glyphCount}`).join(', ')}`);
@@ -86,8 +92,8 @@ async function stippleAudit(page) {
 const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 9000 dots inked` : s.painted < 1500 ? `only ${s.painted} painted pixels` : s.inside < 0.9 ? `${(s.inside * 100).toFixed(1)} % of the dots on the blade` : null);
 
 (async () => {
-  const { RU, EN } = await import(path.resolve('scripts/i18n.mjs'));
-  const DICT = { ru: RU, en: EN };
+  const { RU, EN, JA } = await import(path.resolve('scripts/i18n.mjs'));
+  const DICT = { ru: RU, en: EN, ja: JA };
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const report = { when: new Date().toISOString(), base, runs: [] };
   let fails = 0;
@@ -130,7 +136,8 @@ const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 900
       if (DICT[lang] && strip(html) !== strip(DICT[lang][k] ?? '')) bad('copy', `${k}: "${strip(html).slice(0, 40)}" is not the ${lang} text`);
     }
     for (const [k, l] of info.labels) if (DICT[lang] && norm(l) !== norm(DICT[lang][k])) bad('copy', `aria-label ${k} is not the ${lang} text`);
-    if (lang !== 'uz' && /ʻ/.test(info.text)) bad('copy', 'Uzbek text (with ʻ) on a translated page');
+    // the language switch names Uzbek in Uzbek (Oʻzbekcha, lang="uz") on every page; any other okina is untranslated text
+    if (lang !== 'uz' && /ʻ/.test(info.text.replace(/Oʻzbekcha/g, ''))) bad('copy', 'Uzbek text (with ʻ) on a translated page');
     run.keys = info.i18n.length;
 
     // the okina: which font actually draws it (CDP), and crops to look at
@@ -210,14 +217,14 @@ const stippleBad = (s) => (s.error ? s.error : s.dots < 9000 ? `${s.dots} of 900
     }
     run.frames = i;
     // every text drawn with our own faces (the phone menu opened too)
-    const fa = await fontAudit(page, ctx);
+    const fa = await fontAudit(page, ctx, 'body', lang);
     run.fonts = { elements: fa.elements, used: fa.used };
     for (const o of fa.off) bad('font', o);
     if (js && v.phone) {
       await page.evaluate(() => scrollTo(0, 0));
       await page.click('.menu'); await page.waitForTimeout(900);
       await page.screenshot({ path: path.join(out, `menu-${tag}.png`) });
-      const fm = await fontAudit(page, ctx, '#menu');
+      const fm = await fontAudit(page, ctx, '#menu', lang);
       for (const o of fm.off) bad('font', 'menu ' + o);
       run.fonts.menu = fm.elements;
       await page.click('.menu'); await page.waitForTimeout(600);

@@ -5,28 +5,27 @@ varying vec3 vWPos; varying vec3 vWNrm; varying vec3 vLPos;
 uniform vec3 uBase; uniform float uRough; uniform float uMetal; uniform float uKind;
 uniform vec3 uAxisW, uBackGlow, uFaceU, uFaceV;
 uniform sampler2D tIshime;    // the tsuba face: rg = height gradient, b = coarse variation, a = height
-#ifdef REVEAL
 uniform float uReveal, uFront;
-#endif
 void main(){
-#ifdef REVEAL
   if (vAxial > uReveal) discard;
-#endif
   vec3 N = normalize(vWNrm);
   vec3 V = normalize(cameraPosition - vWPos);
   if (dot(N, V) < -0.2) N = -N;
   vec3 base = uBase; float rough = uRough; float metal = uMetal;
   vec3 lp = vLPos;
   float h = 0., bscale = .0005;
+  // the noise comes from the baked ishime (b: fbm at 90/unit, a: value noise at 420/unit over a 0.82 unit tile),
+  // sampled at other scales: no live fbm, so this program stays small enough to compile fast in software
+  vec4 nz = texture2D(tIshime, fract(lp.xz * vec2(0.66, 1.9)));
   if (uKind < .5) {            // copper habaki: diagonal file marks (nekogaki), faded where they would alias
     float ph = (lp.x*1.0 + lp.y*0.5 - lp.z*0.45)*2300.;
     float k = lod(fwidth(ph) / 6.2832);
-    float f = sin(ph + fbm2(lp.xz*60.)*3.) * k;
-    h = f*0.22 + fbm2(lp.xz*220.)*.25 * lod(fwidth(lp.x*220.));
+    float f = sin(ph + nz.b*3.) * k;
+    h = f*0.22 + nz.a*.25 * lod(fwidth(lp.x*220.));
     rough = uRough + f*.02 + (1. - k) * .03;
-    base *= 0.92 + 0.08*fbm2(lp.xz*40.);
+    base *= 0.92 + 0.08*nz.b;
   } else if (uKind < 1.5) {    // gold seppa
-    h = fbm2(lp.zy*300.)*.2 * lod(fwidth(lp.z*300.));
+    h = texture2D(tIshime, fract(lp.zy * 0.7)).a * .2 * lod(fwidth(lp.z*300.));
     bscale = .0022;
   } else if (uKind < 2.5) {    // patinated iron tsuba, stone-hammered (ishime): a baked normal map
     vec2 fc = lp.zy / 0.82 + .5;
@@ -54,7 +53,7 @@ void main(){
     float ph = (lp.x * 1.0 + lp.z * 0.6) * 900.;
     float k = lod(fwidth(ph) / 6.2832);
     float f = sin(ph) * k;
-    float n = fbm2(lp.xz * 30.);
+    float n = texture2D(tIshime, fract(lp.xz * 0.33)).b;
     base *= 0.7 + 0.6 * n;
     h = f * .3 + n * .4;
     bscale = .0008;
@@ -74,10 +73,7 @@ void main(){
     float rr = length(lp.zy * vec2(1., 1./1.03));
     col += uBackGlow * pow(wall, 2.5) * (0.25 + 0.75*depth*depth) * step(rr, 0.362);
   }
-#ifdef REVEAL
-  float fr = vAxial - uReveal;
-  col += uFront * vec3(.86,.93,1.) * (thinLine(fr, 0., 0.0022)*3.0);
-#endif
+  if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(vAxial - uReveal, 0., 0.0022)*3.0);
   col *= uExposure;
   // round parts: their silhouette (N.V -> 0) ramps to 0 over a pixel
   float alpha = uKind > 2.5 && uKind < 3.5 ? clamp(abs(dot(normalize(vWNrm), V)) / max(fwidth(dot(normalize(vWNrm), V)) * 1.5, 1e-4), 0., 1.) : 1.;

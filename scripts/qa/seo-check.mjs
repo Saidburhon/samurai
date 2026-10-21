@@ -231,7 +231,7 @@ for (const [path, { html: h }] of html) {
   }
   // Japanese pages: no claim the facts do not support
   if (lang === 'ja') {
-    const text = dec(main.replace(/<[^>]+>/g, ' '));
+    const text = dec(main.replace(/<wbr>|<br class="sp">/g, '').replace(/<[^>]+>/g, ' ')); // the phrase breaks join their words
     const CLAIMS = [/日本語(対応|ネイティブ|堪能)[^。]*(スタッフ|エンジニア|担当)/, /日本人(スタッフ|エンジニア|担当者|PM)/, /ブリッジSEが在籍/, /日本法人(を|が)(設立|あり)/, /ISO\s?\d{4,5}/, /(認証|認定)(を)?取得/, /(豊富な|多数の)(導入|開発)?実績/, /実績[0-9０-９]+/, /納期(を)?(保証|厳守)/];
     for (const re of CLAIMS) { const m = text.match(re); if (m) fail(W, `a claim content/site.json does not support: «${m[0]}»`); }
     if (!site.japan.legalName && /日本法人/.test(text)) fail(W, 'mentions 日本法人 without a Japanese entity in content/site.json');

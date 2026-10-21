@@ -64,6 +64,8 @@ export class SoftPass {
     let n = 0, x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
     // the footprint, in the frame of the sword's projected axis (an oriented quad, §2.1)
     const pts = segs.filter(Boolean);
+    if (pts.length < 2) { this.U.uN.value = 0; this.empty = true; this.dirty = true; return; }
+    this.empty = false;
     const a = pts[0], b = pts[Math.max(1, nBlade - 1)] || pts[pts.length - 1];
     let ax = b[0] - a[0], az = b[1] - a[1]; const al = Math.hypot(ax, az) || 1; ax /= al; az /= al;
     for (const sg of segs) {
@@ -92,6 +94,7 @@ export class SoftPass {
   // render the target if needed, then composite it onto the current framebuffer
   draw(camera) {
     const r = this.r;
+    if (this.empty) return;
     if (this.dirty) {
       const cc = r.getClearAlpha();
       r.setRenderTarget(this.rt); r.setClearColor(0x000000, 0); r.clear(); r.render(this.scene, camera); r.setRenderTarget(null);

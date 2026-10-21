@@ -1,5 +1,10 @@
 // fit-check: every text box against the viewport, the side margins, the other text boxes, the nav and ruler bands
-// and the blade band of the hero drawing, in uz/ru/en at 1440 × 900, 1280 × 720, 390 × 844 and 360 × 740.
+// and the blade band of the hero drawing, in uz/ru/en/ja at 1440 × 900, 1280 × 720, 390 × 844 and 360 × 740.
+// Japanese (G0b): every line of the landing's words is also read character by character; a line break inside a word
+// (not at an Intl.Segmenter word boundary, nor at an authored <wbr> / <br class="sp"> / .ln edge) fails as ja-split
+// (オフショア開発パート／ナー), and a line of fewer than five characters fails as ja-short-line unless it is a whole
+// authored segment (品質は、 between a .ln edge and a <br class="sp">; アプリ after a <wbr>), so no 水準で。 or 手仕事。
+// left alone under a longer line.
 // G0 checks flow mode (the catalogue); from G3 it also checks every cinema hold (?beat=k).
 // Usage: node scripts/qa/fit-check.cjs [baseUrl=http://localhost:8800] [outDir=.cache/qa/fit]
 // Writes <outDir>/fit.json, one annotated screenshot per page and viewport (violations boxed in red), and exits 1 on failure.
@@ -13,7 +18,7 @@ const { chromium } = require(require('child_process').execSync('npm root -g').to
 const base = (process.argv[2] || 'http://localhost:8800').replace(/\/$/, '');
 const out = path.resolve(process.argv[3] || '.cache/qa/fit');
 fs.mkdirSync(out, { recursive: true });
-const PAGES = { uz: '/', ru: '/ru/', en: '/en/' };
+const PAGES = { uz: '/', ru: '/ru/', en: '/en/', ja: '/ja/' };
 const VIEWS = [
   { name: '1440x900', w: 1440, h: 900, phone: false },
   { name: '1280x720', w: 1280, h: 720, phone: false },
@@ -77,9 +82,56 @@ function measure() {
       polys.push(pts);
     }
   }
+  const ja = document.documentElement.lang === 'ja' ? jaLines() : [];
   const m = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 0;
   const navH = document.querySelector('.nav')?.getBoundingClientRect().height || 0;
-  return { W, H, docW: document.documentElement.scrollWidth, docH: document.documentElement.scrollHeight, boxes, wraps, polys, navH, lang: document.documentElement.lang, margin: getComputedStyle(document.body).getPropertyValue('--m') || m, dial: dialAudit() };
+  return { W, H, docW: document.documentElement.scrollWidth, docH: document.documentElement.scrollHeight, boxes, wraps, polys, navH, ja, lang: document.documentElement.lang, margin: getComputedStyle(document.body).getPropertyValue('--m') || m, dial: dialAudit() };
+
+  // Japanese: the rendered lines of every block of words, with the authored break points and the word boundaries
+  function jaLines() {
+    const out = [];
+    const seg = new Intl.Segmenter('ja', { granularity: 'word' });
+    const SEL = ':is(.h1, .sub p, .st, .h2, .big, .after, .line, .pre, .st-sub, .svc li, .cap, .kick)';
+    for (const el of document.querySelectorAll(SEL)) {
+      if (!vis(el) || el.closest('#strings, .sprite, .words, #menu, svg') || el.parentElement.closest(SEL)) continue;
+      // the characters in order, each with "an authored break comes just before me"
+      const chars = []; let mark = true;
+      const tw = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+      for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+        if (n.nodeType === 1) { if (n.tagName === 'WBR' || n.tagName === 'BR' || n.classList.contains('ln')) mark = true; continue; }
+        for (let i = 0; i < n.length; i++) {
+          const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
+          const q = [...rg.getClientRects()].find((x) => x.width > 0);
+          chars.push({ c: n.data[i], top: q ? q.top : null, h: q ? q.height : 0, mark });
+          mark = false;
+        }
+      }
+      const text = chars.map((x) => x.c).join('');
+      if (!/[\u3040-\u30ff\u4e00-\u9fff]/.test(text)) continue;
+      const bounds = new Set([0, text.length]);
+      for (const s of seg.segment(text)) { bounds.add(s.index); bounds.add(s.index + s.segment.length); }
+      // lines: runs of drawn characters with the same top
+      const lines = []; let cur = null;
+      chars.forEach((x, i) => {
+        if (x.top === null || /\s/.test(x.c)) { if (cur && /\s/.test(x.c)) cur.space = true; return; }
+        if (!cur || Math.abs(x.top - cur.top) > x.h * 0.5) { cur = { top: x.top, from: i, to: i, space: false, startMark: x.mark || (lines.length && lines[lines.length - 1].space) }; lines.push(cur); }
+        else cur.space = false;
+        cur.to = i;
+      });
+      if (lines.length < 2) continue;
+      const r = el.getBoundingClientRect();
+      const issues = [];
+      lines.forEach((ln, k) => {
+        const t = text.slice(ln.from, ln.to + 1).replace(/\s+/g, '');
+        const next = lines[k + 1];
+        const endMark = !next || next.startMark;
+        if (next && !next.startMark && !bounds.has(next.from)) issues.push({ kind: 'ja-split', detail: `${t}／${text.slice(next.from, next.to + 1).trim()}` });
+        if ([...t].length < 5 && !(ln.startMark && endMark)) issues.push({ kind: 'ja-short-line', detail: `「${t}」 in ${lines.map((l) => text.slice(l.from, l.to + 1).trim()).join('／')}` });
+      });
+      if (issues.length) out.push({ l: r.left, t: r.top + scrollY, r: r.right, b: r.bottom + scrollY, text: text.trim().slice(0, 40), issues });
+    }
+    return out;
+  }
 
   // the dial, in its own units (viewBox -500 -500 1000 1000, centre 0 0)
   function dialAudit() {
@@ -174,6 +226,7 @@ function rectHitsPoly(b, poly) {
       if (!b.stage) for (const poly of m.polys) if (rectHitsPoly(b, poly)) { issues.push({ kind: 'blade-band', box: b }); break; }
     }
     for (const t of m.wraps) if (!v.phone) issues.push({ kind: 'line-wraps', detail: t });
+    for (const e of m.ja) for (const i of e.issues) issues.push({ kind: i.kind, detail: i.detail, box: { l: e.l, t: e.t, r: e.r, b: e.b, text: e.text, sel: 'ja' } });
     if (m.dial) {
       const min = v.phone ? 12 : 13;
       for (const z of m.dial.sizes) if (z.px < min - 0.05) issues.push({ kind: 'dial-small', detail: `"${z.text}" at ${z.px}px` });

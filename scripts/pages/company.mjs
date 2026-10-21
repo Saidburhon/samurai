@@ -99,14 +99,16 @@ function contactBody(lang, copy) {
     <span class="c-row"><a class="mail" href="mailto:${site.email}">${site.email}</a><button class="copy" type="button" data-copy="${site.email}" aria-label="${esc(L('copy'))}"><svg aria-hidden="true"><use href="#i-copy"/></svg></button></span>${copy.telNote ? `\n    <span class="c-note">${copy.telNote}</span>` : ''}
   </address>`;
   const opt = `<i>${L('fmOptional')}</i>`;
+  // the order a visitor meets: the fields, what the details are used for, the consent box, then the button (APPI: the
+  // purpose is shown before the data is given; the keyboard reaches the required box before the button)
   const form = `<form class="lead" action="mailto:${site.email}?subject=${encodeURIComponent(subject)}" method="post" enctype="text/plain" data-api="${api}" data-to="${site.email}" data-subject="${esc(subject)}">
       <p class="fld"><label for="f-name">${L('fmName')}</label><input id="f-name" name="name" type="text" autocomplete="name" required maxlength="80"></p>
       <p class="fld"><label for="f-contact">${L('fmContact')}</label><input id="f-contact" name="contact" type="text" autocomplete="email" required maxlength="120"></p>
       <p class="fld"><label for="f-company">${L('fmCompany')} ${opt}</label><input id="f-company" name="company" type="text" autocomplete="organization" maxlength="120"></p>
       <p class="fld wide"><label for="f-message">${L('fmMessage')} ${opt}</label><textarea id="f-message" name="message" rows="4" maxlength="1500"></textarea></p>
-      <p class="send"><button class="btn" type="submit" data-cta="contact-form"><span>${L('fmSend')}</span><svg aria-hidden="true"><use href="#kissaki"/></svg></button></p>
+      <p class="fine purpose">${L('fmConsent')}</p>
       <p class="agree"><input id="f-agree" name="agree" type="checkbox" value="yes" required><label for="f-agree">${L('fmAgree').replace('{privacy}', privacy)}</label></p>
-      <p class="fine">${L('fmConsent')}</p>
+      <p class="send"><button class="btn" type="submit" data-cta="contact-form"><span>${L('fmSend')}</span><svg aria-hidden="true"><use href="#kissaki"/></svg></button></p>
       <p class="fine${site.lead.api ? ' nojs-only' : ''}">${L('fmNoJs')}</p>
       <p class="status" role="status" aria-live="polite"></p>
     </form>`;

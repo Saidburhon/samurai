@@ -58,6 +58,8 @@ html.cinema.dark { --fg: var(--washi); --fg2: var(--hagane); --line: rgba(236, 2
 html.cinema.dark .nav, html.cinema.dark .ruler { color: var(--washi); --line: rgba(236, 230, 218, .18); }
 html.cinema.dark .nav .btn { border-color: rgba(236, 230, 218, .5); }
 html.cinema.dark .grain { mix-blend-mode: screen; opacity: .05; }
+/* the grain holds still while the GL programs compile (main.js, gate -> glReady, about a second) */
+html.gl-boot .grain { animation-play-state: paused; }
 
 /* 銘 B0 is the flow hero (critical.css); B1: the promise, top-left; the mei and the hanko leave with the h1 */
 html.cinema .b-hero { position: absolute; inset: 0; height: auto; min-height: 0; }

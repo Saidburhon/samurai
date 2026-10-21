@@ -8,7 +8,7 @@
 
 /* 日本語: the scene statements sized for full-width characters (a Japanese line is about twice as wide per
    character as a Latin one), so each poster keeps its two-line shape */
-html[lang=ja] .b-promise .st { font-size: clamp(30px, calc(58 * var(--fit)), 58px); }
+html[lang=ja] .b-promise .st { font-size: clamp(30px, calc(44 * var(--fit)), 44px); }
 html[lang=ja] .s-tsuba .st.big { font-size: clamp(30px, calc(60 * var(--fit)), 60px); }
 html[lang=ja] .s-tsuba .b-carpet .st { font-size: clamp(26px, calc(44 * var(--fit)), 44px); }
 html[lang=ja] .s-tsuba .st.xl { font-size: clamp(30px, calc(72 * var(--fit)), 72px); white-space: normal; }
@@ -26,4 +26,16 @@ html[lang=ja] .foot-links a, html[lang=ja] .colophon .top { letter-spacing: .06e
    that is a few pixels too narrow would push it under the .ln mask */
 @media (aspect-ratio < 1.2), (max-width: 760px) {
   html[lang=ja] :is(.scene .st, .scene .h2, .scene .big) { max-width: none; }
+}
+/* 日本語, both modes: these win over the cinema poster sizes too (html.cinema rules in cinema.css come later with the
+   same weight), so a Japanese poster has one size whether the page is the film or the catalogue. Each .ln holds one
+   line: the longest desktop line is 柄は、ウズベクの手仕事。 (twelve characters, inside seven columns at 1280 and 1440);
+   on phones the lines break where scripts/i18n.mjs wrote <br class="sp"> and the longest is ten characters, which
+   fits 360 px less the hakogaki strip at min(28px, 7.2vw) */
+html[lang=ja] body .b-promise .st { font-size: clamp(30px, calc(44 * var(--fit)), 44px); }
+html[lang=ja] body .s-tsuba .st.big { font-size: clamp(30px, calc(60 * var(--fit)), 60px); line-height: 1.24; } /* not the Latin 1.02: kanji need the air */
+html[lang=ja] body .s-togi .st, html[lang=ja] body .s-noto .st { font-size: clamp(30px, calc(52 * var(--fit)), 52px); }
+@media (aspect-ratio < 1.2), (max-width: 760px) {
+  html[lang=ja] body :is(.b-promise .st, .s-togi .st, .s-noto .st) { font-size: min(28px, 7.2vw); }
+  html[lang=ja] body .s-tsuba .st.big { font-size: min(28px, 7.2vw); }
 }

@@ -3,9 +3,12 @@
 //     zero console errors and warnings, no failed request, no horizontal overflow, no text clipped by its box,
 //     exactly one h1, <html lang> as the URL says; the first screen saved for review
 //   - the language switch: four names in their own script in the footer (and in the top bar at ≥ 1400 px)
-//   - Japanese pages: the body font stack is the Japanese system gothic (Hiragino Sans, Noto Sans JP, Yu Gothic)
+//   - Japanese pages: the body font stack is the Japanese system gothic (Hiragino Sans, Noto Sans JP, Yu Gothic), and no
+//     line of the words breaks inside a word (ja-split: a break that is neither an Intl.Segmenter word boundary nor an
+//     authored <wbr>/<br>, e.g. まと／める, お問い／合わせ, 取り／扱い, 通／信事業者)
 //   - JavaScript off: every page keeps its words; the contact form is a mailto form (post, text/plain) with the name,
-//     the contact and the consent box required
+//     the contact and the consent box required, and in the order a visitor meets it: the fields, the purpose of use,
+//     the consent box, then the button (APPI: the purpose before the data is given)
 //   - JavaScript on: the contact form refuses to send without consent, then opens a prefilled email (the mailto URL
 //     is recorded in __qilich.lastMailto) and says so in its status line
 //   - --analytics (a build with test IDs in content/site.json): no banner on the first screen, the banner after a
@@ -40,6 +43,38 @@ async function sitemapPaths() {
     for (const u of sm.matchAll(/<loc>https:\/\/qilich\.com([^<]+)<\/loc>/g)) paths.push(u[1]);
   }
   return paths;
+}
+
+// Japanese: every line break inside the words of the page, by character rects; a break that is not a word boundary
+function jaSplits() {
+  const seg = new Intl.Segmenter('ja', { granularity: 'word' });
+  const SEL = ':is(main h1, main h2, main h3, main p, main li, main dt, main dd, main label, main figcaption, .c-note)';
+  const out = [];
+  for (const el of document.querySelectorAll(SEL)) {
+    if (!el.getClientRects().length || el.parentElement.closest(SEL) || el.closest('[hidden], .sprite, #strings')) continue;
+    const chars = []; let mark = true;
+    const tw = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+      if (n.nodeType === 1) { if (n.tagName === 'WBR' || n.tagName === 'BR') mark = true; continue; }
+      for (let i = 0; i < n.length; i++) {
+        const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
+        const q = [...rg.getClientRects()].find((x) => x.width > 0);
+        chars.push({ c: n.data[i], top: q ? q.top : null, h: q ? q.height : 0, mark }); mark = false;
+      }
+    }
+    const text = chars.map((x) => x.c).join('');
+    if (!/[\u3040-\u30ff\u4e00-\u9fff]/.test(text)) continue;
+    const bounds = new Set();
+    for (const s of seg.segment(text)) { bounds.add(s.index); bounds.add(s.index + s.segment.length); }
+    let prev = null, space = false;
+    chars.forEach((x, i) => {
+      if (x.top === null || /\s/.test(x.c)) { if (/\s/.test(x.c)) space = true; return; }
+      if (prev && Math.abs(x.top - prev.top) > x.h * 0.5 && !space && !x.mark && !bounds.has(i)) out.push(`${text.slice(Math.max(0, i - 8), i)}／${text.slice(i, i + 6)}`);
+      if (!prev || Math.abs(x.top - prev.top) > x.h * 0.5) prev = x;
+      space = false;
+    });
+  }
+  return out;
 }
 
 async function inspect(page) {
@@ -93,6 +128,7 @@ async function inspect(page) {
           if (v.width < 1400 && !v.phone && i.barCodes.length !== 4) fail(w, `top bar codes ${i.barCodes.join(', ')}`);
           if (v.phone && !(i.barCodes.length === 1 || i.barCodes.length === 4)) fail(w, `phone bar shows ${i.barCodes.join(', ')}`);
           if (lang === 'ja' && !/Hiragino Sans/.test(i.font) || lang === 'ja' && !/Noto Sans JP/.test(i.font) || lang === 'ja' && !/Yu Gothic/.test(i.font)) fail(w, `Japanese font stack missing: ${i.font}`);
+          if (lang === 'ja') for (const sp of await page.evaluate(jaSplits)) fail(w, `ja-split ${sp}`);
         }
         if (vn === 'd1440' || vn === 'p390') await page.screenshot({ path: path.join(out, `${vn}${p.replace(/\//g, '_').replace(/\.html$/, '')}.png`) });
         log.push(`${w}: lang ${i.lang}, h1 ${i.h1}, ${i.sw}/${i.cw}, text ${i.text}`);
@@ -110,7 +146,8 @@ async function inspect(page) {
         const f = document.querySelector('form.lead');
         return {
           h1: document.querySelector('h1')?.textContent.trim(), first: document.querySelector('main p')?.textContent.trim().length || 0,
-          form: f && { action: f.getAttribute('action'), method: f.getAttribute('method'), enctype: f.getAttribute('enctype'), req: [...f.querySelectorAll('[required]')].map((e) => e.name).join(',') },
+          form: f && { action: f.getAttribute('action'), method: f.getAttribute('method'), enctype: f.getAttribute('enctype'), req: [...f.querySelectorAll('[required]')].map((e) => e.name).join(','),
+            order: [...f.children].map((c) => (c.matches('.purpose') ? 'purpose' : c.matches('.agree') ? 'agree' : c.matches('.send') ? 'send' : c.matches('.fld') ? 'field' : null)).filter(Boolean).join(',') },
           sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth,
         };
       });
@@ -122,6 +159,7 @@ async function inspect(page) {
         else {
           if (!/^mailto:inbox@qilich\.com\?subject=/.test(r.form.action) || r.form.method !== 'post' || r.form.enctype !== 'text/plain') fail(w, `not a mailto form: ${JSON.stringify(r.form)}`);
           if (r.form.req !== 'name,contact,agree') fail(w, `required fields ${r.form.req}`);
+          if (r.form.order !== 'field,field,field,field,purpose,agree,send') fail(w, `form order ${r.form.order} (the purpose and the consent box come before the button)`);
           log.push(`${w}: form ${JSON.stringify(r.form)}`);
         }
         if (langOf(p) === 'uz' || langOf(p) === 'ja') await page.screenshot({ path: path.join(out, `nojs${p.replace(/\//g, '_')}.png`), fullPage: true });

@@ -10,14 +10,15 @@ import { SoftPass } from './softpass.js';
 import { Rays } from './rays.js';
 import { LOOKS, UNIFORM_KEYS } from '../core/looks.js';
 import { pixelRatio } from '../core/tier.js';
+import { holdStudio } from './studio.js';
 
 const D = Math.PI / 180;
 const v3 = (x = 0, y = 0, z = 0) => new Vector3(x, y, z);
 
 export class Stage {
-  constructor(canvas, tier) {
+  constructor(canvas, tier, context) {
     this.tier = tier;
-    const r = (this.renderer = new WebGLRenderer({ canvas, alpha: true, premultipliedAlpha: true, antialias: tier.tier === 3, powerPreference: 'high-performance', preserveDrawingBuffer: false }));
+    const r = (this.renderer = new WebGLRenderer({ canvas, context, alpha: true, premultipliedAlpha: true, antialias: tier.tier === 3, powerPreference: 'high-performance', preserveDrawingBuffer: false }));
     r.setClearColor(0x000000, 0);
     r.toneMapping = NeutralToneMapping; r.toneMappingExposure = 1; r.outputColorSpace = SRGBColorSpace;
     r.sortObjects = true;
@@ -52,16 +53,26 @@ export class Stage {
     this.floorU = {
       ...this.U, tGirih: { value: T.girih }, uDiscL: { value: v3() }, uTsubaC: { value: v3() }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) },
       uDiscR: { value: 0.335 }, uGain: { value: 0.4 }, uFloorWarm: { value: 0 }, uVig: { value: 1 }, uPxPerUnit: { value: 100 },
-      uFloorBase: { value: v3(0.0070, 0.0115, 0.037) }, uLightCol: { value: v3(2.1, 1.42, 0.70) }, uVigC: { value: new Vector2(2.5, 0) }, uVigR: { value: 9 }, uFloorZ: { value: 0.65 },
+      uFloorBase: { value: v3(0.0070, 0.0115, 0.037) }, uLightCol: { value: v3(2.1, 1.42, 0.70) }, uVigC: { value: new Vector2(1.5, 0) }, uVigR: { value: 6 }, uFloorZ: { value: 0.65 },
     };
-    this.floor = new Mesh(new PlaneGeometry(30, 30), new ShaderMaterial({ vertexShader: SRC.PLANE_V, fragmentShader: SRC.frag(SRC.FLOOR_F), uniforms: this.floorU, transparent: true, premultipliedAlpha: true, depthWrite: false, side: DoubleSide }));
+    this.floor = new Mesh(new PlaneGeometry(30, 30), new ShaderMaterial({ vertexShader: SRC.PLANE_V, fragmentShader: SRC.frag(SRC.FLOOR_F), uniforms: this.floorU, transparent: true, premultipliedAlpha: true, depthWrite: false }));
     this.floor.frustumCulled = false; this.floor.renderOrder = -1; this.floor.visible = false;
-    this.floor.position.set(0, 0, 0.65); // the edge side of the guard: the screen's bottom in the opponent's view
+    this.floor.position.set(0, 0, 0.72); // the edge side of the guard: the screen's bottom in the opponent's view
+    this.floor.rotation.x = Math.PI;      // its face towards the guard (front faces only)
     hg.add(this.floor);
     this.soft = new SoftPass(this.renderer);
     this.rays = new Rays(this.renderer, hg);
   }
 
+  // baked textures in place of the stand-ins: uniform values only, no program changes
+  swapTextures(T) {
+    const M = this.mat;
+    if (T.hada) { M.steelU.tHada.value = T.hada; M.lacquer.uniforms.tHada.value = T.hada; }
+    if (T.hamon) M.steelU.tHamon.value = T.hamon;
+    if (T.silk) M.silk.uniforms.tSilk.value = T.silk;
+    if (T.ishime) for (const m of [M.copper, M.gold, M.iron, M.shakudo, M.nakago]) m.uniforms.tIshime.value = T.ishime;
+    if (T.girih) this.floorU.tGirih.value = T.girih;
+  }
   setSize(w, h, atHold = true) {
     this.w = w; this.h = h;
     const pr = pixelRatio(this.tier, w, h, atHold);
@@ -73,7 +84,8 @@ export class Stage {
     this.U.uAA.value = pr / dpr;
     const bw = Math.round(w * pr), bh = Math.round(h * pr);
     this.soft.setSize(bw, bh);
-    this.rays.setSize(bw, bh, this.tier.tier === 1 ? 0.25 : 0.5);
+    // the rays are soft: they run at half the device resolution (a quarter on T1), whatever the supersampling
+    this.rays.setSize(bw, bh, (this.tier.tier === 1 ? 0.25 : 0.5) / Math.max(1, this.U.uAA.value));
   }
 
   // ---------- the look ----------
@@ -231,12 +243,12 @@ export class Stage {
   }
 
   // ---------- the reflected sign (utsuri): solved at the hold, as in the prototype ----------
-  solveSign({ s = 0.5, dist = 5.0, width = 4.0, flatten = 0.8 } = {}) {
+  solveSign({ s = 0.5, zf = 0.56, dist = 5.0, width = 4.0, flatten = 0.8 } = {}) {
     const st = this.mat.steelU, c = this.camera;
     const camL = c.position.clone().applyMatrix4(new Matrix4().copy(this.sword.matrixWorld).invert());
     const side = camL.y >= 0 ? 1 : -1;
     const nB = this.dirW(v3(0, side, 0)).normalize();
-    const p = G.bladePoint(s, side * G.thick(s) * 0.45, 0.56, this.pose.sori);
+    const p = G.bladePoint(s, side * G.thick(s) * 0.45, zf, this.pose.sori);
     const P = this.world(v3(p[0], p[1], p[2]));
     const Vd = P.clone().sub(c.position).normalize();
     const R = Vd.clone().sub(nB.clone().multiplyScalar(2 * Vd.dot(nB)));
@@ -253,7 +265,7 @@ export class Stage {
   }
 
   // the studio rotation (uStudio): a roll of the studio about the blade axis (the reveal's −0.60), else identity
-  setStudio(roll = 0, yaw = 0) { this.U.uStudio.value.setFromMatrix4(new Matrix4().makeRotationX(roll).multiply(new Matrix4().makeRotationY(yaw))); }
+  setStudio(roll = 0, yaw = 0) { this.studioM = holdStudio(roll, yaw); this.U.uStudio.value.setFromMatrix4(this.studioM); }
 
   // ---------- the frame ----------
   render({ shadow = false, rays = false } = {}) {
@@ -268,6 +280,24 @@ export class Stage {
     if (rays) this.rays.draw();
     r.autoClear = true;
     return performance.now() - t0;
+  }
+  // Prewarm (§6.3): draw each mesh once into the default framebuffer with a 1 × 1 scissor, with its own blend and
+  // depth state, so a software renderer builds the real pipeline now and not inside a scene. Returns ms per mesh.
+  prewarm(meshes) {
+    const r = this.renderer, gl = r.getContext(), out = {};
+    const vis = [];
+    this.scene.traverse((o) => { if (o.isMesh) { vis.push([o, o.visible]); o.visible = false; } });
+    r.setRenderTarget(null); r.setScissorTest(true); r.setScissor(0, 0, 1, 1);
+    for (const m of meshes) {
+      const t0 = performance.now();
+      m.visible = true; r.render(this.scene, this.camera); m.visible = false;
+      this.finish();
+      out[m.name || m.material.type] = Math.round(performance.now() - t0);
+    }
+    r.setScissorTest(false);
+    for (const [o, v] of vis) o.visible = v;
+    void gl;
+    return out;
   }
   // a full GPU round trip, for timing logs
   finish() { const gl = this.renderer.getContext(); const px = new Uint8Array(4); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }

@@ -1,19 +1,16 @@
 // The grip: Margʻilon atlas (abr ikat) hishimaki over ray skin, with the gilt paxta menuki under the wrap.
 // The weave, the ikat and the ray skin are baked (bake.js) into tSilk (albedo rgb, height a) and tSilkM
-// (r ribbon, g menuki): mipmapped, so the nodules never break into salt noise at hero scale.
+// (r ribbon, g menuki), the two halves of one texture: mipmapped, so the nodules never break into salt noise at hero scale.
 varying vec2 vUv; varying float vRegion; varying float vAxial;
 varying vec3 vWPos; varying vec3 vWNrm; varying vec3 vLPos;
-uniform sampler2D tSilk, tSilkM;
-#ifdef REVEAL
+uniform sampler2D tSilk;   // top half: albedo + height; bottom half: ribbon, menuki
 uniform float uReveal, uFront;
-#endif
 void main(){
-#ifdef REVEAL
   if (vAxial > uReveal) discard;
-#endif
   vec3 N0 = normalize(vWNrm);
   vec3 V = normalize(cameraPosition - vWPos);
-  vec4 sa = texture2D(tSilk, vUv), sm = texture2D(tSilkM, vUv);
+  vec2 su = vec2(vUv.x, clamp(vUv.y, .002, .998) * .5);
+  vec4 sa = texture2D(tSilk, su), sm = texture2D(tSilk, su + vec2(0., .5));
   vec3 alb = sa.rgb; float h = sa.a, ribbon = sm.r, menuki = sm.g;
   vec3 N = bumpN(vWPos, N0, h, .006);
   float rough = mix(.55, .42, ribbon);
@@ -33,10 +30,7 @@ void main(){
   col += sheen * (alb*1.6 + vec3(.25,.28,.4)) * .55 * (studioIrr(N).g + .3);
   col += studio(reflect(-V,N), rough) * F * mix(.6, .35, ribbon);
   col += lampSpec(N, V, vWPos, F, rough + .1) * .8;
-#ifdef REVEAL
-  float fr = vAxial - uReveal;
-  col += uFront * vec3(.86,.93,1.) * (thinLine(fr, 0., 0.0022)*3.0);
-#endif
+  if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(vAxial - uReveal, 0., 0.0022)*3.0);
   col *= uExposure;
   float nv = abs(dot(N0, V));
   float alpha = clamp(nv / max(fwidth(nv) * 1.5, 1e-4), 0., 1.);

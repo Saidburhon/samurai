@@ -25,7 +25,8 @@ const say = (where, what, ctx) => problems.push(`${where}: ${what}${ctx ? `  «$
 // text a visitor or a search engine reads: text nodes and the attributes that carry words
 function visible(html) {
   const out = [];
-  const h = html.replace(/<script(?![^>]*application\/ld\+json)[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ');
+  // <wbr> (the Japanese phrase breaks) and <br class="sp"> join the words they sit between
+  const h = html.replace(/<wbr>|<br class="sp">/g, '').replace(/<script(?![^>]*application\/ld\+json)[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ');
   for (const m of h.matchAll(/>([^<]+)</g)) out.push(m[1]);
   for (const m of h.matchAll(/\s(?:aria-label|alt|title|content|data-copy|placeholder)="([^"]*)"/g)) out.push(m[1]);
   for (const m of h.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) out.push(m[1]);

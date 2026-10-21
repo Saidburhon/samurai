@@ -14,7 +14,7 @@ void main(){
   // urushi depth: a very faint cloudiness under the clearcoat
   float depthN = texture2D(tHada, vec2(fract(x / uSayaLen * 0.97), fract(vUv.y * 2.))).g;
   vec3 black = vec3(.0030, .0027, .0024) * (1. + .04 * (depthN - .5) * 8.);
-  vec3 band = vec3(.195, .013, .007) * .55;       // bengara #7A1E14, under lacquer
+  vec3 band = vec3(.195, .013, .007) * .32;       // bengara #7A1E14 under the clear lacquer: darker than the UI shu
   vec3 horn = vec3(.62, .55, .40);
   float isHorn = uPart > .5 ? 0. : 1. - smoothstep(uHornEnd - .004, uHornEnd + .004, x);
   float isBand = uPart > .5 ? 0. : (1. - isHorn) * (1. - smoothstep(uBandEnd - .006, uBandEnd + .006, x));

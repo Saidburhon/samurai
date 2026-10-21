@@ -19,7 +19,7 @@ function formation(x, size, r, cell, amp, grainAmp, tint) {
 }
 export function paperTile(kind, size = 512) {
   const c = document.createElement('canvas'); c.width = c.height = size;
-  const x = c.getContext('2d');
+  const x = c.getContext('2d', { willReadFrequently: true }); // a CPU canvas: no GPU readback for getImageData
   const base = { washi: [236, 230, 218], togi: [243, 240, 234], ganch: [227, 201, 160] }[kind];
   x.fillStyle = `rgb(${base})`; x.fillRect(0, 0, size, size);
   const r = mulberry(kind === 'washi' ? 11 : kind === 'togi' ? 12 : 13);
@@ -54,7 +54,7 @@ export function paperTile(kind, size = 512) {
 }
 export function grainTile(size = 128) {
   const c = document.createElement('canvas'); c.width = c.height = size;
-  const x = c.getContext('2d'), img = x.createImageData(size, size), r = mulberry(5);
+  const x = c.getContext('2d', { willReadFrequently: true }), img = x.createImageData(size, size), r = mulberry(5);
   for (let i = 0; i < size * size; i++) { const v = 110 + r() * 145; img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v; img.data[i * 4 + 3] = 255; }
   x.putImageData(img, 0, 0);
   return c;

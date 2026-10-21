@@ -25,7 +25,7 @@ export const RU = {
   'ui.copied': 'Скопировано',
   'mei.gloss': 'Подпись: работа Qilich, житель Ташкента',
   'hero.h': L('Японское <span class="nw">IT-агентство</span>', 'теперь в Узбекистане!'), // never broken after the hyphen (Geologica has no U+2011)
-  'hero.sub': 'Строим приложения, сайты, ботов и системы для бизнеса в Узбекистане по японским стандартам.',
+  'hero.sub': 'Строим приложения, сайты, ботов и системы для бизнеса по японским стандартам.',
   'hero.cta': 'Связаться',
   'pr.h': L('Японское качество.', 'Ташкентские цены.'),
   'pr.sub': 'Дисциплина и забота — в ташкентские рабочие часы.',
@@ -203,6 +203,10 @@ export const EN = {
 // Japanese poster lines: no space between the two .ln spans (a half-width space would show as a gap after 、 when
 // the lines run inline on phones)
 const LJ = (a, b) => `<span class="ln"><span>${a}</span></span><span class="ln"><span>${b}</span></span>`;
+// a line break on phones only (src/styles/site.css): a poster line that is too wide for a phone breaks where it was
+// written to, never inside a phrase, so 品質は、／日本の水準で。 instead of 品質は、日本の／水準で。. <wbr> marks the other
+// places a short line may break (elements that hold one keep their phrases whole: word-break keep-all)
+const SP = '<br class="sp">';
 
 export const JA = {
   'nav.home': 'Qilich ホーム',
@@ -222,9 +226,11 @@ export const JA = {
   'ui.copied': 'コピーしました',
   'mei.gloss': '銘：タシケント住キリチ作',
   'hero.h': LJ('日本品質のオフショア開発を、', 'ウズベキスタンから。'),
-  'hero.sub': '日本企業のためのオフショア開発パートナーとして、アプリと業務システムを日本の品質水準で開発します。',
+  // names Qilich, for whom and what (the first paragraph, Addendum 2); four lines of at most 12 characters on a 360 px
+  // phone (no loanword split, clear of the hanko)
+  'hero.sub': 'Qilichは、<wbr>日本企業の<wbr>アプリと<wbr>業務システムを、<wbr>タシケントの<wbr>開発チームで<wbr>手がけます。',
   'hero.cta': 'お問い合わせ',
-  'pr.h': LJ('日本品質を、', 'オフショア開発のコストで。'),
+  'pr.h': LJ(`品質は、${SP}日本の水準で。`, `コストは、${SP}オフショアの水準で。`), // not 日本品質 again: the hero line just said it
   'pr.sub': '規律ある仕事と、細やかな気配り。',
   'part.kissaki': 'きっさき',
   'part.shinogi': 'しのぎ',
@@ -232,11 +238,11 @@ export const JA = {
   'part.tsuba': 'つば',
   'part.tsuka': 'つか',
   'svc.h': '開発領域',
-  'svc.1': 'iOS・Androidアプリ',
+  'svc.1': 'iOS・<wbr>Androidアプリ',
   'svc.2': 'Webサイト・Webシステム',
   'svc.3': 'チャットボット',
   'svc.4': 'バックエンド・API連携',
-  'svc.5': 'デスクトップアプリ',
+  'svc.5': 'デスクトップ<wbr>アプリ',
   'svc.6': 'IoTシステム',
   'svc.7': 'AIの導入・連携',
   'svc.w1': 'iOS · Android',
@@ -247,7 +253,7 @@ export const JA = {
   'hk.utsuri': 'うつり',
   'proc.h': '開発の流れ',
   'proc.1': '設計',
-  'proc.1t': '最初に設計図を描きます。一本の線も、思いつきでは引きません。',
+  'proc.1t': '最初に<wbr>設計図を<wbr>描きます。<wbr>一本の線も、<wbr>思いつきでは<wbr>引きません。',
   'proc.2': '開発',
   'proc.2t': '最後の一行まで、丁寧に仕上げます。',
   'proc.3': 'テスト',
@@ -258,14 +264,14 @@ export const JA = {
   'hk.hi': 'ひ',
   'hk.mizu': 'みず',
   'hk.sori': 'そり',
-  'kz.h': '毎日、少しずつ良くする。',
+  'kz.h': `毎日、${SP}少しずつ良くする。`,
   'kz.rub': 'マウスでなぞって磨く',
   'kz.rubTouch': '指でなぞって磨く',
   'kz.stone': 'うちぐもり',
   'kz.after': 'リリース後も、改善を続けます。',
   'hk.togi': 'とぎ',
-  'ts.h': LJ('刀身は、日本の流儀。', '柄は、ウズベキスタンの手仕事。'),
-  'ts.cap': 'マルギラン産アトラス（絣織）・ギリフ（幾何学文様）・綿',
+  'ts.h': LJ(`刀身は、${SP}日本の流儀。`, `柄は、${SP}ウズベクの手仕事。`), // ウズベク (Uzbek), as the Uzbek «Dasta — oʻzbek»
+  'ts.cap': 'マルギラン産アトラス<wbr>（絹の絣織り）・<wbr>ギリフ（幾何学文様）・綿',
   'ts.omo': 'ご指示を待つだけでなく、必要なことを自ら考えてご提案します。',
   'ts.team': '開発チームは、タシケントに。',
   'hk.tsuba': 'つば',
@@ -274,8 +280,8 @@ export const JA = {
   'tk.2': '日本時間の午後に、双方の業務時間が5時間重なります。',
   'tk.3': '報告・連絡・相談を、毎日。',
   'hk.toki': 'とき',
-  'ct.new': 'Qilichは、立ち上げたばかりの会社です。最初のプロジェクトを、貴社と一緒に。',
-  'ct.h': 'プロジェクトについて、ご相談ください。',
+  'ct.new': 'Qilichは、ウズベキスタンでの活動を始めたばかりです。タシケントでの最初のプロジェクトを、貴社と一緒に。',
+  'ct.h': LJ('開発のご相談を、', 'お待ちしています。'),
   'ct.call': '電話をかける',
   'ct.mail': 'メールを送る',
   'ct.city': 'タシケント',

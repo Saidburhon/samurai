@@ -35,3 +35,15 @@ html[lang=ja] .hako .gl { letter-spacing: .12em; }
 /* a masked line (.ln) is an inline-block sized to its content: let its min-content include the phrase breaks, so a
    phrase line wider than a phone wraps at a phrase boundary instead of running under the mask */
 html[lang=ja] .ln > span { overflow-wrap: anywhere; }
+/* authored breaks (scripts/i18n.mjs JA): <br class="sp"> breaks a poster line on phones only, <wbr> marks where a short
+   line may break; an element that holds either keeps every other phrase whole (keep-all also in Safari, which has no
+   auto-phrase), so no loanword is ever split (デスクトップ／アプリ, never デスクトップアプ／リ) */
+html[lang=ja] br.sp { display: none; }
+html[lang=ja] :is(.sub p, .svc li, .st, .h2, .big, .after, .line, .pre, .cap):has(wbr, br.sp) { word-break: keep-all; }
+@media (aspect-ratio < 1.2), (max-width: 760px) { html[lang=ja] br.sp { display: inline; } }
+/* the phone hero: the three h1 lines end left of the blade (ウズベキスタンから。 is ten full-width characters), and the
+   sub runs four lines of at most twelve characters, clear of the hanko above it */
+@media (aspect-ratio < 1.2) and (max-width: 599px) {
+  html[lang=ja] .h1 { --h1: clamp(24px, 7vw, 28px); }
+  html[lang=ja] .b-hero .sub p { font-size: 14px; line-height: 1.7; }
+}

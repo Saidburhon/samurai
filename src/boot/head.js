@@ -11,12 +11,22 @@
   d.classList.remove('no-js'); d.classList.add('js');
   const tierQ = q.get('tier');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let cinema = false;
+  let cinema = false, glName = null, glKeep = null;
   if ((__CINEMA__ || q.has('beat') || q.get('cinema') === '1') && tierQ !== '0') {
     try {
+      // the probe asks for the stage's own attributes (gl/stage.js), so a software renderer can keep it
       const c = document.createElement('canvas'); c.width = c.height = 1;
-      const g = c.getContext('webgl2');
-      if (g) { cinema = true; const l = g.getExtension('WEBGL_lose_context'); if (l) l.loseContext(); }
+      const g = c.getContext('webgl2', { alpha: true, premultipliedAlpha: true, antialias: false, depth: true, stencil: false, preserveDrawingBuffer: false, powerPreference: 'high-performance' });
+      if (g) {
+        cinema = true;
+        // the renderer's name, read once here for the tiers (core/tier.js)
+        const x = g.getExtension('WEBGL_debug_renderer_info');
+        glName = String(x ? g.getParameter(x.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER));
+        // a software renderer (T2, no MSAA) keeps this context for the stage: created now, while the GPU process is
+        // idle, it costs little; created after the gate it waits behind the page's frames (up to ~1.3 s measured)
+        if (/swiftshader|llvmpipe|software/i.test(glName)) glKeep = { canvas: c, context: g };
+        else { const l = g.getExtension('WEBGL_lose_context'); if (l) l.loseContext(); }
+      }
     } catch (e) { cinema = false; }
   }
   if (cinema) d.classList.add('cinema');
@@ -25,5 +35,5 @@
   if (intro) d.classList.add('intro');
   const t = performance.now();
   d.style.setProperty('--k', Math.max(0.375, Math.min(1, (800 - t) / 740)).toFixed(3));
-  window.__qilich = { mode: cinema ? 'cinema' : 'flow', tier: cinema ? null : 0, beat: 0, name: 'mei.hero', poster: 0, glReady: false, atHold: true, idle: false, raysReady: false, cutReady: false, intro, boot: { head: Math.round(t) } };
+  window.__qilich = { mode: cinema ? 'cinema' : 'flow', tier: cinema ? null : 0, beat: 0, name: 'mei.hero', poster: 0, glReady: false, atHold: true, idle: false, raysReady: false, cutReady: false, intro, glName, glKeep, boot: { head: Math.round(t) } };
 })();

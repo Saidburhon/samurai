@@ -86,7 +86,7 @@ export class Poster {
     // materials
     const sU = st.mat.steelU, U = st.U;
     const reveal = S.program === 'reveal';
-    st.blade.material = reveal ? st.mat.steelReveal : st.mat.steel;
+    st.blade.material = S.polishFront < 1.5 ? st.mat.steelTogi : S.sign ? st.mat.steelSign : st.mat.steel;
     const P = st.parts, R = st.mat.reveal, M = st.mat;
     P.habaki.material = reveal ? R.copper : M.copper; P.seppa1.material = P.seppa2.material = reveal ? R.gold : M.gold;
     P.tsuba.material = reveal ? R.iron : M.iron; P.fuchi.material = P.kashira.material = reveal ? R.shakudo : M.shakudo;
@@ -112,7 +112,7 @@ export class Poster {
     // the reflected sign
     if (S.sign) {
       await st.atlas;
-      st.solveSign({ s: S.sign.s });
+      st.solveSign({ s: S.sign.s, zf: S.sign.zf });
       sU.uWordAlpha.value = S.sign.alpha; sU.uWordRowA.value = S.sign.row; sU.uWordMix.value = 0;
     } else sU.uWordAlpha.value = 0;
     // the floor and the lamp disc (Tsuba)
@@ -173,14 +173,15 @@ export async function runPoster(stage, log) {
   // dev: re-render this page's stage in another state without reloading (the tuning sweeps use it)
   Q.tune = async (n, over, extra = {}) => { await p.apply(n || name, { ...opt, ...extra, over }); p.render(); stage.finish(); return p.S; };
   await p.apply(name, opt);
+  if (q.has('prewarm')) { const st = stage; st.blade.name = 'steel'; Q.prewarm = st.prewarm([st.blade, st.parts.habaki, st.parts.tsuka, st.saya, st.floor]); }
   // first frame: programs compile here (the prewarm queue of G2 moves this out of the scenes)
   const t0 = performance.now(); p.render(); stage.finish(); const first = performance.now() - t0;
-  await nextFrame();
-  // the steady hold frame
-  const t1 = performance.now(); p.render(); stage.finish(); const hold1 = performance.now() - t1;
-  await nextFrame();
-  const t2 = performance.now(); p.render(); stage.finish(); const hold2 = performance.now() - t2;
-  log('first', first); log('hold', Math.min(hold1, hold2));
+  // the steady hold frame: measured once the page itself has settled (its own first raster shares the GPU process
+  // with this frame on a software renderer, which is not the state of a hold window inside the film)
+  await nextFrame(); await nextFrame(); await new Promise((r) => setTimeout(r, 400));
+  let hold = 1e9;
+  for (let i = 0; i < 3; i++) { const t1 = performance.now(); p.render(); stage.finish(); hold = Math.min(hold, performance.now() - t1); await nextFrame(); }
+  log('first', first); log('hold', hold);
   if (q.has('prof')) Q.prof = profile(stage, p);
   Q.atHold = true; Q.idle = true; Q.raysReady = !!p.S.rays; Q.posterReady = true;
   Q.S = p.S;

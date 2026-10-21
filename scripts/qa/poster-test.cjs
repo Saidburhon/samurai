@@ -16,7 +16,7 @@ const pos = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && args[i - 1].
 const base = (pos[0] || 'http://localhost:8800').replace(/\/$/, '');
 const out = path.resolve(pos[1] || '.cache/qa/poster');
 fs.mkdirSync(out, { recursive: true });
-const sw = flag('sw', 'b');
+const sw = flag('sw', 'a'); // software option A is the shipped default (core/tier.js SW_DEFAULT)
 const views = String(flag('views', 'land,port')).split(',');
 // the G1 material-lock set: [label, query, layout, prototype frame]
 const G1 = [
@@ -46,7 +46,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const ctx = await browser.newContext(VIEW[lay]);
     const page = await ctx.newPage();
     const errors = [];
-    page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`${m.type()}: ${m.text().slice(0, 300)}`); });
+    // (the driver's 'GPU stall due to ReadPixels' notice comes from the timing's own sync point: logged, not a failure)
+    const notes = [];
+    page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') (/GPU stall due to ReadPixels/.test(m.text()) ? notes : errors).push(`${m.type()}: ${m.text().slice(0, 300)}`); });
     page.on('pageerror', (e) => errors.push('PAGEERROR ' + e.message.slice(0, 300)));
     const t0 = Date.now();
     await page.goto(`${base}/?${query}&sw=${sw}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
@@ -58,7 +60,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const info = await page.evaluate(() => { const Q = window.__qilich || {}; return { timing: Q.timing, err: Q.glError, tier: Q.tier, sw: Q.sw, renderer: Q.renderer, pr: Q.stage && Q.stage.pr, buf: Q.stage && [Q.stage.renderer.domElement.width, Q.stage.renderer.domElement.height], ready: !!Q.posterReady }; }).catch((e) => ({ err: e.message }));
     const file = `${lay}-${label}.png`;
     await page.screenshot({ path: path.join(out, file) });
-    log.frames.push({ label, query, layout: lay, file, proto, ok: ok && info.ready && !info.err && !errors.length, wallMs: Date.now() - t0, ...info, errors });
+    log.frames.push({ label, query, layout: lay, file, proto, ok: ok && info.ready && !info.err && !errors.length, wallMs: Date.now() - t0, ...info, errors, notes: notes.length });
     console.log(`${label.padEnd(20)} ${lay} first ${info.timing && info.timing.first} hold ${info.timing && info.timing.hold} glReady ${info.timing && info.timing.glReady} buf ${info.buf} ${errors.length ? 'ERR ' + errors.join(' | ') : ''}`);
     await ctx.close();
   }

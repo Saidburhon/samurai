@@ -61,23 +61,25 @@ S['utsuri.ios'] = {
 };
 // B6: the other flat (ura): the blade is rolled over, so the hamon runs along the top of the band and the ridge
 // along the bottom; seen from the edge side, the tip to the right, the kissaki and the yokote entering at x ~ .93
+// (its studio turned 0.8 rad about the blade: the ji reads as a dark mirror under the frosty hamon, not flat grey)
 S['utsuri.ai'] = {
-  ...BASE, look: 'sumi', pose: { roll: Math.PI - 0.10, pitch: 0, sori: 1 }, ground: 'sumi',
+  ...BASE, look: 'sumi', pose: { roll: Math.PI - 0.10, pitch: 0, sori: 1 }, studioRoll: 0.8, ground: 'sumi',
   glint: { s: 0.97, zf: 0.6, dist: 3.4 },
-  sign: { row: 4, s: 0.74, alpha: 1 },
+  sign: { row: 4, s: 0.74, zf: 0.56, alpha: 1 },
   land: { cam: { mode: 'orbit', target: { s: 0.80 }, az: -68, el: 46.8, dist: 2.7, fov: 26, ang: -18, off: [0, 0] } },
   port: { cam: { mode: 'orbit', target: { s: 0.80 }, az: -60, el: 50, dist: 3.0, fov: 30, ang: -62, off: [0, 0] } },
 };
 // 研 B12: magnified and level, the polish front across the middle of the frame
+// (the black card's one soft white strip is laid where the level ji reflects; the kirari stays small at this zoom)
 S['togi.front'] = {
-  ...BASE, look: 'togi', pose: { roll: 0, pitch: 0, sori: 1 }, polishFront: 0.72, shadow: 1, ground: 'togi', nakago: 1, koshirae: 0,
+  ...BASE, look: 'togi', lookOver: { uStrip: [1.6, 1.6, 1.55], uStripA: [0.10, 0.16], uGlintCol: [5, 4.6, 4] }, pose: { roll: 0, pitch: 0, sori: 1 }, polishFront: 0.72, shadow: 1, ground: 'togi', nakago: 1, koshirae: 0,
   glint: { s: 0.62, zf: 0.55, dist: 7 },
   land: { cam: { mode: 'td', A: { s: 0.55 }, a: [0.04, 0.62], B: { s: 0.85 }, b: [0.96, 0.62], fov: 12, lift: 0.12 } },
   port: { cam: { mode: 'td', A: { s: 0.55 }, a: [-0.05, 0.52], B: { s: 0.85 }, b: [1.05, 0.52], fov: 14, lift: 0.12 } },
 };
 // 鍔 B14: the opponent's view; two candidates for the horn (§2.5), chosen at G1 next to frame 04
 S['tsuba.guard'] = {
-  ...BASE, look: 'ai', pose: { roll: 0, pitch: 0, sori: 0.3 }, ground: 'ai', rays: 1, floor: 1, floorGain: 0.4,
+  ...BASE, look: 'ai', pose: { roll: 0, pitch: 0, sori: 0.3 }, ground: 'ai', rays: 1, floor: 1, floorGain: 0.03,
   lampPos: { tsuba: true }, glintDir: 'axis-',
   land: { cam: { mode: 'guard', cand: 'a', frac: 0.47, off: [-0.12, 0] } },
   port: { cam: { mode: 'guard', cand: 'a', frac: 0.36, off: [0, -0.06] } },
@@ -86,7 +88,9 @@ S['tsuba.guard'] = {
 S['noto.contact'] = {
   ...BASE, look: 'noto', pose: { roll: -Math.PI / 2, pitch: 0, sori: 1 }, ground: 'sumi', saya: 1, sheath: 1,
   glint: null, lampPos: { at: { s: 0.02, zf: 0.5 }, add: [1.4, 2.2, 3.2] },
-  land: { cam: { mode: 'orbit', target: 'koiguchi', az: -8, el: 12, dist: 6.4, fov: 22, ang: 180, chord: [0.02, 0.22], off: [-0.22, -0.20] } },
+  // the koiguchi, the bengara band and the tsuba at the lower right; the grip cropped by the right edge (it is never
+  // closer than 1.8x the hero scale, so only its fuchi end shows)
+  land: { cam: { mode: 'orbit', target: 'koiguchi', az: -8, el: 12, dist: 6.4, fov: 22, ang: 180, chord: [0.02, 0.22], off: [-0.32, -0.25] } },
   port: { cam: { mode: 'orbit', target: 'koiguchi', az: -8, el: 12, dist: 13, fov: 26, ang: 180, chord: [0.02, 0.22], off: [0, -0.36] } },
 };
 export const SHOTS = S;

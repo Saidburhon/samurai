@@ -5,10 +5,15 @@
 //   T0  no WebGL2 (flow mode; decided by the head script)
 // The software resolution policy (chosen at G1, ?sw=a|b overrides): A = 1.5x the device pixels always;
 // B = 1.0x while moving and 2.0x inside a hold window. The buffer never exceeds 3.0 million pixels.
-export const SW_DEFAULT = 'b';
+// G1 chose A: on the capture's stills A and B are indistinguishable at 2x (outlines, ridge, words), and A's hold frame
+// costs about 60 % of B's (scripts/qa/poster-test.cjs, both options)
+export const SW_DEFAULT = 'a';
 const MAXPX = 3.0e6;
 
 export function probeRenderer() {
+  // the head script has already read it (boot/head.js) when it chose cinema mode
+  const Q = window.__qilich;
+  if (Q && typeof Q.glName === 'string') return { ok: true, name: Q.glName, software: /swiftshader|llvmpipe|software/i.test(Q.glName) };
   try {
     const c = document.createElement('canvas'); c.width = c.height = 1;
     const g = c.getContext('webgl2');
