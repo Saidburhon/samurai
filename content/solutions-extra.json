@@ -153,7 +153,7 @@
       "name": { "uz": "restoran", "ru": "ресторан", "en": "a restaurant", "ja": "飲食店" },
       "plural": { "uz": "Restoranlar", "ru": "Рестораны", "en": "Restaurants", "ja": "飲食店" },
       "starter": ["tg-order-bot", "biz-delivery-routing", "biz-1c-integration"],
-      "ja_starter": ["ind-restaurant", "web-booking-engine", "biz-bi-dashboards"],
+      "ja_starter": ["ind-restaurant", "mob-customer-app", "biz-bi-dashboards"],
       "words": ["restoran", "kafe", "choyxona", "fastfud", "ресторан", "кафе", "кофейн", "столовая", "пиццер", "фастфуд", "общепит", "restaurant", "cafe", "café", "coffee shop", "pizzeria", "canteen", "bistro", "eatery"],
       "ja_words": ["飲食", "レストラン", "カフェ", "居酒屋", "食堂", "厨房"],
       "examples": {
@@ -167,7 +167,7 @@
       "name": { "uz": "klinika", "ru": "клиника", "en": "a clinic", "ja": "クリニック" },
       "plural": { "uz": "Klinikalar", "ru": "Клиники", "en": "Clinics", "ja": "クリニック" },
       "starter": ["tg-booking-bot", "biz-call-centre", "ind-clinic"],
-      "ja_starter": ["ind-clinic", "web-booking-engine", "biz-call-centre"],
+      "ja_starter": ["ind-clinic", "biz-notification-hub", "biz-call-centre"],
       "words": ["klinika", "poliklinika", "shifoxona", "stomatolog", "bemor", "shifokor", "tibbiy", "клиник", "поликлиник", "стоматолог", "больниц", "медцентр", "медицинск", "пациент", "врач", "clinic", "dental", "dentist", "hospital", "medical", "patient", "doctor"],
       "ja_words": ["クリニック", "病院", "医院", "歯科", "診療", "患者"],
       "examples": {
@@ -209,7 +209,7 @@
       "name": { "uz": "goʻzallik saloni", "ru": "салон красоты", "en": "a beauty salon", "ja": "美容サロン" },
       "plural": { "uz": "Goʻzallik salonlari", "ru": "Салоны красоты", "en": "Beauty salons", "ja": "美容サロン" },
       "starter": ["tg-booking-bot", "ai-sales-assistant", "tg-loyalty-bot"],
-      "ja_starter": ["web-booking-engine", "biz-crm", "ai-sales-assistant"],
+      "ja_starter": ["mob-booking-app", "biz-crm", "ai-sales-assistant"],
       "words": ["goʻzallik", "sartarosh", "barber", "manikyur", "kosmetolog", "салон красот", "парикмахер", "барбер", "маникюр", "косметолог", "beauty", "hair salon", "nail", "spa=", "salon="],
       "ja_words": ["美容", "サロン", "ネイル", "エステ", "理容"],
       "examples": {
@@ -292,7 +292,7 @@
       "name": { "uz": "fitnes klub", "ru": "фитнес-клуб", "en": "a fitness club", "ja": "フィットネスクラブ" },
       "plural": { "uz": "Fitnes klublar", "ru": "Фитнес-клубы", "en": "Fitness clubs", "ja": "フィットネスクラブ" },
       "starter": ["ind-fitness-sports", "tg-booking-bot"],
-      "ja_starter": ["ind-fitness-sports", "web-booking-engine"],
+      "ja_starter": ["ind-fitness-sports", "mob-booking-app"],
       "words": ["fitnes", "sport zal", "sport klub", "sport maktab", "trenajyor", "фитнес", "спортзал", "тренажер", "тренажёр", "спортивный клуб", "спортивная школа", "fitness", "gym=", "gyms=", "sports club", "yoga"],
       "ja_words": ["フィットネス", "ジム", "スポーツクラブ"],
       "examples": {
@@ -412,8 +412,8 @@
       "name": { "uz": "avtoservis", "ru": "автосервис", "en": "a car service", "ja": "自動車整備工場" },
       "plural": { "uz": "Avtoservislar", "ru": "Автосервисы", "en": "Car services", "ja": "自動車整備工場" },
       "starter": ["ind-auto-service", "tg-booking-bot"],
-      "ja_starter": ["ind-auto-service", "web-booking-engine"],
-      "words": ["avtoservis", "avtomoyka", "moyka", "avtosalon", "avto ehtiyot", "avto taʼmir", "shinomontaj", "автосервис", "автомойк", "мойк", "автосалон", "автозапчаст", "шиномонтаж", "сто=", "car service", "car wash", "auto repair", "auto parts", "car dealer"],
+      "ja_starter": ["ind-auto-service", "mob-booking-app"],
+      "words": ["avtoservis", "avtomoyka", "moyka", "avtosalon", "avto ehtiyot", "avto taʼmir", "shinomontaj", "автосервис", "автомо", "мойк", "моек", "автосалон", "автозапчаст", "шиномонтаж", "сто=", "car service", "car wash", "auto repair", "auto parts", "car dealer"],
       "ja_words": ["自動車整備", "整備工場", "洗車", "ディーラー", "カー用品"],
       "examples": {
         "uz": ["Avtoservis va avtoyuvish, mijozlar navbat kutib ketib qoladi", "Ehtiyot qismlar doʻkoni, qoldiqlar Excelda"],
@@ -426,7 +426,7 @@
       "name": { "uz": "xizmat koʻrsatish biznesi", "ru": "сервисный бизнес", "en": "a service business", "ja": "サービス業" },
       "plural": { "uz": "Xizmat koʻrsatish bizneslari", "ru": "Сервисные компании", "en": "Service businesses", "ja": "サービス業" },
       "starter": ["tg-booking-bot", "biz-crm", "web-corporate"],
-      "ja_starter": ["web-booking-engine", "biz-crm", "web-corporate"],
+      "ja_starter": ["mob-booking-app", "biz-crm", "web-corporate"],
       "words": ["tozalash", "taʼmirlash", "клининг", "химчистк", "cleaning", "laundry", "repair"],
       "ja_words": ["清掃", "修理", "クリーニング"],
       "examples": {

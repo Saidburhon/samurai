@@ -1,5 +1,5 @@
 {
- "_readme": "Written by scripts/samurai-ja-catalogue.mjs from the English and Russian catalogue lines; needs a native reviewer. content/solutions.json wins once it has Japanese.",
+ "_readme": "Written by scripts/samurai-ja-catalogue.mjs from the English and Russian catalogue lines; needs a native reviewer. content/solutions.json wins once it has Japanese. Generic entries are worded for a company in Japan (no Telegram, 1C or Uzbek payment brands where the product does not need them); Telegram products and Uzbekistan-only services keep their names.",
  "made": "2026-10-21",
  "solutions": {
   "ai-telegram-support-account": {
@@ -8,7 +8,7 @@
   },
   "ai-complaints-desk": {
    "title": "AIによる苦情・フィードバック管理窓口",
-   "oneliner": "Telegram、Instagram、電話、Webサイトからの苦情をすべて記録し、担当者へ振り分けて期限内に対応完了します。"
+   "oneliner": "Webサイト、SNS、メール、電話からの苦情をすべて記録し、担当者へ振り分けて期限内に対応完了します。"
   },
   "ai-voice-agent": {
    "title": "コールセンター向けAI音声オペレーター",
@@ -19,12 +19,12 @@
    "oneliner": "予約確認、支払いリマインド、アンケートを1日に数千人の顧客へ、オペレーターなしで実施します。"
   },
   "ai-sales-assistant": {
-   "title": "Web・Instagram・Telegram向けAI営業アシスタント",
+   "title": "Web・SNS向けAI営業アシスタント",
    "oneliner": "顧客の質問から商品を提案して価格を案内し、注文や商談を登録してCRMに記録します。"
   },
   "ai-document-processing": {
    "title": "請求書・送り状・契約書のAI読み取り",
-   "oneliner": "スキャンや写真の書類からデータを読み取り1CやERPへ自動入力し、経理の手入力をなくします。"
+   "oneliner": "スキャンや写真の書類からデータを読み取り会計システムやERPへ自動入力し、経理の手入力をなくします。"
   },
   "ai-id-verification": {
    "title": "パスポート・IDカード読み取りと本人確認",
@@ -36,7 +36,7 @@
   },
   "ai-data-assistant": {
    "title": "自然言語でデータに質問できるAIアナリスト",
-   "oneliner": "質問を入力するだけで、1CやCRMのデータから数値・表・グラフで回答します。"
+   "oneliner": "質問を入力するだけで、基幹システムやCRMのデータから数値・表・グラフで回答します。"
   },
   "ai-demand-forecasting": {
    "title": "需要・売上予測システム",
@@ -44,7 +44,7 @@
   },
   "ai-retail-vision": {
    "title": "店舗向け映像解析（来店数・レジ待ち・棚）",
-   "oneliner": "既存カメラで来店者数、レジの行列、空き棚を把握し、Telegramで店長に通知します。"
+   "oneliner": "既存カメラで来店者数、レジの行列、空き棚を把握し、店長のスマートフォンに通知します。"
   },
   "ai-quality-vision": {
    "title": "製造ラインのAI品質検査",
@@ -64,7 +64,7 @@
   },
   "ai-hr-screening": {
    "title": "AIによる応募者スクリーニング",
-   "oneliner": "数百件の履歴書やTelegram応募から候補者を選び、一次質問を行って人事に要約を送ります。"
+   "oneliner": "数百件の履歴書やWeb応募から候補者を選び、一次質問を行って人事に要約を送ります。"
   },
   "ai-translation": {
    "title": "ウズベク語・ロシア語・英語のAI翻訳",
@@ -80,7 +80,7 @@
   },
   "ai-price-monitoring": {
    "title": "マーケットプレイス価格モニタリング",
-   "oneliner": "Uzum Marketなどの同一商品の価格を毎日表示し、自社価格の見直し時期を把握できます。"
+   "oneliner": "ECモールでの同一商品の価格を毎日表示し、自社価格の見直し時期を把握できます。"
   },
   "ai-contract-review": {
    "title": "AI契約書レビュー",
@@ -88,7 +88,7 @@
   },
   "ai-private-llm": {
    "title": "自社サーバーで動くプライベートAI",
-   "oneliner": "契約書や社内規程についてAIに質問でき、ウズベキスタン国内のサーバーで動くため機密データが国外に出ません。"
+   "oneliner": "契約書や社内規程についてAIに質問でき、自社のサーバーで動くため機密データが社外に出ません。"
   },
   "ai-fraud-detection": {
    "title": "不正・異常検知システム",
@@ -99,12 +99,12 @@
    "oneliner": "IELTSやCEFR模試の答案と録音に数分で目安スコアとコメントを付け、講師は確認・承認するだけです。"
   },
   "ai-reviews-reputation": {
-   "title": "Yandex Maps・Google Maps・2GISの口コミ管理",
-   "oneliner": "全支店の口コミをTelegramに集約し、低評価は返信案付きで1時間以内に店長へ届け、来店後に感想を依頼します。"
+   "title": "地図サービス・口コミサイトの口コミ管理",
+   "oneliner": "全店舗の口コミを一か所に集約し、低評価は返信案付きで1時間以内に店長へ届け、来店後に感想を依頼します。"
   },
   "ai-product-photos": {
    "title": "マーケットプレイス向けAI商品写真・商品ページ",
-   "oneliner": "スマホ写真1枚から数分でスタジオ風写真、使用シーン、Uzum Market用の説明文を作成します。"
+   "oneliner": "スマホ写真1枚から数分でスタジオ風写真、使用シーン、ECモール用の説明文を作成します。"
   },
   "tg-order-bot": {
    "title": "店舗・飲食店向けTelegram注文ボット",
@@ -176,7 +176,7 @@
   },
   "mob-field-sales": {
    "title": "営業担当者向けモバイルアプリ",
-   "oneliner": "オフラインでも受注でき、取引先残高の確認や棚写真の送信が可能で、すべて1Cに反映されます。"
+   "oneliner": "オフラインでも受注でき、取引先残高の確認や棚写真の送信が可能で、すべて基幹システムに反映されます。"
   },
   "mob-fintech-app": {
    "title": "銀行・決済・マイクロファイナンス向けアプリ",
@@ -264,7 +264,7 @@
   },
   "web-ecommerce": {
    "title": "ECサイト構築",
-   "oneliner": "Click・Payme・Uzum・分割払い、1Cの在庫連携、配送に対応し、24時間販売できるストアです。"
+   "oneliner": "カード決済・分割払い、在庫システム連携、配送に対応し、24時間販売できるストアです。"
   },
   "web-marketplace": {
    "title": "複数出店者型マーケットプレイス",
@@ -319,7 +319,7 @@
    "oneliner": "検索順位とリンクを維持したまま、古いサイトのデザインと表示速度を刷新します。"
   },
   "biz-crm": {
-   "title": "CRM導入（amoCRM・Bitrix24・独自開発）",
+   "title": "CRM導入（既製品の導入・独自開発）",
    "oneliner": "電話や問い合わせをすべてCRMに記録し、経営者が営業ファネルと担当者の動きをリアルタイムで把握できます。"
   },
   "biz-erp": {
@@ -327,7 +327,7 @@
    "oneliner": "購買・生産・在庫・販売・財務を一元管理し、実際の原価と利益を毎日確認できます。"
   },
   "biz-1c-integration": {
-   "title": "1C・iiko・R-Keeperとサイト・Bot・銀行の連携",
+   "title": "会計・POSシステムとサイト・銀行の連携",
    "oneliner": "在庫・価格・注文・決済を自動同期し、ソフト間のデータ転記作業をなくします。"
   },
   "biz-wms": {
@@ -335,8 +335,8 @@
    "oneliner": "全商品の棚位置を把握し、ピッキングミスを減らして棚卸を大幅に短縮します。"
   },
   "biz-pos": {
-   "title": "税務対応POSレジシステム",
-   "oneliner": "素早い会計、税務要件を満たすレシート、Click・PaymeのQR決済、全店舗の売上を一つのレポートに。"
+   "title": "POSレジシステム",
+   "oneliner": "素早い会計、電子レシート、QRコード決済に対応し、全店舗の売上を一つのレポートにまとめます。"
   },
   "biz-hr-payroll": {
    "title": "勤怠・給与計算システム",
@@ -344,7 +344,7 @@
   },
   "biz-document-workflow": {
    "title": "電子文書管理・ワークフロー承認",
-   "oneliner": "契約書や申請をペーパーレスで承認しE-IMZOで署名、どこで書類が止まっているかも見えます。"
+   "oneliner": "契約書や申請をペーパーレスで承認し電子署名、どこで書類が止まっているかも見えます。"
   },
   "biz-e-invoicing": {
    "title": "電子請求書連携（Didox・Faktura.uz・soliq.uz）",
@@ -352,11 +352,11 @@
   },
   "biz-bi-dashboards": {
    "title": "経営者向けBIダッシュボード",
-   "oneliner": "売上・資金・在庫・広告を一画面に集約し、毎朝Telegramへ配信。Excel集計を待たずに判断できます。"
+   "oneliner": "売上・資金・在庫・広告を一画面に集約し、毎朝メールで配信。Excel集計を待たずに判断できます。"
   },
   "biz-queue": {
    "title": "順番待ち・受付発券システム",
-   "oneliner": "Telegramや端末で整理券を発行し待ち時間を表示、店内の混雑を抑え職員の負荷も見える化します。"
+   "oneliner": "スマートフォンや端末で整理券を発行し待ち時間を表示、店内の混雑を抑え職員の負荷も見える化します。"
   },
   "biz-kiosk": {
    "title": "セルフオーダーキオスク開発",
@@ -376,7 +376,7 @@
   },
   "biz-marketplace-sync": {
    "title": "マーケットプレイス出品業務の自動化",
-   "oneliner": "Uzum Market・Yandex Market・Wildberriesの在庫・価格・注文を1Cと自動連携し、過剰販売や手作業を防ぎます。"
+   "oneliner": "複数のECモールの在庫・価格・注文を基幹システムと自動連携し、過剰販売や手作業を防ぎます。"
   },
   "biz-digital-marking": {
    "title": "商品デジタル識別（Asl belgisi）連携",
@@ -384,11 +384,11 @@
   },
   "biz-subscription-billing": {
    "title": "サブスクリプション・公共料金向け請求システム",
-   "oneliner": "毎月数千件の請求を発行しClick・Paymeで入金、未払者へ督促も送り、Excel不要の運用を実現します。"
+   "oneliner": "毎月数千件の請求を発行しオンライン決済で入金、未払者へ督促も送り、Excel不要の運用を実現します。"
   },
   "biz-notification-hub": {
-   "title": "SMS・Telegram・プッシュ通知の一元配信",
-   "oneliner": "安価なTelegramやプッシュを優先し届かなければSMSへ切替、コストを抑え到達状況も見えます。"
+   "title": "SMS・メール・プッシュ通知の一元配信",
+   "oneliner": "安価なプッシュ通知やメールを優先し届かなければSMSへ切替、コストを抑え到達状況も見えます。"
   },
   "biz-payments": {
    "title": "決済連携（Click・Payme・Uzum・Humo・Uzcard）",
@@ -404,7 +404,7 @@
   },
   "biz-delivery-routing": {
    "title": "配送計画・ルート配信システム",
-   "oneliner": "1Cの注文を積載量と地域で便にまとめ、ドライバーへTelegramでルート送信、配達は写真で確認します。"
+   "oneliner": "受注データを積載量と地域で便にまとめ、ドライバーのスマートフォンへルートを送信、配達は写真で確認します。"
   },
   "biz-management-accounting": {
    "title": "管理会計：資金繰りと店舗別利益",
@@ -424,11 +424,11 @@
   },
   "iot-access-control": {
    "title": "入退室管理：顔認証・QRコード・カード",
-   "oneliner": "オフィスや工場、住宅に権限者のみ入場でき、来客にはTelegramでQR通行証を1分で発行します。"
+   "oneliner": "オフィスや工場、住宅に権限者のみ入場でき、来客にはQR通行証を1分で発行します。"
   },
   "iot-smart-parking": {
    "title": "スマートパーキング：ナンバー認識・自動ゲート",
-   "oneliner": "ナンバーを認識してゲートが自動で開き、Click・Paymeで支払い、係員や紙の駐車券が不要になります。"
+   "oneliner": "ナンバーを認識してゲートが自動で開き、キャッシュレスで支払い、係員や紙の駐車券が不要になります。"
   },
   "iot-greenhouse": {
    "title": "温室の環境自動制御",
@@ -452,7 +452,7 @@
   },
   "iot-vending-cashless": {
    "title": "自販機・セルフ洗車のQR決済と遠隔監視",
-   "oneliner": "自販機や給水機、セルフ洗車でClick・PaymeのQR決済に対応し、在庫と売上を遠隔で確認できます。"
+   "oneliner": "自販機や給水機、セルフ洗車でQRコード決済に対応し、在庫と売上を遠隔で確認できます。"
   },
   "iot-asset-tracking": {
    "title": "RFID・BLEによる資産トラッキング",
@@ -492,7 +492,7 @@
   },
   "cloud-data-platform": {
    "title": "データウェアハウス・データパイプライン構築",
-   "oneliner": "1C・レジ・CRM・広告のデータを一つの基盤に集約し、全レポートの数字を一致させます。"
+   "oneliner": "基幹システム・レジ・CRM・広告のデータを一つの基盤に集約し、全レポートの数字を一致させます。"
   },
   "cloud-data-compliance": {
    "title": "個人情報保護法への技術的対応",
@@ -548,7 +548,7 @@
   },
   "sup-app-store": {
    "title": "App Store・Google Play公開支援とASO",
-   "oneliner": "審査リジェクトなくストア公開し検索で見つかるようにし、ウズベキスタン法人の開発者登録も支援します。"
+   "oneliner": "審査リジェクトなくストア公開し検索で見つかるようにし、開発者アカウントの登録も支援します。"
   },
   "sup-training": {
    "title": "社員研修・マニュアル作成",
@@ -556,11 +556,11 @@
   },
   "ind-clinic": {
    "title": "クリニック向け管理システム",
-   "oneliner": "予約・電子カルテ・会計・検査結果を一元化し、Telegram通知と安全なリンクで結果を共有、医師の事務を減らします。"
+   "oneliner": "予約・電子カルテ・会計・検査結果を一元化し、通知と安全なリンクで結果を共有、医師の事務を減らします。"
   },
   "ind-education-centre": {
    "title": "学習塾・私立学校・保育園向け管理システム",
-   "oneliner": "見込客・クラス・出欠・入金・講師給与を一元管理し、欠席や未払いを保護者へTelegramで即時通知します。"
+   "oneliner": "見込客・クラス・出欠・入金・講師給与を一元管理し、欠席や未払いを保護者へ即時通知します。"
   },
   "ind-restaurant": {
    "title": "飲食店向けQRオーダー・キッチンディスプレイ",
@@ -624,7 +624,7 @@
   },
   "ind-wedding-hall": {
    "title": "結婚式場・宴会場の予約管理システム",
-   "oneliner": "日程・会場・メニュー・前金を一つのカレンダーで管理しダブルブッキングを防止、Telegramで案内と請求を送ります。"
+   "oneliner": "日程・会場・メニュー・前金を一つのカレンダーで管理しダブルブッキングを防止、案内と請求もオンラインで送ります。"
   },
   "ind-fitness-sports": {
    "title": "フィットネスクラブ・スポーツスクール管理",

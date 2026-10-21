@@ -221,7 +221,7 @@ export function stampHtml(C, st) {
   const signed = genuine && st.verified && st.source !== 'sample';
   const sig = st.source === 'sample' ? S.sampleStamp : signed ? S.signed : genuine ? S.unsigned : '';
   return `<div class="stamp${signed ? ' signed' : ''}">
-    <div><p>${h(fill(S.stampNo, { no: m.brief_no, date })).replace(/ · /g, SEP)}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>
+    <div><p>${h(fill(S.stampNo, { no: '\u0001', date })).replace(/ · /g, SEP).replace('\u0001', `<span class="nw">${h(m.brief_no)}</span>`)}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>
     ${st.expired ? `<p>${h(S.expired)}${SEP}<button class="tlink" type="button" data-act="reprice">${h(S.reprice)}</button></p>` : ''}${st.repriced ? `<p>${h(S.repriced)}</p>` : ''}</div>
     ${sig ? `<p class="sig">${h(sig)}${signed ? `<i class="hanko${st.stamped ? ' still' : ''}" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i>` : ''}</p>` : ''}
   </div>`;

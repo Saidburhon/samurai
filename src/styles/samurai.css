@@ -417,6 +417,7 @@ html.legend-open .hako { visibility: hidden; }
   .print-foot { display: block; margin-top: 0; padding: 6px 0 4px; border-bottom: 1px solid #0F0E0C; font: 400 8pt/1.4 var(--mono); }
   /* the brief: compact, never a page of its own */
   .brief { position: static; display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; padding: 0 0 6px; border-bottom: 1px solid #0F0E0C; max-width: none; }
+  .brief > .note.k { grid-column: 1 / -1; } /* "Namuna" on its own line: the label and its text stay side by side */
   .brief .no, .res-head { display: none !important; } /* the print head carries the brief number and the date */
   .brief .lbl { margin-top: 4px; font-size: 7.5pt; }
   /* the proposal carries what we understood; the visitor's own words (or their quotes) stay on the screen */

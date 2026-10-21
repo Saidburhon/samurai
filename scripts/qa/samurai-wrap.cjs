@@ -82,6 +82,9 @@ const WIDTHS = [[1440, 900], [390, 844], [360, 740]];
           const re = /\$?\d[\d .,億]*万?[–〜]\$?\d[\d .,億]*/g;
           let m;
           while ((m = re.exec(t))) { const a = lineOf(n, m.index), z = lineOf(n, m.index + m[0].length - 1); if (a != null && z != null && Math.abs(a - z) > 4) broken.push(t.slice(Math.max(0, m.index - 12), m.index + m[0].length + 10)); }
+          // a brief number never breaks at its hyphens ("QL-2610-⏎36C5")
+          const bn = /QL-\d{4}-[0-9A-F]{4}(?:·\d+)?/g;
+          while ((m = bn.exec(t))) { const a = lineOf(n, m.index), z = lineOf(n, m.index + m[0].length - 1); if (a != null && z != null && Math.abs(a - z) > 4) broken.push(m[0]); }
           // a separator dot at the start or the end of a line: compare with the nearest visible character on each side
           for (let i = t.indexOf('·'); i >= 0; i = t.indexOf('·', i + 1)) {
             const at = lineOf(n, i);

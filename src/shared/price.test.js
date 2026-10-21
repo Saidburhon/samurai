@@ -186,7 +186,7 @@ test('the matcher reads the industry the visitor wrote, in every language, befor
   const cases = [
     ['uz', 'Toshkentda goʻzallik saloni, mijozlar Instagram orqali yoziladi', 'beauty'], ['ru', 'Салон красоты в Ташкенте, клиенты записываются через Instagram', 'beauty'], ['en', 'A beauty salon in Tashkent, clients book through Instagram', 'beauty'],
     ['uz', 'Samarqandda 30 xonali mehmonxona, bron telefon orqali', 'hospitality'], ['ru', 'Отель на 40 номеров, брони в Excel', 'hospitality'], ['en', 'A small hotel with 25 rooms, bookings in a notebook', 'hospitality'],
-    ['uz', 'Avtoservis, mijozlar navbatda uzoq kutadi', 'auto'], ['ru', 'Автосервис и автомойка, очереди и путаница с записью', 'auto'],
+    ['uz', 'Avtoservis, mijozlar navbatda uzoq kutadi', 'auto'], ['ru', 'Автосервис и автомойка, очереди и путаница с записью', 'auto'], ['ru', 'Сеть из 4 автомоек в Ташкенте. Клиенты записываются по телефону.', 'auto'],
     ['ru', 'Оптовая торговля стройматериалами в Ташкенте, 15 менеджеров', 'distribution'], ['uz', 'Qurilish mollari ulgurji savdosi', 'distribution'], ['ru', 'Ресторан с доставкой, заказы по телефону', 'restaurants'],
     ['ru', 'Интернет-магазин одежды, заказы в Instagram', 'ecommerce'], ['en', 'We store our stock in Excel and run a pharmacy', 'pharmacy'],
   ];
