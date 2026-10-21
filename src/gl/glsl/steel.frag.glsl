@@ -97,6 +97,10 @@ void main(){
   float ro = r + up * 2. - 1.;                                  // the neighbour's region
   float wo = clamp(.5 - abs(v - cr) / fwv, 0., .5);   // its share of this pixel
   wo *= cr < .1 ? 1. - muneOut : cr > .9 ? 1. - haOut : 1.;     // no blend into a dropped outer facet: it is the outline
+  // the mune's 59° crease: the two facets' reflections are mixed by their shares, each with its own normal (below)
+  float wm = cr < .1 ? wo : 0.;
+  vec3 F0m; float rgm;
+  if (wm > 0.) { facet(ro, hada, mistW, F0m, rgm); wo = 0.; }
   if (wo > 0.) {
     vec3 Gv = Gv0;
     // the crease angles of the section (geom-core PROFILE); the mune's 60° crease is not bent: its in-between normal
@@ -131,10 +135,30 @@ void main(){
   vec3 F = F0 + (1.-F0)*pow(1.-NoV, 5.);
   vec3 spec = studio(R, rough) * F;
   spec += lampSpec(N, V, vWPos, F, rough) * uLampSpec;
+  // At the mune's crease the pixel is the coverage-weighted mix of both facets' reflections, the neighbour's with its
+  // own normal (this one's turned by the crease angle): one in-between normal would catch the studio's strip as a
+  // sub-pixel line (B6), and the material alone left the step (G1 r2: B12's magnified spine stepped one pixel every
+  // ~18 px, with a bright tick at each step). Only the pixels within half a pixel of the crease pay for it.
+  if (wm > 0.) {
+    vec3 Nm = normalize(N * cos(1.03) + Gv0 * ((up * 2. - 1.) * sin(1.03)));
+    vec3 Rm = reflect(-V, Nm);
+    vec3 Fm = F0m * (1. + hada*.10);
+    Fm = Fm + (1. - Fm) * pow(1. - clamp(dot(Nm, V), 0., 1.), 5.);
+    vec3 sm = studio(Rm, rgm) * Fm + lampSpec(Nm, V, vWPos, Fm, rgm) * uLampSpec;
+    spec = mix(spec, sm, wm);
+    sjW = mix(sjW, 1. - sjW, wm);                                // the shinogi-ji's sheen by its share too
+  }
   // itame: up close the folded grain shows as faint wood-grain streaks in the mirror of the ji
   spec *= 1. + hada * .55 * (1. - mistW) * onJi * (1. - frost) * pol;
-  // the shinogi-ji is a dark mirror, but burnished: it carries a faint broad sheen of the studio around its streak
-  if (sjW > 0.) spec += uShinogiSheen * F * studio(R, .55) * pol * sjW;
+  // the shinogi-ji is a dark mirror, but burnished: it carries a faint broad sheen of the studio around its streak.
+  // Up close (the macro looks) the sheen has a floor, the studio's soft light on the burnished facet, brightening
+  // towards the shinogi ridge: never a flat black stripe (G1 r2: B1 read 17–30 across the whole facet); where the
+  // facet already reflects more (B12) the floor changes nothing
+  if (sjW > 0.) {
+    vec3 sj = spec + uShinogiSheen * F * studio(R, .55) * pol;
+    vec3 fl = uShinogiSheen * F * studioIrr(N) * 1.6 * mix(.6, 1.35, smoothstep(.04, .27, v)) * pol * uMacro;
+    spec = mix(spec, max(sj, fl), sjW);
+  }
 #ifdef TOGI
   if (pol < .999) {
     vec2 bp = vec2(u * 7.0, v * 0.28);                         // the flat in units (along, across)
@@ -171,8 +195,11 @@ void main(){
 #endif
   vec3 Ll = normalize(uLampPos - vWPos);
   vec3 diff = dAlb * (studioIrr(N) * uFrostLight + uFrostAmb + uLampCol*max(dot(N, Ll),0.)*.18);
-  // folded grain, faintly visible in the polished ji (only where it is resolved: the bake's mips average it away)
+  // folded grain, faintly visible in the polished ji (only where it is resolved: the bake's mips average it away);
+  // up close (the macro looks) the dark mirror of the ji shows the itame as lighter wood-grain streaks (G1 r2: B1's
+  // and B12's ji read as plain black)
   diff += vec3(.5,.515,.565) * (hada+.5) * .018 * onJi * (1.-frost) * uFrostLight * pol;
+  diff += vec3(.50,.53,.58) * smoothstep(.25, .85, hada + .5) * .045 * (1. - mistW) * onJi * (1.-frost) * uFrostLight * pol;
   vec3 col = spec*mix(1., .30, frost) + diff;
 
   // the shinogi ridge (and the ko-shinogi in the kissaki) and the yokote catch light as crisp lines

@@ -52,40 +52,38 @@ export class Cut {
   ready(k, layout) { return this.cache.has(this.key(k, layout)); }
   arrived(k, layout) { const fz = this.cache.get(this.key(k, layout)); return !!(fz && fz.ready); }
 
-  // the freeze of hold k for the transition k -> k + 1 (its type decides the shape)
-  prepare(k, layout, same = false) {
+  // the freeze of hold k for the transition k -> k + 1 (its type decides the shape). same: the hold on screen is
+  // hold k; fresh: and the canvas holds its frame now (drawn earlier in this task), so it is not drawn again
+  prepare(k, layout, same = false, fresh = false) {
     const key = this.key(k, layout);
     if (this.cache.has(key)) return this.cache.get(key);
     const tr = SEQ[layout].trans[k];
     const d = evalS(k, layout); d.settled = true;
-    const fz = this.snapshot(d, tr, same);
+    const fz = this.snapshot(d, tr, same, fresh);
     this.cache.set(key, fz);
     // a few sheets at most (each holds a copy of the canvas)
     if (this.cache.size > 4) for (const kk of this.cache.keys()) { if (kk !== key && this.shown !== this.cache.get(kk)) { this.cache.delete(kk); break; } }
     return fz;
   }
-  // render a state, take two copies of the canvas, clone the page's layers for it. The copies are ImageBitmaps taken
-  // in the same task as the render (no read-back: the main thread never waits for the GPU); the sheet is ready when
-  // they arrive. same: the state is the one on screen, so the live frame need not be drawn again.
-  snapshot(d, tr, same = false) {
+  // render a state, take copies of the canvas, clone the page's layers for it. The copies are ImageBitmaps taken in
+  // the same task as the render and shown by bitmaprenderer canvases: no read-back, the main thread never waits for
+  // the GPU (a 2D canvas drawn from the bitmap read it back, and held the main thread at the hold, G3). A cut takes
+  // two (one per half), a wipe or a slash one; the sheet is ready when they arrive.
+  snapshot(d, tr, same = false, fresh = false) {
     const film = this.film, st = film.st, W = st.w, H = st.h;
-    film.apply(d); if (this.dom) this.dom.apply(d);
-    film.render();
+    tr = tr || { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } };
+    if (!fresh) { film.apply(d); if (this.dom) this.dom.apply(d); film.render(); }
     const src = st.renderer.domElement;
-    // the copies are unaccelerated 2D canvases: painted into their half's own tiles like an image, so each half is
-    // one composited layer (a texture-backed canvas is a layer of its own, and every layer of a half was composited
-    // again in every frame of the cut: a second of software compositing per cut, G3)
-    // (at the screen's own pixel size: the tiles then copy them 1:1, never resample the hold-resolution frame)
-    const dw = Math.round(W * devicePixelRatio), dh = Math.round(H * devicePixelRatio);
-    const mk = () => { const c = document.createElement('canvas'); c.width = dw; c.height = dh; c.getContext('2d', { willReadFrequently: true }); return c; };
-    const glA = mk(), glB = mk();
-    const fz = { tr: tr || { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } }, W, H, k: d.k, ready: false };
-    const put = (c, bmp) => { const x = c.getContext('2d', { willReadFrequently: true }); x.imageSmoothingQuality = 'high'; x.drawImage(bmp, 0, 0, dw, dh); if (bmp.close) bmp.close(); };
+    const two = tr.type === 'cut' && !this.reduced;
+    const mk = () => { const c = document.createElement('canvas'); c.width = src.width; c.height = src.height; return c; };
+    const gls = two ? [mk(), mk()] : [mk()];
+    const fz = { tr, W, H, k: d.k, ready: false };
+    const put = (c, bmp) => { const x = c.getContext('bitmaprenderer'); if (x) x.transferFromImageBitmap(bmp); else { c.getContext('2d').drawImage(bmp, 0, 0); if (bmp.close) bmp.close(); } };
     if (typeof createImageBitmap === 'function') {
-      Promise.all([createImageBitmap(src), createImageBitmap(src)]).then(([a, b]) => { put(glA, a); put(glB, b); fz.ready = true; }).catch(() => { fz.ready = true; });
-    } else { glA.getContext('2d').drawImage(src, 0, 0); glB.getContext('2d').drawImage(src, 0, 0); fz.ready = true; }
-    fz.sheet = this.build(glA, d);
-    fz.copy = this.build(glB, d);
+      Promise.all(gls.map(() => createImageBitmap(src))).then((bs) => { bs.forEach((b, i) => put(gls[i], b)); fz.ready = true; }).catch(() => { fz.ready = true; });
+    } else { for (const c of gls) c.getContext('2d').drawImage(src, 0, 0); fz.ready = true; }
+    fz.sheet = this.build(gls[0], d);
+    if (two) fz.copy = this.build(gls[1], d);
     // where the wipes start: the tsuba of the frozen hold, on screen
     fz.ts = st.project(st.point('tsuba'));
     if (!same) { film.dirty = true; film.lastKey = ''; }
@@ -105,8 +103,9 @@ export class Cut {
     }
     const dk = document.querySelector('#paper .deckle');
     if (dk) { const c = document.createElement('div'); c.style.background = cs(dk).background; layer(c); }
+    // the dial only where the hold shows it (near Toki it waits on the paper all but invisible: not part of a picture)
     const dial = document.getElementById('dialw');
-    if (dial && dial.style.visibility !== 'hidden') { const c = stripIds(dial.cloneNode(true)); c.classList.add('fz-dial'); s.appendChild(c); }
+    if (dial && dial.style.visibility !== 'hidden' && !(parseFloat(dial.style.opacity || '1') < 0.05)) { const c = stripIds(dial.cloneNode(true)); c.classList.add('fz-dial'); s.appendChild(c); }
     // the drawing: the wrapper with its matrix, the stipple as a copy of its raster
     const paper = document.getElementById('osh-paper');
     if (paper && paper.style.visibility !== 'hidden') {

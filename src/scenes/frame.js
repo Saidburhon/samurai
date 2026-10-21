@@ -324,6 +324,12 @@ export class Film {
     const html = this.html;
     if (html.dataset.ground !== nearG) { html.dataset.ground = nearG; html.classList.toggle('dark', !!DARK[nearG]); }
   }
+  // a hold with the dial within two beats of the position (the track's own order)
+  nearDial(d) {
+    const names = SEQ[d.layout].names, k = Math.round(d.pos ?? 0);
+    for (let j = Math.max(0, k - 2); j <= Math.min(names.length - 1, k + 2); j++) if (/^toki\./.test(names[j])) return true;
+    return false;
+  }
   // the holds next to the one in view (for priming what a transition will need)
   neighbours(d) {
     const seq = SEQ[d.layout], k = Math.round(d.pos), out = [];
@@ -339,9 +345,10 @@ export class Film {
     const w = this.dialW;
     if (!w) return;
     if (!(da || db) || !st.td) {
-      // near Toki the dial stays on screen, all but invisible, at its B17 place: its first raster (about a second in
-      // software) happens at a hold, not inside the light wipe
-      const near = d.settled && d.layout && !d.intro ? this.neighbours(d).find((h) => h.dial) : null;
+      // near Toki (two beats either side) the dial stays on screen, all but invisible, at its B17 place: it is
+      // rasterised once, at a hold, and never dropped and drawn again on the way in or out (its SVG is the costliest
+      // layer of the page in software: a re-raster held the compositor for a second or more, G3)
+      const near = d.layout && !d.intro && this.dialR && this.nearDial(d) ? this.R('toki.0900', d.layout) : null;
       if (near && this.dialR && near.hubPx) {
         w.style.visibility = ''; w.style.opacity = '0.002';
         const rpx = this.dialR * near.paperK;

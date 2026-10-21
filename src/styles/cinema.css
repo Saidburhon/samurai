@@ -176,6 +176,9 @@ html.film.sw.dark .grain { opacity: .06; }
 html.film #paper .sheet.on { will-change: opacity; }
 #dialw .dial { width: 1000px; height: 1000px; --sun: var(--sun-a, 135deg); }
 #dialw .hand { display: none; }
+/* software renderer: the dial's engraving keeps one sun (11:30) through Toki; every change of --sun re-rasterised
+   the whole dial (its numerals and rosettes three times over), a second of software raster each (G3) */
+html.film.sw #dialw .dial, html.film.sw #cut .fz-dial .dial { --sun: 352deg; }
 html.film .s-toki .dial-plate { display: none; }
 /* the plaster's raking light follows the sun (Toki, Temur) */
 html.film .sheet[data-g=ganch] { background: linear-gradient(var(--sun-a, 135deg), rgba(255, 250, 238, .22), rgba(255, 250, 238, 0) 45%, rgba(74, 52, 28, 0) 55%, rgba(74, 52, 28, .2)), var(--ganch) var(--ganch-tile, none) 0 0 / 512px 512px; }
@@ -192,7 +195,7 @@ html.film #cut { position: fixed; z-index: 7; }
 #cut .fz { position: absolute; inset: 0; overflow: hidden; }
 #cut .fz-l, #cut .fz-dial { position: absolute; inset: 0; }
 /* the frozen dial: the copy of #dialw (its id is not copied, so its geometry is restated here) */
-#cut .fz-dial { inset: auto; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; color: #5C4630; }
+#cut .fz-dial { inset: auto; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; color: #5C4630; will-change: transform; }
 #cut .fz-dial .dial { width: 1000px; height: 1000px; --sun: var(--sun-a, 135deg); }
 #cut .fz-dial .hand { display: none; }
 #cut .fz-gl { width: 100%; height: 100%; }

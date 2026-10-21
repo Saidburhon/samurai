@@ -19,8 +19,9 @@ export class Rays {
     // the blur itself runs at the occluder's resolution and is composited with one bilinear sample
     this.rtBlur = new WebGLRenderTarget(4, 4, { type: half ? HalfFloatType : UnsignedByteType, generateMipmaps: false, depthBuffer: false });
     this.black = new MeshBasicMaterial({ color: 0x000000, side: DoubleSide });
-    // 56 -> 40 samples: the per-sample decay and weight are rescaled so the rays keep the prototype's length and energy
-    const n = 40, d56 = 0.935, w56 = 0.034, d = Math.pow(d56, 56 / n), w = w56 * (1 - Math.pow(d56, 56)) / (1 - d56) * (1 - d) / (1 - Math.pow(d, n));
+    // 56 -> 30 samples: the per-sample decay and weight are rescaled so the rays keep the prototype's length and energy
+    // (G1 r2: 40 samples at a third of the buffer were half of B14's hold frame, ~120 ms in software)
+    const n = 30, d56 = 0.935, w56 = 0.034, d = Math.pow(d56, 56 / n), w = w56 * (1 - Math.pow(d56, 56)) / (1 - d56) * (1 - d) / (1 - Math.pow(d, n));
     this.U = { tOcc: { value: this.rt.texture }, uLight: { value: new Vector2(0.5, 0.5) }, uDecay: { value: d }, uWeight: { value: w }, uDensity: { value: 0.42 }, uExp: { value: 0.30 } };
     this.mat = new ShaderMaterial({ vertexShader: SRC.QUAD_V, fragmentShader: SRC.RAYS_F, uniforms: this.U, depthTest: false, depthWrite: false });
     this.scene = new Scene();

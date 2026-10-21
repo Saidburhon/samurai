@@ -2,7 +2,7 @@
 // screen point, with a fixed per-pixel jitter so a still is stable. Composited additively.
 uniform sampler2D tOcc; uniform vec2 uLight; uniform float uDecay, uWeight, uDensity, uExp;
 varying vec2 vUv;
-#define NS 40
+#define NS 30
 void main(){
   vec2 delta = (vUv - uLight) * uDensity / float(NS);
   float jit = fract(sin(dot(floor(gl_FragCoord.xy), vec2(12.9898,78.233))) * 43758.5453);

@@ -8,6 +8,7 @@
 // G0 checks flow mode (the catalogue); from G3 it also checks every cinema hold (?beat=k). G1 adds the top bar (its
 // groups never closer than 24 px, also at 1600 where the language names return) and the object band of the cinema
 // holds whose text sits beside the 3D object (B21: every text line 40 px or more from the rendered silhouette).
+// G1 r2 adds the text masks of every cinema hold (scripts/qa/mask-audit.cjs): the ink of every line inside its mask.
 // Usage: node scripts/qa/fit-check.cjs [baseUrl=http://localhost:8800] [outDir=.cache/qa/fit]
 // Writes <outDir>/fit.json, one annotated screenshot per page and viewport (violations boxed in red), and exits 1 on failure.
 // The dial (svg text, so its size is the font size times the svg's scale): every numeral and ring name renders at
@@ -334,6 +335,16 @@ async function objectBand(page, scene) {
     report.results.push({ page: lang, view: v.name, beat: h.beat, issues: issues.map((i) => ({ kind: i.kind, detail: i.detail })) });
     fails += issues.length;
     await ctx.close();
+  }
+  // G1 r2: at every cinema hold, every text block's mask (.tk, and the .ln line masks in it) holds the ink of its
+  // glyphs: descenders, the okina, the Cyrillic breve (scripts/qa/mask-audit.cjs; uz/ru/en/ja at 1440, 1280 and 390)
+  const { auditPage } = require('./mask-audit.cjs');
+  for (const [lang, p] of Object.entries(PAGES)) for (const v of VIEWS.filter((x) => ['1440x900', '1280x720', '390x844'].includes(x.name))) {
+    const r = await auditPage(browser, base, p, { ...v, dpr: v.phone ? 1.5 : 0.75 });
+    const bad = r.filter((x) => x.issues.length), n = bad.reduce((a, x) => a + x.issues.length, 0);
+    report.results.push({ page: lang, view: v.name, masks: r.length, issues: bad.flatMap((x) => x.issues.map((i) => ({ kind: 'mask-' + i.mask, beat: x.beat, detail: `"${i.text}" ink ${i.ink} outside ${i.win} by ${i.over}px` }))) });
+    fails += n;
+    console.log(`${n ? 'FAIL' : 'ok  '} ${lang}-${v.name} masks: ${r.length} holds${n ? '\n   ' + bad.map((x) => `${x.beat}: ${x.issues.map((i) => `${i.mask} "${i.text}" ${i.over}px`).join('; ')}`).join('\n   ') : ''}`);
   }
   await browser.close();
   report.pass = fails === 0;

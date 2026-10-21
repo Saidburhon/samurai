@@ -41,7 +41,13 @@ function startCinema() {
   // evaluating its modules is only class definitions. Nothing GL runs before the gate below (0.80 s).
   let mods = null;
   const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js'), import('./core/film.js')]).then((m) => { log('fetched', performance.now()); return m; }));
-  if (!q.has('beat')) setTimeout(() => load().then(([gl]) => gl.prebuild()), 0);
+  // once the chunk has arrived: the geometries in idle time, and the renderer with the two hero programs issued (a
+  // few ms of main-thread work; their links run in the GPU process during the drawing, gl/index.js precompile). The
+  // canvas stays out of the page until glReady (gl-warm)
+  if (!q.has('beat')) setTimeout(() => load().then(([gl]) => {
+    gl.prebuild();
+    try { html.classList.add('gl-warm'); gl.precompile({ canvas: document.getElementById('gl'), tier, log }); } catch (e) { Q.glError = String(e && e.stack || e); }
+  }), 0);
   requestAnimationFrame(() => log('raf1', performance.now()));
   // GL work starts when the drawing's animations have ended, checked from 0.80 s, at most 0.40 s later (§4.1).
   // "Ended" is read from their scheduled end on the document timeline, not from their play state: a software

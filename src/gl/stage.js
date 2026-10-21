@@ -108,8 +108,9 @@ export class Stage {
     const bw = Math.round(w * pr), bh = Math.round(h * pr);
     this.mat.steelU.uRes.value.set(bw, bh);
     this.soft.setSize(bw, bh);
-    // the rays are soft: they run at half the device resolution (a quarter on T1), whatever the supersampling
-    this.rays.setSize(bw, bh, (this.tier.tier === 1 ? 0.25 : 0.5) / Math.max(1, this.U.uAA.value));
+    // the rays are soft: they run at 0.42 of the device resolution (a quarter on T1), whatever the supersampling
+    // (G1 r2: 0.5 with 40 samples cost ~120 ms of B14's hold frame in software; 0.42 with 30 about half that)
+    this.rays.setSize(bw, bh, (this.tier.tier === 1 ? 0.25 : 0.42) / Math.max(1, this.U.uAA.value));
   }
 
   // ---------- the look ----------

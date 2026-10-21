@@ -62,45 +62,28 @@ export function prebuild() {
   ric(step);
 }
 
-export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true, bakes = null }) {
+// The renderer and the two hero programs, issued as soon as the chunk has arrived (main.js, during the intro
+// drawing): a few milliseconds of main-thread work (the context is the head script's, its synchronous reads answered
+// from there; compile and link are only issued, nothing waits for them), so the links are done in the GPU process by
+// the gate and the first draw there does not wait for them (G1 r2: that wait was 0.1–0.3 s of the boot's critical
+// path). boot() calls it itself if main.js has not.
+let early = null;
+export function precompile({ canvas: el, tier, log = () => {} }) {
+  if (early) return early;
   const t0 = performance.now();
-  // The order of the GL boot (§4.1, G1): the renderer and the two hero programs first, then the geometries. Nothing
-  // here waits for the GPU process, which is still rastering the intro's last frames: the renderer's few synchronous
-  // reads of the fresh context are answered from the head script's (fixed below), and compile and link are
-  // asynchronous. So the links, and ANGLE's pipeline warm-up on its worker threads, run while the main thread builds
-  // the geometries (~0.1 s of CPU), instead of after it.
   const { canvas, context, fixed } = adopt(el, tier);
-  log('adopted', context ? 1 : 0); log('adoptMs', performance.now() - t0);
+  log('adopted', context ? 1 : 0);
   let gp = null;
   if (context && fixed) { gp = context.getParameter; context.getParameter = (p) => (p in fixed ? fixed[p] : gp.call(context, p)); }
   const stage = new Stage(canvas, tier, context);
   if (gp) delete context.getParameter;
-  log('stageMs', performance.now() - t0);
-  const r = stage.renderer;
-  const W = canvas.clientWidth || innerWidth, H = canvas.clientHeight || innerHeight;
-  const portrait = W / H < 1.2;
-  // stand-ins: neutral grain, the hamon at its mean height, a mid silk, a flat ishime
+  // stand-ins: neutral grain, the hamon at its mean height, a mid silk, a flat ishime (uniform values until the bakes
+  // are swapped in before the first draw; only a browser without workers ever draws with them, off screen)
   const T0 = { hada: px(128, 128, 128, 0), hamon: px(179, 0, 0, 255), silk: px(40, 50, 90, 128), ishime: px(128, 128, 128, 128) };
-  // The baked textures (gl/bakecpu.js: the workers main.js started at ~0.2 s have finished before the gate on any
-  // machine measured; a slow one is waited for here). They go into the materials before the first draw: a software
-  // renderer builds its pipelines for the formats and samplers it is drawn with, so drawing the proxies with the 1 × 1
-  // stand-ins built pipelines that the real textures could not use (G1 r2: warm() then built them again, +0.3–0.5 s)
-  const big = tier.tier === 3 || (tier.tier === 2 && !portrait);
-  let B = null;
-  const tex = (d) => { log('bake.' + d.name, d.ms); log('tex.' + d.name, d.at); return dataTex(r, d, tier.aniso); };
-  if (bakes) {
-    const got = await Promise.all(['hamon', 'silk', 'hada', 'ishime'].map((n) => bakes.get(n)));
-    if (got.every(Boolean)) { B = {}; for (const d of got) B[d.name] = tex(d); }
-    log('bakesIn', performance.now());
-  }
-  // Both hero programs (the steel and the fittings, the grip being one of their kinds) are issued now, on stand-in
-  // meshes (a program does not depend on its geometry): renderer.compile() on the stage's scene would also issue every
-  // hidden part's program (the tang, the lacquer, the floor, the rays' disc)
-  stage.materials({ ...T0, ...(B || {}) });
-  // ... and drawn at once, on proxies with the meshes' vertex layouts (a software renderer builds a pipeline at its first
-  // draw, from the program, the blend and depth state and the vertex formats: not from the geometry): the pipelines
-  // are then built on the renderer's own thread while the GPU process's main thread finishes the intro's raster and
-  // this thread builds the geometries; warm() draws the real meshes, which find them built
+  // Both hero programs (the steel and the fittings, the grip being one of their kinds) are issued on proxies with the
+  // meshes' vertex layouts (a program does not depend on its geometry; renderer.compile() on the stage's scene would
+  // also issue every hidden part's program: the tang, the lacquer, the floor, the rays' disc). boot() draws them.
+  stage.materials(T0);
   const proxy = (attrs, indexed) => {
     const g = new BufferGeometry();
     for (const [n, k] of attrs) g.setAttribute(n, new Float32BufferAttribute(new Float32Array(3 * k), k));
@@ -113,8 +96,37 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true,
   add(proxy([...SWORD, ['aRegion', 1], ['aMune', 3], ['aHa', 3]]), stage.mat.steel);
   add(proxy(SWORD), stage.mat.iron);           // the extruded fittings (not indexed)
   add(proxy(SWORD, true), stage.mat.silk);     // the oval tubes (indexed)
-  r.compile(two, stage.camera);
-  log('issued', performance.now() - t0);
+  stage.renderer.compile(two, stage.camera);
+  // sent to the GPU process now (a WebGL command buffer is otherwise flushed only by a draw or a synchronous call)
+  stage.renderer.getContext().flush();
+  log('issued', performance.now());
+  early = { stage, canvas, T0, two, ms: performance.now() - t0 };
+  return early;
+}
+
+export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true, bakes = null }) {
+  const t0 = performance.now();
+  const E = precompile({ canvas: el, tier, log });
+  const { stage, canvas, T0, two } = E;
+  log('stageMs', E.ms);
+  const r = stage.renderer;
+  const W = canvas.clientWidth || innerWidth, H = canvas.clientHeight || innerHeight;
+  const portrait = W / H < 1.2;
+  // The baked textures (gl/bakecpu.js: the workers main.js started at ~0.2 s have finished before the gate on any
+  // machine measured; a slow one is waited for here). They are in the materials before the first draw: a software
+  // renderer builds its pipelines for the formats and samplers it draws with, so proxies drawn with the 1 × 1
+  // stand-ins built pipelines the real textures could not use (G1 r2: warm() then built them again, +0.3–0.5 s)
+  const big = tier.tier === 3 || (tier.tier === 2 && !portrait);
+  let B = null;
+  const tex = (d) => { log('bake.' + d.name, d.ms); log('tex.' + d.name, d.at); return dataTex(r, d, tier.aniso); };
+  if (bakes) {
+    const got = await Promise.all(['hamon', 'silk', 'hada', 'ishime'].map((n) => bakes.get(n)));
+    if (got.every(Boolean)) { B = {}; for (const d of got) B[d.name] = tex(d); stage.swapTextures(B); }
+    log('bakesIn', performance.now());
+  }
+  // the proxies drawn at once (a software renderer builds a pipeline at its first draw, from the program, the blend
+  // and depth state, the vertex formats and the samplers: not from the geometry): the pipelines are built in the GPU
+  // process while this thread builds the geometries; warm() draws the real meshes, which find them built
   r.setRenderTarget(null); r.setScissorTest(true); r.setScissor(0, 0, 1, 1);
   r.render(two, stage.camera);
   r.setScissorTest(false);

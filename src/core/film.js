@@ -57,26 +57,44 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   if (dial && paper && !document.getElementById('dialw')) { const w = document.createElement('div'); w.id = 'dialw'; w.style.visibility = 'hidden'; w.appendChild(dial); paper.appendChild(w); }
   const layout0 = stage.w / stage.h >= 1.2 ? 'land' : 'port';
   const fz = parseBeatParam(q, layout0);
-  const state = { intro: null, d: null, key: '', holdKey: '', prepared: '', drawn: null, warmed: new Set() };
+  const state = { intro: null, d: null, key: '', holdKey: '', prepared: '', drawn: null };
   const dir = new Director({
     frozen: fz === 'intro' ? 0 : fz,
     onInput: () => { if (state.intro && state.intro.t < 1) introSpeed(4); },
     onJump: () => { if (state.d) cut.freezeNow(state.d); },
   });
   dir.onResize = () => { stage.setSize(innerWidth, innerHeight, true); film.reset(); cut.reset(); state.key = ''; };
-  // the intro (§4.1, §4.3): the reveal from max(glReady, 1.7 s), 2.0 s (shortened to end by 3.9 s, never under 1.4 s,
-  // when GL is ready after 2.2 s), then the 1.8 s lift. Its clock is the wall clock from navigation, not the sum of
-  // frame times (G1 r2): a long software frame cannot hold it back, so the 3 s frame is the reveal's 3 s state. Each
-  // frame is evaluated at the time it will reach the screen (now + the last GPU frame time, at most 0.2 s).
+  // The intro (§4.1, §4.3) on the wall clock from navigation, not on the sum of frame times (G1 r2): a long software
+  // frame cannot hold it back. The reveal starts at max(glReady, 1.7 s) and is anchored to fixed times, so the 3 s frame is the
+  // same whenever GL was ready (up to 2.6 s): a C1 curve from (start, 0) through (3.1 s, 0.725) to (3.8 s, 1), flat at
+  // both ends. The steel leaves the habaki, glides through the middle of the blade at about half its length per
+  // second (the 3 s frame shows three quarters steel, §4.1 frame 02; the band 60–85 % spans 2.9–3.3 s) and comes to
+  // rest at the tip by 3.8 s; then the 1.8 s lift. GL later than 2.6 s: power2.inOut over max(1.4 s, 3.9 s − start).
   if (intro && fz == null && !dir.reduced) {
-    const start = Math.max(glReady, 1700), R = start > 2200 ? Math.max(1400, 3900 - start) : 2000;
-    state.intro = { t: 0, start, R, L: 1800, tau: 0, at: start, speed: 1 };
-    log('revealStart', start); log('revealMs', R);
+    const start = Math.max(glReady, 1700), late = start > 2600;
+    const E = late ? start + Math.max(1400, 3900 - start) : 3800;
+    state.intro = { t: 0, start, E, late, L: 1800, tau: 0, at: start, speed: 1 };
+    log('revealStart', start); log('revealEnd', E);
   }
-  // the intro's position on its own timeline (evalIntro: the reveal is [0, .526], the lift [.526, 1]) at time ms
+  // the reveal (0..1) at wall time v (ms)
+  const K1 = [3100, 0.725, 0.00052];
+  const herm = (u, p0, m0, p1, m1, h) => { const u2 = u * u, u3 = u2 * u; return (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * h * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * h * m1; };
+  function revealAt(v) {
+    const I = state.intro;
+    if (v <= I.start) return 0;
+    if (v >= I.E) return 1;
+    if (I.late) { const x = (v - I.start) / (I.E - I.start); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(2 - 2 * x, 3) / 2; }
+    if (v < K1[0]) { const h = K1[0] - I.start; return herm((v - I.start) / h, 0, 0, K1[1], K1[2], h); }
+    const h = I.E - K1[0];
+    return herm((v - K1[0]) / h, K1[1], K1[2], 1, 0, h);
+  }
+  // the intro's position on its own timeline at time ms (evalIntro: the reveal is [0, .526], eased power2.inOut, so
+  // the reveal's value is mapped back through that ease; the lift is [.526, 1])
   function introT(ms) {
-    const I = state.intro, tau = I.tau + Math.max(0, ms - Math.max(I.at, I.start)) * I.speed;
-    return tau < I.R ? 0.526 * tau / I.R : Math.min(1, 0.526 + 0.474 * (tau - I.R) / I.L);
+    const I = state.intro, v = I.start + I.tau + Math.max(0, ms - Math.max(I.at, I.start)) * I.speed;
+    if (v >= I.E) return Math.min(1, 0.526 + 0.474 * (v - I.E) / I.L);
+    const y = revealAt(v), x = y < 0.5 ? Math.cbrt(y / 4) : 1 - Math.cbrt(2 * (1 - y)) / 2;
+    return 0.526 * Math.min(1, Math.max(0, x));
   }
   // scroll during the intro plays the rest at 4× (§4.3), from where it is now
   function introSpeed(k) {
@@ -166,7 +184,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       labels.update(d, lay);
       Q.applyMs = Math.round(performance.now() - ta);
       const ms = film.render();
-      fence();
+      fence(); state.fresh = true;
       // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
       if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.3 * Math.min(0.5, (now - state.lastIssue) / 1000));
       state.lastIssue = now;
@@ -178,31 +196,26 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     } else { film.colours(d); dom.apply(d); }
     mark(d, lay);
     holdWork(d, lay);
+    state.fresh = false;
     report(d, lay, cutOn);
   };
-  // the hold window: prepare the freezes of the transitions that touch this hold (either direction), then draw the
-  // incoming hold of the next freeze once, unseen. Runs whether or not a GL frame is in flight (the snapshot takes
-  // bitmaps, never a read-back)
+  // the hold window: prepare the freezes of the transitions that touch this hold, in either direction. Runs whether or
+  // not a GL frame is in flight (the snapshot takes bitmaps, never a read-back)
   const holdWork = (d, lay) => {
   if (d.atHold && d.hold && !d.intro && fz == null) {
     const k = Math.round(d.pos), seq = SEQ[lay], hk = `${lay}|${k}|${stage.w}x${stage.h}`;
     const need = [k - 1, k].filter((j) => j >= 0 && j < seq.trans.length && isFreeze(seq.trans[j]));
+    if (need.some((j) => !cut.ready(j, lay)) && (d.settled || Math.abs(dir.v) < 0.6)) {
+      // the freeze that leaves this hold copies the frame on screen, in the task that drew it (a frame of this hold,
+      // at the resolution it was drawn): no second render (G3: the hold's extra renders ran into the next scroll)
+      if (need.includes(k) && !cut.ready(k, lay) && state.fresh && state.key.startsWith(`H|${seq.names[k]}|`)) cut.prepare(k, lay, true, true);
+      // the one that arrives here from hold k − 1 shows that hold, drawn once this hold has settled (scrolling
+      // forwards it was taken at hold k − 1 already)
+      const back = need.filter((j) => j !== k && !cut.ready(j, lay));
+      if (back.length && d.settled && state.prepared !== hk) { state.prepared = hk; for (const j of back) cut.prepare(j, lay, false, false); fence(); }
+    }
     Q.cutReady = need.every((j) => cut.ready(j, lay));
     Q.cutArrived = need.every((j) => cut.arrived(j, lay));
-    if (!Q.cutReady && state.prepared !== hk && (d.settled || Math.abs(dir.v) < 0.6)) {
-      state.prepared = hk;
-      // (the hold on screen is the state of freeze k: its frame needs no second render; freeze k − 1 shows hold
-      // k − 1, so the live frame is drawn again after it)
-      for (const j of need) cut.prepare(j, lay, j === k && d.settled && state.key === `H|${seq.names[k]}|1`);
-      fence();
-    } else if (Q.cutReady && Q.cutArrived && d.settled && need.includes(k) && !state.warmed.has(hk)) {
-      // once ready, the incoming hold of the next freeze is drawn once, unseen (the live frame follows in this
-      // task): its first frame inside the freeze is then no slower than any other (textures, pipelines)
-      state.warmed.add(hk);
-      const db = evalS(k + 1, lay); db.settled = false;
-      film.apply(db); film.render();
-      film.apply(d); dom.apply(d); film.render(); fence();
-    }
   } else Q.cutReady = !d.freeze;
   };
   // report (§3.10)
@@ -221,7 +234,9 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     const now = performance.now(), dt = Math.min(0.25, (now - last) / 1000); last = now;
     dir.update(dt, time * 1000);
     if (state.intro) {
-      state.intro.t = introT(now + Math.min(200, Q.gpuMs || 0));
+      // (a small lead: a frame reaches the screen a little after it is issued; a screenshot waits for the next frame,
+      // which carries the newest GL frame, so a lead of the whole GPU time would run ahead of the wall clock)
+      state.intro.t = introT(now + Math.min(150, Q.gpuMs || 0));
       if (state.intro.t >= 1 || dir.x > 0.02) { if (state.intro.t < 1 && state.intro.speed < 4) introSpeed(4); if (state.intro.t >= 1) state.intro = null; }
     }
     frame(now);
