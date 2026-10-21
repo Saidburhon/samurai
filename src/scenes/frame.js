@@ -9,6 +9,7 @@
 // at a log-interpolated distance. Mode changes otherwise happen under a freeze (fx/cut.js).
 import { Vector3, Quaternion, Matrix4 } from 'three';
 import { hold as holdOf } from '../core/shots.js';
+import { SEQ } from '../core/tracks.js';
 import { LOOKS } from '../core/looks.js';
 import { ease } from '../core/eases.js';
 import { holdStudio, carried, studioBetween } from '../gl/studio.js';
@@ -60,6 +61,7 @@ export class Film {
     h.M = holdStudio(h.studioRoll || 0, h.studioYaw || 0);
     h.C = carried(h.M, c);
     h.lightW = lightOf(h, h.sol.td);
+    if (h.dial && st.td) { h.hubPx = st.project(st.point('tsuba')); h.paperK = st.td.f / st.td.Hc; }
     if (h.ink) h.inkPose = this.inkPose(h, layout, opt);
     this.cache.set(key, h);
     return h;
@@ -101,7 +103,8 @@ export class Film {
     if (d.live === 'a') { B = A; e = ZERO; p = ZERO; } else if (d.live === 'b') { A = B; e = ONE; p = ONE; }
     const tr = d.tr || {}, same = A === B;
     // every hold this frame needs is resolved before the stage is posed (R() poses and solves the stage itself)
-    if ((A.dial || B.dial) && !this.dialR) {
+    if (d.atHold && d.layout && !d.intro && d.pos != null) this.neighbours(d);
+    if (!this.dialR) {
       const h17 = this.R('toki.0900', layout);
       this.dialR = (layout === 'land' ? 0.40 * st.h : 0.40 * st.w) / (h17.sol.td.f / h17.sol.td.Hc);
     }
@@ -289,11 +292,16 @@ export class Film {
   // the DOM part of the paper: the ground sheets, the dial, the plaster's light
   paper(A, B, e, d) {
     const html = this.html, ga = A.ground, gb = B.ground, near = e.look < 0.5 ? A : B;
+    // at a hold the grounds of the neighbouring holds are displayed too, all but invisible, so their tiles are
+    // rasterised before a transition needs them (§3.1: the current and the incoming sheet)
+    const pre = new Set();
+    if (d.atHold && d.layout && !d.intro && ga === gb) for (const n of this.neighbours(d)) pre.add(n.ground);
+    pre.delete(ga);
     for (const s of this.sheets) {
-      const g = s.dataset.g, on = g === ga || g === gb;
+      const g = s.dataset.g, on = g === ga || g === gb || pre.has(g);
       if (s.classList.contains('on') !== on) s.classList.toggle('on', on);
-      const op = ga !== gb && g === gb ? e.look.toFixed(3) : '', z = ga !== gb && g === gb ? '1' : '';
-      if (s.style.opacity !== op) { s.style.opacity = op; s.style.willChange = op ? 'opacity' : ''; }
+      const op = pre.has(g) && g !== gb ? '0.002' : ga !== gb && g === gb ? e.look.toFixed(3) : '', z = pre.has(g) && g !== gb ? '-1' : ga !== gb && g === gb ? '1' : '';
+      if (s.style.opacity !== op) s.style.opacity = op;
       if (s.style.zIndex !== z) s.style.zIndex = z;
     }
     const nearG = d.live === 'b' ? gb : d.live === 'a' ? ga : (d.f < 0.5 ? ga : gb);
@@ -301,8 +309,16 @@ export class Film {
     this.dial(A, B, e, d);
     // the plaster's raking light and the dial's engraving follow the sun: exact at a hold, in 5° steps between holds
     // (each step re-rasterises the plaster and the dial)
-    let sun = (A.sun || B.sun) ? lerp((A.sun || B.sun).az, (B.sun || A.sun).az, e.look) + 180 : null;
-    if (sun != null) { if (!d.atHold) sun = Math.round(sun / 5) * 5; const v = `${sun.toFixed(1)}deg`; if (this.sunV !== v) { this.sunV = v; html.style.setProperty('--sun-a', v); } }
+    // (between holds the sun keeps the nearer hold's angle: every change re-rasterises the plaster and the dial's
+    // engraving, about half a second on a software renderer)
+    const sunH = e.look < 0.5 ? A.sun || B.sun : B.sun || A.sun;
+    if (sunH) { const v = `${(sunH.az + 180).toFixed(1)}deg`; if (this.sunV !== v) { this.sunV = v; html.style.setProperty('--sun-a', v); } }
+  }
+  // the holds next to the one in view (for priming what a transition will need)
+  neighbours(d) {
+    const seq = SEQ[d.layout], k = Math.round(d.pos), out = [];
+    for (const j of [k - 1, k + 1]) if (j >= 0 && j < seq.names.length) out.push(this.R(seq.names[j], d.layout));
+    return out;
   }
   dial(A, B, e, d = {}) {
     const st = this.st, da = A.dial, db = B.dial;
@@ -312,7 +328,17 @@ export class Film {
     }
     const w = this.dialW;
     if (!w) return;
-    if (!(da || db) || !st.td) { if (w.style.visibility !== 'hidden') w.style.visibility = 'hidden'; return; }
+    if (!(da || db) || !st.td) {
+      // near Toki the dial stays on screen, all but invisible, at its B17 place: its first raster (about a second in
+      // software) happens at a hold, not inside the light wipe
+      const near = d.atHold && d.layout && !d.intro ? this.neighbours(d).find((h) => h.dial) : null;
+      if (near && this.dialR && near.hubPx) {
+        w.style.visibility = ''; w.style.opacity = '0.002';
+        const rpx = this.dialR * near.paperK;
+        w.style.transform = `translate(${(near.hubPx[0] - 500).toFixed(2)}px,${(near.hubPx[1] - 500).toFixed(2)}px) scale(${(rpx / 350).toFixed(5)})`;
+      } else if (w.style.visibility !== 'hidden') w.style.visibility = 'hidden';
+      return;
+    }
     // the dial lies on the paper: its size is fixed in sword units (the inner ring 0.40 H at B17, 0.40 W on the phone)
     if (!this.dialR) return;
     const k = st.td.f / st.td.Hc, rpx = this.dialR * k;
@@ -321,8 +347,7 @@ export class Film {
     w.style.visibility = alpha > 0.002 ? '' : 'hidden';
     w.style.opacity = alpha < 0.999 ? alpha.toFixed(3) : '';
     w.style.transform = `translate(${(hub[0] - 500).toFixed(2)}px,${(hub[1] - 500).toFixed(2)}px) scale(${(rpx / 350).toFixed(5)})`;
-    // a layer while it moves (scaled, not re-rasterised every frame); crisp again at a hold
-    w.style.willChange = d.atHold ? '' : 'transform';
+    // (#dialw is its own layer for good, cinema.css: toggling it at holds re-rasterised the whole dial, ~0.5 s)
     // the big clocks count with the hand (Tashkent; Tokyo four hours later)
     const hour = da && db ? lerp(da.hour, db.hour, e.cam) : (da || db).hour;
     const m = Math.round(hour * 60), fmt = (x) => `${String(Math.floor(x / 60) % 24).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`;

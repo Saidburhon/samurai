@@ -153,7 +153,9 @@ html.film .scene:not(.on), html.film .scene:not(.on) *, html.film .foot:not(.on)
 html.film .tk { translate: 0 calc(var(--t, 0) * 105%); clip-path: inset(max(0%, calc(var(--t, 0) * -105%)) -100vw max(0%, calc(var(--t, 0) * 105%)) -100vw); }
 
 /* the dial lies on the paper under the sword (the flow page's own element, moved by the film) */
-#dialw { position: absolute; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; pointer-events: none; color: #5C4630; }
+#dialw { position: absolute; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; pointer-events: none; color: #5C4630; will-change: transform; }
+/* the displayed ground sheets are layers: their crossfades never re-rasterise the tiles */
+html.film #paper .sheet.on { will-change: opacity; }
 #dialw .dial { width: 1000px; height: 1000px; --sun: var(--sun-a, 135deg); }
 #dialw .hand { display: none; }
 html.film .s-toki .dial-plate { display: none; }
@@ -164,6 +166,7 @@ html.film[data-beat="temur.quote"] .sheet[data-g=ganch] { background: linear-gra
 /* the freeze layer (fx/cut.js): the frozen hold, split by a cut or under a moving mask */
 html.cinema #cut { position: absolute; inset: 0; z-index: 4; pointer-events: none; display: none; overflow: hidden; }
 html.cinema #cut.on { display: block; }
+html.cinema #cut.primed { display: block; opacity: .002; }
 #cut .fz-half, #cut .fz-one { position: absolute; inset: 0; will-change: transform; }
 #cut .fz { position: absolute; inset: 0; overflow: hidden; }
 #cut .fz-l, #cut .fz-dial { position: absolute; inset: 0; }

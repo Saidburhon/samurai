@@ -52,7 +52,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const m0 = Date.now();
     await page.screenshot({ path: path.join(out, `d-step-${nn}-mid.png`) });
     const m1 = Date.now();
-    await sleep(1300);
+    // +1.0 s after the first wheel (§3.2): the director inside the hold window, raysReady and cutReady where they apply
+    await sleep(Math.max(0, 1000 - (Date.now() - w0)));
+    const q1 = await read(); q1.t = Date.now() - w0;
+    await sleep(Math.max(0, 1300 - (Date.now() - m1)));
     await page.screenshot({ path: path.join(out, `d-step-${nn}.png`) });
     const set = await read();
     const flog = await page.evaluate(() => (window.__qilich.flog || []).slice());
@@ -63,14 +66,14 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     let shown = {};
     try { shown = JSON.parse(execFileSync('python3', [path.join(__dirname, 'frame-diff.py'), 'stamp', path.join(out, `d-step-${nn}-mid.png`), path.join(out, `d-step-${nn}.png`)], { encoding: 'utf8' })); } catch (e) { /* no stamp */ }
     const midShown = shown[`d-step-${nn}-mid.png`], setShown = shown[`d-step-${nn}.png`];
-    const s = { i, wheelsMs: m0 - w0, midShotMs: [m0 - w0, m1 - w0], midA: mA, midB: mB, midShown, setShown, at1: a1, set, frames };
+    const s = { i, wheelsMs: m0 - w0, midShotMs: [m0 - w0, m1 - w0], midA: mA, midB: mB, midShown, setShown, at1: a1, q1, set, frames };
     log.steps.push(s);
     const iv = frames.map((x, j) => (j ? x[0] - frames[j - 1][0] : 0)).slice(1);
-    console.log(`${nn} y ${set.y} beat ${set.beat} ${set.name} | wheels ${m0 - w0} ms, mid shot ${m0 - w0}-${m1 - w0} ms: shows ${midShown} (issued ${mA && mA[1]} .. ${mB && mB[1]}) | +1.0 s frame ${a1 && a1[1]} | settled ${set.drawn} cut ${set.cut} rays ${set.rays} | ${frames.length} frames, interval ${iv.length ? Math.round(iv.reduce((a, b) => a + b, 0) / iv.length) : '-'} ms`);
+    console.log(`${nn} y ${set.y} beat ${set.beat} ${set.name} | wheels ${m0 - w0} ms, mid shot ${m0 - w0}-${m1 - w0} ms: shows ${midShown} (issued ${mA && mA[1]} .. ${mB && mB[1]}) | +1.0 s (${q1.t} ms) beat ${q1.beat != null ? q1.beat.toFixed(3) : '-'} cut ${q1.cut} rays ${q1.rays}, frame ${a1 && a1[1]} | settled ${set.drawn} cut ${set.cut} rays ${set.rays} | ${frames.length} frames, interval ${iv.length ? Math.round(iv.reduce((a, b) => a + b, 0) / iv.length) : '-'} ms`);
   }
   log.errors = errors;
   // the criteria
-  const fr = [], bad = [];
+  const fr = [], bad = [], warn = [];
   let prev = start.beat || 0;
   for (const s of log.steps) {
     const k = Math.round(s.set.beat);
@@ -79,14 +82,16 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     if (s.set.y !== 640 * Math.min(24, s.i)) bad.push(`step ${s.i}: scrollY ${s.set.y} != ${640 * Math.min(24, s.i)}`);
     const setB = s.setShown != null ? s.setShown : s.set.drawn;
     if (setB == null || Math.abs(setB - k) > 0.002) bad.push(`step ${s.i}: the settled frame shows ${setB}, not ${k}`);
-    if (!s.set.cut) bad.push(`step ${s.i}: cutReady false at the settled frame`);
-    if (s.at1 && Math.abs(s.at1[1] - k) > 0.15) bad.push(`step ${s.i}: the frame at +1.0 s is ${s.at1[1]}, outside the hold window of ${k}`);
+    if (Math.abs(s.q1.beat - k) > 0.15) bad.push(`step ${s.i}: the director at +1.0 s is at ${s.q1.beat}, outside the hold window of ${k}`);
+    if (!s.q1.cut) bad.push(`step ${s.i}: cutReady false at +1.0 s`);
+    if (k === 14 && !s.q1.rays) bad.push(`step ${s.i}: raysReady false at +1.0 s on tsuba.guard`);
+    if (s.at1 && Math.abs(s.at1[1] - k) > 0.15) warn.push(`step ${s.i}: the frame on screen at +1.0 s shows ${s.at1[1]}`);
     prev = k;
   }
   const sorted = [...fr].sort((a, b) => a - b), med = sorted.length ? sorted[Math.floor(sorted.length / 2)] : null;
   const outside = fr.filter((f) => f < 0.35 || f > 0.80);
   log.mid = { fractions: fr, median: med, outside };
-  log.fail = bad;
+  log.fail = bad; log.warn = warn;
   // mid vs settled (the §3.9 measure)
   try {
     const r = execFileSync('python3', [path.join(__dirname, 'frame-diff.py'), 'pairs', out], { encoding: 'utf8' });
@@ -96,7 +101,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('mid fractions', fr.join(' '));
   console.log('median', med, 'outside .35–.80:', outside.length, outside.join(' '));
   console.log('mid vs settled', JSON.stringify(log.midVsSettled && log.midVsSettled.low));
-  console.log(bad.length ? 'FAIL\n' + bad.join('\n') : 'PASS: scrollY, settled frames, hold window and cutReady at +1.0 s');
+  if (warn.length) console.log('note\n' + warn.join('\n'));
+  if (med == null || med < 0.45 || med > 0.60) bad.push(`mid median ${med} outside .45–.60`);
+  if (outside.length) bad.push(`${outside.length} mid frames outside .35–.80: ${outside.join(' ')}`);
+  console.log(bad.length ? 'FAIL\n' + bad.join('\n') : 'PASS: scrollY = 640·k, mids in .35–.80 (median .45–.60), settled exact, hold window, cutReady and raysReady at +1.0 s');
   console.log('errors', errors.length ? errors.join('\n') : 'none');
   await browser.close();
 })().catch((e) => { console.error(e); process.exit(1); });

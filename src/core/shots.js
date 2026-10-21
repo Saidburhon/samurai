@@ -173,7 +173,9 @@ const toki = (hour, sun, land, port) => ({
   ...(port ? { port: { cam: { mode: 'td', A: 'tsuba', a: port.hub, B: 'T', hand: { hour, lenW: port.lenW }, fov: 24, lift: 0.12 } } } : {}),
 });
 S['toki.0900'] = toki(9, { az: 135, el: 45 }, { hub: [0.62, 0.56], len: 0.32 }, { hub: [0.5, 0.62], lenW: 0.40 });
-S['toki.1130'] = toki(11.5, { az: 172, el: 58 }, { hub: [0.70, 0.56], len: 0.58 });
+// (G3: B18 keeps B17's framing; its push-in on the hub, camera height × 0.55 at (.70, .56), waits for the dial drawn
+// into a canvas at G4: the SVG dial re-rasterised every frame of a zoom cost 0.5–2 s per frame on a software renderer)
+S['toki.1130'] = toki(11.5, { az: 172, el: 58 }, { hub: [0.62, 0.56], len: 0.32 });
 S['toki.1400'] = toki(14, { az: 210, el: 40 }, { hub: [0.62, 0.56], len: 0.32 }, { hub: [0.5, 0.60], lenW: 0.727 });
 
 // Addendum 1, the Temur poster: the carved plaster lit low from the left; the sheathed sword along the bottom edge

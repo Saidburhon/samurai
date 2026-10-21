@@ -119,7 +119,13 @@ export class Cut {
   }
 
   // ---------------- showing ----------------
-  hide() { if (this.shown) { this.root.replaceChildren(); this.root.classList.remove('on'); this.shown = null; } }
+  hide() { if (this.shown) { this.root.replaceChildren(); this.root.classList.remove('on', 'primed'); this.shown = null; } }
+  // a prepared freeze mounted at its start, all but invisible: its layers (two full-screen halves with a copy of the
+  // canvas) are rasterised and uploaded while the hold is on screen, not in the first frame of the cut
+  prime(fz) {
+    if (this.shown !== fz) { this.mount(fz); this.show(fz, 0); }
+    this.root.classList.remove('on'); this.root.classList.add('primed');
+  }
   mount(fz) {
     if (this.shown === fz) return;
     const W = fz.W, H = fz.H, tr = fz.tr;
@@ -150,6 +156,7 @@ export class Cut {
   // p in [0, 1]: the progress of the freeze window
   show(fz, p) {
     this.mount(fz);
+    if (!this.root.classList.contains('on')) { this.root.classList.remove('primed'); this.root.classList.add('on'); }
     const tr = fz.tr, P = fz.parts, W = fz.W, H = fz.H;
     if (P.a) {
       const c = EASES.cut(p), s = 0.55 * P.D * c, sl = 0.02 * P.D * c;
@@ -194,6 +201,10 @@ export class Cut {
       this.show(fz, d.freeze.p);
       return true;
     }
+    // the freeze this hold leads into (or the one about to start) waits mounted
+    const k = d && !d.intro ? (d.atHold ? Math.round(d.pos) : d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe') ? d.k : null) : null;
+    const fz = k != null ? this.cache.get(this.key(k, layout)) : null;
+    if (fz) { this.prime(fz); return false; }
     this.hide();
     return false;
   }

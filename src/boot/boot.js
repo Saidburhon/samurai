@@ -86,20 +86,21 @@ if (cv && stageEl) {
     // The drawing ends by 0.80 s after navigation start (§4.1). The head script guessed --k from its own time, but
     // the CSS animations start at the first frame: in that frame's animation callback (before its style and paint)
     // --k is set so that the longest of them (0.80 s at k = 1: the annotations, the detail plate, the mei) ends at
-    // 0.78 s; never below 0.375.
+    // 0.68 s; never below 0.375. (0.68, not 0.78: on a software renderer the GPU process rasters the drawing's last
+    // frame for about 0.1–0.2 s after it, and the GL gate at 0.80 s queues behind that raster, G1.)
     // Their start time is pinned to that callback's time (a CSS animation otherwise starts when its first frame
     // commits, which a software renderer can delay by 0.2 s).
     requestAnimationFrame(() => {
-      const c = performance.now(), k = Math.max(0.375, Math.min(kk, (780 - c) / 800));
+      const c = performance.now(), k = Math.max(0.375, Math.min(kk, (680 - c) / 800));
       if (k < kk - 0.005) document.documentElement.style.setProperty('--k', k.toFixed(3));
       for (const a of document.getAnimations()) if (/^(draw|tick|rise)$/.test(a.animationName) && a.effect && a.effect.target && a.effect.target.closest('#osh-paper, .h1, .mei')) a.startTime = c;
       Q.boot.animStart = Math.round(c); Q.boot.k = +k.toFixed(3);
     });
-    // 12 batches, tang to tip, from 0.05 s to 0.70 s after navigation start (compressed with the CSS when late)
+    // 12 batches, tang to tip, from 0.05 s to 0.62 s after navigation start (compressed with the CSS when late)
     const N = order.length;
     const tick = () => {
       const t = performance.now() / 1000;
-      const b = Math.min(12, Math.max(0, Math.floor((t - 0.05 * kk) / (0.65 * kk / 12)) + 1));
+      const b = Math.min(12, Math.max(0, Math.floor((t - 0.05 * kk) / (0.57 * kk / 12)) + 1));
       drawTo(Math.round(N * b / 12));
       if (b < 12) requestAnimationFrame(tick); else Q.boot.stipple = Math.round(performance.now());
     };

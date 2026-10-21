@@ -3,7 +3,7 @@
 // On the boot path the first frame is the reveal pose with nothing revealed (§4.1), so it needs no texture: it
 // renders with 1 × 1 stand-ins, which keeps the bakes (and their program) off the critical path to glReady; the
 // baked textures are swapped in (uniform values, no recompile) before the steel appears.
-import { DataTexture, RGBAFormat, LinearFilter, Scene, Mesh, BufferGeometry } from 'three';
+import { DataTexture, RGBAFormat, LinearFilter, Scene, Mesh, BufferGeometry, Float32BufferAttribute } from 'three';
 import { Stage, buildGeometries, buildPart, PART_NAMES } from './stage.js';
 import { bakeAll } from './bake.js';
 
@@ -59,10 +59,31 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true 
   // meshes (a program does not depend on its geometry): renderer.compile() on the stage's scene would also issue every
   // hidden part's program (the tang, the lacquer, the floor, the rays' disc)
   stage.materials(T0);
+  // ... and drawn at once, on proxies with the meshes' vertex layouts (a software renderer builds a pipeline at its first
+  // draw, from the program, the blend and depth state and the vertex formats: not from the geometry): the pipelines
+  // are then built on the renderer's own thread while the GPU process's main thread finishes the intro's raster and
+  // this thread builds the geometries; warm() draws the real meshes, which find them built
+  const proxy = (attrs, indexed) => {
+    const g = new BufferGeometry();
+    for (const [n, k] of attrs) g.setAttribute(n, new Float32BufferAttribute(new Float32Array(3 * k), k));
+    if (indexed) g.setIndex([0, 1, 2]);
+    return g;
+  };
+  const SWORD = [['position', 3], ['normal', 3], ['uv', 2], ['aAxial', 1]];
   const two = new Scene();
-  for (const m of [stage.mat.steel, stage.mat.iron]) { const k = new Mesh(new BufferGeometry(), m); k.frustumCulled = false; two.add(k); }
+  const add = (g, m) => { const k = new Mesh(g, m); k.frustumCulled = false; two.add(k); };
+  add(proxy([...SWORD, ['aRegion', 1], ['aMune', 3], ['aHa', 3]]), stage.mat.steel);
+  add(proxy(SWORD), stage.mat.iron);           // the extruded fittings (not indexed)
+  add(proxy(SWORD, true), stage.mat.silk);     // the oval tubes (indexed)
   r.compile(two, stage.camera);
   log('issued', performance.now() - t0);
+  r.setRenderTarget(null); r.setScissorTest(true); r.setScissor(0, 0, 1, 1);
+  r.render(two, stage.camera);
+  r.setScissorTest(false);
+  log('proxied', performance.now() - t0);
+  // dev (?pxwait=ms): let the proxies' pipelines finish before warm(), to see whether the real draws find them built
+  const pxw = +(new URLSearchParams(location.search).get('pxwait') || 0);
+  if (pxw) { await stage.gpuDone(); await new Promise((res) => setTimeout(res, pxw)); log('pxdone', performance.now() - t0); }
   // the geometries the idle time has not built yet (gl/index.js prebuild): CPU work while the GPU process links
   log('prebuilt', Object.keys(pre).length);
   const geo = buildGeometries(pre);

@@ -103,7 +103,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       const ms = film.render();
       fence();
       // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
-      if (state.lastIssue && dir.v) dir.lead = Math.min(0.25, 0.8 * (dir.lead || 0) + 0.2 * Math.min(0.5, (now - state.lastIssue) / 1000));
+      if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.45 * Math.min(0.5, (now - state.lastIssue) / 1000));
       state.lastIssue = now;
       state.key = key; state.drawn = d;
       Q.frameMs = Math.round(ms);
