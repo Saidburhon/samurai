@@ -134,11 +134,9 @@ html.cinema #osh-paper.no-annot .o-annot, html.cinema #osh-paper.no-annot #osh-d
 
 /* ======================= G3: the film (html.film, core/film.js) ======================= */
 /* only #track scrolls (its height is the film's length, core/director.js); the stage and the text stay fixed */
-/* touch scrolls the document; a fine pointer scrolls the virtual #scroller (core/director.js), so the document never
-   moves under the fixed layers */
-html.film.native, html.film.native body { overflow: visible; height: auto; }
-html.film.native { scrollbar-width: none; }
-html.film.native::-webkit-scrollbar { display: none; }
+/* a fine pointer scrolls the virtual #scroller (core/director.js), so the document never moves under the fixed layers */
+/* touch: the pager (core/director.js) moves the film; the page never pans under the finger (pinch-zoom stays) */
+html.film.pager, html.film.pager body { touch-action: pinch-zoom; overscroll-behavior: none; }
 #scroller { position: fixed; inset: 0; overflow-y: scroll; scrollbar-width: none; pointer-events: none; z-index: 0; }
 #scroller::-webkit-scrollbar { display: none; }
 html.film #track { display: block; position: relative; width: 1px; pointer-events: none; }
@@ -232,3 +230,5 @@ html.film .foot .colophon { padding-top: 14px; }
   html.film .foot { bottom: 16px; gap: 10px; font-size: 12px; }
   html.film .foot .foot-links { display: none; }
 }
+/* the rub hint names the gesture of the visitor's own pointer */
+@media (pointer: coarse) { html.film .s-togi .hint .ptr { display: none; } html.film .s-togi .hint .tch { display: inline; } }

@@ -49,6 +49,26 @@ def main():
             r, g, b = im.getpixel((2, im.size[1] - 2))
             out[os.path.basename(f)] = round(round(r / 10) + g / 250, 3) if abs(b - 77) < 6 else None
         print(json.dumps(out))
+    elif mode == 'band':
+        # the nav band (top 80 CSS px) of every mid frame must be made of what the settled frames before and after it
+        # show there: a tear (the fixed layers shifted, a foreign band) leaves pixels that match neither
+        d = sys.argv[2]
+        out = {}
+        sets = sorted(glob.glob(os.path.join(d, 'd-step-[0-9][0-9].png')))
+        prev = os.path.join(d, 'start.png') if os.path.exists(os.path.join(d, 'start.png')) else None
+        for st in sets:
+            mid = st.replace('.png', '-mid.png')
+            if os.path.exists(mid) and prev:
+                m = Image.open(mid).convert('L'); h = round(80 * m.size[0] / 1440)
+                crop = lambda im: im.convert('L').crop((0, 0, m.size[0], h))
+                mm, a, b = crop(m), crop(Image.open(prev)), crop(Image.open(st))
+                da, db = ImageChops.difference(mm, a), ImageChops.difference(mm, b)
+                dmin = ImageChops.darker(da, db)
+                hist = dmin.histogram(); n = sum(hist)
+                out[os.path.basename(st)[:-4]] = round(sum(hist[41:]) / n, 4)
+            prev = st
+        bad = {k: v for k, v in out.items() if v > 0.05}
+        print(json.dumps({'measure': out, 'torn': bad}))
     elif mode == 'compare':
         a, b = Image.open(sys.argv[2]).convert('L'), Image.open(sys.argv[3]).convert('L')
         if len(sys.argv) > 4 and sys.argv[4] == 'top80':

@@ -457,7 +457,8 @@ export const S = {
     ph: { plan: '設計', build: '開発', test: 'テスト', launch: 'リリース', kaizen: '改善' },
     week: '週',
     refine: '変更したい点',
-    chips: { cheaper: '費用を抑える', faster: '短期間で', telegram_only: 'Telegramのみ', have_site: 'Webサイトあり', have_1c: '1C導入済み' },
+    // a company in Japan: no Telegram-only or 1C chip (empty strings are not shown)
+    chips: { cheaper: '費用を抑える', faster: '短期間で', telegram_only: '', have_site: 'Webサイトあり', have_1c: '' },
     refineText: 'その他の変更点',
     refineRun: '再計算する',
     removed: '除外したもの',
@@ -469,7 +470,7 @@ export const S = {
     expired: '有効期限切れ',
     reprice: '現在の価格で再計算する',
     repriced: '現在のサービス一覧の価格で表示しています',
-    share: '関係者に共有', copy: 'リンクをコピー', tg: 'Telegram', mail: 'メール', pdf: 'PDF', lead: 'Qilichに送る',
+    share: '関係者に共有', copy: 'リンクをコピー', tg: '', mail: 'メール', pdf: 'PDF', lead: 'Qilichに送る',
     shareText: 'Qilich概算書 {no}：{sum}、{weeks}',
     copied: 'コピーしました',
     printHead: 'ご提案書（案）',

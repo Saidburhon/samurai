@@ -57,7 +57,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   if (dial && paper && !document.getElementById('dialw')) { const w = document.createElement('div'); w.id = 'dialw'; w.style.visibility = 'hidden'; w.appendChild(dial); paper.appendChild(w); }
   const layout0 = stage.w / stage.h >= 1.2 ? 'land' : 'port';
   const fz = parseBeatParam(q, layout0);
-  const state = { intro: null, d: null, key: '', holdKey: '', prepared: '', drawn: null };
+  const state = { intro: null, d: null, key: '', holdKey: '', prepared: '', drawn: null, warmed: new Set() };
   const dir = new Director({
     frozen: fz === 'intro' ? 0 : fz,
     onInput: () => { if (state.intro && state.intro.t < 1) state.intro.speed = 4; },
@@ -97,13 +97,23 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     const d = describe(now);
     state.d = d;
     const lay = layout();
-    if (busy() && !force) { report(d, lay, false); return; }
+    // a GL frame in flight: the page's own layers (the freeze, the text) still move, the GL waits for the fence
+    if (busy() && !force) {
+      if (stage.tier.tier !== 2 || now - (state.lastDom || 0) >= 90 || cut.jumpFz) {
+        state.lastDom = now;
+        const on = cut.update(d, lay, now);
+        dom.apply(d);
+        if (stamp && on) { const b = Math.max(0, beatOf(d.pos, lay)), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
+      }
+      holdWork(d, lay);
+      report(d, lay, !!cut.shown); return;
+    }
     // the resolution: the hold's own inside a hold window (and through the intro), cheaper frames while moving (§6.4)
     // (a frame that keeps a settled hold keeps its resolution)
     const keepHold = !d.settled && d.atHold === false && state.key && state.key.endsWith('|1') && stateKey(d) === state.key.slice(0, -1) + '0';
-    // under a freeze the live layers show the incoming hold, still: one frame, drawn at once at its hold resolution
-    const underFreeze = !!(d.freeze && d.live === 'b');
-    const hr = !!(d.settled || d.intro || fz != null || keepHold || underFreeze);
+    // (under a freeze the incoming hold is drawn once at the moving resolution: its hold-resolution frame kept the
+    // software GPU busy for most of the freeze, and the halves could not move meanwhile)
+    const hr = !!(d.settled || d.intro || fz != null || keepHold);
     if (hr !== state.holdRes) { state.holdRes = hr; stage.setSize(stage.w, stage.h, hr); state.key = ''; }
     let key = stateKey(d);
     // leaving a settled hold draws nothing until the state itself moves (the hold's frame is still the right one)
@@ -125,7 +135,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       const ms = film.render();
       fence();
       // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
-      if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.45 * Math.min(0.5, (now - state.lastIssue) / 1000));
+      if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.3 * Math.min(0.5, (now - state.lastIssue) / 1000));
       state.lastIssue = now;
       state.key = key; state.drawn = d;
       Q.frameMs = Math.round(ms);
@@ -135,19 +145,33 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       // ?stamp (probes only): the drawn beat as a colour in the corner, committed with the frame it describes
       if (stamp) { const b = Math.max(0, state.drawnBeat), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
     } else dom.apply(d);
-    // the hold window: prepare the freezes of the transitions that touch this hold (either direction)
-    if (d.atHold && d.hold && !d.intro && fz == null) {
-      const k = Math.round(d.pos), seq = SEQ[lay], hk = `${lay}|${k}|${stage.w}x${stage.h}`;
-      const need = [k - 1, k].filter((j) => j >= 0 && j < seq.trans.length && isFreeze(seq.trans[j]));
-      Q.cutReady = need.every((j) => cut.ready(j, lay));
-      if (!Q.cutReady && state.prepared !== hk && Math.abs(dir.v) < 0.6) {
-        state.prepared = hk;
-        for (const j of need) cut.prepare(j, lay);
-        film.apply(d); dom.apply(d); film.render(); fence();
-        Q.cutReady = true;
-      }
-    } else Q.cutReady = !d.freeze;
+    holdWork(d, lay);
     report(d, lay, cutOn);
+  };
+  // the hold window: prepare the freezes of the transitions that touch this hold (either direction), then draw the
+  // incoming hold of the next freeze once, unseen. Runs whether or not a GL frame is in flight (the snapshot takes
+  // bitmaps, never a read-back)
+  const holdWork = (d, lay) => {
+  if (d.atHold && d.hold && !d.intro && fz == null) {
+    const k = Math.round(d.pos), seq = SEQ[lay], hk = `${lay}|${k}|${stage.w}x${stage.h}`;
+    const need = [k - 1, k].filter((j) => j >= 0 && j < seq.trans.length && isFreeze(seq.trans[j]));
+    Q.cutReady = need.every((j) => cut.ready(j, lay));
+    Q.cutArrived = need.every((j) => cut.arrived(j, lay));
+    if (!Q.cutReady && state.prepared !== hk && (d.settled || Math.abs(dir.v) < 0.6)) {
+      state.prepared = hk;
+      // (the hold on screen is the state of freeze k: its frame needs no second render; freeze k − 1 shows hold
+      // k − 1, so the live frame is drawn again after it)
+      for (const j of need) cut.prepare(j, lay, j === k && d.settled && state.key === `H|${seq.names[k]}|1`);
+      fence();
+    } else if (Q.cutReady && Q.cutArrived && d.settled && need.includes(k) && !state.warmed.has(hk)) {
+      // once ready, the incoming hold of the next freeze is drawn once, unseen (the live frame follows in this
+      // task): its first frame inside the freeze is then no slower than any other (textures, pipelines)
+      state.warmed.add(hk);
+      const db = evalS(k + 1, lay); db.settled = false;
+      film.apply(db); film.render();
+      film.apply(d); dom.apply(d); film.render(); fence();
+    }
+  } else Q.cutReady = !d.freeze;
   };
   // report (§3.10)
   const report = (d, lay, cutOn) => {

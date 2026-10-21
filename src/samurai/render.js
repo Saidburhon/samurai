@@ -8,7 +8,8 @@ import { solutionUrl } from '../shared/catalogue.js';
 
 export const h = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 export const fill = (s, o) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in o ? o[k] : m));
-const CARET = '<svg class="caret" viewBox="0 0 8 6" aria-hidden="true"><path d="M.6 .8h6.8L4 5.4z"/></svg>';
+// the row's mark is a 6 px kissaki (a blade's point: a straight back, the curved edge), never a generic triangle
+const CARET = '<svg class="caret" viewBox="0 0 8 6" aria-hidden="true"><path d="M1 .6h6c0 2.2-1.6 4-4.4 5L1 .6z"/></svg>';
 const KISSAKI = '<svg viewBox="0 0 30 8" aria-hidden="true"><use href="#kissaki"/></svg>';
 export const money = (C, usdR, uzsR) => F.money(usdR, uzsR, C.cur, C.lang);
 // a separator that never starts or ends a line: the dot is tied to the words on both sides (rows of buttons or long
@@ -16,7 +17,7 @@ export const money = (C, usdR, uzsR) => F.money(usdR, uzsR, C.cur, C.lang);
 export const SEP = '\u00a0·\u00a0';
 // a range with its unit never breaks across lines ("19–27 недель", "$16 900–26 200", "3,000〜4,100ドル"): wrapped in a
 // nowrap span. Runs on escaped HTML text, never on markup with attributes.
-const RANGE = /\$?\d[\d\u00a0.,]*万?(?:[–〜]\$?\d[\d\u00a0.,]*万?)?(?:\u00a0[^\s<&·]+(?:\u00a0[^\s<&·]+)?|ドル|週間|か月|スム)?/g;
+const RANGE = /\$?\d[\d\u00a0.,億]*万?(?:[–〜]\$?\d[\d\u00a0.,億]*万?)?(?:\u00a0[^\s<&·]+(?:\u00a0[^\s<&·]+)?|ドル|週間|か月|スム)?/g;
 export const nw = (html) => html.replace(RANGE, (m) => (/[–〜\u00a0]/.test(m.trim()) ? `<span class="nw">${m}</span>` : m));
 /** escape, then keep every range whole */
 export const R = (s) => nw(h(s));
@@ -127,7 +128,8 @@ function rows(C, s, st, entry) {
   }
   row('impact', impSum, impBody, waiting);
   // 9 the price breakdown: one ruled line split into proportional segments, labelled under it
-  const lines = s.price_lines[state];
+  // a line that adds nothing (a modifier that only moves the weeks) is not a price line
+  const lines = s.price_lines[state].filter((l, i) => !i || l.usd[1] > 0);
   const tot = lines.reduce((a, l) => a + l.usd[1], 0) || 1;
   row('breakdown', lines.length > 1 ? h(N(C, S.sumBreak, lines.length - 1)) : h(S.sumBase), `<div class="bar" aria-hidden="true">${lines.map((l) => `<span style="flex:${(l.usd[1] / tot).toFixed(3)}"></span>`).join('')}</div><ul class="bar-l">${lines.map((l) => `<li><span>${h(l.label).replace(/ · /g, SEP)}</span><b>${R(money(C, l.usd.map(Math.round), C.uzs(l.usd))[0])}</b></li>`).join('')}</ul>`);
   return out.join('');
@@ -158,8 +160,8 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
     <h3 id="t-${h(id)}">${h(s.title)}</h3>
     ${plate}
     <dl class="sfacts">
-      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn ? ' still' : ''}">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
-      <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was${st.wasDrawn ? ' still' : ''}">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
+      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
+      <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
       <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div>
       <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
       <div><dt>${h(S.row.why)}</dt><dd class="why">${h(s.why)}</dd></div>
@@ -176,7 +178,7 @@ function bigDigits(a, b) {
     while (i < a.length && i < b.length && a[i] === b[i]) i++;
     while (j < a.length - i && j < b.length - i && a[a.length - 1 - j] === b[b.length - 1 - j]) j++;
   } else i = b.length;
-  const m = /\$?\d[\d\u00a0.,]*万?(?:[–〜]\$?\d[\d\u00a0.,]*万?)?/.exec(b);
+  const m = /\$?\d[\d\u00a0.,億]*万?(?:[–〜]\$?\d[\d\u00a0.,億]*万?)?/.exec(b);
   let out = '';
   for (let k = 0; k < b.length; k++) {
     if (m && k === m.index) out += '<span class="nw">';
@@ -205,7 +207,7 @@ export function notNeededHtml(C, st) {
 
 export function refineHtml(C, st) {
   const { S } = C;
-  return `<section class="refine" aria-labelledby="rf-h"><h2 id="rf-h">${h(S.refine)}</h2><p class="chips">${Object.entries(S.chips).map(([k, v]) => `<button type="button" data-act="chip" data-k="${k}" aria-pressed="${st.chips.has(k)}">${h(v)}</button>`).join('')}</p>
+  return `<section class="refine" aria-labelledby="rf-h"><h2 id="rf-h">${h(S.refine)}</h2><p class="chips">${Object.entries(S.chips).filter(([, v]) => v).map(([k, v]) => `<button type="button" data-act="chip" data-k="${k}" aria-pressed="${st.chips.has(k)}">${h(v)}</button>`).join('')}</p>
     <form data-act="refine"><label class="vh" for="rf-t">${h(S.refineText)}</label><input id="rf-t" name="t" maxlength="200" placeholder="${h(S.refineText)}"><button class="btn" type="submit"><span>${h(S.refineRun)}</span>${KISSAKI}</button><div class="rf-status" aria-live="polite"></div></form>
     ${st.removed?.length ? `<p class="removed mono">${h(S.removed)}: ${st.removed.map((t) => `<s>${h(t)}</s>`).join('')}</p>` : ''}</section>`;
 }
@@ -231,7 +233,7 @@ export function actionsHtml(C) {
     <button class="btn solid" type="button" data-act="lead"><span>${h(S.lead)}</span>${KISSAKI}</button>
     <button class="btn" type="button" data-act="share"><span>${h(S.share)}</span></button>
     <button class="tlink" type="button" data-act="copy">${h(S.copy)}</button>
-    <button class="tlink" type="button" data-act="tg">${h(S.tg)}</button>
+    ${S.tg ? `<button class="tlink" type="button" data-act="tg">${h(S.tg)}</button>` : ''}
     <button class="tlink" type="button" data-act="mail">${h(S.mail)}</button>
     <button class="tlink" type="button" data-act="pdf">${h(S.pdf)}</button>
     <a href="tel:${h(tel)}">${h(C.cfg.phone.replace(/ /g, '\u00a0'))}</a> <a href="mailto:${h(C.cfg.email)}" data-act="mailto">${h(C.cfg.email)}</a>

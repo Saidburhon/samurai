@@ -18,7 +18,8 @@ const IDS = {
 };
 // the default sentence: what most visitors would say (industry: the first market's most common case)
 const DEFAULT = { industry: 'restaurants', branches: '1', staff: '6-20', tools: 'paper_phone', goal: 'sales', budget: 'unknown', deadline: 'none' };
-const CARET = '<svg class="caret" viewBox="0 0 8 6" aria-hidden="true"><path d="M.6 .8h6.8L4 5.4z"/></svg>';
+// the blank's mark: a 6 px kissaki, the same as the rows' (src/samurai/render.js)
+const CARET = '<svg class="caret" viewBox="0 0 8 6" aria-hidden="true"><path d="M1 .6h6c0 2.2-1.6 4-4.4 5L1 .6z"/></svg>';
 
 function check(lang) {
   const keys = (o, p = '') => Object.entries(o).flatMap(([k, v]) => (v && typeof v === 'object' && !Array.isArray(v) ? keys(v, `${p}${k}.`) : [`${p}${k}`]));

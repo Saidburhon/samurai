@@ -40,6 +40,9 @@ export class Dom {
     const foot = document.getElementById('foot');
     if (foot) this.add(foot, ['bookend.steel'], null);
     this.items = [...document.querySelectorAll('.svc li')];
+    // the hanko stands beside the phone number in the contact poster (cloned from the hero's; it carries no text)
+    const row = document.querySelector('.contact .row');
+    if (row && !row.querySelector('.hanko-c')) { const h = document.querySelector('.s-mei .hanko svg'); if (h) { const i = document.createElement('i'); i.className = 'hanko-c'; i.setAttribute('aria-hidden', 'true'); i.appendChild(h.cloneNode(true)); row.appendChild(i); } }
     this.ruler = [...document.querySelectorAll('.ruler li')];
   }
   add(el, beats, sec) {

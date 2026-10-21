@@ -35,33 +35,43 @@ export class Cut {
   }
   reset() { this.cache.clear(); this.hide(); }
   key(k, layout) { const st = this.film.st; return `${layout}|${k}|${st.w}x${st.h}`; }
+  // ready: the freeze's frame is taken (its two bitmaps are on their way from the GPU; the sheet shows them on arrival)
   ready(k, layout) { return this.cache.has(this.key(k, layout)); }
+  arrived(k, layout) { const fz = this.cache.get(this.key(k, layout)); return !!(fz && fz.ready); }
 
   // the freeze of hold k for the transition k -> k + 1 (its type decides the shape)
-  prepare(k, layout) {
+  prepare(k, layout, same = false) {
     const key = this.key(k, layout);
     if (this.cache.has(key)) return this.cache.get(key);
     const tr = SEQ[layout].trans[k];
     const d = evalS(k, layout); d.settled = true;
-    const fz = this.snapshot(d, tr);
+    const fz = this.snapshot(d, tr, same);
     this.cache.set(key, fz);
     // a few sheets at most (each holds a copy of the canvas)
     if (this.cache.size > 4) for (const kk of this.cache.keys()) { if (kk !== key && this.shown !== this.cache.get(kk)) { this.cache.delete(kk); break; } }
     return fz;
   }
-  // render a state, copy it, clone the page's layers for it; the caller's next frame renders the live state again
-  snapshot(d, tr) {
+  // render a state, take two copies of the canvas, clone the page's layers for it. The copies are ImageBitmaps taken
+  // in the same task as the render (no read-back: the main thread never waits for the GPU); the sheet is ready when
+  // they arrive. same: the state is the one on screen, so the live frame need not be drawn again.
+  snapshot(d, tr, same = false) {
     const film = this.film, st = film.st, W = st.w, H = st.h;
     film.apply(d); if (this.dom) this.dom.apply(d);
     film.render();
-    const src = st.renderer.domElement, gl = document.createElement('canvas');
-    gl.width = src.width; gl.height = src.height;
-    gl.getContext('2d').drawImage(src, 0, 0);
-    const sheet = this.build(gl, d);
+    const src = st.renderer.domElement;
+    const mk = () => { const c = document.createElement('canvas'); c.width = src.width; c.height = src.height; return c; };
+    const glA = mk(), glB = mk();
+    const fz = { tr: tr || { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } }, W, H, k: d.k, ready: false };
+    const put = (c, bmp) => { const x = c.getContext('bitmaprenderer'); if (x) x.transferFromImageBitmap(bmp); else c.getContext('2d').drawImage(bmp, 0, 0); };
+    if (typeof createImageBitmap === 'function') {
+      Promise.all([createImageBitmap(src), createImageBitmap(src)]).then(([a, b]) => { put(glA, a); put(glB, b); fz.ready = true; }).catch(() => { fz.ready = true; });
+    } else { glA.getContext('2d').drawImage(src, 0, 0); glB.getContext('2d').drawImage(src, 0, 0); fz.ready = true; }
+    fz.sheet = this.build(glA, d);
+    fz.copy = this.build(glB, d);
     // where the wipes start: the tsuba of the frozen hold, on screen
-    const ts = st.project(st.point('tsuba'));
-    film.dirty = true; film.lastKey = '';
-    return { sheet, tr: tr || { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } }, W, H, ts, k: d.k };
+    fz.ts = st.project(st.point('tsuba'));
+    if (!same) { film.dirty = true; film.lastKey = ''; }
+    return fz;
   }
   build(gl, d) {
     const s = document.createElement('div');
@@ -217,7 +227,7 @@ export class Cut {
   }
   // a jump of more than one beat: freeze the frame on screen now; update() plays one kesagiri slash over it
   freezeNow(d) {
-    const fz = this.snapshot(d, { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } });
+    const fz = this.snapshot(d, { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } }, true);
     this.shown = null;
     this.jumpFz = fz; this.jumpT0 = performance.now();
     this.show(fz, 0);

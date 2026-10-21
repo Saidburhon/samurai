@@ -19,7 +19,9 @@
     "samples": "node scripts/samurai-samples.mjs",
     "ja:catalogue": "node scripts/samurai-ja-catalogue.mjs",
     "eval:samurai": "node scripts/eval-samurai.mjs",
-    "qa:samurai": "node scripts/qa/samurai-probe.mjs"
+    "qa:samurai": "node scripts/qa/samurai-probe.mjs",
+    "qa:samurai-fixes": "node scripts/qa/samurai-fixes.cjs",
+    "qa:samurai-refine": "node scripts/qa/samurai-refine.cjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",

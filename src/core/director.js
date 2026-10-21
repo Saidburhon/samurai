@@ -1,13 +1,14 @@
 // The scroll director (§3.2): input -> raw position -> a critically damped follower -> the position the film shows.
 //   desktop (fine pointer)  Lenis (lerp .10); one beat B = round(0.7111 · innerHeight) (640 at 900, one capture wheel
 //                           step); 250 ms after the last input the settle snap brings any other rest onto a hold
-//   touch (coarse pointer)  native scroll; one poster STEP = round(1.14 · innerHeight); ScrollTrigger snaps it
+//   touch (coarse pointer)  a pager: the finger moves the track 1:1 (one poster STEP = round(1.14 · innerHeight)),
+//                           and a released swipe goes exactly one poster on, whatever its fling (G3: native scroll with
+//                           a ScrollTrigger snap skipped posters when the fling outran the snap on a slow renderer)
 // The track is the layout's ordered list of holds (core/tracks.js SEQ): every beat on landscape, PHONE on portrait.
 // Keys step one beat; Home/End, nav links, the ruler, deep links and focus jump (a freeze and one slash, fx/cut.js).
-// The stage is position: fixed and never pinned; only #track scrolls (§3.1).
+// The stage is position: fixed and never pinned; the document never scrolls (a virtual track, §3.1).
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SEQ, posOf } from './tracks.js';
 import { HASH_BEAT, SCENE_OF } from './shots.js';
 import { EASES } from './eases.js';
@@ -36,11 +37,11 @@ export class Director {
     this.unit = this.coarse ? Math.round(1.14 * h) : Math.round(0.7111 * h);
     this.track.style.height = `${(this.n - 1) * this.unit + h}px`;
   }
-  scrollY() { return this.lenis ? this.lenis.scroll : window.scrollY; }
-  // the scroll position of the track (the probes' scrollY): the virtual scroller's on desktop, the document's on touch
-  get y() { return this.scroller ? this.scroller.scrollTop : window.scrollY; }
+  scrollY() { return this.lenis ? this.lenis.scroll : this.pager ? this.pager.y : window.scrollY; }
+  // the scroll position of the track (the probes' scrollY): the virtual scroller's, or the pager's
+  get y() { return this.scroller ? this.scroller.scrollTop : this.pager ? this.pager.y : window.scrollY; }
   raw() { return this.frozen != null ? this.frozen : clamp(this.scrollY() / this.unit, 0, this.n - 1); }
-  target() { return this.lenis ? this.lenis.targetScroll / this.unit : this.raw(); }
+  target() { return this.lenis ? this.lenis.targetScroll / this.unit : this.pager ? (this.pager.anim ? this.pager.anim.to : this.pager.y) / this.unit : this.raw(); }
 
   bind() {
     if (!this.coarse) {
@@ -53,10 +54,30 @@ export class Director {
       this.scroller = sc;
       this.lenis = new Lenis({ wrapper: sc, content: this.track, eventsTarget: window, lerp: 0.10, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, autoRaf: false });
     } else {
-      this.html.classList.add('native');
-      gsap.registerPlugin(ScrollTrigger);
-      ScrollTrigger.config({ ignoreMobileResize: true });
-      this.snapT = ScrollTrigger.create({ start: 0, end: (this.n - 1) * this.unit, snap: { snapTo: 1 / (this.n - 1), duration: { min: 0.2, max: 0.45 }, delay: 0.05, ease: 'power1.inOut', inertia: false } });
+      // the pager: the page itself never pans (touch-action: pinch-zoom, cinema.css); taps reach links as usual
+      this.html.classList.add('pager');
+      this.W = 12;
+      const P = (this.pager = { y: 0, anim: null, t0: null });
+      addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1 || this.frozen != null) { P.t0 = null; return; }
+        P.t0 = { y: e.touches[0].clientY, at: P.anim ? P.anim.to : P.y, from: Math.round((P.anim ? P.anim.to : P.y) / this.unit) };
+      }, { passive: true });
+      addEventListener('touchmove', (e) => {
+        if (!P.t0 || e.touches.length !== 1 || this.html.classList.contains('menu-open')) return;
+        const dy = P.t0.y - e.touches[0].clientY;
+        if (Math.abs(dy) < 8 && !P.dragging) return;
+        P.dragging = true; P.anim = null;
+        // the finger moves the film 1:1, at most one poster either way
+        P.y = clamp(P.t0.at + dy, Math.max(0, (P.t0.from - 1) * this.unit), Math.min((this.n - 1) * this.unit, (P.t0.from + 1) * this.unit));
+      }, { passive: true });
+      const end = () => {
+        if (!P.t0) return;
+        const moved = P.y - P.t0.at;
+        if (P.dragging) this.place(P.t0.from + (Math.abs(moved) > 30 ? Math.sign(moved) : 0), false, 0.35);
+        P.t0 = null; P.dragging = false;
+      };
+      addEventListener('touchend', end, { passive: true });
+      addEventListener('touchcancel', end, { passive: true });
     }
     const input = () => { this.lastInput = performance.now(); this.snapIssued = false; if (this.onInput) this.onInput(); };
     addEventListener('wheel', input, { passive: true });
@@ -103,14 +124,17 @@ export class Director {
     this.measure();
     const p = lay === this.layout ? pos : posOf(Math.round(pos), this.layout);
     if (this.lenis) this.lenis.resize();
-    if (this.snapT) { this.snapT.kill(); this.snapT = ScrollTrigger.create({ start: 0, end: (this.n - 1) * this.unit, snap: { snapTo: 1 / (this.n - 1), duration: { min: 0.2, max: 0.45 }, delay: 0.05, ease: 'power1.inOut', inertia: false } }); }
     this.place(p, true);
     this.x = p; this.v = 0;
     if (this.onResize) this.onResize();
   }
   place(pos, immediate, duration = 1.1) {
     const y = clamp(pos, 0, this.n - 1) * this.unit;
+    // a placed scroll always ends on a hold: the settle snap has nothing to do (it would read Lenis's programmatic
+    // target mid-animation and pull the scroll back)
+    this.snapIssued = true;
     if (this.lenis) this.lenis.scrollTo(y, immediate ? { immediate: true, force: true } : { duration, easing: EASES.inOutCubic, force: true });
+    else if (this.pager) { if (immediate) { this.pager.y = y; this.pager.anim = null; } else this.pager.anim = { from: this.pager.y, to: y, t: 0, dur: duration }; }
     else window.scrollTo({ top: y, behavior: immediate ? 'instant' : 'smooth' });
   }
   key(e) {
@@ -126,7 +150,7 @@ export class Director {
     if (!d) return;
     if (k === ' ' && t && t.closest && t.closest('a, button')) return;
     e.preventDefault();
-    this.lastInput = performance.now(); this.snapIssued = false;
+    this.lastInput = performance.now();
     if (this.onInput) this.onInput();
     this.place(clamp(Math.round(this.target()) + d, 0, this.n - 1), false, 1.1);
   }
@@ -142,6 +166,8 @@ export class Director {
   // every tick: the raw position, the settle snap, the follower (fixed 1/120 s substeps: stable at 3 fps)
   update(dt, timeMs) {
     if (this.lenis) this.lenis.raf(timeMs);
+    const A = this.pager && this.pager.anim;
+    if (A) { A.t = Math.min(1, A.t + Math.min(dt, 0.25) / A.dur); this.pager.y = A.from + (A.to - A.from) * EASES.inOutCubic(A.t); if (A.t >= 1) this.pager.anim = null; }
     const raw = this.raw();
     if (this.lenis && !this.snapIssued && performance.now() - this.lastInput > 250) {
       const t = this.lenis.targetScroll, r = Math.round(t / this.unit) * this.unit;
@@ -157,7 +183,7 @@ export class Director {
     // what the screen will show: a frame drawn now reaches the screen about one frame later (lead, in seconds, set by
     // the film from its measured frame time; 0 on a fast GPU), so the film draws where the follower will be by then,
     // never past the scroll's own target
-    const tgt = this.lenis ? clamp(this.lenis.targetScroll / this.unit, 0, this.n - 1) : raw;
+    const tgt = this.lenis || this.pager ? clamp(this.target(), 0, this.n - 1) : raw;
     this.xp = v ? clamp(x + v * (this.lead || 0), Math.min(x, tgt), Math.max(x, tgt)) : x;
     return x;
   }

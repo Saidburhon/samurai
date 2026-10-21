@@ -116,7 +116,8 @@ html.no-js .nojs { display: block; }
 .broken p { max-width: 30em; }
 .broken .acts { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 24px; }
 .broken .acts a { box-shadow: inset 0 -1px 0 var(--line); }
-.desk.nb { grid-column: 1 / span 8; padding-top: 8px; }
+.desk.nb { grid-column: 1 / span 7; padding-top: 8px; }
+.rtop > .nb-plate { grid-column: 8 / -1; margin: -24px 0 0; }
 .nb-line { font-weight: 300; font-size: clamp(21px, calc(26 * var(--fit)), 26px); line-height: 1.4; letter-spacing: -.01em; max-width: 26em; outline: none; text-wrap: pretty; }
 .desk.nb .tlink { margin-top: 18px; font-size: 15px; }
 
@@ -251,7 +252,8 @@ html[lang=ja] .fitter .dv { font-family: var(--sans); }
 .next-st { margin-top: 10px; color: var(--kurogane); }
 
 /* refine */
-.refine { grid-column: 5 / -1; margin-top: 56px; }
+.refine { grid-column: 1 / -1; margin-top: 56px; } /* §3.2: below the desk, the refine line, the stamp and the actions span 1–12 */
+.refine form { max-width: 960px; }
 .refine .chips { margin-top: 12px; }
 .refine .chips button { font-size: 14px; padding: 4px 0; }
 .refine .chips button[aria-pressed=true] { background: var(--hamon-k) no-repeat 0 100% / 100% 5px; box-shadow: none; }
@@ -266,7 +268,7 @@ html[lang=ja] .fitter .dv { font-family: var(--sans); }
 .removed s { text-decoration-thickness: 1.5px; margin-right: 14px; }
 
 /* the stamp and the actions */
-.stamp { grid-column: 5 / -1; margin-top: 64px; padding: 22px 0; border-top: 1px solid var(--sumi); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto; gap: 6px 24px; align-items: end; }
+.stamp { grid-column: 1 / -1; margin-top: 64px; padding: 22px 0; border-top: 1px solid var(--sumi); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto; gap: 6px 24px; align-items: end; }
 .stamp p { font: 400 13px/1.7 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; }
 .stamp p:first-child { font-size: 15px; }
 .stamp .sig { display: flex; align-items: center; gap: 14px; }
@@ -276,7 +278,7 @@ html[lang=ja] .fitter .dv { font-family: var(--sans); }
 .signed .hanko { opacity: 1; animation: stampin .35s var(--hone) both; }
 .signed .hanko.still, .was.still::after { animation: none; }
 @keyframes stampin { from { transform: scale(1.5); opacity: 0; } }
-.actions { grid-column: 5 / -1; margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.actions { grid-column: 1 / -1; margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
 .actions .btn { height: 44px; font: inherit; color: var(--sumi); }
 .actions .btn span { font-size: 13px; font-weight: 560; letter-spacing: .08em; text-transform: uppercase; font-variation-settings: "SHRP" 60; }
 .actions .btn.solid { background: var(--sumi); color: var(--washi); }
@@ -301,7 +303,12 @@ dialog::backdrop { background: rgba(15, 14, 12, .32); }
 .slots { display: grid; gap: 2px; border: 0; padding: 0; }
 .slots legend { font: 400 13px/1.3 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--kurogane); margin-bottom: 6px; }
 .slots label { display: flex; align-items: baseline; gap: 10px; padding: 8px 0; min-height: 44px; cursor: pointer; font: 400 14px/1.4 var(--mono); font-stretch: 87.5%; }
-.slots input { accent-color: var(--sumi); }
+/* the slots are words, like the scope switch: the chosen one takes the hamon underline (no browser radio circles) */
+.slots label { position: relative; }
+.slots input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.slots span { padding-bottom: 3px; background: var(--hamon-k) no-repeat 0 100% / 0 5px; box-shadow: inset 0 -1px 0 var(--line); transition: background-size .45s var(--ui); }
+.slots input:checked + span { background-size: 100% 5px; box-shadow: none; }
+.slots input:focus-visible + span { outline: 2px solid var(--shu); outline-offset: 3px; }
 .slots small { color: var(--kurogane); font-size: 13px; }
 .lead-f .fine { font-size: 14px; }
 .lead-f .err { color: var(--sumi); font-weight: 520; min-height: 1.4em; }
@@ -341,10 +348,19 @@ html.legend-open .hako { visibility: hidden; }
 }
 @media (max-width: 860px) {
   .sam-head, .blank-plate { grid-column: 1 / -1; }
+  .rtop > .nb-plate { display: none; } .desk.nb { grid-column: 1 / -1; }
   .blank-plate { grid-row: auto; margin: 28px calc(-1 * var(--m)) 0; }
   .blank-form.tilt { display: none; }
   .blank-form.level { display: block; }
   .sam-head { margin-top: 28px; padding-right: 52px; }
+}
+/* the phases table on a phone screen: the phase and its weeks on one line, what it delivers under them (never one word
+   a line); the printout keeps its table */
+@media screen and (max-width: 760px) {
+  .phase-t tr { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; border-top: 1px solid var(--line); padding: 6px 0; }
+  .phase-t td { border-top: 0; padding: 0; }
+  .phase-t td:nth-child(3) { grid-column: 1 / -1; }
+  .phase-t td:nth-child(3):empty { display: none; }
 }
 @media (max-width: 760px) {
   .sam, .result, .how { grid-template-columns: minmax(0, 1fr); }

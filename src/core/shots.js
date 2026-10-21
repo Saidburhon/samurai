@@ -246,7 +246,9 @@ export const TRANS = {
 export const INTRO = { type: 'reveal', groups: { mat: [0, 0.526, 'power2.inOut'], cam: [0.526, 1, 'lift'], look: [0.526, 1, 'lift'], ink: [0.526, 1, 'lift'] } };
 export const FREEZE_WIN = F;
 // the phone shows the elements of the beats it skips on the nearest poster of the same scene
-export const PORT_ALIAS = { 'utsuri.web': 'utsuri.ios', 'utsuri.backend': 'utsuri.telegram', 'yaki.heat': 'yaki.plan', 'togi.stone': 'togi.front', 'togi.mirror': 'togi.front', 'tsuba.team': 'tsuba.carpet', 'toki.1130': 'toki.0900', 'bookend.drawing': 'bookend.steel' };
+// (only blocks the phone poster really carries: Kaizen's "even after launch" and the rub hint, Tsuba's team line; the
+// blocks of the other skipped beats stay off the phone, so no two lines share a place)
+export const PORT_ALIAS = { 'togi.stone': 'togi.front', 'togi.mirror': 'togi.front', 'tsuba.team': 'tsuba.carpet', 'bookend.drawing': 'bookend.steel' };
 // the deep links (§7.1): the scene ids, the same on every language page
 export const HASH_BEAT = { mei: 'mei.hero', xizmatlar: 'utsuri.ios', jarayon: 'yaki.plan', kaizen: 'togi.stone', tsuba: 'tsuba.guard', vaqt: 'toki.0900', temur: 'temur.quote', aloqa: 'noto.contact' };
 export const SCENES = ['mei', 'xizmatlar', 'jarayon', 'kaizen', 'tsuba', 'vaqt', 'aloqa'];

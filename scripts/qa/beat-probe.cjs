@@ -39,6 +39,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const read = () => page.evaluate(() => { const Q = window.__qilich || {}; return { y: Q.scrollY != null ? Q.scrollY : Math.round(scrollY), docY: Math.round(scrollY), beat: Q.beat, drawn: Q.drawnBeat, name: Q.name, rays: !!Q.raysReady, cut: !!Q.cutReady, hold: !!Q.atHold, ms: Q.frameMs }; });
   const log = { url, when: new Date().toISOString(), steps: [] };
   const start = await read();
+  await page.screenshot({ path: path.join(out, 'start.png') });
   const origin = await page.evaluate(() => performance.timeOrigin);
   const pt = (t) => t - origin; // node's clock -> the page's performance.now()
   console.log('start', JSON.stringify(start));
@@ -97,10 +98,14 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const r = execFileSync('python3', [path.join(__dirname, 'frame-diff.py'), 'pairs', out], { encoding: 'utf8' });
     log.midVsSettled = JSON.parse(r);
   } catch (e) { log.midVsSettled = { error: e.message.slice(0, 200) }; }
+  // the nav band never torn (§8 G3): every mid frame's top 80 px is made of its neighbours' settled bands
+  try { log.band = JSON.parse(execFileSync('python3', [path.join(__dirname, 'frame-diff.py'), 'band', out], { encoding: 'utf8' })); } catch (e) { log.band = { error: e.message.slice(0, 200) }; }
+  if (log.band.torn && Object.keys(log.band.torn).length) bad.push('nav band torn in ' + JSON.stringify(log.band.torn));
   fs.writeFileSync(path.join(out, 'beat-probe.json'), JSON.stringify(log, null, 1));
   console.log('mid fractions', fr.join(' '));
   console.log('median', med, 'outside .35–.80:', outside.length, outside.join(' '));
-  console.log('mid vs settled', JSON.stringify(log.midVsSettled && log.midVsSettled.low));
+  console.log('mid vs settled (< 10 %, a G4 measure)', JSON.stringify(log.midVsSettled && log.midVsSettled.low));
+  console.log('nav band: worst', log.band && log.band.measure ? Math.max(...Object.values(log.band.measure)) : '-', 'torn', JSON.stringify(log.band && log.band.torn));
   if (warn.length) console.log('note\n' + warn.join('\n'));
   if (med == null || med < 0.45 || med > 0.60) bad.push(`mid median ${med} outside .45–.60`);
   if (outside.length) bad.push(`${outside.length} mid frames outside .35–.80: ${outside.join(' ')}`);

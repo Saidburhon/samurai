@@ -26,10 +26,12 @@ export function usd(r, lang) {
   if (lang === 'ja') return `${span(r[0], r[1], (x) => int(x, lang), lang)}ドル`;
   return `$${span(r[0], r[1], (x) => int(x, lang), lang)}`;
 }
-/** "38–52 mln soʻm", "38–52 млн сум", "UZS 38–52 mln", "3,800万〜5,200万スム"; under 1 mln in thousands */
+// Japanese counts in 万 (10⁴) and, from 1億 (10⁸), in 億 and 万: "2億4,500万", never "24,500万"
+const man = (x) => { const m = Math.round(x / 1e4), o = Math.floor(m / 1e4), r = m % 1e4; return o ? `${o}億${r ? `${int(r, 'ja')}万` : ''}` : `${int(m, 'ja')}万`; };
+/** "38–52 mln soʻm", "38–52 млн сум", "UZS 38–52 mln", "3,800万〜5,200万スム", "2億4,500万〜3億スム"; under 1 mln in thousands */
 export function uzs(r, lang) {
   const [a, b] = r;
-  if (lang === 'ja') return `${span(a, b, (x) => `${int(x / 1e4, 'ja')}万`, lang)}スム`;
+  if (lang === 'ja') return `${span(a, b, man, lang)}スム`;
   if (b < 1e6) {
     const v = span(a / 1e3, b / 1e3, (x) => int(x, lang), lang);
     return lang === 'uz' ? `${v} ming soʻm` : lang === 'ru' ? `${v} тыс.${NB}сум` : `UZS ${v} thousand`;

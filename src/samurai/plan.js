@@ -25,9 +25,9 @@ export function ganttHtml(C, sols, st, width) {
   const maxW = Math.max(4, Math.ceil(Math.max(p.totals.weeks[1], ...ends, dlW) + 3));
   const X = (w) => pad + (w / maxW) * (width - 2 * pad);
   const out = [DEFS];
-  // the hatch legend, once; the mono face at 13 px is at most 8.6 px a Latin or Cyrillic letter, 13 px a Japanese one
-  // (a generous measure: items wrap before they could touch)
-  const tw = (t) => [...t].reduce((a, c) => a + (c.charCodeAt(0) > 0x2e7f ? 13 : 8.6), 0);
+  // the hatch legend, once; at 13 px with the .04em tracking a Latin or Cyrillic letter is at most 8.6 px, a Japanese
+  // one 14 px (a generous measure: items wrap, and labels stop at the edge, before they could touch or be cut)
+  const tw = (t) => [...t].reduce((a, c) => a + (c.charCodeAt(0) > 0x2e7f ? 14 : 8.6), 0);
   // items wrap to another row when the line is full (phones); the start and deadline labels sit under the last row
   let lx = pad, ly = 0;
   const item = (draw, label) => { const w = 22 + tw(label); if (lx > pad && lx + w > width - pad) { lx = pad; ly += 17; } const g = draw(lx, ly) + `<text x="${lx + 22}" y="${11 + ly}">${h(label)}</text>`; lx += w + 18; return g; };

@@ -80,7 +80,8 @@ function paint() {
   const hasSols = st.sols.length > 0;
   if (nb) {
     // not a business: one line and the examples, nothing that looks like an estimate (no number, stamp or actions)
-    result.innerHTML = `<div class="rtop"><div class="desk nb"><p class="note nb-line" id="res-h" tabindex="-1">${h(S.notBusiness)}</p><p class="examples mono">${exampleButtons()}</p><p><button class="tlink edit" type="button" data-act="edit">${h(S.edit)}</button></p></div></div>`;
+    // beside it the empty appraisal form stays: the desk waits for a business (no number, stamp or actions)
+    result.innerHTML = `<div class="rtop"><div class="desk nb"><p class="note nb-line" id="res-h" tabindex="-1">${h(S.notBusiness)}</p><p class="examples mono">${exampleButtons()}</p><p><button class="tlink edit" type="button" data-act="edit">${h(S.edit)}</button></p></div><figure class="nb-plate" aria-hidden="true">${$('.blank-plate')?.innerHTML || ''}</figure></div>`;
     st.fresh.clear(); st.newIds.clear();
     strip(false);
     return;
@@ -112,10 +113,12 @@ function paint() {
   st.fresh.clear(); st.newIds.clear();
   // what draws once draws once: the quote underlines, the hanko and the strikes are static on every later repaint
   // (a currency switch, a scope switch, a resize), so nothing moves without a cause
-  if (!reduced && !st.marked) result.querySelectorAll('.letter mark').forEach((m, i) => setTimeout(() => m.classList.add('on'), 120 + i * 450));
-  if (result.querySelector('.letter mark')) st.marked = true;
+  const marks = result.querySelectorAll('.letter mark');
+  if (reduced) marks.forEach((m) => m.classList.add('on'));
+  else if (!st.marked) marks.forEach((m, i) => setTimeout(() => m.classList.add('on'), 120 + i * 450));
+  if (marks.length) st.marked = true;
   if (result.querySelector('.signed .hanko')) st.stamped = true;
-  if (st.was) st.wasDrawn = true;
+  result.querySelectorAll('.sheet .was').forEach((el) => (st.wasDrawn ||= new Set()).add(el.closest('.sheet').dataset.id));
   if (focus) restore(focus);
   strip(hasPlan);
 }

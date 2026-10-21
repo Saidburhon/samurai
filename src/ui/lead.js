@@ -80,9 +80,9 @@ export function openLead(o) {
       o.onDone?.('telegram');
       return;
     }
-    // no bot (501), a refusal (429) or no network: the same text as a prefilled e-mail, and the phone
-    const text = j?.text || o.mailText;
-    const href = `mailto:${o.email}?subject=${encodeURIComponent(j?.subject || `Smeta ${no}`)}&body=${encodeURIComponent(`${text}\n\n${name} · ${body.phone || body.contact}`)}`;
+    // no bot (501), a refusal (429) or no network: the estimate as a prefilled e-mail in the page's language (never the
+    // server's text, which is the owner's Uzbek note), and the phone
+    const href = `mailto:${o.email}?subject=${encodeURIComponent(`${S.res} ${no}`)}&body=${encodeURIComponent(`${o.mailText}\n\n${name} · ${body.phone || body.contact}`)}`;
     (window.__qilich || (window.__qilich = {})).lastMailto = href;
     form.outerHTML = `<div class="lead-done"><p><a class="btn" href="${esc(href)}"><span>${esc(L.mail)}</span></a></p><p>${esc(L.mailNote)}</p><p><a href="tel:${esc(tel)}">${esc(o.phone)}</a></p></div>`;
     o.onDone?.('mailto');
