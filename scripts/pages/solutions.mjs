@@ -183,7 +183,7 @@ function row(s, V, { open = false, full = false } = {}) {
   // the lens and the sort read these (the catalogue); a group page has neither and keeps only the id
   const data = `data-id="${s.id}"${full ? '' : ` data-g="${s.group}" data-d="${s.difficulty}" data-w="${s.mvp.weeks[1]}" data-p="${s.mvp.usd[0]}" data-ind="${s.industries.join(' ')}" data-pl="${platformsOf(s).join(' ')}" data-goal="${goalsOf(s, V).join(' ')}"`}${V.monthly(s) ? ' data-m="1"' : ''}`;
   return `<li class="sr" ${data}>
-<details${open ? ' open' : ''}><summary><h3>${esc(V.L(s.title))}</h3><span class="sr-o">${esc(V.L(s.oneliner))}</span><span class="sr-g">${microBlade(s, V)}${microHamon(s.difficulty, `${T.dl.diff}: ${T.diff[s.difficulty - 1]}`)}</span><span class="sr-f mono">${figCells(f1)} ${figCells(f2)}</span><span class="sr-x" aria-hidden="true"></span></summary>
+<details${open ? ' open' : ''}><summary><h3>${esc(V.L(s.title))}</h3><span class="sr-o">${esc(V.L(s.oneliner))}</span><span class="sr-g">${microBlade(s, V)}${microHamon(s.difficulty, `${T.dl.diff}: ${T.diff[s.difficulty - 1]}`)}</span><span class="sr-f mono${[f1, f2].some(([l, w, p]) => l.length + w.length + p.length >= 36) ? ' lg' : ''}">${figCells(f1)} ${figCells(f2)}</span><span class="sr-x" aria-hidden="true"></span></summary>
 <div class="sr-b"><dl class="sheet"${full ? '' : ' data-lazy'}>${full ? sheetHtml(rowSheet(s, V)) : ''}</dl><p class="sr-a"><a class="u" href="${solutionUrl(s, lang)}">${esc(T.details)}<span class="vh">${lang === 'ja' ? '：' : ': '}${esc(V.L(s.title))}</span></a>${V.monthly(s) || !full ? '' : `<a class="u" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}">${esc(T.estimate)}</a>`}</p></div>
 </details></li>`;
 }

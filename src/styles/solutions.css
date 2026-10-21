@@ -88,13 +88,13 @@ html.no-js .sort, html.no-js .lens-out { display: none; }
 .sr:last-child { border-bottom: 1px solid var(--line); }
 .sr[hidden] { display: none; }
 .sr.dim { opacity: .45; }
-.sr summary { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) 140px 336px; grid-template-areas: "t g f" "o g f"; grid-template-rows: auto 1fr; column-gap: 28px; align-items: start; padding: 20px 178px 20px 0; cursor: pointer; }
+.sr summary { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) 140px 376px; grid-template-areas: "t g f" "o g f"; grid-template-rows: auto 1fr; column-gap: 28px; align-items: start; padding: 20px 178px 20px 0; cursor: pointer; }
 .sr summary::-webkit-details-marker { display: none; }
 .sr h3 { grid-area: t; justify-self: start; font-weight: 420; font-size: 19px; line-height: 1.3; letter-spacing: -.005em; font-variation-settings: "SHRP" 60; background: var(--hamon-k) no-repeat 0 100% / 0 5px; transition: background-size .45s var(--ui); }
 .sr summary:hover h3, .sr.hit h3, .sr details[open] h3 { background-size: 100% 5px; }
 .sr-o { grid-area: o; display: block; margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--kurogane); text-wrap: pretty; }
 .sr-g { grid-area: g; display: grid; justify-items: start; gap: 9px; padding-top: 7px; overflow: hidden; }
-.sr-f { grid-area: f; display: grid; grid-template-columns: max-content max-content minmax(0, 1fr); gap: 5px 14px; align-content: start; padding-top: 3px; font-variant-numeric: tabular-nums; }
+.sr-f { grid-area: f; display: grid; grid-template-columns: max-content max-content minmax(0, 1fr); gap: 5px 12px; align-content: start; padding-top: 3px; font-variant-numeric: tabular-nums; }
 /* the figures stand in columns, label, weeks, price; the MVP line in sumi, the full version's in kurogane */
 .sr-f b { font-weight: 400; color: var(--kurogane); }
 .sr-f i { font-style: normal; white-space: nowrap; color: var(--sumi); }
@@ -194,9 +194,12 @@ html.no-js .add { display: none; }
 .tr-tg { min-height: 44px; padding: 0 2px; background: var(--hamon-k) no-repeat 0 72% / 0 5px; transition: background-size .45s var(--ui); }
 .tr-tg:hover { background-size: 100% 5px; }
 /* the open sheet: the list scrolls, the actions under it stay in view */
-.tr-sheet { padding: 0 0 20px; }
+.tray.open { display: flex; flex-direction: column; max-height: calc(100svh - 180px); }
+.tr-bar { flex: none; }
+.tr-sheet { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; padding: 0 0 20px; }
 .tr-sheet[hidden] { display: none; }
-.tr-body { padding: 4px 0 0; max-height: max(160px, calc(60svh - 120px)); overflow-y: auto; overscroll-behavior: contain; }
+.tr-body { flex: 0 1 auto; min-height: 96px; max-height: 60svh; padding: 4px 0 0; overflow-y: auto; overscroll-behavior: contain; }
+.tr-acts { flex: none; }
 .tr-list { list-style: none; }
 .tr-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(12em, auto) 44px; align-items: center; gap: 8px 20px; padding: 6px 0; border-top: 1px solid var(--line); }
 .tr-list .t { font-size: 16px; }
@@ -223,7 +226,7 @@ html[lang=ja] main :is(h1, h3, p, dd, dt, li, .lede, .sr-o, .ch-l, th, label):ha
   .ch-h { grid-column: 1 / -1; position: static; margin-bottom: 20px; }
   .ch-v { display: none; }
   .reg { grid-column: 1 / -1; }
-  .sr summary { grid-template-columns: minmax(0, 1fr) 336px; grid-template-areas: "t f" "o f" "g f"; grid-template-rows: auto auto 1fr; row-gap: 0; padding-right: 150px; }
+  .sr summary { grid-template-columns: minmax(0, 1fr) 376px; grid-template-areas: "t f" "o f" "g f"; grid-template-rows: auto auto 1fr; row-gap: 0; padding-right: 150px; }
   .sr-g { margin-top: 10px; }
   .sr-g { display: flex; align-items: center; gap: 16px; padding-top: 0; }
   .sr-b { padding-right: 0; }
@@ -247,7 +250,9 @@ html[lang=ja] main :is(h1, h3, p, dd, dt, li, .lede, .sr-o, .ch-l, th, label):ha
   .chap { grid-template-columns: minmax(0, 1fr); padding: 32px 0 40px; }
   .ch-h h2 { font-size: 26px; }
   .sr summary { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t" "o" "f" "g"; grid-template-rows: none; padding: 16px 30px 14px 0; row-gap: 0; }
-  .sr-f { margin-top: 10px; }
+  .sr-f { margin: 10px -30px 0 0; gap: 4px 10px; font-size: clamp(12px, 3.4vw, 13px); }
+  /* a row whose longest line would not fit (Toʻliq 28–52 hafta 1 200–3 005 mln soʻm): its prices under the weeks */
+  .sr-f.lg i + i { grid-column: 2 / -1; }
   .sr h3 { font-size: 17px; }
   .sr-o { font-size: 14px; }
   .sr-f { padding-top: 0; }
@@ -260,7 +265,7 @@ html[lang=ja] main :is(h1, h3, p, dd, dt, li, .lede, .sr-o, .ch-l, th, label):ha
   .sol-plate { grid-column: 1; margin: 40px calc(-1 * var(--m)) 0 0; }
   .sol-plate .pl { display: none; }
   .sol-plate .ps { display: block; width: 100%; max-width: none; }
-  .sol-plate .ps text { font-size: 13px; }
+  .sol-plate .ps text, .sol-plate .ps .ruler text { font-size: 13.5px; }
   .pair { grid-template-columns: minmax(0, 1fr); }
   .honest { grid-column: 1; }
   .prices { margin-top: 56px; }
@@ -286,7 +291,7 @@ html[lang=ja] main :is(h1, h3, p, dd, dt, li, .lede, .sr-o, .ch-l, th, label):ha
   .tray:not(.open) .tr-ns { display: inline; }
   .tray.open .tr-n { flex: 1; }
   .tray.open .tr-sum { flex-basis: 100%; order: 3; text-align: left; }
-  .tr-body { max-height: max(140px, calc(100svh - 340px)); }
+
   .tr-list li { grid-template-columns: minmax(0, 1fr) 44px; }
   .tr-list .sw { grid-column: 1; }
   .tr-list .f { grid-column: 1; text-align: left; }

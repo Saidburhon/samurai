@@ -66,21 +66,22 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   dir.onResize = () => { stage.setSize(innerWidth, innerHeight, true); film.reset(); cut.reset(); state.key = ''; };
   // The intro (§4.1, §4.3) on the wall clock from navigation, not on the sum of frame times (G1 r2): a long software
   // frame cannot hold it back. The reveal starts at max(glReady, 1.7 s) and is anchored to fixed times, so the 3 s
-  // frame is the same whenever GL was ready (up to 2.5 s): a C1 curve from (start, 0) through (2.7 s, 0.58) and
-  // (3.6 s, 0.832) to (3.95 s, 1), flat at both ends. The steel leaves the habaki, fills the inner half of the blade,
-  // glides along the outer half at 0.28 of its length per second (the kirari front travelling, §4.1 frame 02: two
-  // thirds steel at 3 s) and comes to rest at the tip at 3.95 s; then the 1.6 s lift, settled by 5.55 s (§4.1: 5.5 s).
+  // frame is the same whenever GL was ready (up to 2.5 s): a C1 curve from (start, 0) through (2.65 s, 0.62) and
+  // (3.5 s, 0.841) to (3.9 s, 1), flat at both ends. The steel leaves the habaki, fills the inner half of the blade,
+  // glides along the outer half at 0.26 of its length per second (the kirari front travelling, §4.1 frame 02: two
+  // thirds steel at 3 s) and comes to rest at the tip at 3.9 s; then the 1.65 s lift, settled by 5.55 s (§4.1: 5.5 s).
   // The glide is what holds 'the 3 s frame' at 60–85 % steel: a software renderer's frame takes 0.3–0.5 s here, so the
-  // capture's screenshot at 3 s shows the state of 2.7–3.6 s (measured: G1 r2 probes and captures).
-  // GL later than 2.5 s: power2.inOut over max(1.4 s, 3.95 s − start).
+  // capture's screenshot at 3 s shows either the frame issued before it or the one after (the state of 2.6–2.85 s
+  // or of 3.3–3.5 s: G1 r2 probes and captures), and both read 60–85 %.
+  // GL later than 2.5 s: power2.inOut over max(1.4 s, 3.9 s − start).
   if (intro && fz == null && !dir.reduced) {
     const start = Math.max(glReady, 1700), late = start > 2500;
-    const E = late ? start + Math.max(1400, 3950 - start) : 3950;
-    state.intro = { t: 0, start, E, late, L: 1600, tau: 0, at: start, speed: 1 };
+    const E = late ? start + Math.max(1400, 3900 - start) : 3900;
+    state.intro = { t: 0, start, E, late, L: 1650, tau: 0, at: start, speed: 1 };
     log('revealStart', start); log('revealEnd', E);
   }
   // the reveal (0..1) at wall time v (ms)
-  const K1 = [2700, 0.58, 0.00028], K2 = [3600, 0.832, 0.00028];
+  const K1 = [2650, 0.62, 0.00026], K2 = [3500, 0.841, 0.00026];
   const herm = (u, p0, m0, p1, m1, h) => { const u2 = u * u, u3 = u2 * u; return (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * h * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * h * m1; };
   function revealAt(v) {
     const I = state.intro;
@@ -185,7 +186,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     // one is issued only as the follower leaves the hold window, and alone it would show the scroll's first tenth for
     // the whole of its flight. The page's layers keep the follower's own position; never across a freeze
     let dg = d;
-    const lead = state.movLat ? Math.min(0.3, 0.8 * state.movLat / 1000) : 0;
+    const lead = state.movLat ? Math.min(0.2, 0.6 * state.movLat / 1000) : 0;
     if (lead > 0.02 && dir.v && fromHold && !d.intro && !d.atHold && !d.pre && fz == null && dir.frozen == null && !isFreeze(d.tr)) {
       const x = dir.xp ?? dir.x, t = Math.max(0, Math.min(dir.n - 1, dir.target()));
       const xg = Math.max(Math.min(x, t), Math.min(Math.max(x, t), x + dir.v * lead));

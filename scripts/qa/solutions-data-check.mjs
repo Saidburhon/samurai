@@ -56,7 +56,7 @@ for (const lang of LANGS) {
   if (!catH) continue;
   common(CATALOGUE_BASE[lang], catH);
   // a row's figures: <b>label</b> <i>weeks</i> <i>price</i>, twice (MVP, full version; or the two monthly plans)
-  const rowFig = Object.fromEntries([...catH.matchAll(/<li class="sr" data-id="([^"]+)"[\s\S]*?<span class="sr-f mono">([\s\S]*?)<\/span><span class="sr-x"/g)].map((m) => [m[1], m[2].split(/(?=<b>)/).filter(Boolean).map((x) => dec(x.replace(/></g, '> <')).replace(/[ \t\n]+/g, ' '))]));
+  const rowFig = Object.fromEntries([...catH.matchAll(/<li class="sr" data-id="([^"]+)"[\s\S]*?<span class="sr-f mono(?: lg)?">([\s\S]*?)<\/span><span class="sr-x"/g)].map((m) => [m[1], m[2].split(/(?=<b>)/).filter(Boolean).map((x) => dec(x.replace(/></g, '> <')).replace(/[ \t\n]+/g, ' '))]));
   if (Object.keys(rowFig).length !== model.solutions.length) fail(CATALOGUE_BASE[lang], `${Object.keys(rowFig).length} rows`);
   for (const g of cat.groups) { const p = `${CATALOGUE_BASE[lang]}${g.id}/`; const h = read(p); if (h) common(p, h); }
   for (const s of model.solutions) {
