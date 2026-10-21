@@ -99,9 +99,17 @@ export function hold(name, layout, opt = {}) {
   const out = { ...sh, ...L, name, layout, lookOver: { ...(sh.lookOver || {}), ...(L.lookOver || {}) } };
   delete out.land; delete out.port;
   out.cam = { ...L.cam };
-  if (name === 'tsuba.guard' && opt.cand) {
-    out.cam.cand = opt.cand;
-    if (opt.cand === 'b') out.pose = { ...out.pose, sori: 1 };
+  // B14's two candidates (§2.5), both rendered at G1 and chosen next to frame 04:
+  //   (a) on the guard's normal, sori 0.3: the blade is a short dark fin rising from the centre; seen straight down
+  //       its axis the flats would mirror the lamp behind the guard over their whole width (a peach leaf), so the
+  //       backlight's glint is off for this camera (the iron keeps its back glow)
+  //   (b) off the axis: a tapering spike leaving the centre towards the lower left. At the spec's 14° / 8° the blade
+  //       crossed the statement and the lamp disc showed beside the guard; 3° / 2.5° keeps both inside the rim.
+  const cand = opt.cand || (name === 'tsuba.guard' ? 'a' : null);
+  if (name === 'tsuba.guard') {
+    out.cam.cand = cand;
+    if (cand === 'a') out.lookOver = { ...out.lookOver, uGlintCol: [0, 0, 0] };
+    if (cand === 'b') { out.cam.side = 3; out.cam.up = 2.5; }
   }
   if (name === 'intro' && opt.reveal != null) out.reveal = opt.reveal;
   // dev: overrides for tuning a hold (?tune=json or __qilich.tune): nested objects merge one level deep
