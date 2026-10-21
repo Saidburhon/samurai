@@ -12,6 +12,16 @@ const NS = 'http://www.w3.org/2000/svg';
 const diagOf = (w, h) => Math.hypot(w, h);
 const stripIds = (el) => { el.removeAttribute && el.removeAttribute('id'); for (const x of el.querySelectorAll ? el.querySelectorAll('[id]') : []) x.removeAttribute('id'); return el; };
 
+// a copy of a block of the page as it stands: no ids, and without the elements it does not display now (rules on
+// html[data-beat] would otherwise show them in the copy when the beat changes under the freeze)
+function frozenClone(el) {
+  const c = el.cloneNode(true);
+  const a = [el, ...el.querySelectorAll('*')], b = [c, ...c.querySelectorAll('*')];
+  const gone = [];
+  for (let i = 0; i < a.length; i++) if (a[i].nodeType === 1 && getComputedStyle(a[i]).display === 'none') gone.push(b[i]);
+  for (const x of gone) x.remove();
+  return stripIds(c);
+}
 // the viewport rectangle clipped by a half-plane n·(x − P) <= 0 (Sutherland–Hodgman)
 function halfPoly(W, H, P, n, sign) {
   const pts = [[0, 0], [W, 0], [W, H], [0, H]], out = [];
@@ -29,6 +39,9 @@ export class Cut {
   constructor(film, dom) {
     this.film = film; this.dom = dom;
     this.root = document.getElementById('cut');
+    // the frozen sheet lies over the page's text too (cinema.css: above #story, under the nav): the incoming text
+    // rises under it and shows where the cut has opened or the wipe has passed, never across the frozen hold
+    if (this.root && this.root.parentNode !== document.body) document.body.appendChild(this.root);
     this.cache = new Map();
     this.shown = null;
     this.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -59,10 +72,15 @@ export class Cut {
     film.apply(d); if (this.dom) this.dom.apply(d);
     film.render();
     const src = st.renderer.domElement;
-    const mk = () => { const c = document.createElement('canvas'); c.width = src.width; c.height = src.height; return c; };
+    // the copies are unaccelerated 2D canvases: painted into their half's own tiles like an image, so each half is
+    // one composited layer (a texture-backed canvas is a layer of its own, and every layer of a half was composited
+    // again in every frame of the cut: a second of software compositing per cut, G3)
+    // (at the screen's own pixel size: the tiles then copy them 1:1, never resample the hold-resolution frame)
+    const dw = Math.round(W * devicePixelRatio), dh = Math.round(H * devicePixelRatio);
+    const mk = () => { const c = document.createElement('canvas'); c.width = dw; c.height = dh; c.getContext('2d', { willReadFrequently: true }); return c; };
     const glA = mk(), glB = mk();
     const fz = { tr: tr || { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } }, W, H, k: d.k, ready: false };
-    const put = (c, bmp) => { const x = c.getContext('bitmaprenderer'); if (x) x.transferFromImageBitmap(bmp); else c.getContext('2d').drawImage(bmp, 0, 0); };
+    const put = (c, bmp) => { const x = c.getContext('2d', { willReadFrequently: true }); x.imageSmoothingQuality = 'high'; x.drawImage(bmp, 0, 0, dw, dh); if (bmp.close) bmp.close(); };
     if (typeof createImageBitmap === 'function') {
       Promise.all([createImageBitmap(src), createImageBitmap(src)]).then(([a, b]) => { put(glA, a); put(glB, b); fz.ready = true; }).catch(() => { fz.ready = true; });
     } else { glA.getContext('2d').drawImage(src, 0, 0); glB.getContext('2d').drawImage(src, 0, 0); fz.ready = true; }
@@ -97,7 +115,7 @@ export class Cut {
       if (stip && stip.style.visibility !== 'hidden') {
         const srcCv = stip.__stip ? stip.__stip.ctx.canvas : stip;
         const c = document.createElement('canvas'); c.width = srcCv.width; c.height = srcCv.height;
-        try { c.getContext('2d').drawImage(srcCv, 0, 0); } catch (e) { /* an empty raster */ }
+        try { c.getContext('2d', { willReadFrequently: true }).drawImage(srcCv, 0, 0); } catch (e) { /* an empty raster */ }
         c.style.cssText = `position:absolute;left:0;top:0;width:${stip.style.width};height:${stip.style.height};transform:${stip.style.transform || 'none'};transform-origin:0 0`;
         ink.appendChild(c);
       }
@@ -112,11 +130,20 @@ export class Cut {
     if (lb && lb.firstChild) { const x = stripIds(lb.cloneNode(true)); x.className = 'fz-l fz-labels'; s.appendChild(x); }
     // the text of the hold: the visible scene (its masks as they stand), and the footer
     const story = document.createElement('div'); story.className = 'fz-l fz-story';
-    for (const sec of document.querySelectorAll('#story > .scene.vis')) story.appendChild(stripIds(sec.cloneNode(true)));
+    const srcs = [...document.querySelectorAll('#story > .scene.vis')];
     const foot = document.getElementById('foot');
-    if (foot && foot.classList.contains('vis')) story.appendChild(stripIds(foot.cloneNode(true)));
+    if (foot && foot.classList.contains('vis')) srcs.push(foot);
+    for (const sec of srcs) story.appendChild(frozenClone(sec));
     for (const el of story.querySelectorAll('a, button, [tabindex]')) el.setAttribute('tabindex', '-1');
     s.appendChild(story);
+    // a sheet is a picture: nothing in it may follow the page's state afterwards. The page's colours (html.dark),
+    // the beat (html[data-beat]) and the sun (--sun-a) change under a freeze, and every change repainted both
+    // halves in full (G3, a trace: 2 × 12 tiles twice per cut). Their values as they stand are written on the sheet,
+    // and what the hold did not show is left out of it
+    const hs = getComputedStyle(document.getElementById('story') || document.documentElement), rs = getComputedStyle(document.documentElement);
+    for (const v of ['--fg', '--fg2', '--line']) { const x = hs.getPropertyValue(v); if (x) s.style.setProperty(v, x); }
+    const sun = rs.getPropertyValue('--sun-a'); if (sun) s.style.setProperty('--sun-a', sun);
+    s.style.color = hs.color;
     s.setAttribute('aria-hidden', 'true'); s.inert = true;
     return s;
   }
@@ -124,7 +151,7 @@ export class Cut {
   clone(sheet) {
     const c = sheet.cloneNode(true);
     const a = sheet.querySelectorAll('canvas'), b = c.querySelectorAll('canvas');
-    a.forEach((cv, i) => { try { b[i].getContext('2d').drawImage(cv, 0, 0); } catch (e) { /* empty */ } });
+    a.forEach((cv, i) => { try { b[i].getContext('2d', { willReadFrequently: true }).drawImage(cv, 0, 0); } catch (e) { /* empty */ } });
     return c;
   }
 
@@ -154,11 +181,25 @@ export class Cut {
       this.root.append(a, b, line);
       Object.assign(fz.parts, { a, b, line, u, n, D: diagOf(W, H) });
     } else {
+      // the wipes move a window over the frozen sheet, never a mask: a window is a clip the compositor moves (a
+      // rectangle, or a circle: a rounded clip), and the sheet inside it is moved back by as much, so it stays in
+      // place and is rasterised once. (A moving mask-image was rasterised again in every frame: 24 tiles, about 2 s
+      // per wipe in software, G3.) The radial light wipe is a circle of the frozen light closing on the tsuba; the
+      // linear ones a rectangle whose edge travels across the screen. The rim of light: on the radial wipe a small
+      // canvas stretched over the screen and redrawn per frame, on the linear wipes one strip the compositor moves
+      const win = document.createElement('div'); win.className = 'fz-win';
       const one = document.createElement('div'); one.className = 'fz-one';
-      one.appendChild(fz.sheet);
-      const rim = document.createElement('i'); rim.className = 'fz-rim';
-      this.root.append(one, rim);
-      Object.assign(fz.parts, { one, rim, D: diagOf(W, H) });
+      one.appendChild(fz.sheet); win.appendChild(one);
+      let rim, R = 0;
+      if (tr.type === 'wipe' && tr.wipe === 'light') {
+        const [cx, cy] = fz.ts;
+        R = Math.max(...[[0, 0], [W, 0], [0, H], [W, H]].map(([x, y]) => Math.hypot(x - cx, y - cy))) + 120;
+        win.style.cssText = `inset:auto;left:${(cx - R).toFixed(1)}px;top:${(cy - R).toFixed(1)}px;width:${(2 * R).toFixed(1)}px;height:${(2 * R).toFixed(1)}px;border-radius:50%`;
+        one.style.cssText = `inset:auto;left:${(R - cx).toFixed(1)}px;top:${(R - cy).toFixed(1)}px;width:${W}px;height:${H}px;transform-origin:${cx.toFixed(1)}px ${cy.toFixed(1)}px`;
+        rim = document.createElement('canvas'); rim.className = 'fz-rimc'; rim.width = Math.ceil(W / 8); rim.height = Math.ceil(H / 8);
+      } else { rim = document.createElement('i'); rim.className = 'fz-rim'; }
+      this.root.append(win, rim);
+      Object.assign(fz.parts, { win, one, rim, R, D: diagOf(W, H) });
     }
     this.root.classList.add('on');
     this.shown = fz;
@@ -170,37 +211,45 @@ export class Cut {
     const tr = fz.tr, P = fz.parts, W = fz.W, H = fz.H;
     if (P.a) {
       const c = EASES.cut(p), s = 0.55 * P.D * c, sl = 0.02 * P.D * c;
-      // half a lies on the −n side of the line, half b on the +n side: each slides away from the line
-      P.a.style.transform = `translate(${(-P.n[0] * s - P.u[0] * sl).toFixed(1)}px,${(-P.n[1] * s - P.u[1] * sl).toFixed(1)}px)`;
-      P.b.style.transform = `translate(${(P.n[0] * s + P.u[0] * sl).toFixed(1)}px,${(P.n[1] * s + P.u[1] * sl).toFixed(1)}px)`;
+      // half a lies on the −n side of the line, half b on the +n side: each slides away from the line (in whole
+      // device pixels: a layer moved by a fraction of a pixel is rasterised again at the new phase)
+      const r = devicePixelRatio, px = (v) => (Math.round(v * r) / r).toFixed(3);
+      P.a.style.transform = `translate(${px(-P.n[0] * s - P.u[0] * sl)}px,${px(-P.n[1] * s - P.u[1] * sl)}px)`;
+      P.b.style.transform = `translate(${px(P.n[0] * s + P.u[0] * sl)}px,${px(P.n[1] * s + P.u[1] * sl)}px)`;
       P.line.style.transform = `scaleX(${Math.min(1, p / 0.1).toFixed(3)})`;
       P.line.style.opacity = p < 0.1 ? '1' : Math.max(0, 1 - (p - 0.1) / 0.15).toFixed(3);
       return;
     }
-    const one = P.one, rim = P.rim;
+    const one = P.one, win = P.win, rim = P.rim;
     if (this.reduced) { one.style.opacity = (1 - p).toFixed(3); rim.style.opacity = '0'; return; }
-    // the rim of light is one small layer moved and scaled by the compositor (a full-screen gradient re-drawn in
-    // every frame, blended with the page, cost a second per frame in software, G3)
-    let mask, tf;
+    const e = EASES['power2.inOut'](p);
     if (tr.type === 'wipe' && tr.wipe === 'light') {
-      const [cx, cy] = fz.ts, r = 1.2 * P.D * EASES['power2.inOut'](p);
-      mask = `radial-gradient(circle at ${cx.toFixed(0)}px ${cy.toFixed(0)}px, transparent ${Math.max(0, r - 70).toFixed(0)}px, #000 ${(r + 70).toFixed(0)}px)`;
-      if (!rim.dataset.k) { rim.dataset.k = 'ring'; rim.style.cssText = `left:${(cx - 500).toFixed(0)}px;top:${(cy - 500).toFixed(0)}px;width:1000px;height:1000px;background:radial-gradient(circle closest-side, transparent 82%, rgba(255,214,160,.5) 94%, transparent 100%)`; }
-      tf = `scale(${Math.max(0.001, r / 470).toFixed(4)})`;
+      // the frozen light closes on the tsuba: the window's radius from beyond the farthest corner to nothing
+      const [cx, cy] = fz.ts, R = P.R, r = R * (1 - e), k = Math.max(1e-3, r / R);
+      win.style.visibility = r < 0.5 ? 'hidden' : '';
+      win.style.transform = `scale(${k.toFixed(5)})`;
+      one.style.transform = `scale(${(1 / k).toFixed(5)})`;
+      const x = rim.getContext('2d'), sc = rim.width / W;
+      x.clearRect(0, 0, rim.width, rim.height);
+      if (r > 1) {
+        const g = x.createRadialGradient(cx * sc, cy * sc, Math.max(0, r - 90) * sc, cx * sc, cy * sc, (r + 90) * sc);
+        g.addColorStop(0, 'rgba(255,214,160,0)'); g.addColorStop(0.5, 'rgba(255,214,160,.55)'); g.addColorStop(1, 'rgba(255,214,160,0)');
+        x.fillStyle = g; x.fillRect(0, 0, rim.width, rim.height);
+      }
     } else {
-      // linear fronts: the raking light sweeps from the left; the dusk comes from the right
-      const fromLeft = tr.wipe === 'sweep', dir = fromLeft ? 90 : 270, soft = fromLeft ? 140 : 240;
-      const x = EASES['power2.inOut'](p) * (W + 2 * soft) - soft;
-      mask = `linear-gradient(${dir}deg, transparent ${(x - soft / 2).toFixed(0)}px, #000 ${(x + soft / 2).toFixed(0)}px)`;
+      // linear fronts: the raking light sweeps in from the left (the frozen sheet keeps the part right of the
+      // front); the dusk comes from the right (the sheet keeps the part left of it). In whole device pixels
+      const fromLeft = tr.wipe === 'sweep', soft = fromLeft ? 140 : 240, dp = devicePixelRatio;
+      const x = Math.round(e * W * dp) / dp;
+      win.style.transform = `translateX(${(fromLeft ? x : -x).toFixed(3)}px)`;
+      one.style.transform = `translateX(${(fromLeft ? -x : x).toFixed(3)}px)`;
       if (!rim.dataset.k) {
         rim.dataset.k = 'strip';
         const col = fromLeft ? 'rgba(255,214,160,.42)' : 'rgba(200,116,46,.5)';
-        rim.style.cssText = `left:0;top:0;width:${soft * 2}px;height:100%;inset:auto;bottom:0;background:linear-gradient(90deg, transparent, ${col} 50%, transparent)`;
+        rim.style.cssText = `inset:0 auto 0 0;width:${soft * 2}px;height:100%;background:linear-gradient(90deg, transparent, ${col} 50%, transparent)`;
       }
-      tf = `translateX(${((fromLeft ? x : W - x) - soft).toFixed(1)}px)`;
+      rim.style.transform = `translateX(${((fromLeft ? x : W - x) - soft).toFixed(1)}px)`;
     }
-    one.style.webkitMaskImage = one.style.maskImage = mask;
-    rim.style.transform = tf;
     rim.style.opacity = Math.sin(Math.PI * Math.min(1, Math.max(0, p))).toFixed(3);
     void H;
   }
@@ -217,6 +266,14 @@ export class Cut {
       const fz = this.cache.get(this.key(k, layout)) || this.prepare(k, layout);
       this.show(fz, d.freeze.p);
       return true;
+    }
+    // a freeze being entered forwards (core/film.js d.pre): its sheet is up, closed, from the first frame of the
+    // move. It shows the hold on screen, so nothing changes, but its layers are rasterised and the live layers switch
+    // to the incoming hold before the cut starts at k + 0.2, not inside it (G3: the first frame of a freeze held the
+    // compositor for about a second in software)
+    if (d && d.pre) {
+      const fz = this.cache.get(this.key(d.k, layout));
+      if (fz) { this.show(fz, 0); return true; }
     }
     // the freeze this hold leads into (or the one about to start) waits mounted
     const k = d && !d.intro ? (d.atHold ? (d.settled ? Math.round(d.pos) : null) : d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe') && this.shown && this.shown.k === d.k ? d.k : null) : null;

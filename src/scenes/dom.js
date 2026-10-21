@@ -66,7 +66,8 @@ export class Dom {
     const layout = d.layout || 'land', html = this.html;
     // the intro and its frozen states read as the hero's DOM (its own CSS animations do the arrival)
     const intro = d.a === 'intro';
-    const k = intro ? 0 : d.k, f = intro ? 0 : d.f, freeze = !intro && isFreeze(d.tr);
+    // (before a freeze, while its closed sheet is up, d.pre: the outgoing text is the sheet's, as inside the freeze)
+    const k = intro ? 0 : d.k, f = intro ? 0 : d.pre ? Math.max(d.f, 0.2) : d.f, freeze = !intro && isFreeze(d.tr);
     const near = intro ? 'mei.hero' : d.near;
     const vis = new Set();
     for (const t of this.tracks) {

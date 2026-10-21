@@ -36,6 +36,7 @@ export class Film {
     this.html = document.documentElement;
     this.sheets = [...document.querySelectorAll('#paper .sheet')];
     this.opt = {};
+    this.gmap = new Map();
   }
   layout() { return this.st.w / this.st.h >= 1.2 ? 'land' : 'port'; }
   reset() { this.cache.clear(); this.softKey = ''; this.dialR = 0; }
@@ -304,8 +305,7 @@ export class Film {
       if (s.style.opacity !== op) s.style.opacity = op;
       if (s.style.zIndex !== z) s.style.zIndex = z;
     }
-    const nearG = d.live === 'b' ? gb : d.live === 'a' ? ga : (d.f < 0.5 ? ga : gb);
-    if (html.dataset.ground !== nearG) { html.dataset.ground = nearG; html.classList.toggle('dark', !!DARK[nearG]); }
+    this.colours(d);
     this.dial(A, B, e, d);
     // the plaster's raking light and the dial's engraving follow the sun: exact at a hold, in 5° steps between holds
     // (each step re-rasterises the plaster and the dial)
@@ -313,6 +313,16 @@ export class Film {
     // engraving, about half a second on a software renderer)
     const sunH = e.look < 0.5 ? A.sun || B.sun : B.sun || A.sun;
     if (sunH) { const v = `${(sunH.az + 180).toFixed(1)}deg`; if (this.sunV !== v) { this.sunV = v; html.style.setProperty('--sun-a', v); } }
+  }
+  // the page's colours (html data-ground, .dark: the nav, the ruler, the text): the nearer hold's ground; under a
+  // freeze the incoming one's, before it (d.pre, the incoming hold drawn under the closed sheet) still the outgoing
+  // one's. Written on every DOM update (core/film.js), not only with a GL frame: a freeze draws one GL frame
+  colours(d) {
+    const lay = d.layout || this.layout(), g = (n) => { const k = n + '|' + lay; let v = this.gmap.get(k); if (v === undefined) { v = holdOf(n, lay, this.opt).ground; this.gmap.set(k, v); } return v; };
+    const ga = g(d.a), gb = g(d.b);
+    const nearG = d.pre || d.live === 'a' ? ga : d.live === 'b' ? gb : d.f < 0.5 ? ga : gb;
+    const html = this.html;
+    if (html.dataset.ground !== nearG) { html.dataset.ground = nearG; html.classList.toggle('dark', !!DARK[nearG]); }
   }
   // the holds next to the one in view (for priming what a transition will need)
   neighbours(d) {

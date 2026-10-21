@@ -7,7 +7,7 @@
 import { gsap } from 'gsap';
 import { Director } from './director.js';
 import { evalS, evalIntro, evalT, posOf, beatOf, SEQ, isFreeze } from './tracks.js';
-import { BEATS, PHONE } from './shots.js';
+import { BEATS, PHONE, FREEZE_WIN } from './shots.js';
 import { Film } from '../scenes/frame.js';
 import { Dom } from '../scenes/dom.js';
 import { Cut } from '../fx/cut.js';
@@ -109,6 +109,12 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     if (!d.atHold) state.windowSince = null;
     else if (state.windowSince == null) state.windowSince = now;
     d.settled = d.atHold && (fz != null || dir.frozen != null || now - state.windowSince >= 300);
+    // a freeze about to be entered forwards (the scroll's target at least half a beat on): its sheet goes up closed
+    // over the hold and the live layers draw the incoming hold under it (fx/cut.js). The frame is the hold's own, so
+    // seeking, scrolling and jumping still agree; the cost of the cut's first frame moves to the start of the scroll
+    if (!d.freeze && !d.intro && fz == null && dir.frozen == null && isFreeze(d.tr) && d.f < FREEZE_WIN[0] && dir.target() >= d.k + 0.5 && cut.arrived(d.k, layout())) {
+      d.pre = true; d.live = 'b'; d.settled = false;
+    }
     return d;
   };
   // one frame in flight: a software renderer takes 0.1–0.3 s per frame in the GPU process, and frames issued faster
@@ -130,7 +136,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       if (stage.tier.tier !== 2 || now - (state.lastDom || 0) >= 90 || cut.jumpFz) {
         state.lastDom = now;
         cut.update(d, lay, now);
-        dom.apply(d);
+        film.colours(d); dom.apply(d);
         mark(d, lay);
       }
       holdWork(d, lay);
@@ -169,7 +175,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       // the beat of the frame on screen: a hold key is the hold itself, whatever the follower's last decimals
       state.drawnBeat = key.startsWith('H|') ? beatOf(posOf(key.split('|')[1], lay), lay) : beatOf(d.pos, lay);
       flog.push([Math.round(now), +state.drawnBeat.toFixed(4), Math.round(ms), Q.applyMs, Q.gpuMs]); if (flog.length > 600) flog.splice(0, 200);
-    } else dom.apply(d);
+    } else { film.colours(d); dom.apply(d); }
     mark(d, lay);
     holdWork(d, lay);
     report(d, lay, cutOn);

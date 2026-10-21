@@ -159,6 +159,16 @@ html.film .scene:not(.on), html.film .scene:not(.on) *, html.film .foot:not(.on)
 html.film .tk { --tka: max(.24em, 10px); --tkb: max(.34em, 14px);
   translate: 0 calc(var(--t, 0) * (105% + var(--tka) + var(--tkb)));
   clip-path: inset(calc(var(--t, 0) * (-105% - var(--tka) - var(--tkb)) - var(--tka)) -100vw calc(var(--t, 0) * (105% + var(--tka) + var(--tkb)) - var(--tkb)) -100vw); }
+/* each block is its own layer: its rise and its rectangular mask move on the compositor and its glyphs are
+   rasterised once (G3: re-rasterising the text tiles in every frame held a software compositor through a freeze) */
+html.film .tk { will-change: transform; }
+/* software renderer: the lit services and the nav button switch at once (each frame of their .45 s colour and size
+   transitions re-rasterised the list and the nav) */
+html.film.sw .svc li, html.film.sw .nav .btn { transition: none; }
+/* software renderer: the grain is one layer whose image never changes (the white grain of the dark grounds was a
+   second image: each switch, under a cut or a wipe, re-rasterised the whole grain, 15 tiles, about 0.4 s) */
+html.film.sw .grain, html.film.sw.dark .grain { background-image: var(--grain-k, none); will-change: transform; }
+html.film.sw.dark .grain { opacity: .06; }
 
 /* the dial lies on the paper under the sword (the flow page's own element, moved by the film) */
 #dialw { position: absolute; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; pointer-events: none; color: #5C4630; will-change: transform; }
@@ -175,17 +185,26 @@ html.film[data-beat="temur.quote"] .sheet[data-g=ganch] { background: linear-gra
 html.cinema #cut { position: absolute; inset: 0; z-index: 4; pointer-events: none; display: none; overflow: hidden; }
 html.cinema #cut.on { display: block; }
 html.cinema #cut.primed { display: block; opacity: .002; }
+/* in the film the freeze layer is a child of body over the text (#story z5, the footer z6), under the ruler and nav */
+html.film #cut { position: fixed; z-index: 7; }
 #cut .fz-half, #cut .fz-one { position: absolute; inset: 0; will-change: transform; }
+#cut .fz-win { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
 #cut .fz { position: absolute; inset: 0; overflow: hidden; }
 #cut .fz-l, #cut .fz-dial { position: absolute; inset: 0; }
-#cut .fz-dial { inset: auto; }
+/* the frozen dial: the copy of #dialw (its id is not copied, so its geometry is restated here) */
+#cut .fz-dial { inset: auto; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; color: #5C4630; }
+#cut .fz-dial .dial { width: 1000px; height: 1000px; --sun: var(--sun-a, 135deg); }
+#cut .fz-dial .hand { display: none; }
 #cut .fz-gl { width: 100%; height: 100%; }
+/* a frozen sheet is flat: its text blocks are not layers of their own (one layer per half, fx/cut.js) */
+#cut .tk { will-change: auto; }
 #cut .fz-ink { color: var(--sumi); }
 #cut .fz-labels { color: var(--sumi); }
 #cut .fz-story > .scene { position: absolute; inset: 0; display: block; opacity: 1; }
 #cut .fz-story > .foot { position: absolute; }
 #cut .fz-slash { position: absolute; height: 1.5px; transform-origin: 50% 50%; background: linear-gradient(90deg, transparent, #F6F1E6 30%, #fff 50%, #F6F1E6 70%, transparent); }
 #cut .fz-rim { position: absolute; pointer-events: none; will-change: transform, opacity; transform-origin: 50% 50%; }
+#cut .fz-rimc { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; will-change: opacity; }
 
 /* 銘 B1 and 映: as G1; 焼 B7–B10: the step word and its line top-left, the hakogaki in the strip */
 html.film .s-yaki > .kick { position: absolute; left: var(--m); top: 112px; padding: 0; }

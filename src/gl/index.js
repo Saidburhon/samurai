@@ -81,10 +81,22 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true,
   const portrait = W / H < 1.2;
   // stand-ins: neutral grain, the hamon at its mean height, a mid silk, a flat ishime
   const T0 = { hada: px(128, 128, 128, 0), hamon: px(179, 0, 0, 255), silk: px(40, 50, 90, 128), ishime: px(128, 128, 128, 128) };
+  // The baked textures (gl/bakecpu.js: the workers main.js started at ~0.2 s have finished before the gate on any
+  // machine measured; a slow one is waited for here). They go into the materials before the first draw: a software
+  // renderer builds its pipelines for the formats and samplers it is drawn with, so drawing the proxies with the 1 × 1
+  // stand-ins built pipelines that the real textures could not use (G1 r2: warm() then built them again, +0.3–0.5 s)
+  const big = tier.tier === 3 || (tier.tier === 2 && !portrait);
+  let B = null;
+  const tex = (d) => { log('bake.' + d.name, d.ms); log('tex.' + d.name, d.at); return dataTex(r, d, tier.aniso); };
+  if (bakes) {
+    const got = await Promise.all(['hamon', 'silk', 'hada', 'ishime'].map((n) => bakes.get(n)));
+    if (got.every(Boolean)) { B = {}; for (const d of got) B[d.name] = tex(d); }
+    log('bakesIn', performance.now());
+  }
   // Both hero programs (the steel and the fittings, the grip being one of their kinds) are issued now, on stand-in
   // meshes (a program does not depend on its geometry): renderer.compile() on the stage's scene would also issue every
   // hidden part's program (the tang, the lacquer, the floor, the rays' disc)
-  stage.materials(T0);
+  stage.materials({ ...T0, ...(B || {}) });
   // ... and drawn at once, on proxies with the meshes' vertex layouts (a software renderer builds a pipeline at its first
   // draw, from the program, the blend and depth state and the vertex formats: not from the geometry): the pipelines
   // are then built on the renderer's own thread while the GPU process's main thread finishes the intro's raster and
@@ -114,22 +126,7 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true,
   log('prebuilt', Object.keys(pre).length);
   const geo = buildGeometries(pre);
   log('geo', performance.now() - t0);
-  const big = tier.tier === 3 || (tier.tier === 2 && !portrait);
   const opt = { big, maxAniso: tier.aniso, onEach: (n, ms) => log('bake.' + n, ms), wait: () => stage.gpuDone() };
-  let B = null;
-  const tex = (d) => { log('bake.' + d.name, d.ms); log('tex.' + d.name, d.at); return dataTex(r, d, tier.aniso); };
-  if (bakes) {
-    // the hero's three (and, for a hold, the ishime): normally landed long ago; awaited if a slow machine is still on them
-    const need = bakeFirst ? ['hamon', 'silk', 'hada', 'ishime'] : ['hamon', 'silk', 'hada'];
-    const got = await Promise.all(need.map((n) => bakes.get(n)));
-    if (got.every(Boolean)) {
-      B = {};
-      for (const d of got) B[d.name] = tex(d);
-      // the ishime when it lands (the fittings show it; until then their stone texture is flat)
-      if (!B.ishime) { const d = bakes.peek('ishime'); if (d) B.ishime = tex(d); else bakes.get('ishime').then((x) => { if (x) { stage.swapTextures({ ishime: tex(x) }); if (window.__qilich && window.__qilich.film) window.__qilich.film.invalidate(); } }); }
-      log('bakesIn', performance.now());
-    }
-  }
   if (!B && bakeFirst) B = await bakeAll(r, opt);
   const t1 = performance.now();
   stage.build({ ...T0, ...(B || {}) }, geo);
