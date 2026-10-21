@@ -181,17 +181,20 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     const hr = !!(d.settled || d.intro || fz != null || keepHold);
     const fromHold = state.key.startsWith('H|');
     if (hr !== state.holdRes) { state.holdRes = hr; stage.setSize(stage.w, stage.h, hr); state.key = ''; }
-    // the first frame that leaves a hold draws where the follower will be when it reaches the screen (a moving frame
-    // takes 0.1–0.3 s in software, more after a hold-resolution frame): the frames after it follow at once, but this
-    // one is issued only as the follower leaves the hold window, and alone it would show the scroll's first tenth for
-    // the whole of its flight. The page's layers keep the follower's own position; never across a freeze
+    // a frame reaches the screen 0.1–0.3 s after it is issued in software (more after a hold-resolution frame), so two
+    // frames are drawn where the follower will be by then: the first that leaves a hold (issued only as the follower
+    // leaves the window, alone it would show the scroll's first tenth for the whole of its flight), and the hold
+    // being arrived at (its frame, and the copy the next freeze takes of it, are ready when the follower gets there).
+    // The page's layers keep the follower's own position; never across a freeze
     let dg = d;
     const lead = state.movLat ? Math.min(0.2, 0.6 * state.movLat / 1000) : 0;
-    if (lead > 0.02 && dir.v && fromHold && !d.intro && !d.atHold && !d.pre && fz == null && dir.frozen == null && !isFreeze(d.tr)) {
+    if (lead > 0.02 && dir.v && !d.intro && !d.atHold && !d.pre && !d.freeze && fz == null && dir.frozen == null) {
       const x = dir.xp ?? dir.x, t = Math.max(0, Math.min(dir.n - 1, dir.target()));
       const xg = Math.max(Math.min(x, t), Math.min(Math.max(x, t), x + dir.v * lead));
       const g = Math.abs(xg - x) > 1e-3 ? evalS(xg, lay) : null;
-      if (g && !isFreeze(g.tr) && !g.atHold) { g.settled = false; g.gl = true; dg = g; }
+      if (g && fromHold && !g.atHold && !isFreeze(d.tr) && !isFreeze(g.tr)) { g.settled = false; g.gl = true; dg = g; }
+      // (arriving: only from the last few hundredths before the window, so the GL never skips the transition's end)
+      else if (g && g.atHold && !g.freeze && g.hold === SEQ[lay].names[Math.round(t)] && Math.abs(x - Math.round(t)) < 0.2) { g.settled = false; g.gl = true; dg = g; }
     }
     let key = stateKey(dg);
     // leaving a settled hold draws nothing until the state itself moves (the hold's frame is still the right one)
@@ -211,7 +214,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       labels.update(d, lay);
       Q.applyMs = Math.round(performance.now() - ta);
       const ms = film.render();
-      fence(); state.fresh = dg === d; state.fenceMoving = !hr;
+      fence(); state.fenceMoving = !hr;
       // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
       if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.3 * Math.min(0.5, (now - state.lastIssue) / 1000));
       state.lastIssue = now;
@@ -220,10 +223,21 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       // the beat of the frame on screen: a hold key is the hold itself, whatever the follower's last decimals
       state.drawnBeat = key.startsWith('H|') ? beatOf(posOf(key.split('|')[1], lay), lay) : beatOf(dg.pos, lay);
       flog.push([Math.round(now), +state.drawnBeat.toFixed(4), Math.round(ms), Q.applyMs, Q.gpuMs]); if (flog.length > 600) flog.splice(0, 200);
+      // a hold drawn: the freeze that leaves it copies this very frame now, in the task that drew it (no second
+      // render; G3: the hold's extra renders ran into the next scroll), with the page's layers set to the hold for
+      // the copy and back to the follower's state after it
+      if (key.startsWith('H|') && fz == null && !dg.intro && !d.pre && !d.freeze) {
+        const seq = SEQ[lay], k = seq.names.indexOf(key.split('|')[1]);
+        if (k >= 0 && k < seq.trans.length && isFreeze(seq.trans[k]) && !cut.ready(k, lay)) {
+          const dh = evalS(k, lay); dh.settled = true;
+          dom.apply(dh); labels.update(dh, lay);
+          cut.prepare(k, lay, true, true);
+          dom.apply(d); labels.update(d, lay);
+        }
+      }
     } else { film.colours(d); dom.apply(d); if (!d.atHold) labels.update(d, lay); }
     mark(d, lay);
     holdWork(d, lay);
-    state.fresh = false;
     report(d, lay, cutOn);
   };
   // the hold window: prepare the freezes of the transitions that touch this hold, in either direction. Runs whether or
@@ -232,17 +246,18 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   if (d.atHold && d.hold && !d.intro && fz == null) {
     const k = Math.round(d.pos), seq = SEQ[lay], hk = `${lay}|${k}|${stage.w}x${stage.h}`;
     const need = [k - 1, k].filter((j) => j >= 0 && j < seq.trans.length && isFreeze(seq.trans[j]));
-    // the freeze that leaves this hold copies the frame on screen, in the task that drew it (a frame of this hold, at
-    // the resolution it was drawn): no second render (G3: the hold's extra renders ran into the next scroll). It costs
-    // two bitmaps and a copy of the page's layers, so it is taken on the first frame of the hold, however fast
-    if (need.includes(k) && !cut.ready(k, lay) && state.fresh && state.key.startsWith(`H|${seq.names[k]}|`)) cut.prepare(k, lay, true, true);
-    // the one that arrives here from hold k − 1 shows that hold, drawn once this hold has settled (scrolling forwards
-    // it was taken at hold k − 1 already)
+    // (the freeze that leaves this hold is taken when its frame is drawn, frame() above; the one that arrives here
+    // from hold k − 1 shows that hold, drawn once this hold has settled: scrolling forwards it was taken at hold
+    // k − 1 already)
+    // (a hold drawn under a freeze, the incoming hold of a cut or a wipe, is not copied then: if this hold leads into
+    // another freeze, its copy is drawn once the director calms in the window)
+    const own = need.includes(k) && !cut.ready(k, lay) && (d.calm || d.settled) && state.prepared !== hk + '|own';
+    if (own) { state.prepared = hk + '|own'; cut.prepare(k, lay, true, false); fence(); }
     const back = need.filter((j) => j !== k && !cut.ready(j, lay));
     if (back.length && d.settled && state.prepared !== hk) { state.prepared = hk; for (const j of back) cut.prepare(j, lay, false, false); fence(); }
     Q.cutReady = need.every((j) => cut.ready(j, lay));
     Q.cutArrived = need.every((j) => cut.arrived(j, lay));
-  } else Q.cutReady = !d.freeze;
+  } else { Q.cutReady = !d.freeze; if (!d.atHold) state.prepared = ''; }
   };
   // report (§3.10)
   const report = (d, lay, cutOn) => {
