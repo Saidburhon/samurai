@@ -139,6 +139,12 @@ html.no-js .add { display: none; }
 .sheet-row { margin-top: 72px; }
 .sol-plate + .sheet-row { margin-top: 48px; }
 .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; }
+/* the sheet's pairs (MVP | full version) stack when the wider price would not fit its half: a price never overruns
+   its neighbour (1 200–3 005 mln soʻm at 28 px is about 245 px) */
+.sheet-row .sheet dd { container-type: inline-size; }
+@container (max-width: 520px) { .pair.w2 { grid-template-columns: minmax(0, 1fr); } }
+@container (max-width: 420px) { .pair.w1 { grid-template-columns: minmax(0, 1fr); } }
+@container (max-width: 340px) { .pair { grid-template-columns: minmax(0, 1fr); } }
 .pair b { display: block; font-weight: 400; color: var(--kurogane); margin-bottom: 2px; }
 .sheet .big, .sheet .sec { white-space: nowrap; }
 .sheet .big { display: block; font: 300 clamp(22px, calc(28 * var(--fit)), 28px)/1.1 var(--mono); font-stretch: 87.5%; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
@@ -291,6 +297,7 @@ html[lang=ja] main :is(h1, h3, p, dd, dt, li, .lede, .sr-o, .ch-l, th, label):ha
   .tray:not(.open) .tr-ns { display: inline; }
   .tray.open .tr-n { flex: 1; }
   .tray.open .tr-sum { flex-basis: 100%; order: 3; text-align: left; }
+  .tray.open .tr-x { display: block; margin-top: 2px; }
 
   .tr-list li { grid-template-columns: minmax(0, 1fr) 44px; }
   .tr-list .sw { grid-column: 1; }

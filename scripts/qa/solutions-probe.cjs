@@ -193,7 +193,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     await page.screenshot({ path: path.join(out, 'basket-solution-p390.png') });
     await page.reload({ waitUntil: 'networkidle' });
     await sleep(800);
-    const again = await page.evaluate(() => !document.getElementById('tray').hidden && document.querySelector('#tray .tr-n')?.textContent);
+    const again = await page.evaluate(() => !document.getElementById('tray').hidden && document.querySelector('#tray .tr-nl')?.textContent);
     if (!again) fail('basket', 'the basket does not survive a reload');
     notes.push(`basket after reload on a solution page: ${again}`);
     await ctx.close();

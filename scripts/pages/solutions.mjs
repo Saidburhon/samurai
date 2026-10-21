@@ -360,7 +360,13 @@ export function renderSolution(s, V) {
     const base = 36, usable = W - base - 12, x = (w) => r1(base + (usable * w) / V.maxFull);
     let g = `<g class="ruler"><path d="M${base} 104H${x(V.maxFull)}"/>`;
     for (let w = 0; w <= V.maxFull; w += 4) g += `<path d="M${x(w)} 104v${w % step ? 3 : 6}"/>`;
-    for (let w = 0; w <= V.maxFull; w += step) g += `<text x="${x(w)}" y="122" text-anchor="${w ? (x(w) > W - 40 ? 'end' : 'middle') : 'start'}">${w + step > V.maxFull ? esc(V.wk([w, w])) : w}</text>`;
+    // the last figure carries the unit when it has the room ("56 hafta"); at the end of a phone's ruler only the number
+    const cw = W > 400 ? 7 : 8, wid = (t) => [...String(t)].reduce((a, c) => a + (c.charCodeAt(0) > 0x2e80 ? 2 : 1), 0) * cw;
+    for (let w = 0; w <= V.maxFull; w += step) {
+      const last = w + step > V.maxFull, room = W - x(w);
+      const t = last && room >= wid(V.wk([w, w])) / 2 ? V.wk([w, w]) : String(w);
+      g += `<text x="${x(w)}" y="122" text-anchor="${w ? (room >= wid(t) / 2 ? 'middle' : 'end') : 'start'}">${esc(t)}</text>`;
+    }
     return svg.replace('class="plate-svg"', `class="plate-svg ${cls}"`).replace(new RegExp(`viewBox="0 0 ${W} 96" width="${W}" height="96"`), `viewBox="0 0 ${W} 128" width="${W}" height="128"`).replace(/<\/svg>$/, `${g}</g></svg>`);
   };
   const plate = mon ? '' : ruled(plateAt(720, 380), 720, 8, 'pl') + ruled(plateAt(360, 150), 360, 20, 'ps');
@@ -372,8 +378,13 @@ export function renderSolution(s, V) {
     sheet.push([perLabel(T.monthly.basic), `<span class="big">${esc(V.prim(s.mvp.usd))}</span> <span class="sec mono">${esc(V.sec(s.mvp.usd))}</span>`]);
     sheet.push([perLabel(T.monthly.ext), `<span class="big">${esc(V.prim(s.full.usd))}</span> <span class="sec mono">${esc(V.sec(s.full.usd))}</span>`]);
   } else {
-    sheet.push([T.dl.time, `<span class="pair"><span><b class="mono">${T.mvp}</b> ${nw(V.wk(s.mvp.weeks))}</span><span><b class="mono">${esc(T.full)}</b> ${nw(V.wk(s.full.weeks))}</span></span>`]);
-    sheet.push([T.dl.price, `<span class="pair"><span><b class="mono">${T.mvp}</b> <span class="big">${esc(V.prim(s.mvp.usd))}</span> <span class="sec mono">${esc(V.sec(s.mvp.usd))}</span></span><span><b class="mono">${esc(T.full)}</b> <span class="big">${esc(V.prim(s.full.usd))}</span> <span class="sec mono">${esc(V.sec(s.full.usd))}</span></span></span><span class="rate mono">${esc(rateLine(V.rate, lang))}</span>`]);
+    // the pairs stand side by side while the wider of the two prices fits its half of the sheet, then one above the
+    // other (src/styles/solutions.css container queries); w1, w2: the price is 13–16 or 17+ characters wide
+    const fwid = (t) => [...t].reduce((a, c) => a + (c.charCodeAt(0) > 0x2e80 ? 2 : 1), 0);
+    const pw = Math.max(fwid(V.prim(s.mvp.usd)), fwid(V.prim(s.full.usd)));
+    const pc = `pair${pw >= 17 ? ' w2' : pw >= 13 ? ' w1' : ''}`;
+    sheet.push([T.dl.time, `<span class="${pc}"><span><b class="mono">${T.mvp}</b> ${nw(V.wk(s.mvp.weeks))}</span><span><b class="mono">${esc(T.full)}</b> ${nw(V.wk(s.full.weeks))}</span></span>`]);
+    sheet.push([T.dl.price, `<span class="${pc}"><span><b class="mono">${T.mvp}</b> <span class="big">${esc(V.prim(s.mvp.usd))}</span> <span class="sec mono">${esc(V.sec(s.mvp.usd))}</span></span><span><b class="mono">${esc(T.full)}</b> <span class="big">${esc(V.prim(s.full.usd))}</span> <span class="sec mono">${esc(V.sec(s.full.usd))}</span></span></span><span class="rate mono">${esc(rateLine(V.rate, lang))}</span>`]);
     if (s.monthly_usd[1] > 0) sheet.push([T.dl.month, `${nw(V.prim(s.monthly_usd))} <span class="note">${esc(T.monthNote)}</span>`]);
   }
   sheet.push([T.dl.diff, `<span class="diff">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.id), label: `${T.dl.diff}: ${T.diff[s.difficulty - 1]}` })}<span>${esc(T.diff[s.difficulty - 1])}</span></span>`]);
