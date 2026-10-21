@@ -216,7 +216,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       const ms = film.render();
       fence(); state.fenceMoving = !hr;
       // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
-      if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.3 * Math.min(0.5, (now - state.lastIssue) / 1000));
+      if (state.lastIssue && dir.v) dir.lead = Math.min(0.12, 0.8 * (dir.lead || 0) + 0.2 * 0.22 * Math.min(0.5, (now - state.lastIssue) / 1000));
       state.lastIssue = now;
       state.key = key; state.drawn = dg;
       Q.frameMs = Math.round(ms);
@@ -238,6 +238,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     } else { film.colours(d); dom.apply(d); if (!d.atHold) labels.update(d, lay); }
     mark(d, lay);
     holdWork(d, lay);
+    if (d.settled && !d.intro && fz == null && !cut.warmed) cut.warm();
     report(d, lay, cutOn);
   };
   // the hold window: prepare the freezes of the transitions that touch this hold, in either direction. Runs whether or

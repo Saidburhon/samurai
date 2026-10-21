@@ -198,6 +198,16 @@ html.cinema #cut.primed { display: block; opacity: .002; }
 html.film #cut { position: fixed; z-index: 7; }
 #cut .fz-half, #cut .fz-one { position: absolute; inset: 0; will-change: transform; }
 #cut .fz-win { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
+/* fx/cut.js warm(): one tiny freeze of every kind, all but invisible, for a moment at the first hold */
+.fz-warm { position: fixed; left: 0; top: 0; width: 140px; height: 48px; z-index: 7; opacity: .002; pointer-events: none; overflow: hidden; }
+.fz-warm .fz-half, .fz-warm .fz-l, .fz-warm .fz-one { position: absolute; inset: 0; will-change: transform; }
+.fz-warm .fz-gl { position: absolute; width: 64px; height: 48px; }
+.fz-warm .fz-slash { position: absolute; height: 1.5px; background: linear-gradient(90deg, transparent, #F6F1E6 30%, #fff 50%, #F6F1E6 70%, transparent); will-change: transform, opacity; }
+.fz-warm .fz-win { position: absolute; overflow: hidden; will-change: transform; }
+.fz-warm .fz-rimc { position: absolute; left: 124px; top: 0; width: 16px; height: 12px; will-change: opacity; }
+.fz-warm-story { position: fixed; inset: 0; z-index: 7; opacity: .002; pointer-events: none; overflow: hidden; }
+.fz-warm-story > .scene, .fz-warm-story > .foot { position: absolute; inset: 0; display: block; opacity: 1; }
+.fz-warm-story .tk { will-change: auto; translate: none; clip-path: none; }
 #cut .fz { position: absolute; inset: 0; overflow: hidden; }
 #cut .fz-l, #cut .fz-dial { position: absolute; inset: 0; }
 /* the frozen dial: the copy of #dialw (its id is not copied, so its geometry is restated here) */

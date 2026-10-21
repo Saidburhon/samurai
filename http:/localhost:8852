@@ -1,0 +1,340 @@
+{
+ "posts": 80,
+ "byLang": {
+  "uz": 24,
+  "ru": 24,
+  "en": 24,
+  "ja": 8
+ },
+ "rows": 108,
+ "figures": 216,
+ "fails": [],
+ "notes": [
+  "uz: 24 posts linked from the Solutions pages",
+  "ru: 24 posts linked from the Solutions pages",
+  "en: 24 posts linked from the Solutions pages",
+  "ja: 8 posts linked from the Solutions pages"
+ ],
+ "words": [
+  {
+   "path": "/ja/blog/offshore-development-uzbekistan/",
+   "words": 378
+  },
+  {
+   "path": "/blog/what-to-automate-first/",
+   "words": 1830
+  },
+  {
+   "path": "/ru/blog/what-to-automate-first/",
+   "words": 1828
+  },
+  {
+   "path": "/en/blog/what-to-automate-first/",
+   "words": 2102
+  },
+  {
+   "path": "/ja/blog/four-hour-time-difference/",
+   "words": 325
+  },
+  {
+   "path": "/blog/automation-roi/",
+   "words": 2276
+  },
+  {
+   "path": "/ru/blog/automation-roi/",
+   "words": 2308
+  },
+  {
+   "path": "/en/blog/automation-roi/",
+   "words": 2733
+  },
+  {
+   "path": "/blog/telegram-bot-cost/",
+   "words": 1994
+  },
+  {
+   "path": "/ru/blog/telegram-bot-cost/",
+   "words": 2008
+  },
+  {
+   "path": "/en/blog/telegram-bot-cost/",
+   "words": 2414
+  },
+  {
+   "path": "/blog/mobile-app-cost/",
+   "words": 2263
+  },
+  {
+   "path": "/ru/blog/mobile-app-cost/",
+   "words": 2263
+  },
+  {
+   "path": "/en/blog/mobile-app-cost/",
+   "words": 2680
+  },
+  {
+   "path": "/blog/website-cost/",
+   "words": 1943
+  },
+  {
+   "path": "/ru/blog/website-cost/",
+   "words": 1999
+  },
+  {
+   "path": "/en/blog/website-cost/",
+   "words": 2431
+  },
+  {
+   "path": "/blog/ai-to-cut-costs/",
+   "words": 2003
+  },
+  {
+   "path": "/ru/blog/ai-to-cut-costs/",
+   "words": 1983
+  },
+  {
+   "path": "/en/blog/ai-to-cut-costs/",
+   "words": 2385
+  },
+  {
+   "path": "/ja/blog/offshore-estimate-factors/",
+   "words": 365
+  },
+  {
+   "path": "/blog/ai-support-in-telegram/",
+   "words": 2065
+  },
+  {
+   "path": "/ru/blog/ai-support-in-telegram/",
+   "words": 2088
+  },
+  {
+   "path": "/en/blog/ai-support-in-telegram/",
+   "words": 2589
+  },
+  {
+   "path": "/blog/ai-document-processing/",
+   "words": 1757
+  },
+  {
+   "path": "/ru/blog/ai-document-processing/",
+   "words": 1761
+  },
+  {
+   "path": "/en/blog/ai-document-processing/",
+   "words": 2169
+  },
+  {
+   "path": "/ja/blog/horenso-offshore-team/",
+   "words": 312
+  },
+  {
+   "path": "/ja/blog/mvp-outsourcing/",
+   "words": 319
+  },
+  {
+   "path": "/ja/blog/acceptance-testing/",
+   "words": 381
+  },
+  {
+   "path": "/blog/app-website-or-mini-app/",
+   "words": 1751
+  },
+  {
+   "path": "/ru/blog/app-website-or-mini-app/",
+   "words": 1796
+  },
+  {
+   "path": "/en/blog/app-website-or-mini-app/",
+   "words": 2120
+  },
+  {
+   "path": "/blog/mvp-first-version/",
+   "words": 1943
+  },
+  {
+   "path": "/ru/blog/mvp-first-version/",
+   "words": 2009
+  },
+  {
+   "path": "/en/blog/mvp-first-version/",
+   "words": 2478
+  },
+  {
+   "path": "/ja/blog/offshore-contract-ip-security/",
+   "words": 443
+  },
+  {
+   "path": "/blog/ux-mistakes-that-lose-orders/",
+   "words": 1856
+  },
+  {
+   "path": "/ru/blog/ux-mistakes-that-lose-orders/",
+   "words": 1857
+  },
+  {
+   "path": "/en/blog/ux-mistakes-that-lose-orders/",
+   "words": 2295
+  },
+  {
+   "path": "/blog/uzbek-russian-interface/",
+   "words": 2274
+  },
+  {
+   "path": "/ru/blog/uzbek-russian-interface/",
+   "words": 2309
+  },
+  {
+   "path": "/en/blog/uzbek-russian-interface/",
+   "words": 2813
+  },
+  {
+   "path": "/blog/speed-on-android/",
+   "words": 2148
+  },
+  {
+   "path": "/ru/blog/speed-on-android/",
+   "words": 2233
+  },
+  {
+   "path": "/en/blog/speed-on-android/",
+   "words": 2709
+  },
+  {
+   "path": "/blog/chatbot-ux/",
+   "words": 1951
+  },
+  {
+   "path": "/ru/blog/chatbot-ux/",
+   "words": 1950
+  },
+  {
+   "path": "/en/blog/chatbot-ux/",
+   "words": 2470
+  },
+  {
+   "path": "/ja/blog/japanese-communication-setup/",
+   "words": 332
+  },
+  {
+   "path": "/blog/brief-for-it-agency/",
+   "words": 2022
+  },
+  {
+   "path": "/ru/blog/brief-for-it-agency/",
+   "words": 2059
+  },
+  {
+   "path": "/en/blog/brief-for-it-agency/",
+   "words": 2459
+  },
+  {
+   "path": "/blog/horenso-reporting/",
+   "words": 1498
+  },
+  {
+   "path": "/ru/blog/horenso-reporting/",
+   "words": 1531
+  },
+  {
+   "path": "/en/blog/horenso-reporting/",
+   "words": 1838
+  },
+  {
+   "path": "/blog/kaizen-in-software/",
+   "words": 1677
+  },
+  {
+   "path": "/ru/blog/kaizen-in-software/",
+   "words": 1633
+  },
+  {
+   "path": "/en/blog/kaizen-in-software/",
+   "words": 2034
+  },
+  {
+   "path": "/blog/maintenance-after-launch/",
+   "words": 2485
+  },
+  {
+   "path": "/ru/blog/maintenance-after-launch/",
+   "words": 2552
+  },
+  {
+   "path": "/en/blog/maintenance-after-launch/",
+   "words": 3032
+  },
+  {
+   "path": "/blog/fixed-price-or-hourly/",
+   "words": 1852
+  },
+  {
+   "path": "/ru/blog/fixed-price-or-hourly/",
+   "words": 1893
+  },
+  {
+   "path": "/en/blog/fixed-price-or-hourly/",
+   "words": 2232
+  },
+  {
+   "path": "/blog/click-payme-uzum-payments/",
+   "words": 2122
+  },
+  {
+   "path": "/ru/blog/click-payme-uzum-payments/",
+   "words": 2176
+  },
+  {
+   "path": "/en/blog/click-payme-uzum-payments/",
+   "words": 2637
+  },
+  {
+   "path": "/blog/choosing-a-crm/",
+   "words": 2173
+  },
+  {
+   "path": "/ru/blog/choosing-a-crm/",
+   "words": 2246
+  },
+  {
+   "path": "/en/blog/choosing-a-crm/",
+   "words": 2632
+  },
+  {
+   "path": "/blog/1c-integration/",
+   "words": 2006
+  },
+  {
+   "path": "/ru/blog/1c-integration/",
+   "words": 2063
+  },
+  {
+   "path": "/en/blog/1c-integration/",
+   "words": 2488
+  },
+  {
+   "path": "/blog/personal-data-in-uzbekistan/",
+   "words": 2087
+  },
+  {
+   "path": "/ru/blog/personal-data-in-uzbekistan/",
+   "words": 2178
+  },
+  {
+   "path": "/en/blog/personal-data-in-uzbekistan/",
+   "words": 2656
+  },
+  {
+   "path": "/blog/security-basics/",
+   "words": 2235
+  },
+  {
+   "path": "/ru/blog/security-basics/",
+   "words": 2329
+  },
+  {
+   "path": "/en/blog/security-basics/",
+   "words": 2809
+  }
+ ]
+}

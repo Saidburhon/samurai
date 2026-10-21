@@ -158,6 +158,29 @@ export class Cut {
     return c;
   }
 
+  // the compositor's first freeze: a few tiles of each kind of layer a freeze is made of (a half clipped by a polygon,
+  // a bitmap canvas, the slash, a round window, a rim), all but invisible for a moment at the first hold, so the
+  // software renderer builds their programs there and not in the first frames of the first cut (G3)
+  warm() {
+    if (this.warmed || !this.root) return;
+    this.warmed = true;
+    const box = document.createElement('div');
+    box.className = 'fz-warm';
+    box.innerHTML = '<div class="fz-half" style="clip-path:polygon(0 0,64px 0,0 48px)"><canvas class="fz-gl" width="64" height="48"></canvas><div class="fz-l" style="background:radial-gradient(130% 110% at 50% 50%, transparent 50%, rgba(0,0,0,.35) 100%)"></div></div>'
+      + '<i class="fz-slash" style="left:0;top:20px;width:64px"></i><div class="fz-win" style="inset:auto;left:70px;top:0;width:48px;height:48px;border-radius:50%;transform:scale(.5)"><div class="fz-one" style="background:#888"></div></div><canvas class="fz-rimc" width="16" height="12"></canvas>';
+    document.body.appendChild(box);
+    // and every scene's text, in place, all but invisible: the glyphs of every face and size are rasterised once here
+    // (their first raster, inside the first frames of a scene's text rising, held a software compositor ~0.3 s)
+    const st = document.createElement('div'); st.className = 'fz-warm-story'; st.setAttribute('aria-hidden', 'true'); st.inert = true;
+    for (const sec of document.querySelectorAll('#story > .scene, #foot')) { const c = stripIds(sec.cloneNode(true)); c.classList.add('vis'); st.appendChild(c); }
+    for (const el of st.querySelectorAll('a, button, [tabindex]')) el.setAttribute('tabindex', '-1');
+    document.body.appendChild(st);
+    setTimeout(() => st.remove(), 2500);
+    const c = box.querySelector('canvas.fz-gl');
+    if (typeof createImageBitmap === 'function') createImageBitmap(new ImageData(64, 48)).then((b) => { const x = c.getContext('bitmaprenderer'); if (x) x.transferFromImageBitmap(b); }).catch(() => {});
+    setTimeout(() => box.remove(), 1500);
+  }
+
   // ---------------- showing ----------------
   hide() { if (this.shown) { this.root.replaceChildren(); this.root.classList.remove('on', 'primed'); this.shown = null; } }
   // a prepared freeze mounted at its start, all but invisible: its layers (two full-screen halves with a copy of the
