@@ -76,7 +76,10 @@ html.cinema .b-promise .st-sub { margin-top: 20px; max-width: 26em; font-size: c
 html.cinema[data-beat="mei.promise"] .s-mei > .mei, html.cinema[data-beat="mei.promise"] .s-mei > .hanko { display: none; }
 /* the film's hanko stamps at 5.6 s, after the lift (§4.1); the flow hero stamps at 0.9 s */
 html.cinema.intro .hanko { animation-delay: 5.6s; }
-html.cinema[data-beat="intro"] .b-hero .sub, html.cinema[data-beat="intro"] .s-mei > .hanko, html.cinema[data-beat="intro"] .cue { display: none; }
+/* the reveal's frozen state (?beat=intro, G1's poster of frame 02) has no subline, seal or cue; on the boot path
+   (html.intro) they keep their own timed arrivals (1.3 s, 5.6 s, 8 s): hiding them for a moment at glReady would
+   restart those animations from then (G1 r2) */
+html.cinema:not(.intro)[data-beat="intro"] :is(.b-hero .sub, .s-mei > .hanko, .cue) { display: none; }
 
 /* 映 B2–B6: the h2 top-left, the full list bottom-right (the active items lit), the hakogaki at the right edge */
 html.cinema .s-utsuri .h2 { position: absolute; left: var(--m); top: 128px; font-size: clamp(36px, calc(54 * var(--fit)), 54px); }

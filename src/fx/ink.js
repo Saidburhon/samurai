@@ -53,7 +53,7 @@ export class Ink {
   place(stage, pose, { reveal = 2, front = 0, show = true, annot = true } = {}) {
     const W = stage.w, H = stage.h, td = stage.td;
     if (!this.hair) { hairlines(); this.hair = true; }
-    if (!show || !td) { this.paper.style.visibility = 'hidden'; this.stip.style.visibility = 'hidden'; this.front.innerHTML = ''; return; }
+    if (!show || !td) { this.paper.style.visibility = 'hidden'; this.stip.style.visibility = 'hidden'; this.front.style.visibility = 'hidden'; this.frontOn = false; return; }
     this.paper.style.visibility = ''; this.stip.style.visibility = '';
     // the dimension lines, their labels and the face-on tsuba belong to the hero poster: they leave with the h1
     this.paper.classList.toggle('no-annot', !annot);
@@ -83,7 +83,7 @@ export class Ink {
     if (!this.hair) { hairlines(); this.hair = true; }
     if (!this.groups) this.groups = { hero: this.hero, plan: document.getElementById('osh-plan'), saya: document.getElementById('osh-saya') };
     if (!pose || !td || alpha <= 0.002) {
-      if (this.shown !== false) { this.paper.style.visibility = 'hidden'; this.stip.style.visibility = 'hidden'; this.front.innerHTML = ''; this.shown = false; }
+      if (this.shown !== false) { this.paper.style.visibility = 'hidden'; this.stip.style.visibility = 'hidden'; this.front.style.visibility = 'hidden'; this.frontOn = false; this.shown = false; }
       return;
     }
     if (this.shown !== true) { this.paper.style.visibility = ''; this.shown = true; }
@@ -114,9 +114,13 @@ export class Ink {
     this.clipOn(blade, draw === 'saya' && u0 != null ? reveal * (this.lkj || (this.lkj = LKJ())) : u0);
     if (draw === 'hero') {
       this.stip.style.visibility = '';
-      const ku = u0 == null ? -1 : Math.round(u0 * 4);
+      // the stipple is never clipped in the film: the steel is drawn over the ink wherever it has arrived (#gl lies
+      // above #ink), so the dots behind the front are hidden by the steel itself. It is drawn once per placement, not
+      // once per frame of a reveal (G1 r2: each redraw uploaded a full-screen canvas into the GPU process between
+      // two frames of the steel, and the reveal's frames queued behind it)
+      const ku = -1;
       if (crisp || !this.stipM || ku !== this.stipU) {
-        this.drawStipple(stage, reveal); this.stipM = { e0, ex, ey }; this.stipU = ku; this.stip.style.transform = '';
+        this.drawStipple(stage, 2); this.stipM = { e0, ex, ey }; this.stipU = ku; this.stip.style.transform = '';
       } else {
         // the delta from the drawn matrix to this one: q = e0 + A·A0⁻¹·(q0 − e0')
         const { e0: f0, ex: a, ey: b } = this.stipM, det = a[0] * b[1] - b[0] * a[1] || 1;
@@ -129,7 +133,7 @@ export class Ink {
       this.drawFront(stage, reveal, front, S);
     } else {
       this.stip.style.visibility = 'hidden';
-      if (this.front.firstChild) this.front.innerHTML = '';
+      if (this.frontOn !== false) { this.front.style.visibility = 'hidden'; this.frontOn = false; }
     }
   }
   clipOn(els, u0) {
@@ -178,28 +182,40 @@ export class Ink {
     ctx.globalAlpha = 1;
     surf.present();
   }
-  // the luminous front where ink turns into steel (prototype oshigata.js)
+  // the luminous front where ink turns into steel (prototype oshigata.js). Its picture is drawn once (two blurred
+  // strokes and a hairline across the blade, in a box of its own); each frame only moves it with one CSS transform
+  // (a compositor layer: G1 r2, the blur filters were re-rasterised in the GPU process at every frame of the reveal)
   drawFront(stage, reveal, front, S) {
-    const fr = this.front, W = stage.w, H = stage.h;
-    fr.setAttribute('viewBox', `0 0 ${W} ${H}`); fr.setAttribute('width', W); fr.setAttribute('height', H);
-    if (!(reveal < 1.5) || !front) { fr.innerHTML = ''; return; }
+    const fr = this.front;
+    if (!(reveal < 1.5) || !front) { if (this.frontOn !== false) { fr.style.visibility = 'hidden'; this.frontOn = false; } return; }
     // the blade station at the front: the axis point at reveal, and the blade's width across it
     const F = frame(K, T);
     let s = 0.5; for (let i = 0; i < 30; i++) { const p = F(G.bp2(s, 0.5, 1)); s += (reveal * LKT - p[0]) / LKT * 1.4; s = Math.min(0.995, Math.max(0.005, s)); }
     const sp = F(G.bp2(s, 0, 1)), ed = F(G.bp2(s, 1, 1)), mid = F(G.bp2(s, 0.5, 1));
     const cen = S(reveal * LKT, mid[1]), a = S(reveal * LKT, sp[1]), b = S(reveal * LKT, ed[1]);
-    const wpx = Math.hypot(a[0] - b[0], a[1] - b[1]);
-    const n = [(a[0] - b[0]) / (wpx || 1), (a[1] - b[1]) / (wpx || 1)];
-    const P = (t) => [cen[0] + n[0] * wpx * t, cen[1] + n[1] * wpx * t];
-    const f1 = (v) => v.toFixed(1);
-    const [h1, h2, g1, g2] = [P(1.6), P(-1.6), P(0.75), P(-0.75)];
-    fr.innerHTML = `<defs><linearGradient id="fg" gradientUnits="userSpaceOnUse" x1="${f1(h1[0])}" y1="${f1(h1[1])}" x2="${f1(h2[0])}" y2="${f1(h2[1])}">
+    const wpx = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1;
+    const ang = Math.atan2(a[1] - b[1], a[0] - b[0]);
+    // the picture, for the blade's width at mid-length (rebuilt when the stage's size changes)
+    const key = `${stage.w}x${stage.h}`;
+    if (this.frontKey !== key) {
+      this.frontKey = key;
+      const w0 = this.frontW0 = wpx, half = 1.6 * w0, pad = 40, f1 = (v) => v.toFixed(1);
+      this.frontBox = [half + pad, pad];
+      fr.setAttribute('viewBox', `${f1(-half - pad)} ${-pad} ${f1(2 * (half + pad))} ${2 * pad}`);
+      fr.setAttribute('width', f1(2 * (half + pad))); fr.setAttribute('height', String(2 * pad));
+      fr.innerHTML = `<defs><linearGradient id="fg" gradientUnits="userSpaceOnUse" x1="${f1(half)}" y1="0" x2="${f1(-half)}" y2="0">
       <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <filter id="fb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
       <filter id="fb2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
-      <g class="front" opacity="${front}"><path d="M${f1(h1[0])} ${f1(h1[1])}L${f1(h2[0])} ${f1(h2[1])}" stroke="url(#fg)" stroke-width="26" filter="url(#fb)" opacity=".9"/>
-      <path d="M${f1(h1[0])} ${f1(h1[1])}L${f1(h2[0])} ${f1(h2[1])}" stroke="url(#fg)" stroke-width="7" filter="url(#fb2)"/>
-      <path d="M${f1(g1[0])} ${f1(g1[1])}L${f1(g2[0])} ${f1(g2[1])}" stroke="#fff" stroke-width="1.4"/></g>`;
+      <g class="front"><path d="M${f1(half)} 0L${f1(-half)} 0" stroke="url(#fg)" stroke-width="26" filter="url(#fb)" opacity=".9"/>
+      <path d="M${f1(half)} 0L${f1(-half)} 0" stroke="url(#fg)" stroke-width="7" filter="url(#fb2)"/>
+      <path d="M${f1(0.75 * w0)} 0L${f1(-0.75 * w0)} 0" stroke="#fff" stroke-width="1.4"/></g>`;
+      fr.style.transformOrigin = '0 0'; fr.style.willChange = 'transform, opacity';
+    }
+    const [bx, by] = this.frontBox, k = wpx / this.frontW0;
+    fr.style.transform = `translate(${cen[0].toFixed(1)}px,${cen[1].toFixed(1)}px) rotate(${ang.toFixed(4)}rad) scaleX(${k.toFixed(4)}) translate(${-bx}px,${-by}px)`;
+    fr.style.opacity = front.toFixed(3);
+    if (this.frontOn !== true) { fr.style.visibility = ''; this.frontOn = true; }
   }
   // the screen point of a sword-space paper point under the current placement (for labels)
   screenOf(u, v) { const { e0, ex, ey } = this.m; return [e0[0] + u * ex[0] + v * ey[0], e0[1] + u * ex[1] + v * ey[1]]; }
