@@ -8,6 +8,7 @@ import { initContact } from './ui/contact.js';
 import { initSound } from './ui/sound.js';
 import { initFlow } from './flow/flow.js';
 import { chooseTier } from './core/tier.js';
+import { bakePool, heroJobs } from './gl/bakecpu.js';
 
 const html = document.documentElement;
 const Q = window.__qilich || (window.__qilich = {});
@@ -28,6 +29,13 @@ function startCinema() {
   log('main', performance.now());
   const tier = chooseTier(q);
   Q.tier = tier.tier; Q.sw = tier.sw; Q.renderer = tier.renderer;
+  // The bakes (§2.1) start now, in three workers (gl/bakecpu.js): CPU work off the main thread and off the GPU
+  // process, finished before the gate on any machine that can run the film, so glReady carries the hero's real
+  // textures and no stand-in is ever on screen (G1 r2). ?beat (a hold) bakes the full set.
+  const big = tier.tier === 3 || (tier.tier === 2 && innerWidth / innerHeight >= 1.2);
+  let bakes = null;
+  try { if (typeof Worker === 'function' && !q.has('gpubake')) bakes = bakePool(heroJobs(q.has('beat') ? 'full' : 'boot', big), 3); } catch (e) { bakes = null; }
+  log('bakeStart', performance.now());
   // The GL chunk (three.js and the sword, ~150 KB gz) is requested now, in cinema mode only, so the network has the
   // whole drawing to bring it (the build does not modulepreload it: flow-mode phones must not pay for it, Addendum 2);
   // evaluating its modules is only class definitions. Nothing GL runs before the gate below (0.80 s).
@@ -70,7 +78,7 @@ function startCinema() {
     // wait for the cinema stylesheet (app_css loads without blocking the first paint)
     for (let i = 0; i < 200 && !getComputedStyle(html).getPropertyValue('--cinema-css'); i++) await new Promise((r) => setTimeout(r, 15));
     const canvas = document.getElementById('gl');
-    const { stage, warm } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst') });
+    const { stage, warm } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst'), bakes });
     Q.stage = stage;
     if (q.has('beat')) {
       await warm();
@@ -86,30 +94,40 @@ function startCinema() {
       // in the GPU process in front of the programs
       await p.apply('intro', { reveal: 0, dom: false });
       log('apply', performance.now() - t);
+      // (a browser without workers bakes on the GPU here, before glReady: the stand-ins are never on screen)
+      if (stage.bake) { await stage.bake(); log('baked', performance.now()); }
       await warm(); t = performance.now();
       // the first frame (nothing revealed yet: a clear) is issued, not awaited: the programs it needs are built
       p.render(); if (q.has('rp')) stage.finish();
       log('frame1', performance.now() - t);
-      Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot', 'gl-warm');
+      // the drawing takes the camera's similarity (§4.1: part of glReady). Until now it lay on its diagonal by the
+      // build's own CSS (cinema.css waits for html.osh-set), so this moves it by at most a pixel or two
       if (p.applyDom) p.applyDom();
+      Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot', 'gl-warm');
       // the film takes over: the reveal and the lift, then the scroll (G3)
-      const F = filmM.startFilm({ stage, log, q, intro: html.classList.contains('intro') });
-      await stage.bake(); log('baked', performance.now());
-      F.film.dirty = true;
-      stage.atlas().then(() => log('atlas', performance.now()));
-      // the programs of the later scenes, one per idle period from 6.2 s (never during the reveal or the lift, §6.3),
-      // before any of their scenes can be reached: the full guard (Tsuba, Nōtō), the tang, the lacquer, the floor and
-      // the two other steel programs
+      const F = filmM.startFilm({ stage, log, q, intro: html.classList.contains('intro'), glReady: performance.now() });
+      // Idle work from 6.2 s, one item per idle period (never during the reveal or the lift, §6.3), before any later
+      // scene can be reached: the word atlas, the full-size hada (big tiers), then the programs of the later scenes
+      // (the full guard, the tang, the lacquer, the floor, the two other steel programs). A prewarm draws into the
+      // default framebuffer, which is not preserved: the film's frame is drawn again in the same task, so the frame
+      // that reaches the screen is always the whole film, never a cleared canvas (G1 r2).
       const ric = window.requestIdleCallback || ((f) => setTimeout(f, 50));
+      const redraw = () => { F.film.dirty = true; F.frame(performance.now(), true); };
       setTimeout(() => {
         const M = stage.mat, P = stage.parts;
-        const queue = [[P.tsuba, M.ironFull], [stage.nakagoMesh, null], [stage.saya, null], [stage.kurikata, null], [stage.floor, null], [stage.blade, M.steelSign], [stage.blade, M.steelTogi]];
+        const queue = [
+          async () => { await stage.atlas(); log('atlas', performance.now()); },
+          async () => { if (await stage.upgrade()) { F.film.dirty = true; log('hadaFull', performance.now()); } },
+          ...[[P.tsuba, M.ironFull], [stage.nakagoMesh, null], [stage.saya, null], [stage.kurikata, null], [stage.floor, null], [stage.blade, M.steelSign], [stage.blade, M.steelTogi]].map(([mesh, mat]) => async () => {
+            const t0 = performance.now();
+            stage.prewarm([mesh], { finish: false, material: mat });
+            redraw();
+            await stage.gpuDone();
+            log('pw.' + ((mat && mat.defines && Object.keys(mat.defines).join('+')) || mesh.name || 'mesh'), performance.now() - t0);
+          }),
+        ];
         const step = async () => {
-          const [mesh, mat] = queue.shift();
-          const t0 = performance.now();
-          stage.prewarm([mesh], { finish: false, material: mat });
-          await stage.gpuDone();
-          log('pw.' + ((mat && mat.defines && Object.keys(mat.defines).join('+')) || mesh.name || 'mesh'), performance.now() - t0);
+          try { await queue.shift()(); } catch (e) { Q.idleError = String(e && e.stack || e); }
           if (queue.length) ric(step); else log('prewarmed', performance.now());
         };
         ric(step);

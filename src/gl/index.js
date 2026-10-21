@@ -1,13 +1,39 @@
-// The GL chunk's entry (§6.2): geometries -> renderer -> meshes -> first frame -> glReady -> bakes (one per frame) -> sign atlas.
-// Imported by main.js only in cinema mode (after the intro drawing has finished, or at once with ?beat).
-// On the boot path the first frame is the reveal pose with nothing revealed (§4.1), so it needs no texture: it
-// renders with 1 × 1 stand-ins, which keeps the bakes (and their program) off the critical path to glReady; the
-// baked textures are swapped in (uniform values, no recompile) before the steel appears.
-import { DataTexture, RGBAFormat, LinearFilter, Scene, Mesh, BufferGeometry, Float32BufferAttribute } from 'three';
+// The GL chunk's entry (§6.2): geometries -> renderer -> meshes (with the baked textures) -> first frame -> glReady ->
+// sign atlas. Imported by main.js only in cinema mode (after the intro drawing has finished, or at once with ?beat).
+// The bakes (§2.1) are computed on the CPU, in workers that main.js starts as soon as it runs (gl/bakecpu.js): the
+// hero's hamon, silk and hada (2048 × 128) have landed long before the gate, so glReady carries them and no stand-in
+// is ever on screen (G1 r2). The ishime follows (swapped in as it lands, usually before the gate too); the full-size
+// hada replaces the boot one in idle time after the lift (the same field, at twice the resolution). The 1 × 1
+// stand-ins remain only for a browser without workers, which bakes on the GPU (bake.js) before glReady.
+import { DataTexture, DataUtils, RGBAFormat, HalfFloatType, UnsignedByteType, LinearFilter, LinearMipmapLinearFilter, ClampToEdgeWrapping, NoColorSpace,
+  Scene, Mesh, BufferGeometry, Float32BufferAttribute } from 'three';
 import { Stage, buildGeometries, buildPart, PART_NAMES } from './stage.js';
 import { bakeAll } from './bake.js';
+import { bakePool, heroJobs } from './bakecpu.js';
 
 const px = (r, g, b, a) => { const t = new DataTexture(new Uint8Array([r, g, b, a]), 1, 1, RGBAFormat); t.magFilter = t.minFilter = LinearFilter; t.needsUpdate = true; return t; };
+
+// a CPU bake as a texture with the GPU bakes' sampling (bake.js): mipmapped, trilinear, anisotropic; the hamon (a
+// 1-D profile) without mips. RGBA16F needs a renderable half-float format for its mipmaps, else it becomes RGBA8.
+function dataTex(r, { name, w, h, half, data }, aniso) {
+  const ext = r.extensions;
+  if (half && !(ext.has('EXT_color_buffer_float') || ext.has('EXT_color_buffer_half_float'))) {
+    const q = new Uint8Array(data.length);
+    for (let i = 0; i < data.length; i++) q[i] = Math.round(Math.max(0, Math.min(1, DataUtils.fromHalfFloat(data[i]))) * 255);
+    data = q; half = false;
+  }
+  const mips = name !== 'hamon';
+  const t = new DataTexture(data, w, h, RGBAFormat, half ? HalfFloatType : UnsignedByteType);
+  t.generateMipmaps = mips; t.minFilter = mips ? LinearMipmapLinearFilter : LinearFilter; t.magFilter = LinearFilter;
+  t.anisotropy = mips ? Math.min(aniso, r.capabilities.getMaxAnisotropy()) : 1;
+  t.wrapS = t.wrapT = ClampToEdgeWrapping; t.colorSpace = NoColorSpace; t.flipY = false; t.unpackAlignment = 1;
+  t.needsUpdate = true;
+  return t;
+}
+// the CPU bakes of a page load (main.js starts them; ?beat: the full set, else the boot set)
+export function startBakes(kind, big) {
+  try { return typeof Worker === 'function' && typeof Blob === 'function' ? bakePool(heroJobs(kind, big), 3) : null; } catch (e) { return null; }
+}
 
 // the context the head script created for its probe (software renderers only, boot/head.js): its canvas takes the
 // place of canvas#gl, with the same id, class and attributes
@@ -36,7 +62,7 @@ export function prebuild() {
   ric(step);
 }
 
-export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true }) {
+export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true, bakes = null }) {
   const t0 = performance.now();
   // The order of the GL boot (§4.1, G1): the renderer and the two hero programs first, then the geometries. Nothing
   // here waits for the GPU process, which is still rastering the intro's last frames: the renderer's few synchronous
@@ -88,9 +114,23 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true 
   log('prebuilt', Object.keys(pre).length);
   const geo = buildGeometries(pre);
   log('geo', performance.now() - t0);
-  const opt = { big: tier.tier === 3 || (tier.tier === 2 && !portrait), maxAniso: tier.aniso, onEach: (n, ms) => log('bake.' + n, ms), wait: () => stage.gpuDone() };
+  const big = tier.tier === 3 || (tier.tier === 2 && !portrait);
+  const opt = { big, maxAniso: tier.aniso, onEach: (n, ms) => log('bake.' + n, ms), wait: () => stage.gpuDone() };
   let B = null;
-  if (bakeFirst) B = await bakeAll(r, opt);
+  const tex = (d) => { log('bake.' + d.name, d.ms); log('tex.' + d.name, d.at); return dataTex(r, d, tier.aniso); };
+  if (bakes) {
+    // the hero's three (and, for a hold, the ishime): normally landed long ago; awaited if a slow machine is still on them
+    const need = bakeFirst ? ['hamon', 'silk', 'hada', 'ishime'] : ['hamon', 'silk', 'hada'];
+    const got = await Promise.all(need.map((n) => bakes.get(n)));
+    if (got.every(Boolean)) {
+      B = {};
+      for (const d of got) B[d.name] = tex(d);
+      // the ishime when it lands (the fittings show it; until then their stone texture is flat)
+      if (!B.ishime) { const d = bakes.peek('ishime'); if (d) B.ishime = tex(d); else bakes.get('ishime').then((x) => { if (x) { stage.swapTextures({ ishime: tex(x) }); if (window.__qilich && window.__qilich.film) window.__qilich.film.invalidate(); } }); }
+      log('bakesIn', performance.now());
+    }
+  }
+  if (!B && bakeFirst) B = await bakeAll(r, opt);
   const t1 = performance.now();
   stage.build({ ...T0, ...(B || {}) }, geo);
   stage.setSize(W, H, true);
@@ -116,7 +156,19 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true 
     if (window.__qilich) window.__qilich.prewarm = pw;
     return pw;
   };
-  // the bakes after the first frame (the boot path): one per frame, swapped in as they land
-  stage.bake = async () => { const T = await bakeAll(r, opt); stage.swapTextures(T); return T; };
+  // without workers (no CPU bakes): the GPU bakes, one per frame, swapped in as they land (main.js runs this before
+  // glReady, so the stand-ins are never on screen)
+  stage.bake = B ? null : async () => { const T = await bakeAll(r, { ...opt, onEach: (n, ms) => log('bake.' + n, ms) }); stage.swapTextures(T); return T; };
+  // the full-size hada, in idle time after the lift (big tiers only): the same field at twice the resolution
+  stage.upgrade = async () => {
+    if (!big || !bakes) return false;
+    const p = startBakes('upgrade', big);
+    const d = p && (await p.get('hada'));
+    if (!d) return false;
+    const old = stage.mat.steelU.tHada.value;
+    stage.swapTextures({ hada: tex(d) });
+    if (old && old.dispose && old !== stage.mat.steelU.tHada.value) old.dispose();
+    return true;
+  };
   return { stage, warm };
 }

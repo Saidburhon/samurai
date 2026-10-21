@@ -65,6 +65,8 @@ export class Ink {
     const k = Math.hypot(ex[0], ex[1]), ang = Math.atan2(ex[1], ex[0]);
     const st = this.paper.style;
     st.transform = `matrix(${ex[0]},${ex[1]},${ey[0]},${ey[1]},${tx},${ty})`;
+    // the matrix takes over from the build's placement (cinema.css: html.osh-set)
+    document.documentElement.classList.add('osh-set');
     st.setProperty('--osh-rot', `${(ang * 180 / Math.PI).toFixed(3)}deg`);
     st.setProperty('--ik', (1 / k).toFixed(5));
     this.m = { e0, ex, ey, k };
@@ -100,6 +102,7 @@ export class Ink {
     const st = this.paper.style, mtx = `matrix(${ex[0]},${ex[1]},${ey[0]},${ey[1]},${tx},${ty})`;
     if (this.mtx !== mtx) {
       st.transform = mtx; this.mtx = mtx;
+      document.documentElement.classList.add('osh-set');
       st.setProperty('--osh-rot', `${(ang * 180 / Math.PI).toFixed(3)}deg`);
       st.setProperty('--ik', (1 / k).toFixed(5));
     }

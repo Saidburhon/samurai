@@ -160,8 +160,14 @@ html.intro #osh-detail .fill { animation-delay: calc(.48s * var(--k)); }
 html.intro .h1 .ln > span { animation: rise calc(.6s * var(--k)) var(--hone) calc(.1s * var(--k)) both; }
 html.intro .h1 .ln + .ln > span { animation-delay: calc(.18s * var(--k)); }
 html.intro .mei { animation: tick calc(.4s * var(--k)) linear calc(.4s * var(--k)) both; }
-html.intro .b-hero .sub > * { animation: rise .55s var(--hone) 1.3s both; }
+/* the subline and the CTA rise each through its own mask (the mask is the block's box, grown .3em above and .5em
+   below for the glyphs): until 1.3 s neither is on the page, so the three-line subline and the CTA never overprint */
+html.intro .b-hero .sub > * { animation: rise-m .55s var(--hone) 1.3s both; }
 html.intro .b-hero .sub > * + * { animation-delay: 1.38s; }
+@keyframes rise-m {
+  from { transform: translateY(calc(105% + .8em)); clip-path: inset(calc(-105% - 1.1em) -2em calc(105% + .3em) -2em); font-variation-settings: "SHRP" 0; }
+  to { clip-path: inset(-.3em -2em -.5em -2em); }
+}
 html.intro .hanko { animation: stamp .12s cubic-bezier(.3, 0, .2, 1) .9s both; }
 html.intro .cue { animation: tick .4s linear 8s both; }
 @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }

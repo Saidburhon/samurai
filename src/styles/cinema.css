@@ -26,12 +26,14 @@ html.cinema #ink { z-index: 1; }
 html.cinema #gl { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
 html.cinema #front { position: absolute; left: 0; top: 0; z-index: 3; overflow: visible; }
 html.cinema #labels { position: absolute; inset: 0; z-index: 3; }
-/* the drawing: one matrix() from svg units to the screen (fx/ink.js) */
-html.cinema #osh-paper { left: 0; top: 0; width: 1402px; translate: none; rotate: none; transform-origin: 0 0; }
-html.cinema #osh path, html.cinema #osh circle { vector-effect: non-scaling-stroke; }
+/* the drawing: one matrix() from svg units to the screen (fx/ink.js). Only once ink.js has written that matrix
+   (html.osh-set): until then the drawing keeps the build's own placement on its diagonal (gen/osh.css) and draws
+   itself as in flow mode, so the 1 s frame is the finished drawing on −18° whenever this sheet arrives (G1 r2) */
+html.cinema.osh-set #osh-paper { left: 0; top: 0; width: 1402px; translate: none; rotate: none; transform-origin: 0 0; }
+html.cinema.osh-set #osh path, html.cinema.osh-set #osh circle { vector-effect: non-scaling-stroke; }
 html.cinema .ol { font-size: calc(13px * var(--ik, 1)); }
 html.cinema .ol b { font-size: calc(14px * var(--ik, 1)); }
-html.cinema #osh-hero path[pathLength] { stroke-dasharray: none; }
+html.cinema.osh-set #osh-hero path[pathLength] { stroke-dasharray: none; }
 
 /* the part, stone and tip labels: kanji 26 px (Mincho 500), gloss 15 px (mono), a hairline leader */
 .plabel { position: absolute; inset: 0; }
@@ -147,8 +149,13 @@ html.film .scene { display: block; opacity: 0; }
 html.film .scene.vis { opacity: 1; }
 html.film .scene:not(.on), html.film .scene:not(.on) *, html.film .foot:not(.on), html.film .foot:not(.on) * { pointer-events: none !important; }
 /* one text grammar (§5.6): a block rises into place through its own mask and leaves upward through it.
-   --t: 0 at rest, 1 below the mask (not arrived), −1 above it (gone) (scenes/dom.js) */
-html.film .tk { translate: 0 calc(var(--t, 0) * 105%); clip-path: inset(max(0%, calc(var(--t, 0) * -105%)) -100vw max(0%, calc(var(--t, 0) * 105%)) -100vw); }
+   --t: 0 at rest, 1 below the mask (not arrived), −1 above it (gone) (scenes/dom.js).
+   The mask is the block's box grown by --tka above and --tkb below, so at rest it clears the glyphs that leave a
+   tight line box (descenders under line-height .98, the okina and the Cyrillic breve above): the window stays fixed
+   on the page while the block travels its own height plus both allowances (G1 r2) */
+html.film .tk { --tka: max(.24em, 10px); --tkb: max(.34em, 14px);
+  translate: 0 calc(var(--t, 0) * (105% + var(--tka) + var(--tkb)));
+  clip-path: inset(calc(var(--t, 0) * (-105% - var(--tka) - var(--tkb)) - var(--tka)) -100vw calc(var(--t, 0) * (105% + var(--tka) + var(--tkb)) - var(--tkb)) -100vw); }
 
 /* the dial lies on the paper under the sword (the flow page's own element, moved by the film) */
 #dialw { position: absolute; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; pointer-events: none; color: #5C4630; will-change: transform; }

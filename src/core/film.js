@@ -46,7 +46,7 @@ export function parseBeatParam(q, layout) {
   return 0;
 }
 
-export function startFilm({ stage, log = () => {}, q = new URLSearchParams(location.search), intro = false }) {
+export function startFilm({ stage, log = () => {}, q = new URLSearchParams(location.search), intro = false, glReady = performance.now() }) {
   const film = new Film(stage);
   film.opt = { cand: q.get('cand') || undefined, reveal: q.has('reveal') ? parseFloat(q.get('reveal')) : undefined, over: q.has('tune') ? JSON.parse(q.get('tune')) : undefined };
   const dom = new Dom();
@@ -60,18 +60,46 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   const state = { intro: null, d: null, key: '', holdKey: '', prepared: '', drawn: null, warmed: new Set() };
   const dir = new Director({
     frozen: fz === 'intro' ? 0 : fz,
-    onInput: () => { if (state.intro && state.intro.t < 1) state.intro.speed = 4; },
+    onInput: () => { if (state.intro && state.intro.t < 1) introSpeed(4); },
     onJump: () => { if (state.d) cut.freezeNow(state.d); },
   });
   dir.onResize = () => { stage.setSize(innerWidth, innerHeight, true); film.reset(); cut.reset(); state.key = ''; };
-  // the intro (§4.1, simple for now): the reveal 2.0 s from max(glReady, 1.7 s), then the 1.8 s lift
-  if (intro && fz == null && !dir.reduced) state.intro = { t: 0, start: Math.max(performance.now(), 1700), dur: 3.8, speed: 1 };
+  // the intro (§4.1, §4.3): the reveal from max(glReady, 1.7 s), 2.0 s (shortened to end by 3.9 s, never under 1.4 s,
+  // when GL is ready after 2.2 s), then the 1.8 s lift. Its clock is the wall clock from navigation, not the sum of
+  // frame times (G1 r2): a long software frame cannot hold it back, so the 3 s frame is the reveal's 3 s state. Each
+  // frame is evaluated at the time it will reach the screen (now + the last GPU frame time, at most 0.2 s).
+  if (intro && fz == null && !dir.reduced) {
+    const start = Math.max(glReady, 1700), R = start > 2200 ? Math.max(1400, 3900 - start) : 2000;
+    state.intro = { t: 0, start, R, L: 1800, tau: 0, at: start, speed: 1 };
+    log('revealStart', start); log('revealMs', R);
+  }
+  // the intro's position on its own timeline (evalIntro: the reveal is [0, .526], the lift [.526, 1]) at time ms
+  function introT(ms) {
+    const I = state.intro, tau = I.tau + Math.max(0, ms - Math.max(I.at, I.start)) * I.speed;
+    return tau < I.R ? 0.526 * tau / I.R : Math.min(1, 0.526 + 0.474 * (tau - I.R) / I.L);
+  }
+  // scroll during the intro plays the rest at 4× (§4.3), from where it is now
+  function introSpeed(k) {
+    const I = state.intro, now = performance.now();
+    I.tau += Math.max(0, now - Math.max(I.at, I.start)) * I.speed; I.at = Math.max(now, I.start); I.speed = k;
+  }
   // a deep link (#b=, #aloqa, …) starts at its beat, without the intro
   if (fz == null) { const p = dir.hashPos(); if (p != null) { state.intro = null; dir.place(p, true); dir.x = p; } }
 
   const layout = () => dir.layout;
   let stamp = null;
   if (q.has('stamp')) { stamp = document.createElement('i'); stamp.style.cssText = 'position:fixed;left:0;bottom:0;width:8px;height:4px;z-index:99;pointer-events:none'; document.body.appendChild(stamp); }
+  // ?stamp (probes only): the beat on screen as a colour in the corner, committed with the frame it describes. The
+  // page's layers (text, freeze) always show the state d; the GL shows d when its last frame drew d's key, else the
+  // drawn beat (a frame in flight): then the GL's beat is the one on screen
+  const mark = (d, lay) => {
+    if (!stamp) return;
+    const k = stateKey(d), dk = state.key || '';
+    const same = k === dk || (k.startsWith('H|') && dk.startsWith('H|') && k.slice(0, -1) === dk.slice(0, -1));
+    const b = Math.max(0, same ? beatOf(d.pos, lay) : state.drawnBeat ?? 0), i = Math.floor(b + 1e-6);
+    const c = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`;
+    if (stamp.__c !== c) { stamp.__c = c; stamp.style.background = c; }
+  };
   const describe = (now) => {
     if (fz === 'intro') return holdD('intro', layout());
     if (state.intro) return evalIntro(state.intro.t, layout());
@@ -101,9 +129,9 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     if (busy() && !force) {
       if (stage.tier.tier !== 2 || now - (state.lastDom || 0) >= 90 || cut.jumpFz) {
         state.lastDom = now;
-        const on = cut.update(d, lay, now);
+        cut.update(d, lay, now);
         dom.apply(d);
-        if (stamp && on) { const b = Math.max(0, beatOf(d.pos, lay)), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
+        mark(d, lay);
       }
       holdWork(d, lay);
       report(d, lay, !!cut.shown); return;
@@ -124,7 +152,6 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     state.lastDom = now;
     // the freeze first: preparing one renders its hold, so the live frame is applied after it
     const cutOn = cut.update(d, lay, now);
-    if (stamp && cutOn) { const b = Math.max(0, beatOf(d.pos, lay)), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
     if (key !== state.key || film.dirty) {
       film.dirty = false;
       const ta = performance.now();
@@ -142,9 +169,8 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
       // the beat of the frame on screen: a hold key is the hold itself, whatever the follower's last decimals
       state.drawnBeat = key.startsWith('H|') ? beatOf(posOf(key.split('|')[1], lay), lay) : beatOf(d.pos, lay);
       flog.push([Math.round(now), +state.drawnBeat.toFixed(4), Math.round(ms), Q.applyMs, Q.gpuMs]); if (flog.length > 600) flog.splice(0, 200);
-      // ?stamp (probes only): the drawn beat as a colour in the corner, committed with the frame it describes
-      if (stamp) { const b = Math.max(0, state.drawnBeat), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
     } else dom.apply(d);
+    mark(d, lay);
     holdWork(d, lay);
     report(d, lay, cutOn);
   };
@@ -189,8 +215,8 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     const now = performance.now(), dt = Math.min(0.25, (now - last) / 1000); last = now;
     dir.update(dt, time * 1000);
     if (state.intro) {
-      if (now >= state.intro.start) state.intro.t = Math.min(1, state.intro.t + (dt * state.intro.speed) / state.intro.dur);
-      if (state.intro.t >= 1 || dir.x > 0.02) { if (state.intro.t < 1) state.intro.speed = 4; if (state.intro.t >= 1) state.intro = null; }
+      state.intro.t = introT(now + Math.min(200, Q.gpuMs || 0));
+      if (state.intro.t >= 1 || dir.x > 0.02) { if (state.intro.t < 1 && state.intro.speed < 4) introSpeed(4); if (state.intro.t >= 1) state.intro = null; }
     }
     frame(now);
   };

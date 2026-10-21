@@ -5,7 +5,7 @@
 // while streaming and when done, then the share link opened on a phone (390 × 844) with its hanko checked.
 // Cost: about $0.1–0.2 per case on a warm prompt cache. Keep runs rare.
 // Usage: node scripts/qa/samurai-live.cjs <base> <outDir> [case ids, comma separated]
-//        node scripts/qa/samurai-live.cjs <base without a key> <outDir> --nokey   (T4: the Worker has no
+//        node scripts/qa/samurai-live.cjs <base without a key> <outDir> --nokey [ids]   (T4: the Worker has no
 //        ANTHROPIC_API_KEY; every language must still answer from the catalogue matcher, labelled, unsigned, free)
 const fs = require('fs');
 const path = require('path');
@@ -14,7 +14,8 @@ const { chromium } = require(require('child_process').execSync('npm root -g').to
 const base = (process.argv[2] || 'http://127.0.0.1:8811').replace(/\/$/, '');
 const out = path.resolve(process.argv[3] || '.cache/qa/samurai-live');
 const nokey = process.argv.includes('--nokey');
-const only = nokey ? [] : (process.argv[4] || '').split(',').filter(Boolean);
+// case ids (comma separated) may follow in either mode: node samurai-live.cjs <base> <out> --nokey ru-autowash,ja-dental
+const only = (process.argv.slice(4).find((x) => !x.startsWith('--')) || '').split(',').filter(Boolean);
 const EXTRA = JSON.parse(fs.readFileSync(path.join(__dirname, '../../content/solutions-extra.json'), 'utf8'));
 const FALLBACK_NOTE = { uz: 'SamurAI hozir ishlamayapti', ru: 'SamurAI сейчас недоступен', en: 'SamurAI is unavailable', ja: '現在SamurAIをご利用いただけない' };
 fs.mkdirSync(out, { recursive: true });
