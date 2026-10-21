@@ -11,6 +11,9 @@ const DEF = {
   nie: 520, nieAvg: 0.05, shinogiSheen: 0, shinogiRough: 0.045, edgeLine: 0,
   // the steel's macro treatment (sunagashi streaks, the folded grain, a sharper mirror up close) and its lamp lobe
   macro: 0, lampSpec: 1,
+  // the studio glint's share in the steel, the lobe width of the fittings' glint (copper, gold) and the warm backlit
+  // lines along the blade's outline: 1, 1, 0 everywhere but B14, where the backlight is seen point-on (G1)
+  steelGlint: 1, fittingsGlintW: 1, backEdge: 0, fittingsFill: [0, 0, 0], fillDirV: [0, 0, 1],
   shadowCol: [0.16, 0.13, 0.10], shadowA: 0.68, shadowSoft: 0.14, shadowBase: 0.02,
   backGlow: [0, 0, 0], ironBase: [0.055, 0.048, 0.042],
 };

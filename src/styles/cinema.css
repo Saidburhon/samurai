@@ -107,6 +107,12 @@ html.cinema .contact { display: flex; flex-wrap: wrap; align-items: center; colu
 html.cinema .contact .row { flex: 0 0 100%; }
 html.cinema .contact .btns, html.cinema .contact .ai, html.cinema .contact .city { margin-top: 22px; }
 html.cinema .contact .ai { margin-left: 8px; }
+/* short landscape viewports (1280 × 720): the saya's framing is a fraction of the height and the type is not, so the
+   email shares the buttons' row */
+@media (min-aspect-ratio: 6/5) and (max-height: 820px) {
+  html.cinema .contact .row + .row { flex: 0 0 auto; margin-right: 12px; }
+  html.cinema .contact .btns, html.cinema .contact .ai, html.cinema .contact .city { margin-top: 0; }
+}
 html.cinema .contact .tel { font-size: clamp(56px, calc(120 * var(--fit)), 120px); }
 html.cinema .contact .mail { font-size: clamp(24px, calc(40 * var(--fit)), 40px); }
 html.cinema .contact .hanko-c { width: 28px; height: 28px; rotate: -3deg; margin-left: 6px; align-self: flex-start; margin-top: 10px; }
@@ -128,9 +134,13 @@ html.cinema #osh-paper.no-annot .o-annot, html.cinema #osh-paper.no-annot #osh-d
 
 /* ======================= G3: the film (html.film, core/film.js) ======================= */
 /* only #track scrolls (its height is the film's length, core/director.js); the stage and the text stay fixed */
-html.film, html.film body { overflow: visible; height: auto; }
-html.film { scrollbar-width: none; }
-html.film::-webkit-scrollbar { display: none; }
+/* touch scrolls the document; a fine pointer scrolls the virtual #scroller (core/director.js), so the document never
+   moves under the fixed layers */
+html.film.native, html.film.native body { overflow: visible; height: auto; }
+html.film.native { scrollbar-width: none; }
+html.film.native::-webkit-scrollbar { display: none; }
+#scroller { position: fixed; inset: 0; overflow-y: scroll; scrollbar-width: none; pointer-events: none; z-index: 0; }
+#scroller::-webkit-scrollbar { display: none; }
 html.film #track { display: block; position: relative; width: 1px; pointer-events: none; }
 html.lenis.lenis-smooth { scroll-behavior: auto !important; }
 html.lenis.lenis-stopped { overflow: hidden; }

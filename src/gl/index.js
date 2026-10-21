@@ -3,7 +3,7 @@
 // On the boot path the first frame is the reveal pose with nothing revealed (§4.1), so it needs no texture: it
 // renders with 1 × 1 stand-ins, which keeps the bakes (and their program) off the critical path to glReady; the
 // baked textures are swapped in (uniform values, no recompile) before the steel appears.
-import { DataTexture, RGBAFormat, LinearFilter, Scene, Mesh } from 'three';
+import { DataTexture, RGBAFormat, LinearFilter, Scene, Mesh, BufferGeometry } from 'three';
 import { Stage, buildGeometries, buildPart, PART_NAMES } from './stage.js';
 import { bakeAll } from './bake.js';
 
@@ -19,7 +19,7 @@ function adopt(canvas, tier) {
   const c = keep.canvas;
   for (const a of canvas.attributes) if (a.name !== 'width' && a.name !== 'height') c.setAttribute(a.name, a.value);
   canvas.replaceWith(c);
-  return { canvas: c, context: keep.context };
+  return { canvas: c, context: keep.context, fixed: keep.fixed };
 }
 
 // The geometries, built one part per idle period while the intro drawing runs (main.js calls this as soon as the
@@ -38,39 +38,43 @@ export function prebuild() {
 
 export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true }) {
   const t0 = performance.now();
-  // the geometries the idle time has not built yet: CPU work that overlaps the GPU process finishing the page's
-  // last intro frames (on a software renderer it is busy until about 1.0 s; the renderer's first GL calls wait)
-  log('prebuilt', Object.keys(pre).length);
-  const geo = buildGeometries(pre);
-  log('geo', performance.now() - t0);
-  const { canvas, context } = adopt(el, tier);
+  // The order of the GL boot (§4.1, G1): the renderer and the two hero programs first, then the geometries. Nothing
+  // here waits for the GPU process, which is still rastering the intro's last frames: the renderer's few synchronous
+  // reads of the fresh context are answered from the head script's (fixed below), and compile and link are
+  // asynchronous. So the links, and ANGLE's pipeline warm-up on its worker threads, run while the main thread builds
+  // the geometries (~0.1 s of CPU), instead of after it.
+  const { canvas, context, fixed } = adopt(el, tier);
   log('adopted', context ? 1 : 0); log('adoptMs', performance.now() - t0);
+  let gp = null;
+  if (context && fixed) { gp = context.getParameter; context.getParameter = (p) => (p in fixed ? fixed[p] : gp.call(context, p)); }
   const stage = new Stage(canvas, tier, context);
+  if (gp) delete context.getParameter;
   log('stageMs', performance.now() - t0);
   const r = stage.renderer;
   const W = canvas.clientWidth || innerWidth, H = canvas.clientHeight || innerHeight;
-  log('renderer', performance.now() - t0);
   const portrait = W / H < 1.2;
   // stand-ins: neutral grain, the hamon at its mean height, a mid silk, a flat ishime
   const T0 = { hada: px(128, 128, 128, 0), hamon: px(179, 0, 0, 255), silk: px(40, 50, 90, 128), ishime: px(128, 128, 128, 128) };
+  // Both hero programs (the steel and the fittings, the grip being one of their kinds) are issued now, on stand-in
+  // meshes (a program does not depend on its geometry): renderer.compile() on the stage's scene would also issue every
+  // hidden part's program (the tang, the lacquer, the floor, the rays' disc)
+  stage.materials(T0);
+  const two = new Scene();
+  for (const m of [stage.mat.steel, stage.mat.iron]) { const k = new Mesh(new BufferGeometry(), m); k.frustumCulled = false; two.add(k); }
+  r.compile(two, stage.camera);
+  log('issued', performance.now() - t0);
+  // the geometries the idle time has not built yet (gl/index.js prebuild): CPU work while the GPU process links
+  log('prebuilt', Object.keys(pre).length);
+  const geo = buildGeometries(pre);
+  log('geo', performance.now() - t0);
   const opt = { big: tier.tier === 3 || (tier.tier === 2 && !portrait), maxAniso: tier.aniso, onEach: (n, ms) => log('bake.' + n, ms), wait: () => stage.gpuDone() };
   let B = null;
   if (bakeFirst) B = await bakeAll(r, opt);
   const t1 = performance.now();
   stage.build({ ...T0, ...(B || {}) }, geo);
   stage.setSize(W, H, true);
-  log('build', performance.now() - t1);
-  // Both hero programs (the steel and the fittings, the grip being one of their kinds) are issued now: compile and
-  // link are asynchronous, so they queue in the GPU process behind the intro's last raster while the main thread puts
-  // the first hold in place. Nothing on this path waits for the GPU (three's first use of a program waits for its link,
-  // warm() for the pipelines), and no call here reads a pixel back: the boot path never stalls the GPU process.
   stage.blade.name = 'steel';
-  // (renderer.compile() on the stage's scene would also issue every hidden part's program: the tang, the lacquer, the
-  // floor, the rays' disc; a scene of stand-ins issues exactly the two)
-  const two = new Scene();
-  for (const m of [stage.blade, stage.parts.tsuba]) { const k = new Mesh(m.geometry, m.material); k.frustumCulled = false; two.add(k); }
-  r.compile(two, stage.camera);
-  log('issued', performance.now() - t0);
+  log('build', performance.now() - t1);
   // warm(): one 1 × 1 scissored draw of each hero program (§6.3 prewarm: a software renderer builds the real pipeline
   // only at the first draw), then a fence; resolves when the GPU has built them
   const warm = async () => {

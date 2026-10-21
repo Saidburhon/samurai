@@ -293,16 +293,18 @@ export class Film {
       const g = s.dataset.g, on = g === ga || g === gb;
       if (s.classList.contains('on') !== on) s.classList.toggle('on', on);
       const op = ga !== gb && g === gb ? e.look.toFixed(3) : '', z = ga !== gb && g === gb ? '1' : '';
-      if (s.style.opacity !== op) s.style.opacity = op;
+      if (s.style.opacity !== op) { s.style.opacity = op; s.style.willChange = op ? 'opacity' : ''; }
       if (s.style.zIndex !== z) s.style.zIndex = z;
     }
     const nearG = d.live === 'b' ? gb : d.live === 'a' ? ga : (d.f < 0.5 ? ga : gb);
     if (html.dataset.ground !== nearG) { html.dataset.ground = nearG; html.classList.toggle('dark', !!DARK[nearG]); }
-    this.dial(A, B, e);
-    const sun = (A.sun || B.sun) ? lerp((A.sun || B.sun).az, (B.sun || A.sun).az, e.look) : null;
-    if (sun != null) html.style.setProperty('--sun-a', `${(sun + 180).toFixed(1)}deg`);
+    this.dial(A, B, e, d);
+    // the plaster's raking light and the dial's engraving follow the sun: exact at a hold, in 5° steps between holds
+    // (each step re-rasterises the plaster and the dial)
+    let sun = (A.sun || B.sun) ? lerp((A.sun || B.sun).az, (B.sun || A.sun).az, e.look) + 180 : null;
+    if (sun != null) { if (!d.atHold) sun = Math.round(sun / 5) * 5; const v = `${sun.toFixed(1)}deg`; if (this.sunV !== v) { this.sunV = v; html.style.setProperty('--sun-a', v); } }
   }
-  dial(A, B, e) {
+  dial(A, B, e, d = {}) {
     const st = this.st, da = A.dial, db = B.dial;
     if (!this.dialW) {
       this.dialW = document.getElementById('dialw');
@@ -319,6 +321,8 @@ export class Film {
     w.style.visibility = alpha > 0.002 ? '' : 'hidden';
     w.style.opacity = alpha < 0.999 ? alpha.toFixed(3) : '';
     w.style.transform = `translate(${(hub[0] - 500).toFixed(2)}px,${(hub[1] - 500).toFixed(2)}px) scale(${(rpx / 350).toFixed(5)})`;
+    // a layer while it moves (scaled, not re-rasterised every frame); crisp again at a hold
+    w.style.willChange = d.atHold ? '' : 'transform';
     // the big clocks count with the hand (Tashkent; Tokyo four hours later)
     const hour = da && db ? lerp(da.hour, db.hour, e.cam) : (da || db).hour;
     const m = Math.round(hour * 60), fmt = (x) => `${String(Math.floor(x / 60) % 24).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`;

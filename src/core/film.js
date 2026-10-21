@@ -17,6 +17,8 @@ const Q = window.__qilich || (window.__qilich = {});
 const html = document.documentElement;
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
 const ZERO = { cam: 0, look: 0, mat: 0, sign: 0, ink: 0 };
+// the last frames drawn: [time ms, beat, render ms] (for the probes)
+const flog = (Q.flog = []);
 // a hold as a descriptor (also 'intro', which is not on the track)
 const holdD = (name, layout) => ({ a: name, b: name, k: 0, f: 0, tr: {}, e: ZERO, p: ZERO, freeze: null, live: 'a', push: 0, near: name, atHold: true, hold: name, layout, pos: posOf(name === 'intro' ? 'mei.hero' : name, layout) });
 
@@ -63,45 +65,75 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   if (fz == null) { const p = dir.hashPos(); if (p != null) { state.intro = null; dir.place(p, true); dir.x = p; } }
 
   const layout = () => dir.layout;
+  let stamp = null;
+  if (q.has('stamp')) { stamp = document.createElement('i'); stamp.style.cssText = 'position:fixed;left:0;bottom:0;width:8px;height:4px;z-index:99;pointer-events:none'; document.body.appendChild(stamp); }
   const describe = () => {
     if (fz === 'intro') return holdD('intro', layout());
     if (state.intro) return evalIntro(state.intro.t, layout());
-    return evalS(dir.x, layout());
+    return evalS(dir.xp ?? dir.x, layout());
   };
-  const frame = (now) => {
+  // one frame in flight: a software renderer takes 0.1–0.3 s per frame in the GPU process, and frames issued faster
+  // than that queue up there (the screen then lags the scroll by seconds, and so does every screenshot). A new frame,
+  // its text included, is issued only when the GPU has finished the last one (a fence, never a read-back).
+  const gl = stage.renderer.getContext();
+  const busy = () => {
+    if (!state.fence) return false;
+    if (gl.isContextLost() || gl.getSyncParameter(state.fence, gl.SYNC_STATUS) === gl.SIGNALED) { gl.deleteSync(state.fence); state.fence = null; Q.gpuMs = Math.round(performance.now() - state.fenceT); return false; }
+    return true;
+  };
+  const fence = () => { if (gl.fenceSync) { if (state.fence) gl.deleteSync(state.fence); state.fence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0); gl.flush(); state.fenceT = performance.now(); } };
+  const frame = (now, force = false) => {
     const d = describe();
     state.d = d;
     const lay = layout();
+    if (busy() && !force) { report(d, lay, false); return; }
+    // the resolution: the hold's own inside a hold window (and through the intro), cheaper frames while moving (§6.4)
+    const hr = !!(d.atHold || d.intro || fz != null);
+    if (hr !== state.holdRes) { state.holdRes = hr; stage.setSize(stage.w, stage.h, hr); state.key = ''; }
     // the freeze first: preparing one renders its hold, so the live frame is applied after it
     const cutOn = cut.update(d, lay, now);
-    const key = stateKey(d) + (cutOn ? '' : '');
+    const key = stateKey(d);
     if (key !== state.key || film.dirty) {
       film.dirty = false;
+      const ta = performance.now();
       film.apply(d);
       dom.apply(d);
       labels.update(d, lay);
+      Q.applyMs = Math.round(performance.now() - ta);
       const ms = film.render();
+      fence();
+      // the lead of the follower's prediction: the time between two frames while the film moves (software ~0.15 s)
+      if (state.lastIssue && dir.v) dir.lead = Math.min(0.25, 0.8 * (dir.lead || 0) + 0.2 * Math.min(0.5, (now - state.lastIssue) / 1000));
+      state.lastIssue = now;
       state.key = key; state.drawn = d;
       Q.frameMs = Math.round(ms);
+      // the beat of the frame on screen: a hold key is the hold itself, whatever the follower's last decimals
+      state.drawnBeat = key.startsWith('H|') ? beatOf(posOf(key.split('|')[1], lay), lay) : beatOf(d.pos, lay);
+      flog.push([Math.round(now), +state.drawnBeat.toFixed(4), Math.round(ms), Q.applyMs, Q.gpuMs]); if (flog.length > 600) flog.splice(0, 200);
+      // ?stamp (probes only): the drawn beat as a colour in the corner, committed with the frame it describes
+      if (stamp) { const b = Math.max(0, state.drawnBeat), i = Math.floor(b + 1e-6); stamp.style.background = `rgb(${i * 10},${Math.round((b - i) * 250)},77)`; }
     } else dom.apply(d);
     // the hold window: prepare the freezes of the transitions that touch this hold (either direction)
     if (d.atHold && d.hold && !d.intro && fz == null) {
       const k = Math.round(d.pos), seq = SEQ[lay], hk = `${lay}|${k}|${stage.w}x${stage.h}`;
       const need = [k - 1, k].filter((j) => j >= 0 && j < seq.trans.length && isFreeze(seq.trans[j]));
       Q.cutReady = need.every((j) => cut.ready(j, lay));
-      if (!Q.cutReady && state.prepared !== hk && dir.v === 0) {
+      if (!Q.cutReady && state.prepared !== hk && Math.abs(dir.v) < 0.6) {
         state.prepared = hk;
         for (const j of need) cut.prepare(j, lay);
-        film.apply(d); dom.apply(d); film.render();
+        film.apply(d); dom.apply(d); film.render(); fence();
         Q.cutReady = true;
       }
     } else Q.cutReady = !d.freeze;
-    // report (§3.10)
-    Q.beat = beatOf(d.pos, lay); Q.pos = d.pos; Q.name = d.near; Q.layout = lay;
+    report(d, lay, cutOn);
+  };
+  // report (§3.10)
+  const report = (d, lay, cutOn) => {
+    Q.beat = beatOf(d.pos, lay); Q.pos = d.pos; Q.name = d.near; Q.layout = lay; Q.scrollY = Math.round(dir.y);
     Q.poster = lay === 'port' ? Math.round(d.pos) : PHONE.indexOf(d.near);
     Q.atHold = !!d.atHold; Q.idle = !!d.atHold && dir.v === 0 && !cutOn;
     Q.raysReady = !!(film.raysOn && stage.rays.ready);
-    Q.drawnBeat = state.drawn ? beatOf(state.drawn.pos, lay) : null;
+    Q.drawnBeat = state.drawn ? state.drawnBeat : null;
     Q.intro = state.intro ? +state.intro.t.toFixed(3) : null;
   };
   // the one loop
@@ -119,7 +151,7 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   html.classList.add('film');
   Q.film = { director: dir, film, cut, dom, invalidate: () => { film.dirty = true; }, state };
   // dev and probe hooks (§3.10): seek(b) freezes the director at a beat (number, name or 'intro')
-  Q.seek = (b) => { const p = b === 'intro' ? 0 : posOf(typeof b === 'string' && !/^\d/.test(b) ? b : +b, layout()); dir.frozen = p; dir.x = p; dir.v = 0; state.intro = null; state.key = ''; };
+  Q.seek = (b) => { const p = b === 'intro' ? 0 : posOf(typeof b === 'string' && !/^\d/.test(b) ? b : +b, layout()); dir.frozen = p; dir.x = dir.xp = p; dir.v = 0; state.intro = null; state.key = ''; };
   Q.unfreeze = () => { dir.frozen = null; };
   Q.tune = async (n, over, extra = {}) => {
     film.opt = { ...film.opt, ...extra, over };

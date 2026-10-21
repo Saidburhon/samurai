@@ -49,7 +49,7 @@ export function makeMaterials(U, T) {
   };
   // the blade is a closed shell with outward faces: front faces only, so its far flat is never shaded under the near one
   const steel = (defines) => new ShaderMaterial({ ...base, side: FrontSide, vertexShader: swordV, fragmentShader: frag(STEEL_F), uniforms: steelU, defines: { BEND: '', ...defines } });
-  const metalU = (o) => ({ ...U, tIshime: { value: T.ishime }, tSilk: { value: T.silk }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) }, uBackGlow: { value: v3() }, uGlintWide: { value: 1 }, ...o });
+  const metalU = (o) => ({ ...U, tIshime: { value: T.ishime }, tSilk: { value: T.silk }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) }, uBackGlow: { value: v3() }, uGlintWide: { value: 1 }, uFill: { value: v3() }, uFillDir: { value: v3(0, 0, 1) }, ...o });
   // the fittings are closed, outward-wound shells: front faces only, so they all share one program (the tang, wound
   // both ways, keeps its own; it is never drawn on the boot path)
   const metal = (o, defines = {}, side = FrontSide) => new ShaderMaterial({ ...base, side, vertexShader: swordV, fragmentShader: frag(METAL_F), uniforms: metalU(o), defines });

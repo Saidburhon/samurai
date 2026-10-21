@@ -100,8 +100,6 @@ export class Poster {
     P.tsuka.material = reveal ? R.silk : M.silk; P.mekugi.material = reveal ? R.gold : M.gold;
     U.uReveal.value = reveal ? S.reveal : 2; U.uFront.value = S.front;
     sU.uPolishFront.value = S.polishFront;
-    sU.uGlintGain.value = S.steelGlint ?? 1; sU.uBackEdge.value = S.backEdge ?? 0;
-    for (const m of [M.copper, M.gold]) m.uniforms.uGlintWide.value = S.fittingsGlintW ?? 1;
     // the lamp
     if (S.glint) {
       let s = S.glint.s;

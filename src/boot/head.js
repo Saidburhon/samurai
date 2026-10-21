@@ -31,6 +31,10 @@
           // here (about 1 ms each) and busy with the intro's raster at the gate (0.2–0.3 s for the first one)
           for (const e of ['EXT_color_buffer_float', 'WEBGL_clip_cull_distance', 'OES_texture_float_linear', 'EXT_color_buffer_half_float', 'WEBGL_multisampled_render_to_texture', 'WEBGL_render_shared_exponent', 'EXT_texture_filter_anisotropic', 'KHR_parallel_shader_compile']) g.getExtension(e);
           for (const s of [g.VERTEX_SHADER, g.FRAGMENT_SHADER]) for (const p of [g.HIGH_FLOAT, g.MEDIUM_FLOAT]) g.getShaderPrecisionFormat(s, p);
+          // and its few synchronous reads of this fresh context's fixed state (gl/index.js answers them from here
+          // while the renderer is built, so building it never waits for the GPU process)
+          glKeep.fixed = {};
+          for (const p of [g.SAMPLES, g.VERSION, g.SCISSOR_BOX, g.VIEWPORT]) glKeep.fixed[p] = g.getParameter(p);
         }
         else { const l = g.getExtension('WEBGL_lose_context'); if (l) l.loseContext(); }
       }

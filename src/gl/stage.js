@@ -49,9 +49,13 @@ export class Stage {
   }
 
   // geo: the geometries (buildGeometries)
+  // the materials alone (the boot path issues their programs before the geometries exist); build() makes them if not
+  materials(T) { if (!this.mat) this.mat = makeMaterials(this.U, T); return this.mat; }
   build(T, geo = buildGeometries()) {
     this.T = T;
-    const M = (this.mat = makeMaterials(this.U, T));
+    const early = !!this.mat;
+    const M = this.materials(T);
+    if (early) this.swapTextures(T);
     const sw = (this.sword = new Group()); sw.rotation.order = 'YZX'; this.scene.add(sw);
     this.blade = new Mesh(geo.blade, M.steel); this.blade.frustumCulled = false; this.blade.renderOrder = 2; sw.add(this.blade);
     const hg = (this.handle = new Group()); hg.matrixAutoUpdate = false; sw.add(hg);
@@ -120,6 +124,8 @@ export class Stage {
     const s = this.mat.steelU;
     s.uNie.value = lk.nie; s.uNieAvg.value = lk.nieAvg; s.uShinogiSheen.value = lk.shinogiSheen; s.uShinogiRough.value = lk.shinogiRough; s.uEdgeLine.value = lk.edgeLine;
     s.uMacro.value = lk.macro; s.uLampSpec.value = lk.lampSpec;
+    s.uGlintGain.value = lk.steelGlint ?? 1; s.uBackEdge.value = lk.backEdge ?? 0;
+    for (const m of [this.mat.copper, this.mat.gold]) { const u = m.uniforms; u.uGlintWide.value = lk.fittingsGlintW ?? 1; u.uFill.value.set(...(lk.fittingsFill || [0, 0, 0])); u.uFillDir.value.set(...(lk.fillDirV || [0, 0, 1])); }
     for (const m of [this.mat.iron, this.mat.ironFull]) { m.uniforms.uBackGlow.value.set(...lk.backGlow); m.uniforms.uBase.value.set(...lk.ironBase); }
   }
 
@@ -132,6 +138,9 @@ export class Stage {
     this.handle.matrix.copy(GM.handleMatrix(sori));
     this.mat.steelU.uSori.value = sori;
     sw.updateMatrixWorld(true);
+    // the guard's axis for the gilt seppa and the habaki (their face ramp), as the iron's is set per hold
+    const ax = this.dirH(new Vector3(1, 0, 0)).normalize();
+    for (const m of [this.mat.gold, this.mat.copper]) m.uniforms.uAxisW.value.copy(ax);
   }
   setVis(v) {
     Object.assign(this.vis, v);

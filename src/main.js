@@ -87,7 +87,8 @@ function startCinema() {
       await p.apply('intro', { reveal: 0, dom: false });
       log('apply', performance.now() - t);
       await warm(); t = performance.now();
-      p.render(); if (q.has('rp')) stage.finish(); else await stage.gpuDone();
+      // the first frame (nothing revealed yet: a clear) is issued, not awaited: the programs it needs are built
+      p.render(); if (q.has('rp')) stage.finish();
       log('frame1', performance.now() - t);
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot', 'gl-warm');
       if (p.applyDom) p.applyDom();

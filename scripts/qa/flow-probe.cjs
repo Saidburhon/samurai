@@ -76,7 +76,9 @@ async function stippleAudit(page) {
   return page.evaluate(() => {
     const cv = document.getElementById('stip'), blade = document.querySelector('#osh-hero .o-blade path.k1'), svg = document.getElementById('osh');
     if (!cv || !blade || !svg || !cv.width) return { error: 'no canvas or no blade outline' };
-    const { width: w, height: h } = cv, d = cv.getContext('2d').getImageData(0, 0, w, h).data;
+    // the dots live in the stipple surface's CPU buffer (fx/stipsurface.js); the canvas shows it as one bitmap
+    const src = cv.__stip ? cv.__stip.ctx.canvas : cv;
+    const { width: w, height: h } = src, d = src.getContext('2d').getImageData(0, 0, w, h).data;
     const inv = svg.getScreenCTM().inverse(), st = cv.getBoundingClientRect(), sx = st.width / w, sy = st.height / h;
     let painted = 0, sampled = 0, inside = 0;
     for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) {

@@ -13,6 +13,7 @@ uniform sampler2D tIshime;    // the tsuba face: rg = height gradient, b = coars
 uniform sampler2D tSilk;
 uniform float uReveal, uFront;
 uniform float uGlintWide;     // this part's backlight glint lobe, × (B14: the copper habaki and the gilt seppa catch it)
+uniform vec3 uFill, uFillDir; // B14: a soft warm light in front of the fittings (uFillDir in view space): copper and gold
 void main(){
   gGlintW = uGlintWide;
   if (vAxial > uReveal) discard;
@@ -115,6 +116,9 @@ void main(){
     col += uBackGlow * pow(wall, 2.5) * (0.25 + 0.75*depth*depth) * step(rr, 0.362);
   }
 #endif
+  // B14 (the opponent's view): the copper habaki and the gilt seppa face the viewer and the dark room; a soft warm
+  // light in front (the girih light thrown back by the floor) lets them read as metal, one gradient across each
+  if (uKind < 1.5 && !silk && uFill.r > 0.) col += uFill * F * pow(max(dot(R, normalize(transpose(mat3(viewMatrix)) * uFillDir)), 0.), 6.);
   if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(vAxial - uReveal, 0., 0.0022)*3.0);
   col *= uExposure;
   // round parts (the fuchi, the kashira, the grip, the tsuba's rim): their silhouette (N.V -> 0) ramps to 0 over
@@ -133,6 +137,11 @@ void main(){
     float nr = abs(dot(Nr, V));
     float rimRamp = clamp(nr / max(fwidth(nr) * 1.5, 1e-4), 0., 1.);
     alpha = mix(rq > .385 ? rimRamp : 1., clamp((.393 - rq) / max(fwidth(rq), 1e-5) + .5, 0., 1.), onFace);
+  }
+  if (uKind > .5 && uKind < 1.5) {
+    // the seppa's oval faces ramp to 0 over a pixel at their outline (B14: the plate seen face-on round the habaki)
+    float rs = length(vec2(lp.z / .205, lp.y / .112));
+    alpha = mix(1., clamp((1. - rs) / max(fwidth(rs), 1e-5) + .5, 0., 1.), smoothstep(.5, .8, abs(dot(N0, uAxisW))));
   }
   gl_FragColor = vec4(col, 1.);
   #include <tonemapping_fragment>

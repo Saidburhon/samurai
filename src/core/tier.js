@@ -44,7 +44,9 @@ export function pixelRatio(t, w, h, atHold) {
   const dpr = window.devicePixelRatio || 1;
   let pr;
   if (t.tier === 3) pr = Math.min(dpr, 2);
-  else if (t.tier === 2) pr = dpr * (t.sw === 'a' ? 1.5 : (atHold ? 2.0 : 1.0));
+  // G3: the film's moving frames render at 1.0× on a software renderer with either option (one frame in flight takes
+  // 0.1–0.3 s there, and the scroll must keep up); the hold frame keeps its option's resolution (A 1.5×, B 2.0×)
+  else if (t.tier === 2) pr = dpr * (atHold ? (t.sw === 'a' ? 1.5 : 2.0) : 1.0);
   else pr = Math.min(dpr, 1.5);
   const cap = Math.sqrt(MAXPX / Math.max(1, w * h));
   return Math.min(pr, cap);

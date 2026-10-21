@@ -22,11 +22,11 @@ export class Director {
     this.track = document.getElementById('track');
     this.frozen = frozen;
     this.onJump = onJump; this.onInput = onInput;
-    this.W = 9; this.x = 0; this.v = 0;
+    this.W = 9; this.x = 0; this.v = 0; this.lead = 0;
     this.lastInput = -1e9;
     this.measure();
     if (frozen == null) this.bind();
-    this.x = this.raw(); this.v = 0;
+    this.x = this.xp = this.raw(); this.v = 0;
   }
   measure() {
     const w = document.documentElement.clientWidth || innerWidth, h = innerHeight;
@@ -37,13 +37,23 @@ export class Director {
     this.track.style.height = `${(this.n - 1) * this.unit + h}px`;
   }
   scrollY() { return this.lenis ? this.lenis.scroll : window.scrollY; }
+  // the scroll position of the track (the probes' scrollY): the virtual scroller's on desktop, the document's on touch
+  get y() { return this.scroller ? this.scroller.scrollTop : window.scrollY; }
   raw() { return this.frozen != null ? this.frozen : clamp(this.scrollY() / this.unit, 0, this.n - 1); }
   target() { return this.lenis ? this.lenis.targetScroll / this.unit : this.raw(); }
 
   bind() {
     if (!this.coarse) {
-      this.lenis = new Lenis({ lerp: 0.10, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, autoRaf: false });
+      // a fine pointer scrolls a virtual track: Lenis drives the scrollTop of a fixed, invisible scroller around
+      // #track, never the document. Scrolling the document from the main thread let the compositor show the fixed
+      // layers shifted by the scroll delta in mid-scroll frames (a washi band torn across the top, G3 probe).
+      const sc = document.createElement('div');
+      sc.id = 'scroller'; sc.setAttribute('aria-hidden', 'true');
+      this.track.replaceWith(sc); sc.appendChild(this.track);
+      this.scroller = sc;
+      this.lenis = new Lenis({ wrapper: sc, content: this.track, eventsTarget: window, lerp: 0.10, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, autoRaf: false });
     } else {
+      this.html.classList.add('native');
       gsap.registerPlugin(ScrollTrigger);
       ScrollTrigger.config({ ignoreMobileResize: true });
       this.snapT = ScrollTrigger.create({ start: 0, end: (this.n - 1) * this.unit, snap: { snapTo: 1 / (this.n - 1), duration: { min: 0.2, max: 0.45 }, delay: 0.05, ease: 'power1.inOut', inertia: false } });
@@ -138,12 +148,17 @@ export class Director {
       if (Math.abs(t - r) > 2) this.place(r / this.unit, false, 0.45);
       this.snapIssued = true;
     }
-    if (this.reduced || this.frozen != null) { this.x = this.reduced && this.frozen == null ? Math.round(raw) : raw; this.v = 0; return this.x; }
+    if (this.reduced || this.frozen != null) { this.x = this.xp = this.reduced && this.frozen == null ? Math.round(raw) : raw; this.v = 0; return this.x; }
     let h = Math.min(dt, 0.25), x = this.x, v = this.v;
     const W = this.W;
     while (h > 1e-6) { const s = Math.min(h, 1 / 120); h -= s; const a = -W * W * (x - raw) - 2 * W * v; v += a * s; x += v * s; }
     if (Math.abs(x - raw) < 5e-4 && Math.abs(v) < 5e-3) { x = raw; v = 0; }
     this.x = x; this.v = v;
+    // what the screen will show: a frame drawn now reaches the screen about one frame later (lead, in seconds, set by
+    // the film from its measured frame time; 0 on a fast GPU), so the film draws where the follower will be by then,
+    // never past the scroll's own target
+    const tgt = this.lenis ? clamp(this.lenis.targetScroll / this.unit, 0, this.n - 1) : raw;
+    this.xp = v ? clamp(x + v * (this.lead || 0), Math.min(x, tgt), Math.max(x, tgt)) : x;
     return x;
   }
   settled() { return this.v === 0 && this.x === this.raw(); }

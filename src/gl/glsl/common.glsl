@@ -60,9 +60,11 @@ vec3 lampSpec(vec3 N, vec3 V, vec3 P, vec3 F, float rough){
   float D = a2/(3.14159*dd*dd);
   return uLampCol * F * D * NoL * 0.25;
 }
-// a thin analytic line exp(-((x-c)/w)^2): never thinner than ~1 device px, dimmed instead of broken (AA contract 1)
+// a thin analytic line exp(-((x-c)/w)^2): never thinner than ~1 device px, dimmed instead of broken (AA contract 1).
+// The floor is 0.65 device px of w, a full width at half maximum of 1.1 device px (1.6 buffer px at the software
+// supersample, still above the sampling's dashing limit): G1 found 0.8 (1.33 px) softer than the prototype's ridge.
 float thinLine(float x, float c, float w){
-  float fw = max(w, 0.8 * fwidth(x) * uAA);
+  float fw = max(w, 0.65 * fwidth(x) * uAA);
   return exp(-pow((x - c) / fw, 2.)) * (w / fw);
 }
 // Schlick's (1 − n·v)^5 averaged over the pixel's span of n·v (a box filter, exact): at a grazing silhouette the
