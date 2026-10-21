@@ -1,10 +1,15 @@
 // Freeze transitions (§3.7): one mechanism for the four split cuts, the soft wipes and the jump slash.
 // The frozen sheet of the transition k -> k+1 always shows hold k, in whichever direction the visitor travels; the
-// live layers beneath show the incoming hold. prepare(k) renders S(k) in the same task as it copies the GL canvas
-// (no preserveDrawingBuffer), clones the ground, the drawing, the dial, the labels and hold k's visible text into one
-// sheet (ids stripped, aria-hidden, inert), and leaves the live frame to be rendered again by the next tick.
-// Inside [k + .2, k + .8] the sheet is shown: split cuts as two halves clipped by the cut line (clip-path polygon) and
-// pushed apart along its normal; wipes as one sheet under a moving mask with a lit rim.
+// live layers beneath show the incoming hold. prepare(k) copies the GL canvas in the task that drew hold k (no
+// preserveDrawingBuffer; at the hold it is the frame on screen, so nothing is drawn twice), clones the ground, the
+// drawing, the dial, the labels and hold k's visible text into one sheet (ids stripped, aria-hidden, inert, its colours
+// pinned), and the sheet waits mounted, all but invisible, so its layers are rasterised at the hold.
+// The sheet lies over the page's text (#cut is a child of body, cinema.css): the incoming text rises under it.
+// Scrolling forwards into a freeze, the sheet goes up closed from the first frame of the scroll (d.pre, core/film.js).
+// Inside [k + .2, k + .8]: split cuts as two halves clipped by the cut line (clip-path polygon) pushed apart along its
+// normal; wipes as a window the compositor moves over the sheet (a circle closing on the tsuba, or a rectangle whose
+// edge crosses the screen) with a rim of light. Nothing in a freeze is rasterised again while it plays (G3: a moving
+// mask-image and a scaled ring re-rasterised in every frame and held a software compositor for seconds).
 import { EASES } from '../core/eases.js';
 import { SEQ, evalS } from '../core/tracks.js';
 

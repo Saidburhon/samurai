@@ -312,6 +312,15 @@ export function renderSolution(s, V) {
   const lede = mon ? `${V.L(s.oneliner)} ${T.monthly.basic}: ${V.prim(s.mvp.usd)} / ${T.monthly.per}.` : fill(T.solLede, { line: V.L(s.oneliner), weeks: V.wk(s.mvp.weeks), price: V.from(s.mvp.usd), fweeks: V.wk(s.full.weeks) });
   const ind = s.industries.find((i) => V.model.industries[i]);
   const plate = mon ? '' : bladePlate({ seed: seedOf(s.id), weeks: { mvp: s.mvp.weeks, full: s.full.weeks }, state: 'full', scaleWeeks: V.maxFull, width: 720, difficulty: s.difficulty, dots: 380, labels: { mvp: `${T.mvp} ${V.wk(s.mvp.weeks)}`, full: `${T.full} ${V.wk(s.full.weeks)}`, tick: T.mvp, aria: fill(T.plate.aria, { title, mvp: V.wk(s.mvp.weeks), full: V.wk(s.full.weeks) }) } }).svg;
+  // the plate's ruler: the catalogue's weeks scale (the same one every blade is drawn on), every 4 weeks a tick
+  const ruled = (svg) => {
+    if (!svg) return svg;
+    const base = 36, usable = 720 - base - 12, x = (w) => r1(base + (usable * w) / V.maxFull);
+    let g = `<g class="ruler"><path d="M${base} 104H${x(V.maxFull)}"/>`;
+    for (let w = 0; w <= V.maxFull; w += 4) g += `<path d="M${x(w)} 104v${w % 8 ? 3 : 6}"/>`;
+    for (let w = 0; w <= V.maxFull; w += 8) g += `<text x="${x(w)}" y="122" text-anchor="${w ? 'middle' : 'start'}">${w + 8 > V.maxFull ? esc(V.wk([w, w])) : w}</text>`;
+    return svg.replace(/viewBox="0 0 720 96" width="720" height="96"/, 'viewBox="0 0 720 128" width="720" height="128"').replace(/<\/svg>$/, `${g}</g></svg>`);
+  };
   const sheet = [];
   if (mon) {
     sheet.push([T.monthly.start, esc(V.wk(s.mvp.weeks))]);
@@ -345,7 +354,7 @@ export function renderSolution(s, V) {
     <p class="lede">${esc(lede)}</p>
     <p class="acts">${mon ? '' : `<a class="btn" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}"><span>${esc(T.estimate)}</span>${KISSAKI}</a>`}${addBtn(s, V)}</p>
   </header>
-  ${plate ? `<figure class="sol-plate" aria-hidden="true">${plate}</figure>` : ''}
+  ${plate ? `<figure class="sol-plate" aria-hidden="true">${ruled(plate)}</figure>` : ''}
   <section class="row sheet-row" aria-labelledby="sh-h"><h2 id="sh-h">${esc(T.sheetH)}</h2><div class="row-body"><dl class="sheet">${sheet.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>
   ${get.length ? `<section class="row" aria-labelledby="gt-h"><h2 id="gt-h">${esc(T.getH)}</h2><div class="row-body"><dl class="sheet get">${get.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>` : ''}
   ${needs.length ? `<section class="row" aria-labelledby="nd-h"><h2 id="nd-h">${esc(T.dl.needs)}</h2><div class="row-body">${lines(needs)}</div></section>` : ''}
