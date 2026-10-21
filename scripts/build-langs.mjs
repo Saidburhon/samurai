@@ -15,7 +15,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { EN, RU, JA } from './i18n.mjs';
-import { SITE, LANGS, HOME, LOCALE, abs, esc, langNav, headLinks, pathOf, site } from './site.mjs';
+import { SITE, LANGS, HOME, LOCALE, abs, esc, langNav, headLinks, pathOf, site, SERVICE_TARGETS, serviceHref } from './site.mjs';
 import { graph } from './pages/ld.mjs';
 import { hasBlog, feedPath } from './pages/blog-feed.mjs';
 import { T } from './pages-i18n.mjs';
@@ -89,6 +89,10 @@ export function head(html, lang) {
   // (the Solutions catalogue and the price list have a slug of their own per language: /ru/resheniya/, /ja/prices/)
   const own = { solutions: CATALOGUE_BASE, prices: { uz: '/narxlar/', ru: '/ru/tseny/', en: '/en/prices/', ja: '/ja/prices/' } };
   html = html.replace(/<a href="[^"]*" data-page="([\w-]+)"/g, (a, slug) => `<a href="${own[slug]?.[lang] || pathOf(lang, slug)}" data-page="${slug}"`);
+  // the service list ("What we build") links each service to its Solutions page in this language: the home page's
+  // in-content links into the catalogue (SEO-GEO-GUIDELINES, Internal links). Idempotent: public/index.html keeps them.
+  html = html.replace(/(<li data-g="[^"]*">)(?:<a href="[^"]*" data-svc>)?(<span data-i18n="svc\.(\d)">[\s\S]*?<\/span>)(?:<\/a>)?(<\/li>)/g,
+    (all, li, span, n, end) => (SERVICE_TARGETS[n - 1] ? `${li}<a href="${serviceHref(n - 1, lang)}" data-svc>${span}</a>${end}` : all));
   return html;
 }
 
@@ -170,8 +174,19 @@ export function contentText(html) {
   const b = html.replace(/<head>[\s\S]*?<\/head>/, '').replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ').replace(/<svg[\s\S]*?<\/svg>/g, ' ');
   for (const m of b.matchAll(/>([^<]+)</g)) t.push(m[1]);
   for (const m of b.matchAll(/\s(?:aria-label|alt|title|placeholder)="([^"]*)"/g)) t.push(m[1]);
-  return t.filter(Boolean).join('\u0001').replace(/\s+/g, ' ').trim();
+  return withoutRate(t.filter(Boolean).join('\u0001').replace(/\s+/g, ' ').trim());
 }
+// The day's CBU rate is fetched by every build and printed on the catalogue pages (the rate line, and every soʻm
+// figure derived from a USD price), so it is left out of the hash: a new rate alone is not a change of the page's
+// words, and lastmod moves only when the words or the USD prices change (sitemaps: lastmod must be accurate).
+const RATE_LINES = [
+  /Kurs: Markaziy bank, [\d.]+, 1 ?\$ ?= ?[\d ,.]+ ?soʻm( \(oxirgi maʼlum kurs\))?/g,
+  /Курс ЦБ РУз на [\d.]+: 1 ?\$ ?= ?[\d ,.]+ ?сум( \(последний известный курс\))?/g,
+  /為替レート：ウズベキスタン中央銀行 ?[\d年月日]+、1ドル＝[\d,]+スム(（最新の取得値）)?/g,
+  /Rate: Central Bank of Uzbekistan, [\d.]+, \$1 ?= ?UZS ?[\d,.]+( \(last known rate\))?/g,
+];
+const UZS_FIGURES = [/\d[\d ,.–-]*(mln|ming) soʻm/g, /\d[\d ,.–-]*(млн|тыс\.) ?сум/g, /UZS ?\d[\d ,.–-]*( ?(mln|million|thousand))?/g, /\d[\d,.〜万億]*スム/g];
+export const withoutRate = (s) => [...RATE_LINES, ...UZS_FIGURES].reduce((a, re) => a.replace(re, '¤'), s);
 export function lastmods(entries) {
   const db = existsSync(LASTMOD) ? JSON.parse(readFileSync(LASTMOD, 'utf8')) : {};
   const day = today();

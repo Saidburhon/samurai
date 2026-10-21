@@ -117,21 +117,30 @@ export function initToys(F, stage) {
   }
 
   // ---------------- input ----------------
-  const disarm = () => { P.armed = false; S.ringT = -1e9; ring.classList.remove('on'); };
+  const disarm = () => { P.armed = false; if (P.hist) P.hist.length = 0; S.ringT = -1e9; ring.classList.remove('on'); };
   if (fine) {
     addEventListener('pointermove', (e) => {
       if (e.pointerType === 'touch') return;
       const nx = e.clientX, ny = e.clientY;
       if (Math.abs(nx - P.x) + Math.abs(ny - P.y) < 1) return;
-      P.x = nx; P.y = ny; P.moved = performance.now();
-      P.armed = true;
+      const now = performance.now();
+      // armed only by a real gesture (§9 item 32): 3 moves in 300 ms over 60 px (a single parked move never arms)
+      if (!P.armed) {
+        const hist = P.hist || (P.hist = []);
+        hist.push([now, nx, ny]);
+        while (hist.length && now - hist[0][0] > 300) hist.shift();
+        let path = 0; for (let i = 1; i < hist.length; i++) path += Math.hypot(hist[i][1] - hist[i - 1][1], hist[i][2] - hist[i - 1][2]);
+        if (hist.length >= 3 && path >= 60) { P.armed = true; hist.length = 0; }
+      }
+      P.x = nx; P.y = ny; P.moved = now;
+      if (!P.armed) return;
       if (hero()) { S.ringT = P.moved; ring.style.transform = `translate(${nx}px, ${ny}px)`; ring.classList.add('on'); }
     }, { passive: true });
-    document.addEventListener('pointerleave', disarm);
+    document.documentElement.addEventListener('mouseleave', disarm);
     addEventListener('blur', disarm);
   }
   // a wheel, a key or a touch leaves the hero: the toys go at once (the parked pointer must not show anywhere else)
-  const away = () => { ring.classList.remove('on'); S.ringT = -1e9; };
+  const away = () => { ring.classList.remove('on'); S.ringT = -1e9; P.armed = false; if (P.hist) P.hist.length = 0; };
   addEventListener('wheel', away, { passive: true });
   addEventListener('keydown', away);
   addEventListener('touchstart', () => { P.touch = true; away(); }, { passive: true });
@@ -274,7 +283,7 @@ export function initToys(F, stage) {
     // arming eases in fast; disarmed, the lamp returns to the orbit over 1.2 s
     S.wP = lampOn ? damp(S.wP, 1, 8, dt) : Math.max(0, S.wP - dt / 1.2);
     const kOn = lampOn && now - P.zoneT < 1200;
-    S.k1 = damp(S.k1, kOn ? 1 : 0, kOn ? 9 : 6, dt); S.k2 = damp(S.k2, S.k1, kOn ? 9 : 6, dt);
+    S.k1 = damp(S.k1, kOn ? 1 : 0, kOn ? 12 : 6, dt); S.k2 = damp(S.k2, S.k1, kOn ? 12 : 6, dt);
     if (S.k2 < 0.002 && !kOn) S.k1 = S.k2 = 0;
     // one label, for the part nearest the cursor within 130 px of the outline (none on touch)
     showLabel(L && L.d < 130 ? L : null, g);

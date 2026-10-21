@@ -2,7 +2,9 @@
 // content/site.json. A fact that is empty in site.json is not shown, and a section that would hold nothing is dropped.
 import { PAGES } from './copy-company.mjs';
 import { t, links } from './chrome.mjs';
-import { site, has, esc, html, telHref, nbspPhone, HOME } from '../site.mjs';
+import { site, has, esc, html, telHref, nbspPhone, HOME, serviceHref } from '../site.mjs';
+import { CATALOGUE_BASE } from '../../src/shared/catalogue.js';
+import { hasBlog, blogIndex } from './blog-feed.mjs';
 
 const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 const fmtDate = (lang, iso) => {
@@ -79,7 +81,9 @@ function sections(lang, copy, def) {
     if (s.quote) inner = `<p class="quote">${esc(site.description[lang]).replace(/&amp;nbsp;/g, '&nbsp;')}</p>`;
     if (s.ol) inner += `<ol class="steps">${s.ol.map((x) => `<li>${links(lang, html(pick(x)))}</li>`).join('')}</ol>`;
     if (s.ul) inner += `<ul class="list">${s.ul.map((x) => `<li>${links(lang, html(pick(x)))}</li>`).join('')}</ul>`;
-    if (s.services) inner += `<ul class="svc-list">${L('services').map((x) => `<li>${x}</li>`).join('')}</ul>`;
+    // each service links to its Solutions page; a line after the list links the catalogue and the blog (in-content
+    // links: SEO-GEO-GUIDELINES, Internal links)
+    if (s.services) inner += `<ul class="svc-list">${L('services').map((x, i) => `<li><a class="u" href="${serviceHref(i, lang)}">${x}</a></li>`).join('')}</ul><p>${L('svcMore').replace('{sol}', CATALOGUE_BASE[lang]).replace('{blog}', hasBlog(lang) ? blogIndex(lang) : CATALOGUE_BASE[lang])}</p>`;
     if (s.facts) inner += facts(lang, s.facts);
     if (s.logo) inner += `<figure class="logo"><img src="/assets/img/logo-512.png" width="512" height="512" alt="${esc(L('logoAlt'))}" loading="lazy" decoding="async"><figcaption class="mono"><a href="/assets/img/logo-512.png" download="qilich-logo-512.png">${L('logoPng')}</a> <a href="/assets/img/favicon.svg" download="qilich-logo.svg">${L('logoSvg')}</a></figcaption></figure>`;
     inner += paras(lang, s.p);

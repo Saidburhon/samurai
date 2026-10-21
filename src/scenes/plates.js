@@ -14,10 +14,12 @@ const sine = (x) => 0.5 - 0.5 * Math.cos(Math.PI * clamp(x));
 // placement: the machi (svg 0,0) at m (fractions of the viewport), the axis at ang degrees, scale s per reference px
 // (land: of a 1440 × 900 frame, port: of a 390 px wide one). The quench plate has its own (it carries the water).
 const PLACE = {
-  land: { base: { m: [-0.075, 0.80], ang: -14, s: 1.52 }, 3: { c: [0.56, 0.665], ang: 0, s: 1.02 } },
-  port: { base: { m: [-0.30, 1.06], ang: -62, s: 0.98 }, 3: { c: [0.50, 0.60], ang: -8, s: 0.56 } },
+// range: the part of the plate's width that is on screen (the pen's front runs over it, not over the cropped tang)
+  land: { base: { m: [-0.328, 0.902], ang: -14, s: 1.9, range: [0.42, 1] }, 3: { c: [0.555, 0.655], ang: 0, s: 1.05, range: [0.04, 0.98] } },
+  port: { base: { m: [-0.30, 1.06], ang: -62, s: 0.98, range: [0.36, 1] }, 3: { c: [0.50, 0.60], ang: 0, s: 0.56, range: [0.1, 0.9] } },
 };
 const DASHED = /\b(dash|dash2|hid|cl|fill|dot)\b/;
+const SAME = { 1: 'a', 2: 'a', 3: 'b', 4: 'c' };
 
 export class Plates {
   constructor() {
@@ -82,15 +84,23 @@ export class Plates {
     const intro = d.a === 'intro', k = intro ? -9 : d.k, f = intro ? 0 : d.f;
     const freeze = !intro && d.tr && (d.tr.type === 'cut' || d.tr.type === 'wipe');
     // the pen's front: under a freeze it runs while the halves part (the incoming hold is the live layer)
-    const q = freeze ? sine((f - 0.30) / 0.55) : sine((f - 0.22) / 0.62);
-    const ql = freeze ? sine((f - 0.24) / 0.50) : sine((f - 0.16) / 0.56);
+    // the plates of this segment: the same blade (steps 1 and 2) is re-hatched under one front; a new geometry (the
+    // dip, the bend) is drawn once the old plate is gone, so two blades never cross on the paper
+    const A = this.items.find((it) => it.ready && it.idx[layout] === k), B = this.items.find((it) => it.ready && it.idx[layout] === k + 1);
+    const same = A && B && SAME[A.step] === SAME[B.step];
+    let q, ql, qa;
+    if (freeze) { q = sine((f - 0.30) / 0.55); ql = sine((f - 0.24) / 0.50); qa = q; }
+    else if (same || !A || !B) { q = sine((f - 0.22) / 0.62); ql = sine((f - 0.16) / 0.56); qa = q; }
+    else { qa = sine((f - 0.10) / 0.26); q = sine((f - 0.30) / 0.50); ql = sine((f - 0.26) / 0.40); }
     for (const it of this.items) {
       if (!it.ready) continue;
       const i = it.idx[layout];
       let mode = 'off', front = 1, line = 1;
-      if (i >= 0 && i === k) { if (f <= 0) mode = 'rest'; else if (freeze) mode = f < 0.2 ? 'rest' : 'off'; else { mode = 'leave'; front = q; } }
+      if (i >= 0 && i === k) { if (f <= 0) mode = 'rest'; else if (freeze) mode = f < 0.2 ? 'rest' : 'off'; else { mode = 'leave'; front = qa; } }
       else if (i >= 0 && i === k + 1) { if (f >= 1) mode = 'rest'; else { mode = 'arrive'; front = q; line = ql; } }
       if (!intro && d.atHold && d.hold === it.name) mode = 'rest';
+      const r = (PLACE[layout][it.step] || PLACE[layout].base).range || [0, 1];
+      if (mode === 'leave' || mode === 'arrive') front = r[0] + (r[1] - r[0]) * front;
       const st = `${mode}|${front.toFixed(4)}|${line.toFixed(4)}`;
       if (st === it.st) continue;
       it.st = st;

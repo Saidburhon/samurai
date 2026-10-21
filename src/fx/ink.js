@@ -83,7 +83,7 @@ export class Ink {
   // G3, the film (scenes/frame.js), every frame: which drawing lies on the paper ('hero', 'saya' for the bookend,
   // 'plan' for Yaki), its opacity, the reveal. crisp (inside a hold window): the stipple is redrawn from its dot list;
   // between holds it keeps its last raster, moved by the change of the paper's matrix (one CSS matrix, no redraw).
-  film(stage, pose, { draw = 'hero', alpha = 1, reveal = 2, front = 0, annot = true, crisp = true } = {}) {
+  film(stage, pose, { draw = 'hero', alpha = 1, reveal = 2, front = 0, annot = true, blade = 1, crisp = true } = {}) {
     const td = stage.td, W = stage.w, H = stage.h;
     if (!this.hair) { hairlines(); this.hair = true; }
     if (!this.groups) this.groups = { hero: this.hero, plan: document.getElementById('osh-plan'), saya: document.getElementById('osh-saya') };
@@ -97,6 +97,16 @@ export class Ink {
       this.draw = draw; this.stipM = null;
     }
     this.paper.style.opacity = alpha < 0.999 ? alpha.toFixed(3) : '';
+    // the drawn sword (outline, fittings and stipple, or the saya) fades under the lifted steel (§8 G2: registered or
+    // faded, never a second outline beside the steel); the dimensions and labels stay
+    const bo = blade < 0.999 ? Math.max(0, blade).toFixed(3) : '', bk = bo + '|' + draw;
+    if (this.bladeK !== bk) {
+      this.bladeK = bk;
+      if (!this.bladeEls) this.bladeEls = this.hero ? [...this.hero.querySelectorAll('.o-blade, .o-kosh')] : [];
+      for (const g of this.bladeEls) g.style.opacity = draw === 'hero' ? bo : '';
+      if (this.groups.saya) this.groups.saya.style.opacity = draw === 'saya' ? bo : '';
+      this.stip.style.opacity = bo;
+    }
     this.paper.classList.toggle('no-annot', !annot || draw !== 'hero');
     const S = (u, v) => { const p = svgToPaper(pose, u, v); return paperToScreen(td, W, H, p[0], p[1]); };
     const e0 = S(0, 0), eu = S(1, 0), ev = S(0, 1);

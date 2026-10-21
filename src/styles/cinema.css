@@ -236,14 +236,16 @@ html.film .s-yaki .hako, html.film .s-yaki .beat[data-beat="yaki.quench"] .hako 
 /* Y2 (§2.3): the four steps in sumi ink on the washi, the flow page's plates set inline (scenes/plates.js); the text
    sits on the paper in sumi */
 html.film .s-yaki, html.film .s-yaki .beat { --fg: var(--sumi); --fg2: var(--kurogane); --line: rgba(15, 14, 12, .22); color: var(--sumi); }
+html.film .s-yaki .big { color: var(--sumi); }
 html.film .s-yaki .line { color: var(--kurogane); }
 html.film .s-yaki .plate.pl { display: block; position: absolute; left: 0; top: 0; width: 0; height: 0; margin: 0; padding: 0; overflow: visible; pointer-events: none; grid-column: auto; }
 html.film .s-yaki .pl-in { position: absolute; left: 0; top: 0; transform-origin: 0 0; color: var(--sumi); }
 html.film .s-yaki .pl-in svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 html.film .s-yaki .pl-in g { stroke: #1A1714; }
-.pl-in .k1 { stroke-width: 1.15; opacity: .9; } .pl-in .k2 { stroke-width: .9; opacity: .84; } .pl-in .k3 { stroke-width: .75; opacity: .7; }
-.pl-in .k4 { stroke-width: .6; opacity: .66; } .pl-in .k5 { stroke-width: .5; opacity: .5; } .pl-in .k6 { stroke-width: .5; opacity: .42; }
-.pl-in .d1 { stroke-width: .7; opacity: .75; } .pl-in .d2 { stroke-width: .6; opacity: .6; } .pl-in .d3 { stroke-width: .55; opacity: .5; }
+/* (heavier than the flow page's white ink: sumi on paper, read at the capture's 0.75 DPR) */
+.pl-in .k1 { stroke-width: 1.5; opacity: .92; } .pl-in .k2 { stroke-width: 1.2; opacity: .86; } .pl-in .k3 { stroke-width: 1; opacity: .76; }
+.pl-in .k4 { stroke-width: .9; opacity: .72; } .pl-in .k5 { stroke-width: .8; opacity: .58; } .pl-in .k6 { stroke-width: .8; opacity: .52; }
+.pl-in .d1 { stroke-width: .9; opacity: .8; } .pl-in .d2 { stroke-width: .8; opacity: .66; } .pl-in .d3 { stroke-width: .75; opacity: .58; }
 .pl-in .cl { stroke-dasharray: 14 3 1.5 3; } .pl-in .dash { stroke-dasharray: 2 3; } .pl-in .dash2 { stroke-dasharray: 2 2; } .pl-in .hid { stroke-dasharray: 5 3; }
 .pl-in .dot { stroke-width: 1.1; opacity: .55; } .pl-in .fill { fill: #1A1714; stroke: none; }
 /* 研: the rub hint near the blade (B11), "even after launch" under the statement (B13) */

@@ -28,8 +28,11 @@ const BASE = {
   glint: null, lampPos: null, sign: null, ground: 'washi',
 };
 const hero = {
-  land: { cam: { mode: 'td', A: 'K', a: [0.072, 0.698], B: 'T', b: [0.921, 0.258], fov: 20, lift: 1.05 }, ink: { fit: 'hero', off: [8, 24] } },
-  port: { cam: { mode: 'td', A: 'K', a: [0.626, 0.955], B: 'T', b: [0.856, 0.123], fov: 24, lift: 0.95 }, ink: { fit: 'hero', off: [13, 5] }, lookOver: { nie: 300 } },
+  // (final pass, §8 G2: the drawing registers with the steel (no offset) and its blade fades under the steel during
+  // the lift; the dimensions, the tsuba roundel and the labels stay on the paper. r1 read the offset ink blade as a
+  // second, misregistered outline)
+  land: { cam: { mode: 'td', A: 'K', a: [0.072, 0.698], B: 'T', b: [0.921, 0.258], fov: 20, lift: 1.05 }, ink: { fit: 'hero', off: [0, 0], blade: 0 } },
+  port: { cam: { mode: 'td', A: 'K', a: [0.626, 0.955], B: 'T', b: [0.856, 0.123], fov: 24, lift: 0.95 }, ink: { fit: 'hero', off: [0, 0], blade: 0 }, lookOver: { nie: 300 } },
 };
 const S = {};
 S['mei.hero'] = {
@@ -50,8 +53,8 @@ S.intro = {
 // the yokote, which the macro mirror (looks.js macro) now draws as a crisp line.
 S['mei.promise'] = {
   ...BASE, look: 'washi-macro', lookOver: { uGlintCol: [0, 0, 0], lampSpec: 0.12 }, pose: { roll: -0.30, pitch: 0, sori: 1 }, shadow: 1, glint: { s: 0.93, zf: 0.55, dist: 7 }, ground: 'washi',
-  land: { cam: { mode: 'td', A: { s: 0.50 }, a: [-0.04, 0.64], B: 'T', b: [0.90, 0.64], fov: 16, lift: 1.05 }, ink: { fit: 'hero', off: [8, 24], annot: false } },
-  port: { cam: { mode: 'td', A: { s: 0.62 }, a: [-0.06, 0.56], B: 'T', b: [0.90, 0.56], fov: 20, lift: 0.95 }, ink: { fit: 'hero', off: [13, 5], annot: false } },
+  land: { cam: { mode: 'td', A: { s: 0.50 }, a: [-0.04, 0.64], B: 'T', b: [0.90, 0.64], fov: 16, lift: 1.05 }, ink: { fit: 'hero', off: [0, 0], annot: false, blade: 0 } },
+  port: { cam: { mode: 'td', A: { s: 0.62 }, a: [-0.06, 0.56], B: 'T', b: [0.90, 0.56], fov: 20, lift: 0.95 }, ink: { fit: 'hero', off: [0, 0], annot: false, blade: 0 } },
 };
 // 映 B2: the prototype's utsuri camera, exactly (target bladePoint(0.53) + (−1.50, 1.72, 0.60)); lamp and sign as there
 S['utsuri.ios'] = {
@@ -174,12 +177,14 @@ const toki = (hour, sun, land, port) => ({
   land: { cam: { mode: 'td', A: 'tsuba', a: land.hub, B: 'T', hand: { hour, len: land.len }, fov: 20, lift: 0.12 } },
   ...(port ? { port: { cam: { mode: 'td', A: 'tsuba', a: port.hub, B: 'T', hand: { hour, lenW: port.lenW }, fov: 24, lift: 0.12 } } } : {}),
 });
-S['toki.0900'] = toki(9, { az: 135, el: 45 }, { hub: [0.62, 0.56], len: 0.32 }, { hub: [0.5, 0.62], lenW: 0.40 });
+// (final pass: the dial is 0.31 H on the desktop, the hand 0.25 H, so its numerals and arcs stay clear of the nav and the
+// rail, r1)
+S['toki.0900'] = toki(9, { az: 135, el: 45 }, { hub: [0.62, 0.545], len: 0.25 }, { hub: [0.5, 0.62], lenW: 0.40 });
 // (G3: B18 keeps B17's framing; its push-in on the hub, camera height × 0.55 at (.70, .56), waits for the dial drawn
 // into a canvas at G4: the SVG dial re-rasterised every frame of a zoom cost 0.5–2 s per frame on a software renderer)
-S['toki.1130'] = toki(11.5, { az: 172, el: 58 }, { hub: [0.62, 0.56], len: 0.32 });
+S['toki.1130'] = toki(11.5, { az: 172, el: 58 }, { hub: [0.62, 0.545], len: 0.25 });
 // (phone: the dial's push-in is milder and its hub lower, so the numerals stay clear of the clocks and their line, r1)
-S['toki.1400'] = toki(14, { az: 210, el: 40 }, { hub: [0.62, 0.56], len: 0.32 }, { hub: [0.5, 0.665], lenW: 0.52 });
+S['toki.1400'] = toki(14, { az: 210, el: 40 }, { hub: [0.62, 0.545], len: 0.25 }, { hub: [0.5, 0.665], lenW: 0.52 });
 
 // Addendum 1, the Temur poster: the carved plaster lit low from the left; the sheathed sword along the bottom edge
 S['temur.quote'] = {
@@ -205,8 +210,8 @@ S['bookend.drawing'] = {
 };
 S['bookend.steel'] = {
   ...BASE, look: 'washi', pose: { roll: -0.30, pitch: 0, sori: 1 }, saya: 1, sheath: 1, shadow: 1, ground: 'washi', glint: { s: 0.78, zf: 0.60, dist: 8 },
-  land: { cam: { mode: 'td', ...bookAnch.land, fov: 20, lift: 1.05 }, ink: { fit: 'bookend.steel', draw: 'saya', off: [8, 24] } },
-  port: { cam: { mode: 'td', ...bookAnch.port, fov: 24, lift: 0.95 }, ink: { fit: 'bookend.steel', draw: 'saya', off: [13, 5] }, lookOver: { nie: 300 } },
+  land: { cam: { mode: 'td', ...bookAnch.land, fov: 20, lift: 1.05 }, ink: { fit: 'bookend.steel', draw: 'saya', off: [0, 0], blade: 0 } },
+  port: { cam: { mode: 'td', ...bookAnch.port, fov: 24, lift: 0.95 }, ink: { fit: 'bookend.steel', draw: 'saya', off: [0, 0], blade: 0 }, lookOver: { nie: 300 } },
 };
 export const SHOTS = S;
 

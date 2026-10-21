@@ -23,6 +23,8 @@ import { convert, MdError } from '../pages/blog-md.mjs';
 import { blogIndex, feedPath } from '../pages/blog-feed.mjs';
 import { BANNED } from '../../worker/copy-rules.js';
 
+// the argument is a report path, not a base URL (seo-check takes a URL; this one reads public/ directly)
+if (/^[a-z]+:/i.test(process.argv[2] || '')) { console.error(`blog-check: "${process.argv[2]}" looks like a URL; the argument is a report path (the check reads public/)`); process.exit(2); }
 const out = process.argv[2] || '.cache/blog-check.json';
 const fails = [], notes = [];
 const fail = (w, m) => fails.push(`${w}: ${m}`);

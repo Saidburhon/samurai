@@ -2,6 +2,7 @@
 // from content/site.json. Shared by build-langs.mjs (the landing), build-pages.mjs (every other page), the JSON-LD,
 // the sitemaps, llms.txt, the lint and the QA crawler, so a URL or a fact is written in one place only.
 import { readFileSync } from 'node:fs';
+import { CATALOGUE_BASE } from '../src/shared/catalogue.js';
 
 export const SITE = 'https://qilich.com';
 // Uzbek is the root: the primary market's page carries the domain (SEO-GEO-DECISIONS: no redirect by language)
@@ -51,6 +52,12 @@ export function langNav(current, hrefs = HOME, cls = 'lang') {
   }).join('');
   return `<nav class="${cls}" aria-label="${LANG_LABEL}">${links}</nav>`;
 }
+
+// The seven services the landing and the About page list ("What we build"), in their order, each linked to its
+// Solutions page: a group, or the one solution that is the service. Japanese: the chat-bot line goes to the AI group
+// (the Telegram group is not offered on /ja/: scripts/pages/ja-market.mjs).
+export const SERVICE_TARGETS = ['mobile', 'web', 'telegram', 'cloud-backend-api', 'biz-desktop-app', 'iot', 'ai'];
+export const serviceHref = (i, lang) => `${CATALOGUE_BASE[lang]}${lang === 'ja' && SERVICE_TARGETS[i] === 'telegram' ? 'ai' : SERVICE_TARGETS[i]}/`;
 
 // <head> tags shared by every page: canonical, hreflang (the page's existing twins plus x-default), Open Graph
 export function headLinks({ lang, path, twins, title, description, ogTitle, ogDescription, ogImage, type = 'website' }) {

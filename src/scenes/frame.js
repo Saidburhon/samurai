@@ -107,7 +107,7 @@ export class Film {
     if (d.atHold && d.layout && !d.intro && d.pos != null) this.neighbours(d);
     if (!this.dialR) {
       const h17 = this.R('toki.0900', layout);
-      this.dialR = (layout === 'land' ? 0.40 * st.h : 0.40 * st.w) / (h17.sol.td.f / h17.sol.td.Hc);
+      this.dialR = (layout === 'land' ? 0.31 * st.h : 0.40 * st.w) / (h17.sol.td.f / h17.sol.td.Hc);
     }
     const sw = same || p.cam >= (tr.swap || 0.5);
     const H = sw ? B : A; // the hold whose discrete keys (visibility, programs) are live
@@ -267,9 +267,11 @@ export class Film {
         alpha *= dip * dip;
         sU.uWordRowA.value = q < 0.5 ? sa.row : sb.row; sU.uWordMix.value = 0; sU.uWordStretch.value = 1; sU.uWordSlide.value = 0;
       } else {
-        const m = e.sign;
-        sU.uWordRowA.value = sa.row; sU.uWordRowB.value = sb.row; sU.uWordMix.value = m;
-        sU.uWordStretch.value = 1 + 0.6 * Math.sin(Math.PI * m); sU.uWordSlide.value = 0.3;
+        // one word at a time (r1: two rows mixed read as 'VeTelegram'): the old word dips out, the new one in
+        const q = p.sign, dip = Math.min(1, Math.abs(q - 0.5) / 0.22);
+        alpha *= dip * dip;
+        sU.uWordRowA.value = q < 0.5 ? sa.row : sb.row; sU.uWordMix.value = 0;
+        sU.uWordStretch.value = 1; sU.uWordSlide.value = 0;
       }
     } else {
       const h = sa || sb, x = place(h);
@@ -284,16 +286,19 @@ export class Film {
   // the drawing on the paper: exact while the camera looks straight down, faded where one side has none
   inkFrame(A, B, e, d, reveal, isRev, front) {
     const ia = A.ink, ib = B.ink, t = e.ink;
-    let pose = null, draw = 'hero', alpha = 0, annot = true;
+    let pose = null, draw = 'hero', alpha = 0, annot = true, blade = 1;
     if (ia && ib && (ia.draw || 'hero') === (ib.draw || 'hero') && A.inkPose && B.inkPose) {
       const a = A.inkPose, b = B.inkPose;
       pose = A === B ? a : { O: lerpA(a.O, b.O, t), a: angLerp(a.a, b.a, t), k: logLerp(a.k, b.k, t) };
       draw = ia.draw || 'hero'; alpha = lerp(ia.alpha ?? 1, ib.alpha ?? 1, t); annot = (t < 0.5 ? ia : ib).annot !== false;
+      blade = lerp(ia.blade ?? 1, ib.blade ?? 1, t);
     } else if (ia || ib) {
       const h = ia ? A : B, x = h.ink;
-      pose = h.inkPose; draw = x.draw || 'hero'; alpha = (x.alpha ?? 1) * (ia ? 1 - t : t); annot = x.annot !== false;
+      pose = h.inkPose; draw = x.draw || 'hero'; alpha = (x.alpha ?? 1) * (ia ? 1 - t : t); annot = x.annot !== false; blade = x.blade ?? 1;
     }
-    this.ink.film(this.st, pose, { draw, alpha, reveal: isRev ? reveal : 2, front, annot, crisp: !!d.settled });
+    // (blade: the drawing of the sword itself, faded under the lifted steel; annot false and no blade: nothing to draw)
+    if (!annot && blade <= 0.002) alpha = 0;
+    this.ink.film(this.st, pose, { draw, alpha, reveal: isRev ? reveal : 2, front, annot, blade, crisp: !!d.settled });
   }
 
   // the DOM part of the paper: the ground sheets, the dial, the plaster's light

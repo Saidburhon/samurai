@@ -88,7 +88,8 @@ for (const lang of LANGS) {
   }
 }
 const report = { at: new Date().toISOString(), pages, fails };
-if (process.argv[2]) writeFileSync(process.argv[2], JSON.stringify(report, null, 1));
+if (/^[a-z]+:/i.test(process.argv[2] || '')) console.error(`solutions-data-check: "${process.argv[2]}" looks like a URL; the argument is a report path, so no report was written`);
+else if (process.argv[2]) writeFileSync(process.argv[2], JSON.stringify(report, null, 1));
 for (const f of fails.slice(0, 60)) console.log('  FAIL  ' + f);
 console.log(fails.length ? `solutions-data-check: ${fails.length} failure(s) over ${pages} pages` : `solutions-data-check: ok (${pages} pages)`);
 process.exit(fails.length ? 1 : 0);

@@ -5,23 +5,27 @@
 const Q = window.__qilich || (window.__qilich = {});
 let ctx = null, bus = null, noiseBuf = null, enabled = false;
 
+// the master chain and the shared noise on a context (the live one, or an offline one for the level check)
+function rig(c) {
+  const comp = c.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 3; comp.attack.value = 0.003; comp.release.value = 0.25;
+  const lim = c.createDynamicsCompressor();
+  lim.threshold.value = -6; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.001; lim.release.value = 0.08;
+  const trim = c.createGain(); trim.gain.value = 0.5;
+  comp.connect(lim); lim.connect(trim); trim.connect(c.destination);
+  // one second of white noise, shared by every recipe
+  const nb = c.createBuffer(1, c.sampleRate, c.sampleRate);
+  const ch = nb.getChannelData(0);
+  let seed = 7;
+  for (let i = 0; i < ch.length; i++) { seed = (seed * 16807) % 2147483647; ch[i] = (seed / 2147483647) * 2 - 1; }
+  return { bus: comp, noiseBuf: nb };
+}
 function build() {
   if (ctx) return ctx;
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return null;
   try { ctx = new AC({ latencyHint: 'interactive' }); } catch (e) { return null; }
-  const comp = ctx.createDynamicsCompressor();
-  comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 3; comp.attack.value = 0.003; comp.release.value = 0.25;
-  const lim = ctx.createDynamicsCompressor();
-  lim.threshold.value = -6; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.001; lim.release.value = 0.08;
-  const trim = ctx.createGain(); trim.gain.value = 0.5;
-  comp.connect(lim); lim.connect(trim); trim.connect(ctx.destination);
-  bus = comp;
-  // one second of white noise, shared by every recipe
-  noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-  const ch = noiseBuf.getChannelData(0);
-  let seed = 7;
-  for (let i = 0; i < ch.length; i++) { seed = (seed * 16807) % 2147483647; ch[i] = (seed / 2147483647) * 2 - 1; }
+  ({ bus, noiseBuf } = rig(ctx));
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
     if (document.hidden) ctx.suspend().catch(() => {}); else if (enabled) ctx.resume().catch(() => {});
@@ -78,17 +82,28 @@ const recipes = {
   // chin: high partials with a 60 ms decay and a 40 ms wooden knock (the toggle's own confirmation)
   chin() {
     const t = ctx.currentTime + 0.005;
-    for (const [f, a] of [[3100, 0.03], [5600, 0.018], [8200, 0.01]]) {
+    for (const [f, a] of [[3100, 0.1], [5600, 0.06], [8200, 0.035]]) {
       const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
       const g = ctx.createGain();
       g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(a, t + 0.001); g.gain.exponentialRampToValueAtTime(1e-4, t + 0.06 * 3);
       o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.2);
     }
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300;
-    noise(t, 0.04, 0.12, [lp]);
+    noise(t, 0.04, 0.35, [lp]);
   },
 };
 
+// dev/QA: the peak (dBFS) of a recipe through the same chain, rendered offline (no sound, no live context)
+Q.sfxPeak = async (name) => {
+  const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const oc = new OC(1, 44100 * 5, 44100);
+  const live = [ctx, bus, noiseBuf];
+  ctx = oc; ({ bus, noiseBuf } = rig(oc));
+  try { recipes[name](); } finally { [ctx, bus, noiseBuf] = live; }
+  const buf = await oc.startRendering(), d = buf.getChannelData(0);
+  let pk = 0; for (let i = 0; i < d.length; i++) pk = Math.max(pk, Math.abs(d[i]));
+  return +(20 * Math.log10(pk || 1e-9)).toFixed(1);
+};
 export function sfx(name) {
   if (!enabled || !ctx || !recipes[name]) return;
   if (ctx.state !== 'running') { ctx.resume().then(() => { try { recipes[name](); } catch (e) { /* ignore */ } }).catch(() => {}); return; }

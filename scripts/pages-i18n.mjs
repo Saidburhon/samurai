@@ -17,6 +17,8 @@ export const T = {
     city: 'Toshkent, Oʻzbekiston', tz: 'UTC+5, Tokio bilan farq 4 soat', now: 'hozir',
     langNames: { uz: 'oʻzbek', ru: 'rus', en: 'ingliz', ja: 'yapon' }, listSep: ', ',
     services: ['iOS va Android ilovalar', 'Saytlar va veb-platformalar', 'Telegram-botlar', 'Backend va integratsiyalar', 'Desktop ilovalar', 'IoT', 'AI integratsiyasi'],
+    // after the service list on the About page: the catalogue and the blog, linked in the text
+    svcMore: 'Har bir yechimning narxi va muddati: <a href="{sol}">Yechimlar va narxlar</a>. Narx, muddat va loyiha qanday borishi haqida maqolalar: <a href="{blog}">Qilich blogi</a>.',
     // the contact form
     fmName: 'Ismingiz', fmContact: 'Telefon yoki email', fmCompany: 'Kompaniya', fmMessage: 'Nima qurmoqchisiz?', fmOptional: 'ixtiyoriy',
     fmSend: 'Yuborish', fmNoJs: 'Shakl xat dasturingizni ochadi: xatni oʻzingiz yuborasiz.',
@@ -40,6 +42,7 @@ export const T = {
     city: 'Ташкент, Узбекистан', tz: 'UTC+5, на 4 часа позже Токио', now: 'сейчас',
     langNames: { uz: 'узбекский', ru: 'русский', en: 'английский', ja: 'японский' }, listSep: ', ',
     services: ['Приложения для iOS и Android', 'Сайты и веб-платформы', 'Telegram-боты', 'Бэкенд и интеграции', 'Десктопные приложения', 'IoT', 'Интеграция ИИ'],
+    svcMore: 'Цены и сроки каждого решения: <a href="{sol}">Решения и цены</a>. Статьи о ценах, сроках и ходе проекта: <a href="{blog}">блог Qilich</a>.',
     fmName: 'Ваше имя', fmContact: 'Телефон или почта', fmCompany: 'Компания', fmMessage: 'Что нужно построить?', fmOptional: 'необязательно',
     fmSend: 'Отправить', fmNoJs: 'Форма откроет ваше почтовое приложение: письмо отправляете вы сами.',
     fmConsent: 'Эти данные мы используем, чтобы ответить на запрос, подготовить смету и связаться с вами.', fmAgree: 'Соглашаюсь с <a href="{privacy}">политикой конфиденциальности</a>',
@@ -61,6 +64,7 @@ export const T = {
     city: 'Tashkent, Uzbekistan', tz: 'UTC+5, four hours behind Tokyo', now: 'now',
     langNames: { uz: 'Uzbek', ru: 'Russian', en: 'English', ja: 'Japanese' }, listSep: ', ',
     services: ['iOS and Android apps', 'Websites and web platforms', 'Telegram bots', 'Backend and integrations', 'Desktop apps', 'IoT', 'AI integration'],
+    svcMore: 'The price and timeline of every solution: <a href="{sol}">Solutions and prices</a>. Articles on costs, timelines and how a project runs: <a href="{blog}">the Qilich blog</a>.',
     fmName: 'Your name', fmContact: 'Phone or email', fmCompany: 'Company', fmMessage: 'What do you need built?', fmOptional: 'optional',
     fmSend: 'Send', fmNoJs: 'The form opens your email app; you send the message yourself.',
     fmConsent: 'We use these details to answer your enquiry, prepare an estimate and stay in touch with you.', fmAgree: 'I agree to the <a href="{privacy}">privacy policy</a>',
@@ -82,6 +86,7 @@ export const T = {
     city: 'ウズベキスタン・タシケント', tz: 'UTC+5（日本より4時間遅れ）', now: '現在',
     langNames: { uz: 'ウズベク語', ru: 'ロシア語', en: '英語', ja: '日本語' }, listSep: '、',
     services: ['iOS・Androidアプリ', 'Webサイト・Webシステム', 'チャットボット', 'バックエンド・API連携', 'デスクトップアプリ', 'IoTシステム', 'AIの導入・連携'],
+    svcMore: '各ソリューションの費用と開発期間は<a href="{sol}">開発ソリューションと費用の目安</a>に、開発の進め方に関する記事は<a href="{blog}">Qilichのブログ</a>に掲載しています。',
     fmName: 'お名前', fmContact: 'メールアドレスまたは電話番号', fmCompany: '会社名', fmMessage: 'ご相談内容', fmOptional: '任意',
     fmSend: '送信する', fmNoJs: '送信すると、お使いのメールソフトが開きます。そのままメールを送信してください。',
     fmConsent: 'ご入力いただいた情報は、ご相談への回答、お見積もりの作成、その後のご連絡に利用します。', fmAgree: '<a href="{privacy}">プライバシーポリシー</a>に同意します（ウズベキスタン・米国など外国での<span class="nw">取り扱い</span>を含む）',
