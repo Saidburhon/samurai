@@ -42,12 +42,39 @@ export class Rays {
     for (const [o, m] of saved) o.material = m;
     for (const [o, v] of hv) o.visible = v;
     const lp = this.disc.getWorldPosition(new Vector3()).project(camera);
-    this.U.uLight.value.set(lp.x * 0.5 + 0.5, lp.y * 0.5 + 0.5);
+    const L = this.U.uLight.value.set(lp.x * 0.5 + 0.5, lp.y * 0.5 + 0.5);
+    // The box the rays can reach (G1 r2): a pixel samples the occluder from (1 − uDensity) of its way to the light up
+    // to itself, and only the disc is lit there, so no pixel farther than 1 / (1 − uDensity) of the disc's own extent
+    // from the light receives any. The blur and the composite are scissored to it (the full-frame composite was most
+    // of the rays' cost in software: B14's hold frame).
+    const k = 1.06 / (1 - this.U.uDensity.value), m = this.disc.matrixWorld, R = this.discU.uR.value;
+    let x0 = 1, y0 = 1, x1 = 0, y1 = 0;
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * Math.PI * 2, p = new Vector3(R * Math.cos(a), R * Math.sin(a), 0).applyMatrix4(m).project(camera);
+      const u = L.x + ((p.x * 0.5 + 0.5) - L.x) * k, v = L.y + ((p.y * 0.5 + 0.5) - L.y) * k;
+      x0 = Math.min(x0, u); x1 = Math.max(x1, u); y0 = Math.min(y0, v); y1 = Math.max(y1, v);
+    }
+    this.box = [Math.max(0, x0), Math.max(0, y0), Math.min(1, x1), Math.min(1, y1)];
   }
   draw() {
-    const r = this.r;
-    r.setRenderTarget(this.rtBlur); r.setClearColor(0x000000, 0); r.clear(); r.render(this.scene, this.cam); r.setRenderTarget(null);
-    r.render(this.comp, this.cam);
+    const r = this.r, B = this.box || [0, 0, 1, 1];
+    const rw = this.rt.width, rh = this.rt.height;
+    this.rtBlur.scissorTest = false;
+    r.setRenderTarget(this.rtBlur); r.setClearColor(0x000000, 0); r.clear();
+    if (B[2] > B[0] && B[3] > B[1]) {
+      const sx = Math.max(0, Math.floor(B[0] * rw) - 2), sy = Math.max(0, Math.floor(B[1] * rh) - 2);
+      this.rtBlur.scissor.set(sx, sy, Math.min(rw - sx, Math.ceil((B[2] - B[0]) * rw) + 4), Math.min(rh - sy, Math.ceil((B[3] - B[1]) * rh) + 4));
+      this.rtBlur.scissorTest = true;
+      r.setRenderTarget(this.rtBlur); r.render(this.scene, this.cam);
+      this.rtBlur.scissorTest = false;
+      r.setRenderTarget(null);
+      // the composite: setScissor takes the default framebuffer's logical px (three multiplies by the pixel ratio)
+      const sz = r.getSize(new Vector2());
+      r.setScissorTest(true);
+      r.setScissor(B[0] * sz.x - 2, B[1] * sz.y - 2, (B[2] - B[0]) * sz.x + 4, (B[3] - B[1]) * sz.y + 4);
+      r.render(this.comp, this.cam);
+      r.setScissorTest(false);
+    } else r.setRenderTarget(null);
     this.ready = true;
   }
 }

@@ -241,12 +241,13 @@ export class Stage {
   // straight spike seen point-on; along the guard's own normal (the base tangent) the same blade spread into the
   // frame-04 crescent (the tip leaves the tangent by 4 sagittae). (b) Off the axis: 14° towards the edge side and
   // 8° above. (p) The prototype's camera of frame 04, for reference.
-  solveGuard({ cand = 'a', frac = 0.47, off = [0, 0], dist = 30, side = 14, up = 8 }) {
+  solveGuard({ cand = 'a', frac = 0.47, off = [0, 0], dist = 30, side = 14, up = 8, aim = 1 }) {
     const c = this.camera;
     const tc = this.point('tsuba');
     const axis = this.dirH(v3(1, 0, 0)).normalize();
     let dir;
-    if (cand === 'a') dir = this.point('T').sub(tc).normalize();
+    // (aim < 1: the camera looks back along the chord from the guard to the blade point at s = aim, dev)
+    if (cand === 'a') dir = (aim < 1 ? this.point({ s: aim, zf: 0.5 }) : this.point('T')).sub(tc).normalize();
     else if (cand === 'p') { // the prototype's camera, between the guard normal and the tip direction (frame 04)
       const tipW = this.world(v3(G.B.L, 0, 0.02)), tipDir = tipW.clone().sub(tc).normalize();
       dir = axis.clone().lerp(tipDir, 0.5).normalize().add(v3(0, 0.014, -0.006)).normalize();
@@ -339,8 +340,12 @@ export class Stage {
     // discarded, so the sword is not drawn at all (§3.6: what is invisible is not drawn)
     const none = this.U.uReveal.value <= 1e-4;
     if (none) this.sword.visible = false;
+    // the floor at gain 0 is the ground's own indigo: not drawn (B14, G1 r2: a full-screen pass of ~30 ms in software)
+    const noFloor = this.floor && this.floor.visible && this.floorU.uGain.value < 0.002;
+    if (noFloor) this.floor.visible = false;
     r.render(this.scene, this.camera);
     if (none) this.sword.visible = true;
+    if (noFloor) this.floor.visible = true;
     if (rays) this.rays.draw();
     r.autoClear = true;
     return performance.now() - t0;

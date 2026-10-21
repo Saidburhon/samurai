@@ -86,7 +86,7 @@ S['togi.front'] = {
 };
 // 鍔 B14: the opponent's view; two candidates for the horn (§2.5), chosen at G1 next to frame 04: (a), see hold()
 S['tsuba.guard'] = {
-  ...BASE, look: 'ai', pose: { roll: 0, pitch: 0, sori: 0.3 }, ground: 'ai', rays: 1, floor: 1, floorGain: 0.03,
+  ...BASE, look: 'ai', pose: { roll: 0, pitch: 0, sori: 0.3 }, ground: 'ai', rays: 1, floor: 1, floorGain: 0,
   lampPos: { tsuba: true }, glintDir: 'axis-',
   land: { cam: { mode: 'guard', cand: 'a', frac: 0.47, off: [-0.12, 0] } },
   port: { cam: { mode: 'guard', cand: 'a', frac: 0.36, off: [0, -0.06] } },
