@@ -113,7 +113,7 @@ html[lang=ja] .rel-t { font-weight: 600; font-size: 17px; line-height: 1.5; }
 
 /* typesetting (scripts/pages/blog-type.mjs): the drawn arrow, a figure kept whole, a hidden column name */
 .to { display: inline-block; width: 1.25em; height: .34em; margin: 0 .08em; vertical-align: .16em; fill: currentColor; overflow: visible; }
-.fg { white-space: nowrap; }
+.fg, .nw { white-space: nowrap; }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* Japanese text runs to the full measure (kinsoku by line-break: strict); phrase breaking stays for the h1, the h2s,
    the lede and the tables, where a split word would show */
@@ -165,7 +165,7 @@ html[lang=ja] .ai-line { font-size: 17px; line-height: 1.8; }
   .rule { margin: 0; }
   .post > *, .post-head, .related, .ai-box, .pn, .all { grid-column: 1 / -1; }
   .post { grid-template-columns: minmax(0, 1fr); }
-  .post-head { margin-top: 44px; padding-right: 40px; padding-bottom: 26px; }
+  .post-head { margin-top: 44px; padding-right: 48px; padding-bottom: 26px; }
   .pg .post-head h1 { font-size: 30px; line-height: 1.1; }
   html[lang=ru] .pg .post-head h1 { font-size: 29px; }
   html[lang=ja] .pg .post-head h1 { font-size: 23px; line-height: 1.45; }

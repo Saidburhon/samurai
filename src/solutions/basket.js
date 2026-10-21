@@ -8,6 +8,11 @@ const write = (v) => { try { localStorage.setItem(KEY, JSON.stringify(v)); } cat
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const PLUS = '<svg class="plus" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 .5v9M.5 5h9"/></svg>';
 const TICK = '<svg class="tick" viewBox="0 0 12 10" aria-hidden="true"><path d="M1 5.4l3.4 3.2L11 1.2"/></svg>';
+// "Смета: 3 решения": B.n is one string (uz, ja) or the plural forms [one, few, many] (ru) or [one, other] (en)
+const ruCat = (n) => (n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : 2);
+const count = (forms, n, lang) => (Array.isArray(forms) ? forms[lang === 'ru' ? ruCat(n) : n === 1 ? 0 : 1] || forms[forms.length - 1] : forms).replace('{n}', n);
+// a figure never breaks inside (a range with its unit); lines break between figures
+const nw = (s) => `<span class="nw">${esc(s)}</span>`;
 const STRIKE = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg>';
 
 export function initBasket(cfg) {
@@ -40,14 +45,18 @@ export function initBasket(cfg) {
     try { const { loadModel, totals } = await import('./engine.js'); const m = await loadModel(cfg.data); r = totals(m, items, lang, cfg.rate); } catch { r = null; }
     if (my !== seq) return;
     if (!r || !r.count) { tray.hidden = true; return; }
-    const list = r.lines.map((x) => `<li data-id="${esc(x.id)}"><span class="t">${esc(x.title)}</span><span class="sw" role="group"><button type="button" data-scope="mvp" aria-pressed="${x.scope === 'mvp'}">${esc(T.mvp)}</button><button type="button" data-scope="full" aria-pressed="${x.scope === 'full'}">${esc(T.full)}</button></span><span class="f mono">${esc(x.weeks)} · ${esc(x.price)}</span><button type="button" class="rm" aria-label="${esc(B.remove)}: ${esc(x.title)}">${STRIKE}</button></li>`).join('');
+    const list = r.lines.map((x) => `<li data-id="${esc(x.id)}"><span class="t">${esc(x.title)}</span><span class="sw" role="group"><button type="button" data-scope="mvp" aria-pressed="${x.scope === 'mvp'}">${esc(T.mvp)}</button><button type="button" data-scope="full" aria-pressed="${x.scope === 'full'}">${esc(T.full)}</button></span><span class="f mono">${nw(x.weeks)} · ${nw(x.price)}</span><button type="button" class="rm" aria-label="${esc(B.remove)}: ${esc(x.title)}">${STRIKE}</button></li>`).join('');
     const ids = r.lines.map((x) => x.id).join(',');
     const body = [B.body, ...r.lines.map((x) => `- ${x.title} (${x.scope === 'mvp' ? T.mvp : T.full}): ${x.weeks}, ${x.price}`), `${B.total}: ${r.weeks}, ${r.price[0]} (${r.price[1]})`, location.href.split('?')[0]].join('\n');
     tray.hidden = false;
     document.documentElement.classList.add('has-tray');
     tray.classList.toggle('open', open);
-    tray.innerHTML = `<div class="tr-bar"><p class="tr-n">${esc(B.n.replace('{n}', r.count))}</p><p class="tr-sum mono"><b>${esc(r.price[0])}</b> <span>${esc(r.price[1])}</span> · ${esc(r.weeks)}${r.saving ? ` · <span class="sv">${esc(B.shared)}</span>` : ''}</p><button type="button" class="tr-tg mono" aria-expanded="${open}" aria-controls="tray-body">${esc(open ? B.close : B.open)}</button></div>
-<div class="tr-body" id="tray-body"${open ? '' : ' hidden'}><ol class="tr-list">${list}</ol><p class="tr-acts"><a class="btn" href="${esc(cfg.samurai)}?solutions=${esc(ids)}"><span>${esc(B.check)}</span><svg aria-hidden="true"><use href="#kissaki"/></svg></a><a class="u" href="mailto:${esc(T.email)}?subject=${encodeURIComponent(B.subject)}&amp;body=${encodeURIComponent(body)}">${esc(B.send)}</a><button type="button" class="u clr">${esc(B.clear)}</button></p></div>`;
+    // the bar: the count, the total in the page's currency, the other currency and the weeks (a phone shows only the
+    // count, the total and Open while the tray is closed); the shared-parts note on its own line; the list scrolls
+    // inside the sheet while its actions stay in view under it
+    const n = count(B.n, r.count, lang);
+    tray.innerHTML = `<div class="tr-bar"><p class="tr-n"><span class="tr-nl">${esc(n)}</span><span class="tr-ns" aria-hidden="true">${esc((B.ns || '{n}').replace('{n}', r.count))}</span></p><p class="tr-sum mono"><b class="nw">${esc(r.price[0])}</b> <span class="tr-x"><span class="nw">${esc(r.price[1])}</span> · ${nw(r.weeks)}</span></p><button type="button" class="tr-tg mono" aria-expanded="${open}" aria-controls="tray-body">${esc(open ? B.close : B.open)}</button>${r.saving ? `<p class="sv mono">${esc(B.shared)}</p>` : ''}</div>
+<div class="tr-sheet" id="tray-body"${open ? '' : ' hidden'}><div class="tr-body"><ol class="tr-list">${list}</ol></div><p class="tr-acts"><a class="btn" href="${esc(cfg.samurai)}?solutions=${esc(ids)}"><span>${esc(B.check)}</span><svg aria-hidden="true"><use href="#kissaki"/></svg></a><a class="u" href="mailto:${esc(T.email)}?subject=${encodeURIComponent(B.subject)}&amp;body=${encodeURIComponent(body)}">${esc(B.send)}</a><button type="button" class="u clr">${esc(B.clear)}</button></p></div>`;
   }
   tray.addEventListener('click', (e) => {
     const t = e.target.closest('button');

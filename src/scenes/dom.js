@@ -25,15 +25,19 @@ export class Dom {
     this.sections = [...document.querySelectorAll('#story > .scene')];
     for (const sec of this.sections) {
       const all = SECTION_BEATS(sec.id);
+      // the blocks: a section's children; a .lines group or a beat's container (.beat: a full-screen box in the
+      // film) gives its children instead, each with the beats of its container, so that every block rises through a
+      // mask of its own size (a full-screen block carried its text across the whole screen and through the nav, G3)
       const kids = [];
-      for (const el of sec.children) {
-        if (el.matches('.plate, .words, .dial-plate')) continue;
-        if (el.matches('.lines')) { kids.push(...el.children); continue; }
-        kids.push(el);
-      }
-      for (const el of kids) {
+      const collect = (el, beats) => {
+        if (el.matches('.plate, .words, .dial-plate')) return;
+        if (el.matches('.lines, .beat')) { const b = el.dataset.beat ? el.dataset.beat.split(/\s+/) : beats; for (const c of el.children) collect(c, b); return; }
+        kids.push([el, beats]);
+      };
+      for (const el of sec.children) collect(el, null);
+      for (const [el, inh] of kids) {
         const own = OWN.find(([q]) => el.matches(q));
-        const beats = own ? own[1] : el.dataset.beat ? el.dataset.beat.split(/\s+/) : all;
+        const beats = own ? own[1] : el.dataset.beat ? el.dataset.beat.split(/\s+/) : inh || all;
         this.add(el, beats, sec);
       }
     }

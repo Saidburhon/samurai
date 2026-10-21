@@ -101,9 +101,15 @@ export function initRegister(cfg) {
     out.hidden = !active;
     found.textContent = active ? (cfg.t.found || '{n}').replace('{n}', shown) : '';
     none.hidden = shown > 0;
+    // the industry's starter set: [plural, ids, combined figures (HTML from the build)]; titles and links are the rows'
     const s = st.industry && cfg.starters?.[st.industry];
     starter.hidden = !s;
-    if (s) starter.innerHTML = `${esc(s.line)} ${s.items.map(([, t, u]) => `<a class="u" href="${esc(u)}">${esc(t)}</a>`).join(', ')}; <span class="mono">${esc(s.together)}</span>. <a class="u go" href="${esc(s.href)}">${esc(s.go)}</a>`;
+    if (s) {
+      const [plural, ids, together] = s, [line, go] = cfg.st || ['', ''];
+      const items = ids.map((id) => document.querySelector(`li.sr[data-id="${id}"]`)).filter(Boolean).map((li) => `<a class="u" href="${esc(li.querySelector('.sr-a a')?.getAttribute('href') || '')}">${esc(li.querySelector('h3').textContent)}</a>`);
+      const href = `${cfg.samurai}?${new URLSearchParams({ industry: st.industry, solutions: ids.join(',') })}`;
+      starter.innerHTML = `${esc(line.replace('{plural}', plural))} ${items.join(' · ')}; <span class="mono">${together}</span>. <a class="u go" href="${esc(href)}">${esc(go)}</a>`;
+    }
     for (const b of document.querySelectorAll('.sort [data-sort]')) b.setAttribute('aria-pressed', String(b.dataset.sort === sort));
     if (push) {
       const p = new URLSearchParams();

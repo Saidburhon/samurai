@@ -67,12 +67,15 @@ export function typeset(html, lang) {
     }
     if (skip) continue;
     let t = p;
-    // the arrow: entity-free text, so the glyph is literal here
-    if (ARROW.test(t)) t = t.replace(/[ \t\n ]*[←-⇿][ \t\n ]*/gu, (a) => `${/^\s/u.test(a) ? NBSP : ''}${mark(lang)}${/\s$/u.test(a) ? NBSP : ''}`);
-    if (lang === 'en') t = t.split(/(<svg[^>]*>.*?<\/svg>)/u).map((x) => (x.startsWith('<svg') ? x : enText(x.replace(/&quot;/g, '"').replace(/&#0?39;/g, "'"), prev))).join('');
-    if (lang === 'ru') t = ruText(t);
+    // the arrow: a line may break before the mark, never after it, so the mark and the word after it share a nowrap
+    // span (an inline <svg> is a break opportunity on both sides, whatever spaces surround it); Japanese has no word
+    // to bind (entity-free text here, so the glyph is literal)
+    if (ARROW.test(t)) t = t.replace(/([ \t\n ]*)[←-⇿]([ \t\n ]*)([^\s<]{0,24})/gu, (a, sp1, sp2, next) => `${sp1 ? ' ' : ''}<span class="nw">${mark(lang)}${sp2 ? NBSP : ''}${lang === 'ja' ? '' : next}</span>${lang === 'ja' ? next : ''}`);
+    const fix = (f) => t.split(/(<svg[^>]*>.*?<\/svg>|<[^>]+>)/u).map((x) => (x.startsWith('<') ? x : f(x))).join('');
+    if (lang === 'en') t = fix((x) => enText(x.replace(/&quot;/g, '"').replace(/&#0?39;/g, "'"), prev));
+    if (lang === 'ru') t = fix(ruText);
     parts[k] = t;
-    const last = t.replace(/<svg[^>]*>.*?<\/svg>$/u, '→').replace(/&[a-z#0-9]+;$/i, ' ').slice(-1);
+    const last = t.replace(/<[^>]+>/gu, '').replace(/&[a-z#0-9]+;$/i, ' ').slice(-1);
     if (last) prev = last;
   }
   return parts.join('');

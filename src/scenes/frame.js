@@ -297,10 +297,10 @@ export class Film {
   // the DOM part of the paper: the ground sheets, the dial, the plaster's light
   paper(A, B, e, d) {
     const html = this.html, ga = A.ground, gb = B.ground, near = e.look < 0.5 ? A : B;
-    // at a hold the grounds of the neighbouring holds are displayed too, all but invisible, so their tiles are
-    // rasterised before a transition needs them (§3.1: the current and the incoming sheet)
+    // at a hold the grounds of the neighbouring holds are displayed too, all but invisible (§3.1: the current and the
+    // incoming sheet)
     const pre = new Set();
-    if (d.settled && d.layout && !d.intro && ga === gb) for (const n of this.neighbours(d)) pre.add(n.ground);
+    if (d.settled && d.layout && !d.intro && ga === gb) for (const n of this.groundsNear(d)) pre.add(n);
     pre.delete(ga);
     for (const s of this.sheets) {
       const g = s.dataset.g, on = g === ga || g === gb || pre.has(g);
@@ -328,6 +328,12 @@ export class Film {
     const nearG = d.pre || d.live === 'a' ? ga : d.live === 'b' ? gb : d.f < 0.5 ? ga : gb;
     const html = this.html;
     if (html.dataset.ground !== nearG) { html.dataset.ground = nearG; html.classList.toggle('dark', !!DARK[nearG]); }
+  }
+  // the grounds of the holds next to the nearest one (pure: from the shot list, nothing is resolved)
+  groundsNear(d) {
+    const names = SEQ[d.layout].names, k = Math.round(d.pos), out = [];
+    for (const j of [k - 1, k + 1]) if (j >= 0 && j < names.length) out.push(holdOf(names[j], d.layout, this.opt).ground);
+    return out;
   }
   // a hold with the dial within two beats of the position (the track's own order)
   nearDial(d) {

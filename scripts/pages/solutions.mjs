@@ -13,7 +13,7 @@ import { usd as fUsd, uzs as fUzs, weeks as fWeeks, rateLine, dateNum, NB } from
 import { uzsRange } from '../../src/shared/price.js';
 import { bladePlate, hamonStrip, hamonFn, seedOf } from '../../src/samurai/plate.js';
 import { fold } from '../../src/shared/translit.js';
-import { SOL, GROUP_SEO, GROUP_LINE_JA, INDUSTRY_JA, GROUP_MODS, STOP } from './solutions-i18n.mjs';
+import { SOL, GROUP_SEO, GROUP_LINE_JA, INDUSTRY_JA, GROUP_MODS, STOP, KEEP_CAP } from './solutions-i18n.mjs';
 import { LANGS, pathOf, esc, abs, fwWidth } from '../site.mjs';
 import { ORG_ID } from './ld.mjs';
 
@@ -25,6 +25,26 @@ const r1 = (v) => Math.round(v * 10) / 10;
 const KISSAKI = '<svg aria-hidden="true"><use href="#kissaki"/></svg>';
 const TICK = '<svg class="tick" viewBox="0 0 12 10" aria-hidden="true"><path d="M1 5.4l3.4 3.2L11 1.2"/></svg>';
 const PLUS = '<svg class="plus" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 .5v9M.5 5h9"/></svg>';
+// a figure (a range with its unit) never breaks inside: lines break only between figures, at their separators
+const nw = (s) => `<span class="nw">${esc(s)}</span>`;
+// a template whose words are escaped and whose figures ({k} in figs) are unbreakable spans
+const fillH = (tpl, o, figs = []) => esc(String(tpl)).replace(/\{(\w+)\}/g, (m, k) => (o[k] == null ? m : figs.includes(k) ? nw(o[k]) : esc(o[k])));
+// a Japanese heading may break where a Latin name meets Japanese (飲食店向け／Telegram／注文ボット); the phrases inside
+// are marked by scripts/pages/ja-phrases.mjs
+const jaH = (t) => esc(t).replace(/([\u3040-\u30ff\u4e00-\u9fff])([A-Za-z][\w+.#-]{2,})/g, '$1<wbr>$2').replace(/([A-Za-z0-9]{3,})([\u30a0-\u30ff\u4e00-\u9fff])/g, '$1<wbr>$2');
+const h1Text = (t, lang) => (lang === 'ja' ? jaH(t) : esc(t));
+// the list of what we need as one sentence: the items after the first lose their capital (not a name or an acronym);
+// commas between them, semicolons when an item holds a comma or a colon of its own
+export function joinNeeds(list, lang) {
+  if (lang === 'ja') return list.join('、');
+  const items = list.map((x, i) => {
+    const v = String(x).trim().replace(/[.;]+$/, '');
+    const w = v.split(/[\s:,;]/)[0];
+    if (!i || /\d/.test(w) || /^.\p{L}*\p{Lu}/u.test(w) || KEEP_CAP.some((n) => w === n || w.startsWith(`${n}-`))) return v;
+    return v[0].toLocaleLowerCase(lang) + v.slice(1);
+  });
+  return items.join(items.some((x) => /[,:]/.test(x)) ? '; ' : ', ');
+}
 
 // ---- one language's view of the model ----------------------------------------------------------------------------
 export function view(ctx, lang) {
@@ -91,11 +111,17 @@ const lines = (list) => `<ul class="ticks">${list.map((x) => `<li>${esc(x)}</li>
 const integrationNames = (s, V) => s.integrations.map((k) => V.model.integrations[k]).filter(Boolean).map((i) => i.names?.[V.lang] || i.name);
 const industryNames = (s, V) => s.industries.map(V.indName).filter(Boolean);
 const needsOf = (s, V) => s.needs?.[V.lang] || s.needs?.en || [];
-const figures = (s, V) => {
+// a row's two figure lines as [label, weeks, price]: MVP and full version, or a monthly service's two plans
+const figParts = (s, V) => {
   const { T } = V;
-  if (V.monthly(s)) return [`${T.monthly.basic} · ${V.prim(s.mvp.usd)} / ${T.monthly.per}`, `${T.monthly.ext} · ${V.prim(s.full.usd)} / ${T.monthly.per}`];
-  return [`${T.mvp} ${V.wk(s.mvp.weeks)} · ${V.prim(s.mvp.usd)}`, `${T.full} ${V.wk(s.full.weeks)} · ${V.prim(s.full.usd)}`];
+  if (V.monthly(s)) return [[T.monthly.basic, '', V.prim(s.mvp.usd), T.perM], [T.monthly.ext, '', V.prim(s.full.usd), T.perM]];
+  return [[T.mvp, V.wk(s.mvp.weeks), V.prim(s.mvp.usd)], [T.full, V.wk(s.full.weeks), V.prim(s.full.usd)]];
 };
+// the same in HTML: each figure unbreakable; in a row (grid) the label, weeks and price stand in columns
+// a monthly price with its "per month" ("oyiga 6–18,5 mln soʻm", "$500–1,500 per month", "月額500〜1,500ドル")
+const perH = (pm, p) => esc(pm('\u0001')).replace('\u0001', nw(p));
+const figLine = ([l, w, p, pm]) => (w ? `${esc(l)} ${nw(w)} · ${nw(p)}` : `${esc(l)} · ${perH(pm, p)}`);
+const figCells = ([l, w, p, pm]) => `<b>${esc(l)}</b> ${w ? `<i>${esc(w)}</i> <i>${esc(p)}</i>` : `<i class="m">${perH(pm, p)}</i>`}`;
 // the search text of a row: titles and one-liners in every language, the group, the integrations and the
 // industries, folded (Cyrillic Uzbek to Latin, every okina variant dropped), so one query finds it in any script
 function searchText(s, V) {
@@ -141,7 +167,7 @@ function rowSheet(s, V) {
   if (ints.length) dl.push([T.dl.ints, chips(ints)]);
   const who = industryNames(s, V);
   if (who.length) dl.push([T.dl.who, esc(who.join(sep))]);
-  if (s.monthly_usd[1] > 0 && !V.monthly(s)) dl.push([T.dl.month, `<span class="fig">${esc(V.prim(s.monthly_usd))}</span> <span class="note">${esc(T.monthNote)}</span>`]);
+  if (s.monthly_usd[1] > 0 && !V.monthly(s)) dl.push([T.dl.month, `<span class="fig nw">${esc(V.prim(s.monthly_usd))}</span> <span class="note">${esc(T.monthNote)}</span>`]);
   return dl;
 }
 const sheetHtml = (dl) => dl.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('');
@@ -152,12 +178,13 @@ export function rowsFile(V) {
 }
 function row(s, V, { open = false, full = false } = {}) {
   const { T, lang } = V;
-  const [f1, f2] = figures(s, V);
+  const [f1, f2] = figParts(s, V);
   const ind = s.industries.find((i) => V.model.industries[i]);
-  const data = `data-id="${s.id}" data-g="${s.group}" data-d="${s.difficulty}" data-w="${s.mvp.weeks[1]}" data-p="${s.mvp.usd[0]}" data-ind="${s.industries.join(' ')}" data-pl="${platformsOf(s).join(' ')}" data-goal="${goalsOf(s, V).join(' ')}"${V.monthly(s) ? ' data-m="1"' : ''}`;
+  // the lens and the sort read these (the catalogue); a group page has neither and keeps only the id
+  const data = `data-id="${s.id}"${full ? '' : ` data-g="${s.group}" data-d="${s.difficulty}" data-w="${s.mvp.weeks[1]}" data-p="${s.mvp.usd[0]}" data-ind="${s.industries.join(' ')}" data-pl="${platformsOf(s).join(' ')}" data-goal="${goalsOf(s, V).join(' ')}"`}${V.monthly(s) ? ' data-m="1"' : ''}`;
   return `<li class="sr" ${data}>
-<details${open ? ' open' : ''}><summary><span class="sr-t"><h3>${esc(V.L(s.title))}</h3><span class="sr-o">${esc(V.L(s.oneliner))}</span></span><span class="sr-g">${microBlade(s, V)}${microHamon(s.difficulty, `${T.dl.diff}: ${T.diff[s.difficulty - 1]}`)}</span><span class="sr-f mono"><span>${esc(f1)}</span><span>${esc(f2)}</span></span><span class="sr-x" aria-hidden="true"></span></summary>
-<div class="sr-b"><dl class="sheet"${full ? '' : ' data-lazy'}>${full ? sheetHtml(rowSheet(s, V)) : ''}</dl><p class="sr-a"><a class="u" href="${solutionUrl(s, lang)}">${esc(T.details)}</a>${V.monthly(s) || !full ? '' : `<a class="u" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}">${esc(T.estimate)}</a>`}</p></div>
+<details${open ? ' open' : ''}><summary><h3>${esc(V.L(s.title))}</h3><span class="sr-o">${esc(V.L(s.oneliner))}</span><span class="sr-g">${microBlade(s, V)}${microHamon(s.difficulty, `${T.dl.diff}: ${T.diff[s.difficulty - 1]}`)}</span><span class="sr-f mono">${figCells(f1)} ${figCells(f2)}</span><span class="sr-x" aria-hidden="true"></span></summary>
+<div class="sr-b"><dl class="sheet"${full ? '' : ' data-lazy'}>${full ? sheetHtml(rowSheet(s, V)) : ''}</dl><p class="sr-a"><a class="u" href="${solutionUrl(s, lang)}">${esc(T.details)}<span class="vh">${lang === 'ja' ? '：' : ': '}${esc(V.L(s.title))}</span></a>${V.monthly(s) || !full ? '' : `<a class="u" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}">${esc(T.estimate)}</a>`}</p></div>
 </details></li>`;
 }
 function chapter(gid, V, { open = false, head = true, full = false } = {}) {
@@ -204,7 +231,8 @@ export function renderCatalogue(V) {
   for (const [id, ind] of Object.entries(V.model.industries)) {
     const st = V.ctx.starters[lang]?.[id];
     if (!st || !ind.plural?.[lang]) continue;
-    starters[id] = { line: fill(T.starter, { plural: ind.plural[lang] }), items: st.items.map((x) => [x, V.L(V.model.byId.get(x).title), solutionUrl(V.model.byId.get(x), lang)]), together: fill(T.together, { price: st.price, weeks: st.weeks }), href: samurai(lang, { industry: id, solutions: st.items.join(',') }), go: T.samCalc };
+    // [plural, ids, the combined figures (HTML)]: each title and link is the row's own (src/solutions/register.js)
+    starters[id] = [ind.plural[lang], st.items, fillH(T.together, { price: st.price, weeks: st.weeks }, ['price', 'weeks'])];
   }
   const main = `
   <header class="pg-head sol-head">
@@ -220,7 +248,7 @@ export function renderCatalogue(V) {
   </div>
   <p class="honest"><a class="u" href="${PRICES[lang]}">${esc(T.pricesCrumb)}</a> · <span class="mono">${esc(rateLine(V.rate, lang))}</span></p>
   ${tray(V)}
-  ${pageData(V, { rows: V.ctx.rowsFile[lang], starters })}`;
+  ${pageData(V, { rows: V.ctx.rowsFile[lang], starters, st: [T.starter, T.samCalc] })}`;
   const url = abs(catalogueUrl(lang));
   const list = { '@type': 'ItemList', '@id': `${url}#list`, name: T.h1, numberOfItems: sols.length, itemListElement: sols.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(solutionUrl(s, lang)) })) };
   return { main, ldExtra: [list], mainEntity: `${url}#list` };
@@ -244,18 +272,21 @@ function raises(V, gid, sols) {
     if (m.weeks_mult && m.weeks_mult > 1) parts.push(T.multW(Math.round((m.weeks_mult - 1) * 100)));
     if (m.add_usd) parts.push(`+${V.ja ? fUsd(m.add_usd, lang) : fUzs(V.uzsR(m.add_usd), lang)}`);
     if (m.add_weeks) parts.push(`+${V.wk(m.add_weeks)}`);
-    items.push([V.L(m.label), parts.join(', ')]);
+    items.push([V.L(m.label), parts.map(nw).join(', ')]);
   }
   // the integrations these solutions can add, most used first
   const count = new Map();
   for (const s of sols) for (const k of s.integrations) if (!s.integrations_included.includes(k)) count.set(k, (count.get(k) || 0) + 1);
   const ints = [...count].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => model.integrations[k]).filter(Boolean);
-  for (const i of ints) { const nm = i.names?.[lang] || i.name, wh = V.L(i.what); items.push([wh.includes(nm) ? wh : `${nm}: ${wh}`, `+${V.ja ? fUsd(i.add_usd, lang) : fUzs(V.uzsR(i.add_usd), lang)}, +${V.wk(i.add_weeks)}`]); }
-  return `<dl class="sheet raise">${items.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd class="mono">${esc(v)}</dd></div>`).join('')}</dl>`;
+  for (const i of ints) { const nm = i.names?.[lang] || i.name, wh = V.L(i.what); items.push([wh.includes(nm) ? wh : `${nm}: ${wh}`, `${nw(`+${V.ja ? fUsd(i.add_usd, lang) : fUzs(V.uzsR(i.add_usd), lang)}`)}, ${nw(`+${V.wk(i.add_weeks)}`)}`]); }
+  return `<dl class="sheet raise">${items.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd class="mono">${v}</dd></div>`).join('')}</dl>`;
 }
+// qa: [question, answer (text, for the FAQPage), answer (HTML, its figures unbreakable)]
 function faqBlock(V, qa) {
-  return `<section class="row faq" aria-labelledby="faq-h"><h2 id="faq-h">${esc(V.T.faq)}</h2><div class="row-body"><dl class="qa">${qa.map(([q, a]) => `<div><dt>${esc(q)}</dt><dd>${esc(a)}</dd></div>`).join('')}</dl></div></section>`;
+  return `<section class="row faq" aria-labelledby="faq-h"><h2 id="faq-h">${esc(V.T.faq)}</h2><div class="row-body"><dl class="qa">${qa.map(([q, a, h]) => `<div><dt>${esc(q)}</dt><dd>${h ?? esc(a)}</dd></div>`).join('')}</dl></div></section>`;
 }
+const FIGS = ['usd', 'uzs', 'fusd', 'fuzs', 'weeks', 'fweeks', 'price', 'fprice'];
+const qaOf = (tpl, vals) => tpl.map(([q, a]) => [fill(q, vals), fill(a, vals), fillH(a, vals, FIGS)]);
 const faqLd = (url, qa) => ({ '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: qa.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
 // the posts about this page: those that name the page's own id first (`own`), then those about its group or its
 // solutions, the latter rotated by `turn` (a solution's place in its group) so each post is linked from some page
@@ -272,25 +303,24 @@ function postsBlock(V, ids, own = ids, turn = 0) {
 }
 function groupQa(gid, V, f) {
   const { T, lang, L } = V;
-  const sep = lang === 'ja' ? '、' : lang === 'en' ? '; ' : '; ';
   const needs = needsOf(f.list[0], V);
   const name = GROUP_SEO[gid][lang];
-  const vals = { t: lang === 'en' ? name.replace(/^(Mobile|Websites|Games|Business|Cloud|Support|Industry)\b/, (m) => m.toLowerCase()) : name, usd: fUsd(f.mvpUsd, lang), uzs: fUzs(V.uzsR(f.mvpUsd), lang), fusd: fUsd([f.fullUsd[1], f.fullUsd[1]], lang), weeks: V.wk(f.mvpW), fweeks: V.wk(f.fullW), needs: needs.join(sep) };
+  const vals = { t: lang === 'en' ? name.replace(/^(Mobile|Websites|Games|Business|Cloud|Support|Industry)\b/, (m) => m.toLowerCase()) : name, usd: fUsd(f.mvpUsd, lang), uzs: fUzs(V.uzsR(f.mvpUsd), lang), fusd: fUsd([f.fullUsd[1], f.fullUsd[1]], lang), weeks: V.wk(f.mvpW), fweeks: V.wk(f.fullW), needs: joinNeeds(needs, lang) };
   void L;
-  return T.faqGroup.map(([q, a]) => [fill(q, vals), fill(a, vals)]);
+  return qaOf(T.faqGroup, vals);
 }
 export function renderGroup(gid, V) {
   const { T, lang } = V;
   const f = groupFacts(gid, V);
   const sols = V.byGroup[gid];
-  const lede = fill(T.groupLede, { line: V.gLine(gid), n: sols.length, weeks: V.wk(f.mvpW), price: V.from(f.mvpUsd) });
+  const lede = fillH(T.groupLede, { line: V.gLine(gid), n: sols.length, weeks: V.wk(f.mvpW), price: V.from(f.mvpUsd) }, ['weeks', 'price']);
   const qa = groupQa(gid, V, f);
   const url = abs(groupUrl(gid, lang));
   const main = `
   <header class="pg-head sol-head">
-    <h1>${esc(GROUP_SEO[gid][lang])}</h1>
-    <p class="lede">${esc(lede)}</p>
-    <p class="meta mono">${esc(fill(T.groupRange, { price: V.prim(f.mvpUsd), weeks: V.wk(f.mvpW) }))} · ${esc(rateLine(V.rate, lang))}</p>
+    <h1>${h1Text(GROUP_SEO[gid][lang], lang)}</h1>
+    <p class="lede">${lede}</p>
+    <p class="meta mono">${fillH(T.groupRange, { price: V.prim(f.mvpUsd), weeks: V.wk(f.mvpW) }, ['price', 'weeks'])} · ${esc(rateLine(V.rate, lang))}</p>
     ${samLine(V)}
   </header>
   ${hamonSymbols()}
@@ -308,8 +338,9 @@ export function renderGroup(gid, V) {
 function solQa(s, V) {
   const { T, lang } = V;
   const needs = needsOf(s, V);
-  const vals = { t: V.L(s.title), usd: fUsd(s.mvp.usd, lang), uzs: fUzs(V.uzsR(s.mvp.usd), lang), fusd: fUsd(s.full.usd, lang), fuzs: fUzs(V.uzsR(s.full.usd), lang), weeks: V.wk(s.mvp.weeks), fweeks: V.wk(s.full.weeks), needs: needs.join(lang === 'ja' ? '、' : '; ') };
-  return T.faqSol.map(([q, a]) => [fill(q, vals), fill(a, vals)]);
+  const vals = { t: V.L(s.title), usd: fUsd(s.mvp.usd, lang), uzs: fUzs(V.uzsR(s.mvp.usd), lang), fusd: fUsd(s.full.usd, lang), fuzs: fUzs(V.uzsR(s.full.usd), lang), weeks: V.wk(s.mvp.weeks), fweeks: V.wk(s.full.weeks), needs: joinNeeds(needs, lang) };
+  // a monthly service is two plans a month and a start date, not an MVP and a full version with build times
+  return qaOf(V.monthly(s) ? T.faqMon : T.faqSol, vals);
 }
 export function renderSolution(s, V) {
   const { T, lang, model } = V;
@@ -317,27 +348,33 @@ export function renderSolution(s, V) {
   const url = abs(solutionUrl(s, lang));
   const mon = V.monthly(s);
   const title = V.L(s.title);
-  const lede = mon ? `${V.L(s.oneliner)} ${T.monthly.basic}: ${V.prim(s.mvp.usd)} / ${T.monthly.per}.` : fill(T.solLede, { line: V.L(s.oneliner), weeks: V.wk(s.mvp.weeks), price: V.from(s.mvp.usd), fweeks: V.wk(s.full.weeks) });
+  const lede = mon ? fillH(T.monLede, { line: V.L(s.oneliner), price: V.prim(s.mvp.usd), weeks: V.wk(s.mvp.weeks) }, ['price', 'weeks']) : fillH(T.solLede, { line: V.L(s.oneliner), weeks: V.wk(s.mvp.weeks), price: V.from(s.mvp.usd), fweeks: V.wk(s.full.weeks) }, ['weeks', 'price', 'fweeks']);
   const ind = s.industries.find((i) => V.model.industries[i]);
-  const plate = mon ? '' : bladePlate({ seed: seedOf(s.id), weeks: { mvp: s.mvp.weeks, full: s.full.weeks }, state: 'full', scaleWeeks: V.maxFull, width: 720, difficulty: s.difficulty, dots: 380, labels: { mvp: `${T.mvp} ${V.wk(s.mvp.weeks)}`, full: `${T.full} ${V.wk(s.full.weeks)}`, tick: T.mvp, aria: fill(T.plate.aria, { title, mvp: V.wk(s.mvp.weeks), full: V.wk(s.full.weeks) }) } }).svg;
-  // the plate's ruler: the catalogue's weeks scale (the same one every blade is drawn on), every 4 weeks a tick
-  const ruled = (svg) => {
+  // the plate: 720 units wide on a desktop; on a phone a 360-unit drawing of the same blade on the same scale, so the
+  // whole catalogue scale (and the kissaki of the longest blade) fits the screen with its labels at 12 px or more
+  const plateAt = (width, dots) => (mon ? '' : bladePlate({ seed: seedOf(s.id), weeks: { mvp: s.mvp.weeks, full: s.full.weeks }, state: 'full', scaleWeeks: V.maxFull, width, difficulty: s.difficulty, dots, labels: { mvp: `${T.mvp} ${V.wk(s.mvp.weeks)}`, full: `${T.full} ${V.wk(s.full.weeks)}`, tick: T.mvp, aria: fill(T.plate.aria, { title, mvp: V.wk(s.mvp.weeks), full: V.wk(s.full.weeks) }) } }).svg);
+  // the plate's ruler: the catalogue's weeks scale (the same one every blade is drawn on), every 4 weeks a tick,
+  // a figure every `step` weeks
+  const ruled = (svg, W, step, cls) => {
     if (!svg) return svg;
-    const base = 36, usable = 720 - base - 12, x = (w) => r1(base + (usable * w) / V.maxFull);
+    const base = 36, usable = W - base - 12, x = (w) => r1(base + (usable * w) / V.maxFull);
     let g = `<g class="ruler"><path d="M${base} 104H${x(V.maxFull)}"/>`;
-    for (let w = 0; w <= V.maxFull; w += 4) g += `<path d="M${x(w)} 104v${w % 8 ? 3 : 6}"/>`;
-    for (let w = 0; w <= V.maxFull; w += 8) g += `<text x="${x(w)}" y="122" text-anchor="${w ? 'middle' : 'start'}">${w + 8 > V.maxFull ? esc(V.wk([w, w])) : w}</text>`;
-    return svg.replace(/viewBox="0 0 720 96" width="720" height="96"/, 'viewBox="0 0 720 128" width="720" height="128"').replace(/<\/svg>$/, `${g}</g></svg>`);
+    for (let w = 0; w <= V.maxFull; w += 4) g += `<path d="M${x(w)} 104v${w % step ? 3 : 6}"/>`;
+    for (let w = 0; w <= V.maxFull; w += step) g += `<text x="${x(w)}" y="122" text-anchor="${w ? (x(w) > W - 40 ? 'end' : 'middle') : 'start'}">${w + step > V.maxFull ? esc(V.wk([w, w])) : w}</text>`;
+    return svg.replace('class="plate-svg"', `class="plate-svg ${cls}"`).replace(new RegExp(`viewBox="0 0 ${W} 96" width="${W}" height="96"`), `viewBox="0 0 ${W} 128" width="${W}" height="128"`).replace(/<\/svg>$/, `${g}</g></svg>`);
   };
+  const plate = mon ? '' : ruled(plateAt(720, 380), 720, 8, 'pl') + ruled(plateAt(360, 150), 360, 20, 'ps');
   const sheet = [];
   if (mon) {
-    sheet.push([T.monthly.start, esc(V.wk(s.mvp.weeks))]);
-    sheet.push([T.monthly.basic, `<span class="big">${esc(V.prim(s.mvp.usd))}</span> <span class="sec mono">${esc(V.sec(s.mvp.usd))} / ${esc(T.monthly.per)}</span>`]);
-    sheet.push([T.monthly.ext, `<span class="big">${esc(V.prim(s.full.usd))}</span> <span class="sec mono">${esc(V.sec(s.full.usd))} / ${esc(T.monthly.per)}</span>`]);
+    // the plan's label carries the unit: "Asosiy reja, oyiga", "基本プラン（月額）"
+    const perLabel = (k) => (V.ja ? `${k}（${T.monthly.per}）` : `${k}, ${T.monthly.per}`);
+    sheet.push([T.monthly.start, nw(V.wk(s.mvp.weeks))]);
+    sheet.push([perLabel(T.monthly.basic), `<span class="big">${esc(V.prim(s.mvp.usd))}</span> <span class="sec mono">${esc(V.sec(s.mvp.usd))}</span>`]);
+    sheet.push([perLabel(T.monthly.ext), `<span class="big">${esc(V.prim(s.full.usd))}</span> <span class="sec mono">${esc(V.sec(s.full.usd))}</span>`]);
   } else {
-    sheet.push([T.dl.time, `<span class="pair"><span><b class="mono">${T.mvp}</b> ${esc(V.wk(s.mvp.weeks))}</span><span><b class="mono">${esc(T.full)}</b> ${esc(V.wk(s.full.weeks))}</span></span>`]);
+    sheet.push([T.dl.time, `<span class="pair"><span><b class="mono">${T.mvp}</b> ${nw(V.wk(s.mvp.weeks))}</span><span><b class="mono">${esc(T.full)}</b> ${nw(V.wk(s.full.weeks))}</span></span>`]);
     sheet.push([T.dl.price, `<span class="pair"><span><b class="mono">${T.mvp}</b> <span class="big">${esc(V.prim(s.mvp.usd))}</span> <span class="sec mono">${esc(V.sec(s.mvp.usd))}</span></span><span><b class="mono">${esc(T.full)}</b> <span class="big">${esc(V.prim(s.full.usd))}</span> <span class="sec mono">${esc(V.sec(s.full.usd))}</span></span></span><span class="rate mono">${esc(rateLine(V.rate, lang))}</span>`]);
-    if (s.monthly_usd[1] > 0) sheet.push([T.dl.month, `${esc(V.prim(s.monthly_usd))} <span class="note">${esc(T.monthNote)}</span>`]);
+    if (s.monthly_usd[1] > 0) sheet.push([T.dl.month, `${nw(V.prim(s.monthly_usd))} <span class="note">${esc(T.monthNote)}</span>`]);
   }
   sheet.push([T.dl.diff, `<span class="diff">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.id), label: `${T.dl.diff}: ${T.diff[s.difficulty - 1]}` })}<span>${esc(T.diff[s.difficulty - 1])}</span></span>`]);
   const who = industryNames(s, V);
@@ -358,21 +395,23 @@ export function renderSolution(s, V) {
   const rel = [...next, ...same.filter((x) => !next.includes(x))].slice(0, 5);
   const main = `
   <header class="pg-head sol-head">
-    <h1 style="view-transition-name:sol-${s.id}">${esc(title)}</h1>
-    <p class="lede">${esc(lede)}</p>
+    <h1 style="view-transition-name:sol-${s.id}">${h1Text(title, lang)}</h1>
+    <p class="lede">${lede}</p>
     <p class="acts">${mon ? '' : `<a class="btn" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}"><span>${esc(T.estimate)}</span>${KISSAKI}</a>`}${addBtn(s, V)}</p>
   </header>
-  ${plate ? `<figure class="sol-plate" aria-hidden="true">${ruled(plate)}</figure>` : ''}
+  ${plate ? `<figure class="sol-plate" aria-hidden="true">${plate}</figure>` : ''}
   <section class="row sheet-row" aria-labelledby="sh-h"><h2 id="sh-h">${esc(T.sheetH)}</h2><div class="row-body"><dl class="sheet">${sheet.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>
   ${get.length ? `<section class="row" aria-labelledby="gt-h"><h2 id="gt-h">${esc(T.getH)}</h2><div class="row-body"><dl class="sheet get">${get.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>` : ''}
   ${needs.length ? `<section class="row" aria-labelledby="nd-h"><h2 id="nd-h">${esc(T.dl.needs)}</h2><div class="row-body">${lines(needs)}</div></section>` : ''}
   ${mon ? '' : `<section class="row" aria-labelledby="rs-h"><h2 id="rs-h">${esc(T.dl.raises)}</h2><div class="row-body">${raises(V, s.group, [s])}</div></section>`}
   ${faqBlock(V, qa)}
-  ${rel.length ? `<section class="row rel" aria-labelledby="rl-h"><h2 id="rl-h">${esc(next.length ? T.next : T.related)}</h2><div class="row-body"><ul class="rel-list">${rel.map((x) => `<li><a href="${solutionUrl(x, lang)}"><span class="t">${esc(V.L(x.title))}</span><span class="f mono">${esc(figures(x, V)[0])}</span></a></li>`).join('')}</ul></div></section>` : ''}
+  ${rel.length ? `<section class="row rel" aria-labelledby="rl-h"><h2 id="rl-h">${esc(next.length ? T.next : T.related)}</h2><div class="row-body"><ul class="rel-list">${rel.map((x) => `<li><a href="${solutionUrl(x, lang)}"><span class="t">${esc(V.L(x.title))}</span><span class="f mono">${figLine(figParts(x, V)[0])}</span></a></li>`).join('')}</ul></div></section>` : ''}
   ${postsBlock(V, [s.id, s.group], [s.id], V.byGroup[s.group].indexOf(s))}
   ${tray(V)}
   ${pageData(V)}`;
-  const spec = (r) => [{ '@type': 'PriceSpecification', minPrice: r[0], maxPrice: r[1], priceCurrency: 'USD' }, { '@type': 'PriceSpecification', minPrice: V.uzsR(r)[0], maxPrice: V.uzsR(r)[1], priceCurrency: 'UZS' }];
+  // a monthly plan is a price per month (UnitPriceSpecification, UN/CEFACT unit MON), not a one-off price
+  const unit = mon ? { '@type': 'UnitPriceSpecification', unitCode: 'MON', unitText: 'month' } : { '@type': 'PriceSpecification' };
+  const spec = (r) => [{ ...unit, minPrice: r[0], maxPrice: r[1], priceCurrency: 'USD' }, { ...unit, minPrice: V.uzsR(r)[0], maxPrice: V.uzsR(r)[1], priceCurrency: 'UZS' }];
   const service = {
     '@type': 'Service', '@id': `${url}#service`, name: title, description: V.L(s.oneliner), url, serviceType: V.gTitle(s.group),
     provider: { '@id': ORG_ID }, areaServed: lang === 'ja' ? [{ '@type': 'Country', name: 'Uzbekistan' }, { '@type': 'Country', name: 'Japan' }] : { '@type': 'Country', name: 'Uzbekistan' },
@@ -390,7 +429,7 @@ export function renderPrices(V) {
   const head = `<thead><tr>${T.th.map((h, i) => `<th scope="col"${i ? ' class="n"' : ''}>${esc(h)}</th>`).join('')}</tr></thead>`;
   const cssStr = (x) => `'${String(x).replace(/'/g, '’')}'`;
   const labels = (list) => ` style="${esc(list.map((x, i) => `--l${i + 2}:${cssStr(x)}`).join(';'))}"`;
-  const cell = (r) => `<td><b>${esc(V.prim(r))}</b><i>${esc(V.sec(r))}</i></td>`;
+  const cell = (r) => `<td><b class="nw">${esc(V.prim(r))}</b><i class="nw">${esc(V.sec(r))}</i></td>`;
   const tables = groups.map((gid) => {
     const list = V.byGroup[gid].filter((s) => !V.monthly(s));
     const body = list.map((s) => `<tr><th scope="row"><a href="${solutionUrl(s, lang)}">${esc(V.L(s.title))}</a></th><td>${esc(V.wk(s.mvp.weeks))}</td>${cell(s.mvp.usd)}<td>${esc(V.wk(s.full.weeks))}</td>${cell(s.full.usd)}<td>${s.monthly_usd[1] > 0 ? esc(V.prim(s.monthly_usd)) : '0'}</td></tr>`).join('');
@@ -402,14 +441,14 @@ export function renderPrices(V) {
   const used = new Map();
   for (const s of V.sols) for (const k of s.integrations) used.set(k, (used.get(k) || 0) + 1);
   const ints = Object.entries(model.integrations).filter(([k]) => used.get(k)).sort((a, b) => (a[1].names?.[lang] || a[1].name).localeCompare(b[1].names?.[lang] || b[1].name, 'en'));
-  const intList = `<ul class="ints">${ints.map(([k, i]) => `<li><a class="nm u" href="${catalogueUrl(lang)}?q=${encodeURIComponent(i.name)}">${esc(i.names?.[lang] || i.name)}</a><span class="wh">${esc(V.L(i.what))}</span><span class="ad mono">+${esc(V.ja ? fUsd(i.add_usd, lang) : fUzs(V.uzsR(i.add_usd), lang))}, +${esc(V.wk(i.add_weeks))} · ${esc(fill(T.intsUsed, { n: used.get(k) }))}</span></li>`).join('')}</ul>`;
+  const intList = `<ul class="ints">${ints.map(([k, i]) => `<li><a class="nm u" href="${catalogueUrl(lang)}?q=${encodeURIComponent(i.name)}">${esc(i.names?.[lang] || i.name)}</a><span class="wh">${esc(V.L(i.what))}</span><span class="ad mono">${nw(`+${V.ja ? fUsd(i.add_usd, lang) : fUzs(V.uzsR(i.add_usd), lang)}`)}, ${nw(`+${V.wk(i.add_weeks)}`)} · ${nw(fill(T.intsUsed, { n: used.get(k) }))}</span></li>`).join('')}</ul>`;
   const mods = Object.entries(model.modifiers).map(([k, m]) => {
     const parts = [];
     if (m.mult && m.mult > 1) parts.push(T.mult(Math.round((m.mult - 1) * 100)));
     if (m.weeks_mult && m.weeks_mult > 1) parts.push(T.multW(Math.round((m.weeks_mult - 1) * 100)));
     if (m.add_usd) parts.push(`+${V.ja ? fUsd(m.add_usd, lang) : fUzs(V.uzsR(m.add_usd), lang)}`);
     if (m.add_weeks) parts.push(`+${V.wk(m.add_weeks)}`);
-    return `<div><dt>${esc(V.L(m.label))}</dt><dd class="mono">${esc(parts.join(', '))}</dd></div>`;
+    return `<div><dt>${esc(V.L(m.label))}</dt><dd class="mono">${parts.map(nw).join(', ')}</dd></div>`;
   }).join('');
   const project = V.sols.filter((s) => !V.monthly(s));
   const main = `
@@ -434,6 +473,7 @@ function fitJa(cands, lo, hi, what) {
   throw new Error(`solutions: no Japanese ${what} fits ${lo}–${hi}: ${cands[0]} (${fwWidth(cands[0])})`);
 }
 const JA_TAIL = ['の開発費用と期間｜Qilich', 'の開発費用と期間の目安｜Qilich', 'の費用と期間｜Qilich', 'の開発費用と開発期間の目安｜Qilich', 'の費用目安｜Qilich', 'の開発費用と開発期間の目安・相場｜Qilich', '｜Qilich', '：開発費用と期間の目安｜オフショア開発のQilich', '：開発費用と期間の目安｜ウズベキスタンのオフショア開発Qilich'];
+const JA_TAIL_MON = ['の月額費用と開始時期｜Qilich', 'の月額費用と開始までの期間｜Qilich', 'の月額費用の目安｜Qilich', 'の月額費用と開始時期の目安｜Qilich', 'の月額費用｜Qilich', 'の月額費用と開始までの期間の目安｜Qilich', 'の月額費用と開始時期｜オフショア開発のQilich', '：月額費用と開始時期の目安｜オフショア開発のQilich', '｜Qilich'];
 function jaDesc(heads, tails) {
   const out = [];
   for (const h of heads) {
@@ -446,13 +486,19 @@ export function metaSolution(s, V) {
   const { T, lang } = V;
   const t = V.L(s.title);
   if (lang !== 'ja') {
-    if (V.monthly(s)) return { title: fill(t.includes(':') ? T.title_sol.replace(/^\{t\}:/, '{t},') : T.title_sol, { t }), description: `${t}. ${T.monthly.basic}: ${V.prim(s.mvp.usd)} / ${T.monthly.per}; ${T.monthly.ext}: ${V.prim(s.full.usd)}. ${V.L(s.oneliner)}` };
+    if (V.monthly(s)) return { title: fill(t.includes(':') ? T.title_mon.replace(/^\{t\}:/, '{t},') : T.title_mon, { t }), description: fill(T.monDesc, { t, price: V.prim(s.mvp.usd), fprice: V.prim(s.full.usd), weeks: V.wk(s.mvp.weeks) }) };
     return { title: fill(t.includes(':') ? T.title_sol.replace(/^\{t\}:/, '{t},') : T.title_sol, { t }), description: fill(T.desc_sol, { t, weeks: V.wk(s.mvp.weeks), price: V.from(s.mvp.usd), fweeks: V.wk(s.full.weeks) }) };
   }
+  if (V.monthly(s)) {
+    // a monthly service: the monthly fee of each plan and how soon it starts, not a development cost and period
+    const mt = fitJa(JA_TAIL_MON.map((x) => t + x), 28, 32, `title for ${s.id}`);
+    const nums = `基本プランは月額${fUsd(s.mvp.usd, 'ja')}、拡張プランは月額${fUsd(s.full.usd, 'ja')}が目安で、ご依頼から${V.wk(s.mvp.weeks)}以内に開始できます。`;
+    const mh = [`${t}の月額費用。${nums}`, `${t}。${nums}`, `${t}の月額費用と開始時期。${nums}`];
+    const mtails = ['作業範囲も掲載しています。', 'タシケントの開発チームが担当します。', 'よくあるご質問もあわせてご覧ください。', 'Qilichが担当します。'];
+    return { title: mt, description: fitJa(jaDesc(mh, mtails), 80, 100, `description for ${s.id}`) };
+  }
   const title = fitJa(JA_TAIL.map((x) => t + x), 28, 32, `title for ${s.id}`);
-  const nums = V.monthly(s)
-    ? `月額は基本プランが${fUsd(s.mvp.usd, 'ja')}、拡張プランが${fUsd(s.full.usd, 'ja')}が目安です。`
-    : `MVP（最小構成）は${fUsd(s.mvp.usd, 'ja')}・${V.wk(s.mvp.weeks)}、完成版は${fUsd(s.full.usd, 'ja')}・${V.wk(s.full.weeks)}が目安です。`;
+  const nums = `MVP（最小構成）は${fUsd(s.mvp.usd, 'ja')}・${V.wk(s.mvp.weeks)}、完成版は${fUsd(s.full.usd, 'ja')}・${V.wk(s.full.weeks)}が目安です。`;
   const heads = [`${t}の開発費用と期間。${nums}`, `${t}。${nums}`, `${t}の費用：${nums.replace('（最小構成）', '')}`];
   const tails = ['開発範囲と運用費も掲載しています。', 'タシケントの開発チームが担当します。', 'よくあるご質問もあわせてご覧ください。', 'Qilichが開発します。'];
   return { title, description: fitJa(jaDesc(heads, tails), 80, 100, `description for ${s.id}`) };

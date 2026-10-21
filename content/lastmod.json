@@ -1,6 +1,6 @@
 {
  "/": {
-  "h": "d1162cd628237805",
+  "h": "1ac49b4c9f04b371",
   "d": "2026-10-21"
  },
  "/about/": {
@@ -12,7 +12,7 @@
   "d": "2026-10-21"
  },
  "/en/": {
-  "h": "b9f95eb89621453b",
+  "h": "b5c40b8b9a99263f",
   "d": "2026-10-21"
  },
  "/en/about/": {
@@ -28,7 +28,7 @@
   "d": "2026-10-21"
  },
  "/en/prices/": {
-  "h": "dad7f91d965e9e32",
+  "h": "0a503201b9fab627",
   "d": "2026-10-21"
  },
  "/en/privacy/": {
@@ -40,683 +40,683 @@
   "d": "2026-10-21"
  },
  "/en/solutions/": {
-  "h": "b00d87c9041aede4",
+  "h": "b87c1e404f954530",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-call-quality/": {
-  "h": "925a25dfd46da69b",
+  "h": "b57eec26a380f234",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-complaints-desk/": {
-  "h": "f14e9d1dc0a701a6",
+  "h": "9652bdfc764b0d22",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-contract-review/": {
-  "h": "1e99363f6a3fd047",
+  "h": "7a4b2ad570a7e590",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-data-assistant/": {
-  "h": "69f7b48c0fe42576",
+  "h": "279df6c18ac461c6",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-demand-forecasting/": {
-  "h": "1d5dd42b70e0f22b",
+  "h": "e3e49b1daf8790bf",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-document-processing/": {
-  "h": "9b536fa829896b85",
+  "h": "a5402a7dcf368706",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-exam-grading/": {
-  "h": "a1a50702a1f0a226",
+  "h": "2e0109d3a7df2182",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-fraud-detection/": {
-  "h": "b2050b0e531942c1",
+  "h": "a32353e3d6930dac",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-hr-screening/": {
-  "h": "896df28d94d4c35d",
+  "h": "98c436a29997566e",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-id-verification/": {
-  "h": "265ede32e01f167c",
+  "h": "03e6a4f4600c1547",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-knowledge-base/": {
-  "h": "1fefa915ee356f4b",
+  "h": "d642e4d004456866",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-operations-agent/": {
-  "h": "fb6bcde2df496f92",
+  "h": "41405f67eb68a072",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-outbound-calls/": {
-  "h": "ec78699f81a89fcc",
+  "h": "63033f7965b96735",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-price-monitoring/": {
-  "h": "224a444c53f5d326",
+  "h": "f4aa6d463501c7b0",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-private-llm/": {
-  "h": "f20803a090021f8d",
+  "h": "5e8908d63d3d9d8a",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-product-photos/": {
-  "h": "06f194921d6c208e",
+  "h": "f6b5035d441cb573",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-quality-vision/": {
-  "h": "93e89853fba3b514",
+  "h": "340d267a0fec935c",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-retail-vision/": {
-  "h": "5bd74a02613b0cdb",
+  "h": "48cd009f83252eb2",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-reviews-reputation/": {
-  "h": "1dace7b6eee677b6",
+  "h": "febad0c0f32c471f",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-safety-vision/": {
-  "h": "ffbb41304c205468",
+  "h": "7569a5bfcff65a30",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-sales-assistant/": {
-  "h": "d5b8b3b5d0f636b8",
+  "h": "dac7a4dbaee26085",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-smm-content/": {
-  "h": "2f7dee3ec23df34c",
+  "h": "a2d0b6290f00a737",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-telegram-support-account/": {
-  "h": "b3468425f35ecf04",
+  "h": "608ebce477e38150",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-translation/": {
-  "h": "e2af495c4879b4eb",
+  "h": "ffd24d1c75ad4c27",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-video-voiceover/": {
-  "h": "c819d554e0815e7a",
+  "h": "581ccfeed3f513cd",
   "d": "2026-10-21"
  },
  "/en/solutions/ai-voice-agent/": {
-  "h": "714eb41eda7afdda",
+  "h": "61f88b963c494b59",
   "d": "2026-10-21"
  },
  "/en/solutions/ai/": {
-  "h": "03e3bc3b400c10cf",
+  "h": "c61465ab19ecbaa6",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-1c-integration/": {
-  "h": "e4dd5937d11438ba",
+  "h": "eef506fade7b350c",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-bi-dashboards/": {
-  "h": "9071bc870adb82a6",
+  "h": "41ebb6d90efd0050",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-call-centre/": {
-  "h": "91f2097063e1b734",
+  "h": "8071a2307b643370",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-crm/": {
-  "h": "bc615b4709301f30",
+  "h": "319838dbc062e7e4",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-delivery-routing/": {
-  "h": "528f3a41e1c2d757",
+  "h": "86f177b66d6eba86",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-desktop-app/": {
-  "h": "481679f7042d28d9",
+  "h": "4b302ae6c7e16f0b",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-digital-marking/": {
-  "h": "bbba904c6336e636",
+  "h": "5b1b8e8e651dd655",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-digital-signage/": {
-  "h": "53d1518008402d54",
+  "h": "4130ebd54b7d6f93",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-document-workflow/": {
-  "h": "9bc7b60964d5ffab",
+  "h": "9e2dfe16f2ec126a",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-e-invoicing/": {
-  "h": "f67bfaea63e222f7",
+  "h": "2676a0fb0105e860",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-erp/": {
-  "h": "e2933fbbac599263",
+  "h": "87851615b3605cd3",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-field-service/": {
-  "h": "adecdc899a3603da",
+  "h": "0d824eb169d1465a",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-hr-payroll/": {
-  "h": "7bcf1476178a7e20",
+  "h": "6791022f80be6b89",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-kiosk/": {
-  "h": "f421e733caec39e8",
+  "h": "f4a5f3f10d004512",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-management-accounting/": {
-  "h": "4a8dde8e4e56467c",
+  "h": "e41b78be616cd120",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-marketplace-sync/": {
-  "h": "79d136f3b6379a8b",
+  "h": "b9a9b3a935ed9f70",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-notification-hub/": {
-  "h": "c87a1953d4a3ccf7",
+  "h": "b431000da9ccc2df",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-payments/": {
-  "h": "7c3cf0a2d83547f2",
+  "h": "ca43162fc9b826d0",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-pos/": {
-  "h": "a8ad0833489909e1",
+  "h": "c6fd48bd16e764f0",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-procurement/": {
-  "h": "e78d53001d3f7d7e",
+  "h": "6ef1ff60157e23e8",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-queue/": {
-  "h": "54dd01194b29c137",
+  "h": "fb18371839c5dcc1",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-subscription-billing/": {
-  "h": "67b30e84651529bb",
+  "h": "f9697d12a7dadd70",
   "d": "2026-10-21"
  },
  "/en/solutions/biz-wms/": {
-  "h": "0cea81cd34488cc4",
+  "h": "b675df732ae2a120",
   "d": "2026-10-21"
  },
  "/en/solutions/business/": {
-  "h": "aa2b571dcf492d18",
+  "h": "743d806d5fdcf2c1",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-backend-api/": {
-  "h": "b49a53561f25f1cb",
+  "h": "243ebd2209581063",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-backup-dr/": {
-  "h": "ec5241ac905b233b",
+  "h": "dfb39452cd46ed39",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-cost-optimisation/": {
-  "h": "895e04eec7f877c9",
+  "h": "a48cb4baff3929c0",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-data-compliance/": {
-  "h": "6c7d0b4fa6017e1a",
+  "h": "5facca9b4f010b76",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-data-platform/": {
-  "h": "7edd427916789dce",
+  "h": "51a6e25a49e7c41c",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-devops/": {
-  "h": "493019df1596750d",
+  "h": "91d166cdeb70c3d9",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-hosting-uz/": {
-  "h": "78be046e623ef35e",
+  "h": "ff773c9a9eceac7f",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-identity/": {
-  "h": "11bc880ac42c5e3c",
+  "h": "5489fed1154dd329",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-migration/": {
-  "h": "52b6a5c1a42333f4",
+  "h": "31faae84f976090b",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-performance/": {
-  "h": "b96fe3b141365089",
+  "h": "4c509503dc929dac",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-security-audit/": {
-  "h": "8dd0cc0c47373eed",
+  "h": "1bebd6d79b58204c",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud-workspace/": {
-  "h": "2300afa150dcf6c4",
+  "h": "56bc342b1bbc4487",
   "d": "2026-10-21"
  },
  "/en/solutions/cloud/": {
-  "h": "76a405cf4625aa28",
+  "h": "7e710461562845eb",
   "d": "2026-10-21"
  },
  "/en/solutions/game-3d-mobile/": {
-  "h": "7bc0c982c4435a2d",
+  "h": "45dcbbb5bf15671d",
   "d": "2026-10-21"
  },
  "/en/solutions/game-advergame/": {
-  "h": "4065fb273ba5715b",
+  "h": "9846fa0919eb1b81",
   "d": "2026-10-21"
  },
  "/en/solutions/game-ar-campaign/": {
-  "h": "29e431b73465df9a",
+  "h": "d5bdc910f0f6d48d",
   "d": "2026-10-21"
  },
  "/en/solutions/game-ar-product/": {
-  "h": "5811e61b5dd26830",
+  "h": "2ef6f9749594d263",
   "d": "2026-10-21"
  },
  "/en/solutions/game-casual-2d/": {
-  "h": "8ce492c756eca368",
+  "h": "2832659da724027c",
   "d": "2026-10-21"
  },
  "/en/solutions/game-edu-kids/": {
-  "h": "7f948ab46bfc0660",
+  "h": "1197162721dd3637",
   "d": "2026-10-21"
  },
  "/en/solutions/game-event-installation/": {
-  "h": "ac1979600a5cfd7d",
+  "h": "49ac947964906f88",
   "d": "2026-10-21"
  },
  "/en/solutions/game-gamified-loyalty/": {
-  "h": "0ccf2a3237a83df4",
+  "h": "2a6d6f8b1f77e3c1",
   "d": "2026-10-21"
  },
  "/en/solutions/game-telegram-mini/": {
-  "h": "55026852398f1398",
+  "h": "c1c03a3739153008",
   "d": "2026-10-21"
  },
  "/en/solutions/game-virtual-tour/": {
-  "h": "c8852aa12c2a31df",
+  "h": "d9dec63bd3472e25",
   "d": "2026-10-21"
  },
  "/en/solutions/game-vr-training/": {
-  "h": "19d26a96ab1e1217",
+  "h": "7927d35e9e8fd110",
   "d": "2026-10-21"
  },
  "/en/solutions/games/": {
-  "h": "731ecd6d81c3b296",
+  "h": "3bc7adc27c6fa8cc",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-agro-farm/": {
-  "h": "f6f52ae93be75886",
+  "h": "4a88091d65945837",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-agro-packhouse/": {
-  "h": "82b4e660cd154eef",
+  "h": "1c19a5b430453f30",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-auto-service/": {
-  "h": "a581a1309dcc8a66",
+  "h": "887729b8686aa07a",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-clinic/": {
-  "h": "2c07f8233013eb20",
+  "h": "4b3696fdf824c3d7",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-construction/": {
-  "h": "f67f1f79c689b2d2",
+  "h": "d421bb6cf9577a8d",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-developer-sales/": {
-  "h": "ab4097cc53912c32",
+  "h": "a3800df1c8231b39",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-education-centre/": {
-  "h": "39adc6d76829b7d8",
+  "h": "fe5ef4787b102704",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-fitness-sports/": {
-  "h": "127123a964ddccfc",
+  "h": "c11c9efc92c470cc",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-gov-tenders/": {
-  "h": "ccb64dc8208ce6f1",
+  "h": "e17c869bd2e8dee0",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-hotel-kit/": {
-  "h": "b29e8ed000be400e",
+  "h": "3708e63f05816dd0",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-hotel/": {
-  "h": "f0a60247292b1c6f",
+  "h": "5db07ec59cb10c9f",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-insurance/": {
-  "h": "7c78330303fe8058",
+  "h": "1079f030d1c860be",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-lending/": {
-  "h": "d2954b6f7e8b5a61",
+  "h": "0fc054e794729c55",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-logistics-tms/": {
-  "h": "0b4965ab29f942f0",
+  "h": "dc23a47f546bb176",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-pharmacy/": {
-  "h": "1ce29ab74a2dc2b5",
+  "h": "4807999b4cdb4dca",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-property-management/": {
-  "h": "41e1a75000cf8545",
+  "h": "4b6f03ce94328f57",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-restaurant/": {
-  "h": "46fe0daf3307d1f0",
+  "h": "021fe3346017428e",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-textile/": {
-  "h": "d8d7ed2ea4add1f4",
+  "h": "5e10de5443194ea8",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-tour-operator/": {
-  "h": "9dbc1bba928fa1d0",
+  "h": "94aa4b57e0cf91ac",
   "d": "2026-10-21"
  },
  "/en/solutions/ind-wedding-hall/": {
-  "h": "dbb05c57d5d6d527",
+  "h": "76148f162971028a",
   "d": "2026-10-21"
  },
  "/en/solutions/industry/": {
-  "h": "8f4fbf423262cb7e",
+  "h": "10b90f21e8d078c1",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-access-control/": {
-  "h": "e39af17a3ce89c16",
+  "h": "f9688a35aaa175f5",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-asset-tracking/": {
-  "h": "deaf7d0e232ca7ac",
+  "h": "dfb533f68824639b",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-cold-chain/": {
-  "h": "d57e62bad6068f0f",
+  "h": "b3d7c970b3c787c7",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-custom-device/": {
-  "h": "e3cff8b272392ce8",
+  "h": "d393a13bfe5b0cb8",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-factory-monitoring/": {
-  "h": "2f6ab6da4f507c6d",
+  "h": "dc64abb9a200db28",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-fleet-gps/": {
-  "h": "dd71bf067e6dea25",
+  "h": "edc41f38379e662e",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-greenhouse/": {
-  "h": "717dae7ded6f14f8",
+  "h": "2e5c5bd8babd243a",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-irrigation/": {
-  "h": "8e603f16967942b3",
+  "h": "286011c250c47ce4",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-per-minute-billing/": {
-  "h": "a376acc2fb4b70b0",
+  "h": "21736e662c97c3a3",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-smart-metering/": {
-  "h": "497a6ac9939efe94",
+  "h": "64b4d6b99ffc5826",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-smart-parking/": {
-  "h": "4e32915fb0945e4a",
+  "h": "561b829b880ec05e",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-solar-energy/": {
-  "h": "51313ec9e7e4bd10",
+  "h": "9b26e068e3555633",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-vending-cashless/": {
-  "h": "0af9b139d04a2536",
+  "h": "d7faca234fcd0b99",
   "d": "2026-10-21"
  },
  "/en/solutions/iot-weighbridge/": {
-  "h": "236686d64927631c",
+  "h": "e4a2e900d7855f15",
   "d": "2026-10-21"
  },
  "/en/solutions/iot/": {
-  "h": "cc5b35dcf48786ea",
+  "h": "b2327decfbb051ec",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-booking-app/": {
-  "h": "5e2042ec69411050",
+  "h": "9848fb012dfa411b",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-customer-app/": {
-  "h": "799e61cee3e1699e",
+  "h": "c6d5d6c5e754b15e",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-delivery-suite/": {
-  "h": "eaa73e29f60ba798",
+  "h": "850fdb5f5d6713c7",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-education-app/": {
-  "h": "952bbfc6c7883265",
+  "h": "00cc64a7632fd195",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-events-tickets/": {
-  "h": "a5d297628edfa49c",
+  "h": "e51c6fab584414d3",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-field-sales/": {
-  "h": "724f6e025e7e5b9a",
+  "h": "5044bd0dde159390",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-fintech-app/": {
-  "h": "8e19acb85107d43e",
+  "h": "154920959a74f96c",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-inspection-app/": {
-  "h": "bddb684d8355698e",
+  "h": "363de7f2e10011d9",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-loyalty-platform/": {
-  "h": "9f402ff4fa408578",
+  "h": "25e7433e10ecbaf0",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-services-marketplace/": {
-  "h": "80e99529b957f485",
+  "h": "1538bcc0d69d73ea",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-super-app/": {
-  "h": "e13e7c8d0309d873",
+  "h": "d58fa10d48cba908",
   "d": "2026-10-21"
  },
  "/en/solutions/mob-taxi-app/": {
-  "h": "887513e4eb78fd18",
+  "h": "345372a9003626ea",
   "d": "2026-10-21"
  },
  "/en/solutions/mobile/": {
-  "h": "6b3a0371fb30b07c",
+  "h": "06379e5a544805c6",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-app-store/": {
-  "h": "5610fcf27f50c51e",
+  "h": "b5c32fddfb982e76",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-code-rescue/": {
-  "h": "d6bfd49e8c7cd7e0",
+  "h": "24ee6b4de30d267f",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-dedicated-team/": {
-  "h": "97a73c4fb0671b23",
+  "h": "ebe8a422f07a508e",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-discovery/": {
-  "h": "6f961c077c1c0499",
+  "h": "d8c7e920dd963eb5",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-fractional-cto/": {
-  "h": "153e9dff47b3ed87",
+  "h": "ca48227b79376dac",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-qa/": {
-  "h": "739fc8a571eb0a52",
+  "h": "661a4f1528335ee5",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-sla/": {
-  "h": "4f97bbbcde866436",
+  "h": "019b237bf7690d8d",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-tech-review/": {
-  "h": "9069df2a38ba4a9b",
+  "h": "7a929aeb95ef32d4",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-training/": {
-  "h": "8b147fdcc3143486",
+  "h": "e8754fea86d528dd",
   "d": "2026-10-21"
  },
  "/en/solutions/sup-ux-ui/": {
-  "h": "182390df7911dace",
+  "h": "891b63dbe145a448",
   "d": "2026-10-21"
  },
  "/en/solutions/support/": {
-  "h": "0c3fe1eacb2df452",
+  "h": "d325fdd5f44d8fa9",
   "d": "2026-10-21"
  },
  "/en/solutions/telegram/": {
-  "h": "150ae62141f2907f",
+  "h": "8243777b9fe66441",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-b2b-ordering/": {
-  "h": "b3727630cf392481",
+  "h": "1b1730306675547d",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-booking-bot/": {
-  "h": "d803cedf7e7af1ae",
+  "h": "c02aa3cf1b0172f1",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-channel-automation/": {
-  "h": "36812e9192e8e058",
+  "h": "6a49cfa968339515",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-course-bot/": {
-  "h": "47bf589bbf9c3e3e",
+  "h": "5e2b9c1510f3721f",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-crm-mini-app/": {
-  "h": "7931c816fd5ab173",
+  "h": "8da4ab498058256a",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-field-reports/": {
-  "h": "a996c73d3e48f168",
+  "h": "c75324381011908a",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-freight-board/": {
-  "h": "79a61ceb72f88c60",
+  "h": "b3c6cbf0ba1fa680",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-hr-bot/": {
-  "h": "8238fc326d1b1de7",
+  "h": "2212654c57b13824",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-lead-bot/": {
-  "h": "c36282653201d679",
+  "h": "9ecebed7216b8e08",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-loyalty-bot/": {
-  "h": "b2e3e66140b493bc",
+  "h": "7c4cd6ca3b7e4595",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-mini-app-store/": {
-  "h": "7e5d56ba720e95cf",
+  "h": "67f256e878d61eb6",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-order-bot/": {
-  "h": "19985c677eab8c05",
+  "h": "9726922ada53438b",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-paid-access/": {
-  "h": "1949c871863c5d67",
+  "h": "4c6d45cbe667c2e4",
   "d": "2026-10-21"
  },
  "/en/solutions/tg-support-desk/": {
-  "h": "453d06fb87a9d196",
+  "h": "6daa80233d9cd1e2",
   "d": "2026-10-21"
  },
  "/en/solutions/web-3d-configurator/": {
-  "h": "a33bc82bb9476424",
+  "h": "c3ea6404705f3842",
   "d": "2026-10-21"
  },
  "/en/solutions/web-apartment-picker/": {
-  "h": "4a3aabad16aca2c3",
+  "h": "d05cf3fdacd6f973",
   "d": "2026-10-21"
  },
  "/en/solutions/web-booking-engine/": {
-  "h": "88aae285d8b3c315",
+  "h": "36ed232e65038373",
   "d": "2026-10-21"
  },
  "/en/solutions/web-calculators/": {
-  "h": "4a16307b54e4a83a",
+  "h": "f68e858c8215cc79",
   "d": "2026-10-21"
  },
  "/en/solutions/web-client-portal/": {
-  "h": "99d5f171d9ff047f",
+  "h": "0a4dc2771fc377af",
   "d": "2026-10-21"
  },
  "/en/solutions/web-corporate/": {
-  "h": "b6dbf91bb310589b",
+  "h": "488bf7a6c5fa19c5",
   "d": "2026-10-21"
  },
  "/en/solutions/web-ecommerce/": {
-  "h": "2537d26994aa3fd7",
+  "h": "a92ae88f65753d00",
   "d": "2026-10-21"
  },
  "/en/solutions/web-immersive-site/": {
-  "h": "ea153c3c13fc385e",
+  "h": "cd07f766601d7a65",
   "d": "2026-10-21"
  },
  "/en/solutions/web-landing/": {
-  "h": "032bda3111b179e7",
+  "h": "7a6ac2bba27179cf",
   "d": "2026-10-21"
  },
  "/en/solutions/web-listings-portal/": {
-  "h": "d75048d1704c19a3",
+  "h": "2dee66669e3dd10b",
   "d": "2026-10-21"
  },
  "/en/solutions/web-lms/": {
-  "h": "a210abcff634fdf9",
+  "h": "62d7e12fdae72f13",
   "d": "2026-10-21"
  },
  "/en/solutions/web-marketplace/": {
-  "h": "8a46140a6a91e9c7",
+  "h": "6f3ad930d03cf0cb",
   "d": "2026-10-21"
  },
  "/en/solutions/web-pwa/": {
-  "h": "87f617f858dd8181",
+  "h": "d65779938b0eef9b",
   "d": "2026-10-21"
  },
  "/en/solutions/web-redesign/": {
-  "h": "ecfb774676a65254",
+  "h": "2e0a73f0adc3caee",
   "d": "2026-10-21"
  },
  "/en/solutions/web-saas/": {
-  "h": "dd76ec069ee9cc06",
+  "h": "b2cf9bc2750b66ab",
   "d": "2026-10-21"
  },
  "/en/solutions/web-seo/": {
-  "h": "7623a2fc8637eb1e",
+  "h": "51a8b1df2ff5beab",
   "d": "2026-10-21"
  },
  "/en/solutions/web/": {
-  "h": "cb557ae3b2d77b2a",
+  "h": "a84865049d976357",
   "d": "2026-10-21"
  },
  "/ja/": {
-  "h": "3f2ed46c3a30522f",
+  "h": "5640ed97045ec738",
   "d": "2026-10-21"
  },
  "/ja/about/": {
@@ -732,7 +732,7 @@
   "d": "2026-10-21"
  },
  "/ja/prices/": {
-  "h": "e528633fb3ddca07",
+  "h": "892c55a76bdc9904",
   "d": "2026-10-21"
  },
  "/ja/privacy/": {
@@ -744,683 +744,683 @@
   "d": "2026-10-21"
  },
  "/ja/solutions/": {
-  "h": "8be2356bfa3c5df9",
+  "h": "8997a23f286a235e",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-call-quality/": {
-  "h": "3c5b7f487a1df564",
+  "h": "0992f8400016fcf5",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-complaints-desk/": {
-  "h": "7cb5ca51f942c137",
+  "h": "d861bce999754037",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-contract-review/": {
-  "h": "d175bbbf59dd1beb",
+  "h": "e5b6bb93e436a68f",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-data-assistant/": {
-  "h": "90d71238d3445a8c",
+  "h": "d6c195113bb345ee",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-demand-forecasting/": {
-  "h": "f42cafa47e7772ca",
+  "h": "b99a80ba1ed6ba01",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-document-processing/": {
-  "h": "c6758b1d25cf6b6e",
+  "h": "e1125621a0e411bd",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-exam-grading/": {
-  "h": "1d9db0cb23feff9d",
+  "h": "e56de15ef9adc194",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-fraud-detection/": {
-  "h": "ba4bc566a56ae777",
+  "h": "da1d2e19cb04d856",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-hr-screening/": {
-  "h": "bc46eced2da47e59",
+  "h": "2c9618e65665e573",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-id-verification/": {
-  "h": "c1c95799c21c2eb4",
+  "h": "c246ce147a55627a",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-knowledge-base/": {
-  "h": "847b43a57ba0fdf6",
+  "h": "c5262e7bf9150c53",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-operations-agent/": {
-  "h": "846f0954f0555a0d",
+  "h": "a3c31418bee522df",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-outbound-calls/": {
-  "h": "3a202069f8b194cf",
+  "h": "e31c5c6856a786bf",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-price-monitoring/": {
-  "h": "3ef8d78c7860d1f7",
+  "h": "b4db35235aae1ce4",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-private-llm/": {
-  "h": "b778a97856cc1dff",
+  "h": "d8e5252e067c145a",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-product-photos/": {
-  "h": "0aee224efe7ab176",
+  "h": "af8a96e10403a7da",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-quality-vision/": {
-  "h": "f76a6fb2bc1337f5",
+  "h": "9c310e83ea4f9a5e",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-retail-vision/": {
-  "h": "c25aaaffb4b7063e",
+  "h": "e38f46106016f8b5",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-reviews-reputation/": {
-  "h": "72de737b83e10afe",
+  "h": "f53eaca2113f9f7f",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-safety-vision/": {
-  "h": "eec0aae026906808",
+  "h": "63f54410ade1b850",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-sales-assistant/": {
-  "h": "c579ee1c550f3065",
+  "h": "b0af853b314a7ff0",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-smm-content/": {
-  "h": "4181404a88db3514",
+  "h": "a95881091dd133b9",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-telegram-support-account/": {
-  "h": "6cf16ba764874fd3",
+  "h": "d16f0ff29eff2b0a",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-translation/": {
-  "h": "17030bc276b5ca3f",
+  "h": "3ef0ce1dd21dca26",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-video-voiceover/": {
-  "h": "bd0a518b4040fd5f",
+  "h": "d70c7bda92c13d5f",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai-voice-agent/": {
-  "h": "f78d9c9267945e79",
+  "h": "0eb2592643ad99f0",
   "d": "2026-10-21"
  },
  "/ja/solutions/ai/": {
-  "h": "08118973e203e648",
+  "h": "3852cd0aca0efcfe",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-1c-integration/": {
-  "h": "94497ac29e705642",
+  "h": "0c66850db28b46df",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-bi-dashboards/": {
-  "h": "a8a75fa2ad5b48fe",
+  "h": "93934c199d226f04",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-call-centre/": {
-  "h": "822d48d65594676d",
+  "h": "7bb369ecd3853972",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-crm/": {
-  "h": "96b1b16975d69675",
+  "h": "e62734b23f16c522",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-delivery-routing/": {
-  "h": "a5978c7a414cd623",
+  "h": "82d672a54a488ea7",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-desktop-app/": {
-  "h": "548b59373e824ddf",
+  "h": "ba49bc30d8d58bf6",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-digital-marking/": {
-  "h": "61a2098e0081d808",
+  "h": "a957a3602a24c0d2",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-digital-signage/": {
-  "h": "c9cbb1e61b467003",
+  "h": "51ccd7a6e89990b4",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-document-workflow/": {
-  "h": "358d3ec0248d5259",
+  "h": "9672b5756782ec03",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-e-invoicing/": {
-  "h": "3936a41df89fb5ee",
+  "h": "1cd04052b610c975",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-erp/": {
-  "h": "8f8a9bc1c519fd50",
+  "h": "d7e1d89a3065809b",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-field-service/": {
-  "h": "c84e9159b30947d8",
+  "h": "a70ef0995aa9c7b5",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-hr-payroll/": {
-  "h": "9b4a3316c8eb8cd4",
+  "h": "8b753a1030b9e75a",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-kiosk/": {
-  "h": "f1b80f9fc884dfef",
+  "h": "15dcf85606f92cc4",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-management-accounting/": {
-  "h": "1cae967ddfa0478e",
+  "h": "bfb2dcee0bf97ad0",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-marketplace-sync/": {
-  "h": "cf63144e3d664050",
+  "h": "f663cf7284dcedb4",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-notification-hub/": {
-  "h": "818a29cb49eb6157",
+  "h": "b8e7c57ea46a2d0c",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-payments/": {
-  "h": "7372187491504937",
+  "h": "f502539812042515",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-pos/": {
-  "h": "fade0c32f81dddfc",
+  "h": "b155cff220e02616",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-procurement/": {
-  "h": "c568eaa63c3ba175",
+  "h": "e76b283b118486a1",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-queue/": {
-  "h": "f1f0e1591f59243b",
+  "h": "2ae4447903c2c245",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-subscription-billing/": {
-  "h": "3bab14b563c18d18",
+  "h": "ee17390d4a84fa48",
   "d": "2026-10-21"
  },
  "/ja/solutions/biz-wms/": {
-  "h": "f63d723dacf90a1d",
+  "h": "eab09cb2213bc1cb",
   "d": "2026-10-21"
  },
  "/ja/solutions/business/": {
-  "h": "1797610fa4bfb440",
+  "h": "21753c93a7e7e043",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-backend-api/": {
-  "h": "5031c7efd7b08a65",
+  "h": "bd198c6a2ed09ba3",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-backup-dr/": {
-  "h": "b63590792398ab94",
+  "h": "fe5cc788c9fcd8d5",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-cost-optimisation/": {
-  "h": "0e275f9c360eecd3",
+  "h": "6b965502f0da8923",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-data-compliance/": {
-  "h": "5fc55f48c2bab7d1",
+  "h": "33235cdd7ac9db86",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-data-platform/": {
-  "h": "93df642aea271833",
+  "h": "df83b643d3f5d469",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-devops/": {
-  "h": "d229a01ca73b8c10",
+  "h": "3b08500ab4b1eed6",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-hosting-uz/": {
-  "h": "fae95c35e83ca49b",
+  "h": "57ee6e6a64350956",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-identity/": {
-  "h": "4d5eb577b9237d37",
+  "h": "3b684bb069ef7784",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-migration/": {
-  "h": "bdb32e05210b59ca",
+  "h": "02217cc44fd5058e",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-performance/": {
-  "h": "dbf60b63a8cdf9f6",
+  "h": "5d9f186095658492",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-security-audit/": {
-  "h": "57f1ee1c167469c1",
+  "h": "15f71d23423cb2a7",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud-workspace/": {
-  "h": "66ff9e3c36d672a7",
+  "h": "fe1dc0660938ad15",
   "d": "2026-10-21"
  },
  "/ja/solutions/cloud/": {
-  "h": "773c491c04f07e9e",
+  "h": "a10c30edca374766",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-3d-mobile/": {
-  "h": "2a8c3f6690fc5d2a",
+  "h": "30c25c070efce144",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-advergame/": {
-  "h": "1871b75ea5926bcb",
+  "h": "581eb97fbdb537f6",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-ar-campaign/": {
-  "h": "66aff531d9cd6617",
+  "h": "98b891289a0ae46a",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-ar-product/": {
-  "h": "c48260c86d4b27ae",
+  "h": "cb0d3a93cf6fd9b9",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-casual-2d/": {
-  "h": "3bef6e4044036bfb",
+  "h": "ec19c346c933539b",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-edu-kids/": {
-  "h": "b71b954bec73ecbb",
+  "h": "8c012774d5d567c5",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-event-installation/": {
-  "h": "67bfabab6147340e",
+  "h": "818f90331699086c",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-gamified-loyalty/": {
-  "h": "39c777124e56dd70",
+  "h": "6855988e6847138b",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-telegram-mini/": {
-  "h": "2c763c4569d1a17c",
+  "h": "862ca49dc2fa2a1c",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-virtual-tour/": {
-  "h": "97f4c16a088e7230",
+  "h": "a70c31b462476ab4",
   "d": "2026-10-21"
  },
  "/ja/solutions/game-vr-training/": {
-  "h": "581411fcc6bb09b1",
+  "h": "f150afc14632133c",
   "d": "2026-10-21"
  },
  "/ja/solutions/games/": {
-  "h": "44978a1fec1d8ee2",
+  "h": "81cdd2cda499f145",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-agro-farm/": {
-  "h": "1bd123ffe6ab91b2",
+  "h": "27495d90843890b9",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-agro-packhouse/": {
-  "h": "8f826219bd76a68e",
+  "h": "d1ed7f89c4972402",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-auto-service/": {
-  "h": "8d3701b900044228",
+  "h": "acf7f8d9250043e6",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-clinic/": {
-  "h": "50e5d9925d500883",
+  "h": "36a3132e0f51b16a",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-construction/": {
-  "h": "d4088fe7bec0eeb7",
+  "h": "5eba48d2aaf85a4f",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-developer-sales/": {
-  "h": "9a8f0073996c06b6",
+  "h": "24031863b63d3f5b",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-education-centre/": {
-  "h": "1b96cf8cc11cc6f0",
+  "h": "e71349ccbf264f4e",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-fitness-sports/": {
-  "h": "d6bea67996d027bf",
+  "h": "7215b6ac0e947486",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-gov-tenders/": {
-  "h": "3e3f749d102dad36",
+  "h": "49bd4c5136d7972f",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-hotel-kit/": {
-  "h": "a472167b54dec37a",
+  "h": "0d8fcf395e86613d",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-hotel/": {
-  "h": "8e9ba819738fd9e0",
+  "h": "e068fbc670056421",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-insurance/": {
-  "h": "86c048e731884051",
+  "h": "430327149354c75d",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-lending/": {
-  "h": "82bb176bb52a1ff7",
+  "h": "0c1ee708e1476063",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-logistics-tms/": {
-  "h": "a7822fca66350fbc",
+  "h": "9d994a8b15ceddc6",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-pharmacy/": {
-  "h": "dbdd9624a32e8ff4",
+  "h": "077c0d3d72fe3769",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-property-management/": {
-  "h": "83487bc23955646c",
+  "h": "b43d8a787af7a35d",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-restaurant/": {
-  "h": "db0d7d81d1543acd",
+  "h": "ea7880da4b4b21dc",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-textile/": {
-  "h": "1a5845a3ddbd8b22",
+  "h": "7bc56625e0058017",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-tour-operator/": {
-  "h": "a65f92da94935d70",
+  "h": "856832fc8ad4c61c",
   "d": "2026-10-21"
  },
  "/ja/solutions/ind-wedding-hall/": {
-  "h": "caddfacaee27a0ea",
+  "h": "2496fc6a14049e71",
   "d": "2026-10-21"
  },
  "/ja/solutions/industry/": {
-  "h": "76d3d11a0729af93",
+  "h": "1b8e0bfb52037309",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-access-control/": {
-  "h": "c55d3400989140ed",
+  "h": "ddbdf8a4baf2310a",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-asset-tracking/": {
-  "h": "a1b8ef8ee19dc1a6",
+  "h": "0cdefbcedff1d9c4",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-cold-chain/": {
-  "h": "1c483727924a6de2",
+  "h": "b02f415c0ad79dd8",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-custom-device/": {
-  "h": "7ebf6c4e1fa590e4",
+  "h": "783196385b55cb89",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-factory-monitoring/": {
-  "h": "6ba9e67059c32f1d",
+  "h": "15b415ab09ab1aad",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-fleet-gps/": {
-  "h": "ab96f1430483e931",
+  "h": "77bd2db029061c01",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-greenhouse/": {
-  "h": "37c9d7abb9f88e7f",
+  "h": "eef658e3c5c776c8",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-irrigation/": {
-  "h": "fb9ff56f5ff1bce0",
+  "h": "f8dde8c9cadcadca",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-per-minute-billing/": {
-  "h": "cb8584c62da49541",
+  "h": "93d8d9af00194cb5",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-smart-metering/": {
-  "h": "25d69d6ad5288bf5",
+  "h": "4c0c46ccb8f55232",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-smart-parking/": {
-  "h": "d81aae5d33d81665",
+  "h": "cda1d775aa5d0548",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-solar-energy/": {
-  "h": "2568915e5de12f3e",
+  "h": "ddd267dd86004b34",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-vending-cashless/": {
-  "h": "d157d7a244ec7886",
+  "h": "bacd0a795e3bb0a3",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot-weighbridge/": {
-  "h": "d48e3a3e27375a63",
+  "h": "1da0446213fb9d6b",
   "d": "2026-10-21"
  },
  "/ja/solutions/iot/": {
-  "h": "f19779ca4aaf5def",
+  "h": "b2f69cb7161330e1",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-booking-app/": {
-  "h": "41377d84e022c124",
+  "h": "4119cd2e6b2d9543",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-customer-app/": {
-  "h": "2e0e82d680df632b",
+  "h": "70c8c381b94a65e4",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-delivery-suite/": {
-  "h": "ab5f2ff76d561772",
+  "h": "8422158133edb36d",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-education-app/": {
-  "h": "be37a303eb867585",
+  "h": "d4c493aa5bb47186",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-events-tickets/": {
-  "h": "25c1be180b08ef0a",
+  "h": "e9170dd835edabd0",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-field-sales/": {
-  "h": "83093122b205337b",
+  "h": "3bc0d8d3f7b6cb18",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-fintech-app/": {
-  "h": "8f179a0c5da7d521",
+  "h": "33ad20c59f3789d3",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-inspection-app/": {
-  "h": "2b1195e542d27485",
+  "h": "f83d6e6fcceebcfb",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-loyalty-platform/": {
-  "h": "9a218cd40726e863",
+  "h": "f750cce029d560f5",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-services-marketplace/": {
-  "h": "00928fc3b578507d",
+  "h": "ef89b49696e8d13b",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-super-app/": {
-  "h": "1612f5e98f8eaf51",
+  "h": "1cc79e1f6d79785a",
   "d": "2026-10-21"
  },
  "/ja/solutions/mob-taxi-app/": {
-  "h": "1155900392451289",
+  "h": "5b3f5d7dc0d209e6",
   "d": "2026-10-21"
  },
  "/ja/solutions/mobile/": {
-  "h": "35096ce50a96a22d",
+  "h": "1592ac4ed4b09789",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-app-store/": {
-  "h": "bfd4573ba345bfdc",
+  "h": "33791cc62f23fbce",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-code-rescue/": {
-  "h": "2043c7649793af45",
+  "h": "1de7c06c80d61725",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-dedicated-team/": {
-  "h": "7e237da92aca2fb4",
+  "h": "73740d1c3dd2135a",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-discovery/": {
-  "h": "be78a434659950f2",
+  "h": "b67f6465386cbf35",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-fractional-cto/": {
-  "h": "25216eb8c2fcaede",
+  "h": "4d8ff3dc207bf3c4",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-qa/": {
-  "h": "4a961080ff9effb8",
+  "h": "66f6942ac165175e",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-sla/": {
-  "h": "fe478a362a34cfa8",
+  "h": "335dccfa60effa33",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-tech-review/": {
-  "h": "567bb8a66d126776",
+  "h": "1831b58a24269a01",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-training/": {
-  "h": "de8fcb869299143c",
+  "h": "86dcde90cac08d9d",
   "d": "2026-10-21"
  },
  "/ja/solutions/sup-ux-ui/": {
-  "h": "3acb19f9a21d4881",
+  "h": "7a326fbada12249a",
   "d": "2026-10-21"
  },
  "/ja/solutions/support/": {
-  "h": "96ec28c3bcebe24a",
+  "h": "0ec8b61922c06734",
   "d": "2026-10-21"
  },
  "/ja/solutions/telegram/": {
-  "h": "c9272b98b990d79e",
+  "h": "61c7715d50b9cf02",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-b2b-ordering/": {
-  "h": "3e2dbab3e863d0ac",
+  "h": "8abc9590169a21e3",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-booking-bot/": {
-  "h": "5f8444ddbf7f8f09",
+  "h": "25852beb3f291413",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-channel-automation/": {
-  "h": "f03fee34561047f8",
+  "h": "8bcfb8be7fb2fca0",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-course-bot/": {
-  "h": "8e775d6418e21078",
+  "h": "1da72fde94972fec",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-crm-mini-app/": {
-  "h": "fe91af1b698957f4",
+  "h": "b0d5f7ef20f95cb4",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-field-reports/": {
-  "h": "166ef523c44886df",
+  "h": "5f602b17ca34f633",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-freight-board/": {
-  "h": "4c5fbb3331ba26f9",
+  "h": "27746e442cf6c9a7",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-hr-bot/": {
-  "h": "ff70c46d87ffc1e9",
+  "h": "b36bc060fdb58346",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-lead-bot/": {
-  "h": "367ecaade19eee9f",
+  "h": "a4a3f56e38da70d2",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-loyalty-bot/": {
-  "h": "e46d13394d4ce024",
+  "h": "050bf9ac9ad96bca",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-mini-app-store/": {
-  "h": "6187f4e93ffeee81",
+  "h": "2e2c28431b6bdb51",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-order-bot/": {
-  "h": "577c2e0a8ca6ac6d",
+  "h": "a0ac82220aa9c4dd",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-paid-access/": {
-  "h": "7d99820ff68846cb",
+  "h": "24c651d92468564a",
   "d": "2026-10-21"
  },
  "/ja/solutions/tg-support-desk/": {
-  "h": "a2e7b11ea9e56ec8",
+  "h": "1f40ad39874ef60f",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-3d-configurator/": {
-  "h": "e1afb817ffa05f07",
+  "h": "63dc100af7fa5266",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-apartment-picker/": {
-  "h": "60711adca57a1ee5",
+  "h": "925c6cbc952b040f",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-booking-engine/": {
-  "h": "c78f3e46643c4c73",
+  "h": "e56a94b70208ea3f",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-calculators/": {
-  "h": "d61c520a31883ad9",
+  "h": "f68e8aae35634d33",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-client-portal/": {
-  "h": "6c425d8868e0d9df",
+  "h": "41bdf6a088aa2cf4",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-corporate/": {
-  "h": "a47c8576ad409164",
+  "h": "6500601d901beb51",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-ecommerce/": {
-  "h": "80588c6eff566470",
+  "h": "8063f3b966e5e919",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-immersive-site/": {
-  "h": "0a8c3df46a47bad3",
+  "h": "983d5b7a183ee584",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-landing/": {
-  "h": "c2f118291312c14b",
+  "h": "3aeb87df09d220d6",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-listings-portal/": {
-  "h": "5e9479ad02efcb49",
+  "h": "6d6cf8057475dc81",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-lms/": {
-  "h": "24233cdca2746d6a",
+  "h": "918c26d417a42a61",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-marketplace/": {
-  "h": "bfee691878ff2440",
+  "h": "42836ff2471990e1",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-pwa/": {
-  "h": "d82456e270962ac7",
+  "h": "845c7089539a20e4",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-redesign/": {
-  "h": "2b79636685dee341",
+  "h": "10a512851ff28626",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-saas/": {
-  "h": "05f4be86c180a903",
+  "h": "1d482034abddbf3a",
   "d": "2026-10-21"
  },
  "/ja/solutions/web-seo/": {
-  "h": "7793dc4267810ac0",
+  "h": "ecc88d114779a7b5",
   "d": "2026-10-21"
  },
  "/ja/solutions/web/": {
-  "h": "d7c396548f4dd927",
+  "h": "aa249d1ab1bf9ee1",
   "d": "2026-10-21"
  },
  "/narxlar/": {
-  "h": "c4cd8fa89b984f6c",
+  "h": "40b2ad9fe0d5d545",
   "d": "2026-10-21"
  },
  "/press/": {
@@ -1432,7 +1432,7 @@
   "d": "2026-10-21"
  },
  "/ru/": {
-  "h": "9d39400c3a30bb47",
+  "h": "9b77bf155b533010",
   "d": "2026-10-21"
  },
  "/ru/about/": {
@@ -1452,679 +1452,679 @@
   "d": "2026-10-21"
  },
  "/ru/resheniya/": {
-  "h": "a6f5430afd41518f",
+  "h": "e9540b2b53da7387",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-call-quality/": {
-  "h": "bbaab74d1ae87089",
+  "h": "2ac03c4372ef843d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-complaints-desk/": {
-  "h": "14b23c73182c3853",
+  "h": "c62f58ebcda15b1b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-contract-review/": {
-  "h": "16862577cac9e137",
+  "h": "b52c0cf78dc4227e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-data-assistant/": {
-  "h": "5f2b55050ac53b75",
+  "h": "f1c44e1f41d292ed",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-demand-forecasting/": {
-  "h": "00d694fffce974f6",
+  "h": "9152ccfbfdbe8aad",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-document-processing/": {
-  "h": "55d94d036d513565",
+  "h": "43cc2163a0b516e0",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-exam-grading/": {
-  "h": "ee28b4f180f35f8c",
+  "h": "5da4f29e8a6bae05",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-fraud-detection/": {
-  "h": "98dc2e12f47b58d0",
+  "h": "84a0296576b61624",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-hr-screening/": {
-  "h": "e3bba3f679e89fb7",
+  "h": "70b7658a924748b4",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-id-verification/": {
-  "h": "aa66ff746ade87a8",
+  "h": "cd5b2a22ba0c53f2",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-knowledge-base/": {
-  "h": "6b964e0ab8a61514",
+  "h": "d49e98abe74d82cb",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-operations-agent/": {
-  "h": "1a0f25224a868dd2",
+  "h": "63049e4e8a8e471c",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-outbound-calls/": {
-  "h": "7560928a6ba34e7d",
+  "h": "80e562f1e6c427b7",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-price-monitoring/": {
-  "h": "324b7d5415713ce6",
+  "h": "a28adf63e86c8900",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-private-llm/": {
-  "h": "ef0ff412ebfc7d14",
+  "h": "398a274db235cd93",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-product-photos/": {
-  "h": "1292a9cd32ccc168",
+  "h": "bab57c9a24b0dbaf",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-quality-vision/": {
-  "h": "ca3f208aec1bdaec",
+  "h": "124a33b20ac63de3",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-retail-vision/": {
-  "h": "050b753305e24598",
+  "h": "b9194a39d8449044",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-reviews-reputation/": {
-  "h": "f0078cdc4f6f039f",
+  "h": "4cdd3cbcbb171959",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-safety-vision/": {
-  "h": "4d73c7026123d0cd",
+  "h": "240665ebfb76c086",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-sales-assistant/": {
-  "h": "2e333080bbdca9c7",
+  "h": "07ed6e29b82221e8",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-smm-content/": {
-  "h": "b4291e930c60135a",
+  "h": "0c6e2a8292df0858",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-telegram-support-account/": {
-  "h": "eb270c7986310154",
+  "h": "6ef9308e5b94c089",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-translation/": {
-  "h": "fb2727debd75d6bc",
+  "h": "2b2c5fd7586f320b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-video-voiceover/": {
-  "h": "02f2924ce19657b4",
+  "h": "9f42b961b6ebce82",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai-voice-agent/": {
-  "h": "ff46e566c5605048",
+  "h": "dc26f5d2846db25a",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ai/": {
-  "h": "3b924e780ce056e4",
+  "h": "71a1ad9dd4d03890",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-1c-integration/": {
-  "h": "e325912abe4aeb82",
+  "h": "a415d123ff60b032",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-bi-dashboards/": {
-  "h": "f92e55005ac13505",
+  "h": "b8c254df6375ce83",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-call-centre/": {
-  "h": "06ca5e4dfa20ba76",
+  "h": "f1946ed5a750ff50",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-crm/": {
-  "h": "e01ad71b11aaa732",
+  "h": "5e68f98cfd792b2a",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-delivery-routing/": {
-  "h": "8573804d67bc00a3",
+  "h": "dd120b37132d6f06",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-desktop-app/": {
-  "h": "527e228fa4f5c77b",
+  "h": "a9aa54f89fe938ba",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-digital-marking/": {
-  "h": "9ba58fdfa525320d",
+  "h": "3ba690d666ba7983",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-digital-signage/": {
-  "h": "1aa80bac65849427",
+  "h": "9874fa5f2b1be33d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-document-workflow/": {
-  "h": "3af42af2360f72be",
+  "h": "2c84e38df4ffd588",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-e-invoicing/": {
-  "h": "e7aeb7f7425e5e4a",
+  "h": "6a7b074a715239e9",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-erp/": {
-  "h": "4b107a6a9380102b",
+  "h": "7c1d991d744e3c11",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-field-service/": {
-  "h": "5a3b2c7564666e49",
+  "h": "38219214d29ed67a",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-hr-payroll/": {
-  "h": "636264ba885f26a4",
+  "h": "da65bd73e2161f52",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-kiosk/": {
-  "h": "c619ce2c86030f0a",
+  "h": "a803e6c33841baac",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-management-accounting/": {
-  "h": "ba628eb728005c09",
+  "h": "c16172a04b1a973b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-marketplace-sync/": {
-  "h": "feb742bc069ad9e9",
+  "h": "7478c7898e2d2f7f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-notification-hub/": {
-  "h": "83d68f6f8b5eb858",
+  "h": "067dcf599d2358e7",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-payments/": {
-  "h": "ce3a1b0618ac233e",
+  "h": "1b371d1cd0a38eca",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-pos/": {
-  "h": "4b2a3d7c3cd7b769",
+  "h": "481e4624a2f3f44e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-procurement/": {
-  "h": "bf6471d247023101",
+  "h": "581d052ea7925186",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-queue/": {
-  "h": "b300a47dee3dc09c",
+  "h": "16ebdaf23d4c223e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-subscription-billing/": {
-  "h": "75594bd15b4a8629",
+  "h": "314f32f97fe220b1",
   "d": "2026-10-21"
  },
  "/ru/resheniya/biz-wms/": {
-  "h": "020eabfc4c1736fb",
+  "h": "db87e484ac2c55cd",
   "d": "2026-10-21"
  },
  "/ru/resheniya/business/": {
-  "h": "5e82867193d711b4",
+  "h": "27cbce45205f374e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-backend-api/": {
-  "h": "0775cce56cdfa4e4",
+  "h": "a4456cfc119943d9",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-backup-dr/": {
-  "h": "e52cd2e9cca693ff",
+  "h": "157f2c8f547f01da",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-cost-optimisation/": {
-  "h": "77374fd4a45257ec",
+  "h": "85361acf2af7b8ae",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-data-compliance/": {
-  "h": "476ad6d8a4dca182",
+  "h": "ac16475e76364579",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-data-platform/": {
-  "h": "48af4e23d4c490b9",
+  "h": "97857aaaf1ab3853",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-devops/": {
-  "h": "31bcfb4bd770be3e",
+  "h": "9c101491a31c44b0",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-hosting-uz/": {
-  "h": "32abc33fca609ac5",
+  "h": "2d5db8995cbd08e6",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-identity/": {
-  "h": "db12d325ec701efc",
+  "h": "57de533c1a354b9c",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-migration/": {
-  "h": "54ab533957e1e542",
+  "h": "c4b288c2f1994cd9",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-performance/": {
-  "h": "d7e521c1d00d3bdc",
+  "h": "c1d3a1bf0a3f423e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-security-audit/": {
-  "h": "bb758f69da789eee",
+  "h": "6d2c16bb955de3c6",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud-workspace/": {
-  "h": "af05957c5f29c19d",
+  "h": "a367c2d7de129195",
   "d": "2026-10-21"
  },
  "/ru/resheniya/cloud/": {
-  "h": "e3102279fbb93ca2",
+  "h": "66127b1597a68ca6",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-3d-mobile/": {
-  "h": "b182e74e4557900a",
+  "h": "944cf1427abde3cf",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-advergame/": {
-  "h": "ebe4113f9d956a7e",
+  "h": "2a90ade7b22d740e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-ar-campaign/": {
-  "h": "59db7c4012d85b52",
+  "h": "ed9507744e2ed777",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-ar-product/": {
-  "h": "8bc029d1b0280f1e",
+  "h": "508985abc495e93e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-casual-2d/": {
-  "h": "fe5a6d2b6e86d17c",
+  "h": "cad088620526107e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-edu-kids/": {
-  "h": "faa188909863910f",
+  "h": "3adb2cde5d440ec6",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-event-installation/": {
-  "h": "54317f4c4a26f496",
+  "h": "5c6f88cb5d952ece",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-gamified-loyalty/": {
-  "h": "17ab1373b0cc1219",
+  "h": "19811cf751f80062",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-telegram-mini/": {
-  "h": "55000b967a7461b9",
+  "h": "1c73e71a15c9e1eb",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-virtual-tour/": {
-  "h": "b4feb8b52e60c838",
+  "h": "90f145fc44933b30",
   "d": "2026-10-21"
  },
  "/ru/resheniya/game-vr-training/": {
-  "h": "2f2d73704e2f82cd",
+  "h": "45e28493aedd8dc2",
   "d": "2026-10-21"
  },
  "/ru/resheniya/games/": {
-  "h": "ca5eab955e9f13d6",
+  "h": "5b86afd153af78e9",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-agro-farm/": {
-  "h": "e0d08def8adf2f4b",
+  "h": "20749745cc704125",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-agro-packhouse/": {
-  "h": "864677c9b0a837fb",
+  "h": "be89e979bfe2c776",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-auto-service/": {
-  "h": "5ea641502cb845af",
+  "h": "0c5bf9bce505a0e3",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-clinic/": {
-  "h": "0bb3487e1278e41a",
+  "h": "37e0d231885f7e0f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-construction/": {
-  "h": "552c28e7a15fa159",
+  "h": "bbddbbb118ceba5e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-developer-sales/": {
-  "h": "c2203c880c31e143",
+  "h": "bd974e4c7336fbf1",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-education-centre/": {
-  "h": "dab54e560f8d3947",
+  "h": "97e273cc5ba19f7d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-fitness-sports/": {
-  "h": "aaddde40a34ce52f",
+  "h": "c5ff3308203e1d7a",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-gov-tenders/": {
-  "h": "090f85ddc77c8ba8",
+  "h": "c80cb3ea65c88954",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-hotel-kit/": {
-  "h": "79e5b790f093fa6e",
+  "h": "aaadb466a04f262b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-hotel/": {
-  "h": "36cc863053ba99cc",
+  "h": "a755c67c1cfb05eb",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-insurance/": {
-  "h": "53a83457951a881d",
+  "h": "24b99519385487f8",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-lending/": {
-  "h": "9a056283bdc39e07",
+  "h": "8a6b2bcaf74b0fab",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-logistics-tms/": {
-  "h": "4b846dd765ab9948",
+  "h": "39535421bc3779eb",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-pharmacy/": {
-  "h": "ace3be88262c6973",
+  "h": "2a288337b55a3899",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-property-management/": {
-  "h": "c8bfdd45a4c9f47f",
+  "h": "2cb27640d6283c45",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-restaurant/": {
-  "h": "31e14675cca14d63",
+  "h": "8b67675ccd4412ae",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-textile/": {
-  "h": "6b82a3899464d04e",
+  "h": "7f2a76174a24213d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-tour-operator/": {
-  "h": "a111c7b86f6459c9",
+  "h": "65dcfabd3d6e7f88",
   "d": "2026-10-21"
  },
  "/ru/resheniya/ind-wedding-hall/": {
-  "h": "c8301cbb59654b20",
+  "h": "e05a2227052dcdb8",
   "d": "2026-10-21"
  },
  "/ru/resheniya/industry/": {
-  "h": "11f07b3ada4e36aa",
+  "h": "72d910333605ec8c",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-access-control/": {
-  "h": "e6e80785d6b62a05",
+  "h": "72c47dffe4a4942c",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-asset-tracking/": {
-  "h": "9f6b94e181a60171",
+  "h": "aa9dd23df260934f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-cold-chain/": {
-  "h": "c11203d3b60367e3",
+  "h": "49c33517406bca68",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-custom-device/": {
-  "h": "f18d5a46a9871b03",
+  "h": "f6c94eae24f74f60",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-factory-monitoring/": {
-  "h": "2362025661cd1a51",
+  "h": "3d69f170b25c3719",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-fleet-gps/": {
-  "h": "8359fe6d6676d1bd",
+  "h": "5132e6b9fc2f065a",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-greenhouse/": {
-  "h": "700ac061e892a2e1",
+  "h": "fc6dabf1de7069af",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-irrigation/": {
-  "h": "f9525244075598c3",
+  "h": "cb3c68f2cf698d8f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-per-minute-billing/": {
-  "h": "0418c54106c3188c",
+  "h": "17978177c334542d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-smart-metering/": {
-  "h": "41452cfe7e47b4c6",
+  "h": "a8b51c8c5c54d08e",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-smart-parking/": {
-  "h": "cc203b090efac3b5",
+  "h": "d3c238179a3e6b19",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-solar-energy/": {
-  "h": "049c5804b41b639b",
+  "h": "d89063b40c3d9174",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-vending-cashless/": {
-  "h": "5dbcae83751260c6",
+  "h": "31ea869821af7dfb",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot-weighbridge/": {
-  "h": "15d2294710aebee5",
+  "h": "ceb1e6dad06c5266",
   "d": "2026-10-21"
  },
  "/ru/resheniya/iot/": {
-  "h": "3b7455e0c441d14d",
+  "h": "df14f4109c432623",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-booking-app/": {
-  "h": "3fb7b8a7d375c447",
+  "h": "1d49a99984be3fec",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-customer-app/": {
-  "h": "251b55bd1782ddc7",
+  "h": "80959ec1f6eda786",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-delivery-suite/": {
-  "h": "65ad43ccfd8e4310",
+  "h": "b03a1bd9e01a653d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-education-app/": {
-  "h": "51428f7a0f493e6b",
+  "h": "443f3eb6302aade0",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-events-tickets/": {
-  "h": "14f68e2adc0cdccc",
+  "h": "0f37380b720148bf",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-field-sales/": {
-  "h": "b8116f900ea259ac",
+  "h": "24a00be38ce316b1",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-fintech-app/": {
-  "h": "77e446e1a0123b59",
+  "h": "c9d7da18a8148e30",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-inspection-app/": {
-  "h": "b2b8cec79854cbae",
+  "h": "54111a683ada92da",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-loyalty-platform/": {
-  "h": "35a83cefdd51235f",
+  "h": "acaa2adf17c374df",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-services-marketplace/": {
-  "h": "43ee8d17357badb4",
+  "h": "bf0d10002b659c5a",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-super-app/": {
-  "h": "297f3eee4035819d",
+  "h": "6dc3c12cd672c654",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mob-taxi-app/": {
-  "h": "7e8846495254fb4a",
+  "h": "c523481f3f467b83",
   "d": "2026-10-21"
  },
  "/ru/resheniya/mobile/": {
-  "h": "cb00fe4b76cbcb13",
+  "h": "5e06f20249007d40",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-app-store/": {
-  "h": "960b81c363204c75",
+  "h": "d7cae85f5cf2d57c",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-code-rescue/": {
-  "h": "19649f644e6b86c9",
+  "h": "d9c6d5f175568770",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-dedicated-team/": {
-  "h": "c3fe13583144b3d7",
+  "h": "8370462588a8b46d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-discovery/": {
-  "h": "a991dbfd26e1ff64",
+  "h": "e49e100e3e52edc9",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-fractional-cto/": {
-  "h": "df3802a93026fc90",
+  "h": "57f995f3af56325d",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-qa/": {
-  "h": "ddbd93687519edc8",
+  "h": "8adefbdc15c2af22",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-sla/": {
-  "h": "be30af7959cf5517",
+  "h": "fe8b13052ab4375c",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-tech-review/": {
-  "h": "b7d32b2dea481711",
+  "h": "91d2de8286ad8cee",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-training/": {
-  "h": "01451816f102992d",
+  "h": "7137f2b389d912a0",
   "d": "2026-10-21"
  },
  "/ru/resheniya/sup-ux-ui/": {
-  "h": "5e8c7178630f0dd8",
+  "h": "5a966cad714540eb",
   "d": "2026-10-21"
  },
  "/ru/resheniya/support/": {
-  "h": "c74f0e4aa7afab16",
+  "h": "95bc5c83bdf3ca09",
   "d": "2026-10-21"
  },
  "/ru/resheniya/telegram/": {
-  "h": "c97ee81b591e0e07",
+  "h": "a5f94fdf678f9353",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-b2b-ordering/": {
-  "h": "2ab438b2fce12a34",
+  "h": "8dde5ee9bce8b3e8",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-booking-bot/": {
-  "h": "5c96ff6ad001d9f1",
+  "h": "c886c5ba4ad584cf",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-channel-automation/": {
-  "h": "67f02caefbf2b024",
+  "h": "2f12b8e3c2b4132f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-course-bot/": {
-  "h": "39ec5e0ce3daff8e",
+  "h": "150e2d75df7c5ccf",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-crm-mini-app/": {
-  "h": "1338481bb111e3d4",
+  "h": "5a0ed5104df88109",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-field-reports/": {
-  "h": "278533808a0caaff",
+  "h": "50112c5f5bbdc235",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-freight-board/": {
-  "h": "15eda83986cee39b",
+  "h": "a2f01696d6c8ad0b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-hr-bot/": {
-  "h": "0cd9613436ba5d8f",
+  "h": "decee3619e1acc02",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-lead-bot/": {
-  "h": "5d0396fe5c231305",
+  "h": "b3c434a8343d5d1b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-loyalty-bot/": {
-  "h": "44fd52ec86a48a5b",
+  "h": "3ddc3e51ba1e5e42",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-mini-app-store/": {
-  "h": "ac67a16a234d1df8",
+  "h": "66f6e7a9bb837b04",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-order-bot/": {
-  "h": "d27bcd549d4ba390",
+  "h": "f874987ece6e3924",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-paid-access/": {
-  "h": "2587b0bee59b4d33",
+  "h": "37e13d54546ee27b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/tg-support-desk/": {
-  "h": "3e86c80d1ff0ec0a",
+  "h": "54aab935d538c1b0",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-3d-configurator/": {
-  "h": "8964f9a008ee6834",
+  "h": "dc980d0a4096a36f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-apartment-picker/": {
-  "h": "20ebf7f7051d030e",
+  "h": "7624fbfba064b449",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-booking-engine/": {
-  "h": "43962ed9b8f1703b",
+  "h": "9e56f86ee66040a3",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-calculators/": {
-  "h": "e890975575857079",
+  "h": "c5d85365e583bf61",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-client-portal/": {
-  "h": "c1677af8313e85e9",
+  "h": "1ed81c3c7b76b22f",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-corporate/": {
-  "h": "394c76ab432a10c9",
+  "h": "4c35cd534185072b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-ecommerce/": {
-  "h": "844124f9fd11061e",
+  "h": "c7ed9c4e351d8ece",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-immersive-site/": {
-  "h": "86f4ea9e36b2e98a",
+  "h": "844662119b035353",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-landing/": {
-  "h": "5349cbe102894a23",
+  "h": "5a110e5309012bae",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-listings-portal/": {
-  "h": "ac854f55d8d17fb4",
+  "h": "853ab5950c6ff1b9",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-lms/": {
-  "h": "b60d6416007897ff",
+  "h": "e2c07e4c7a2754bc",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-marketplace/": {
-  "h": "d804b4ce03ab7a87",
+  "h": "a5ef8f741648eaff",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-pwa/": {
-  "h": "8f440cf9656f0da8",
+  "h": "3abcd55ba4652d6b",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-redesign/": {
-  "h": "fabb7d9fab01b8f3",
+  "h": "08174b17256b36ca",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-saas/": {
-  "h": "254d60df99ae6a26",
+  "h": "d7d89ae858219614",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web-seo/": {
-  "h": "40b2a0ceb3decdbe",
+  "h": "d0e73cdeae4971bd",
   "d": "2026-10-21"
  },
  "/ru/resheniya/web/": {
-  "h": "9e09ff3ce0ddfb84",
+  "h": "1369fd47ead7dcb2",
   "d": "2026-10-21"
  },
  "/ru/samurai/": {
@@ -2132,7 +2132,7 @@
   "d": "2026-10-21"
  },
  "/ru/tseny/": {
-  "h": "6e2bcf174bf93c22",
+  "h": "a278412c88aaca7d",
   "d": "2026-10-21"
  },
  "/samurai/": {
@@ -2140,679 +2140,679 @@
   "d": "2026-10-21"
  },
  "/yechimlar/": {
-  "h": "e37de8d31b672a0e",
+  "h": "98d79a7df8a20994",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-call-quality/": {
-  "h": "3e0e7ed91085996a",
+  "h": "75cc2e7082663645",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-complaints-desk/": {
-  "h": "774a624b3c3a3b46",
+  "h": "c578c32687614603",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-contract-review/": {
-  "h": "d962ac6f7d47666a",
+  "h": "a3d6c3ffec83c677",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-data-assistant/": {
-  "h": "e34bae2055a40e78",
+  "h": "41719d431133fc71",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-demand-forecasting/": {
-  "h": "012843f1441de360",
+  "h": "05cf03829d901bc0",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-document-processing/": {
-  "h": "d015f7090e9fcf24",
+  "h": "4c8d2d41fd013dfa",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-exam-grading/": {
-  "h": "4996c46589b090c5",
+  "h": "f34f10e1f0b27241",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-fraud-detection/": {
-  "h": "dd2b1f9671fd7e03",
+  "h": "d3f43bc292ea83fa",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-hr-screening/": {
-  "h": "eaf914650ee42d2e",
+  "h": "e792bc9407bc5398",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-id-verification/": {
-  "h": "b0f204f6360c7186",
+  "h": "f52573890f536e16",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-knowledge-base/": {
-  "h": "b9e0380df6b7890e",
+  "h": "b31bd2c1109765a9",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-operations-agent/": {
-  "h": "04ef89a69ea3ece9",
+  "h": "b94ed97304ed5052",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-outbound-calls/": {
-  "h": "87cbb96352c94523",
+  "h": "5e985190b016f9de",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-price-monitoring/": {
-  "h": "2691117c59d8cf54",
+  "h": "f54b522e611f1357",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-private-llm/": {
-  "h": "49ecbd9f17270374",
+  "h": "1f0bb4745d4dabcd",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-product-photos/": {
-  "h": "26399cc694d54eec",
+  "h": "1d0f81a8d2d8eed2",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-quality-vision/": {
-  "h": "d09704a7b82858fb",
+  "h": "a6719c5baa34d409",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-retail-vision/": {
-  "h": "5cc626417821c79d",
+  "h": "97c73f4bf14d402a",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-reviews-reputation/": {
-  "h": "0853317768c8b517",
+  "h": "1b51e8ba4570f804",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-safety-vision/": {
-  "h": "bd5c660dfd9cd0f7",
+  "h": "86101365aeab7c0f",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-sales-assistant/": {
-  "h": "c7099901568915a8",
+  "h": "f2648adda1121d23",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-smm-content/": {
-  "h": "a71f9a55a38ba417",
+  "h": "9eabf44e322f07c9",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-telegram-support-account/": {
-  "h": "333b16e83a364b83",
+  "h": "dcaca11714617703",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-translation/": {
-  "h": "9beb7b5c4c5852d2",
+  "h": "a7dcbf917d9b8fed",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-video-voiceover/": {
-  "h": "e8993c40dd24f2a0",
+  "h": "a099455816273177",
   "d": "2026-10-21"
  },
  "/yechimlar/ai-voice-agent/": {
-  "h": "601f3492bdfbd38e",
+  "h": "1f65a8448f96d562",
   "d": "2026-10-21"
  },
  "/yechimlar/ai/": {
-  "h": "721b4f952e6cce2d",
+  "h": "c62c59c676cb0698",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-1c-integration/": {
-  "h": "b5e24210dc8f2ec1",
+  "h": "49496d6bb5ad0c7c",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-bi-dashboards/": {
-  "h": "4ae975d2f384f919",
+  "h": "55a40c051bd7cb86",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-call-centre/": {
-  "h": "33bf7b55017fc863",
+  "h": "980f7ca291f2d4dd",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-crm/": {
-  "h": "cfa04b85ce9539ce",
+  "h": "3ef8972c5e4cefe8",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-delivery-routing/": {
-  "h": "67e0d9461f07e4d4",
+  "h": "d7ca861d18ff53bb",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-desktop-app/": {
-  "h": "0e781ba795f0b868",
+  "h": "8db73f662afd2eb5",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-digital-marking/": {
-  "h": "994b933c584f0a46",
+  "h": "dbce6deee034d223",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-digital-signage/": {
-  "h": "bdf99894f25b6fe6",
+  "h": "cad12578ddad927e",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-document-workflow/": {
-  "h": "9ebdaa0b5a0a55b9",
+  "h": "fef8a9edcb0cb910",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-e-invoicing/": {
-  "h": "66c6d268b822a641",
+  "h": "a0b099ee85019ffc",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-erp/": {
-  "h": "d7e3cbfb0ad9ab8b",
+  "h": "c8dc41a6f7f3d920",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-field-service/": {
-  "h": "3c7fba363e3a0ea1",
+  "h": "5285b783adb1f807",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-hr-payroll/": {
-  "h": "0c2f92a1271d1cc6",
+  "h": "e626d2912994a845",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-kiosk/": {
-  "h": "6047b3e751bd6e4d",
+  "h": "28edb40afba783f2",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-management-accounting/": {
-  "h": "d06ffbc9dd218d95",
+  "h": "13ea4fbd5bd98f7d",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-marketplace-sync/": {
-  "h": "6dcc6553a13cdfd5",
+  "h": "63d71abbcf224d3c",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-notification-hub/": {
-  "h": "6091779e2d3aa41f",
+  "h": "b9131e66c85f80f3",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-payments/": {
-  "h": "bd23d2d55406704d",
+  "h": "b74ddf3dd31e1ff0",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-pos/": {
-  "h": "012845afcbc2fde6",
+  "h": "22cc3af49d482a70",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-procurement/": {
-  "h": "f1e1396a85c4b68e",
+  "h": "41f6ace82d72ce96",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-queue/": {
-  "h": "9d1f034eb83cf266",
+  "h": "622e2dc7395871f0",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-subscription-billing/": {
-  "h": "3d57c98c92be5d15",
+  "h": "ef1bc3927dca8999",
   "d": "2026-10-21"
  },
  "/yechimlar/biz-wms/": {
-  "h": "d682c54823eaf6d3",
+  "h": "7f15c39acabb316c",
   "d": "2026-10-21"
  },
  "/yechimlar/business/": {
-  "h": "e2be47fefe9a8c19",
+  "h": "ce45e6c1a05f48e2",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-backend-api/": {
-  "h": "e26cdf2c4120535c",
+  "h": "5fc4000a2a4efe67",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-backup-dr/": {
-  "h": "c49587cea67cfbea",
+  "h": "0fbfbc419e711422",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-cost-optimisation/": {
-  "h": "90df493ff6d785a1",
+  "h": "6cd8bb3255b5bd41",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-data-compliance/": {
-  "h": "e0a29e004ed665e3",
+  "h": "1534eb2d617b7775",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-data-platform/": {
-  "h": "7b99bc4a3a30fa4d",
+  "h": "45e3bd5619860b7f",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-devops/": {
-  "h": "938beb9edd5e0c9d",
+  "h": "ab96121bc31b0726",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-hosting-uz/": {
-  "h": "730820d0af865428",
+  "h": "44b26a3bc618ef7e",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-identity/": {
-  "h": "60d56b2493a07760",
+  "h": "4231d5bfe7759b96",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-migration/": {
-  "h": "d660782d6e93211e",
+  "h": "127253a669235e1c",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-performance/": {
-  "h": "8627f46572321b44",
+  "h": "abcb50f1a12a507f",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-security-audit/": {
-  "h": "50d700df41596d76",
+  "h": "ffa6d4c3a16c211c",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud-workspace/": {
-  "h": "f0762a64344d2f4b",
+  "h": "1258480d7f826ac6",
   "d": "2026-10-21"
  },
  "/yechimlar/cloud/": {
-  "h": "e4f7f4fc5636ead1",
+  "h": "98c6929313150eeb",
   "d": "2026-10-21"
  },
  "/yechimlar/game-3d-mobile/": {
-  "h": "07591c3e257c7b19",
+  "h": "c649e97b96150039",
   "d": "2026-10-21"
  },
  "/yechimlar/game-advergame/": {
-  "h": "2d2a5eac8cd2cb42",
+  "h": "bbe403d17f17841b",
   "d": "2026-10-21"
  },
  "/yechimlar/game-ar-campaign/": {
-  "h": "61ae790c4ecaacd5",
+  "h": "08b26e07108765ec",
   "d": "2026-10-21"
  },
  "/yechimlar/game-ar-product/": {
-  "h": "9e1a41747f869cc1",
+  "h": "ed1eefa17eed08f8",
   "d": "2026-10-21"
  },
  "/yechimlar/game-casual-2d/": {
-  "h": "1c7efc8067839238",
+  "h": "9567831a42852d77",
   "d": "2026-10-21"
  },
  "/yechimlar/game-edu-kids/": {
-  "h": "489ab71ea64772ea",
+  "h": "49c3b3ba4fb6df78",
   "d": "2026-10-21"
  },
  "/yechimlar/game-event-installation/": {
-  "h": "2a0c2d82b5d25b84",
+  "h": "c6739ee63765d721",
   "d": "2026-10-21"
  },
  "/yechimlar/game-gamified-loyalty/": {
-  "h": "fde075a29a68d4ae",
+  "h": "dc21594e86970316",
   "d": "2026-10-21"
  },
  "/yechimlar/game-telegram-mini/": {
-  "h": "ad84d8528bd492da",
+  "h": "6061fc519f9013a4",
   "d": "2026-10-21"
  },
  "/yechimlar/game-virtual-tour/": {
-  "h": "b63a5cb8b2c8cfe1",
+  "h": "eedef34d2a9beb69",
   "d": "2026-10-21"
  },
  "/yechimlar/game-vr-training/": {
-  "h": "ee942cdf783f5e21",
+  "h": "54c9aaafe29cba13",
   "d": "2026-10-21"
  },
  "/yechimlar/games/": {
-  "h": "e0d62b80de602089",
+  "h": "89d688f415b3a1d7",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-agro-farm/": {
-  "h": "f09dd0e6852d50da",
+  "h": "49cdaddef0b42957",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-agro-packhouse/": {
-  "h": "b351e0dbc7977f14",
+  "h": "92df7feaa67338ed",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-auto-service/": {
-  "h": "66dc56e42f7094f2",
+  "h": "48fb52d7f0ffd495",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-clinic/": {
-  "h": "b53b856c7d4abfeb",
+  "h": "4684208b3430d515",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-construction/": {
-  "h": "5922c5264895eb69",
+  "h": "972fd16edd1411e2",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-developer-sales/": {
-  "h": "d54ff5721ee7b295",
+  "h": "60cdfe4256a43b52",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-education-centre/": {
-  "h": "ff2429790ea2deff",
+  "h": "1484529f176edb97",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-fitness-sports/": {
-  "h": "dab24cf6dafebdb7",
+  "h": "09ebaedbd5ad5d43",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-gov-tenders/": {
-  "h": "922ad98b5cd779c8",
+  "h": "d98755137aa13bfd",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-hotel-kit/": {
-  "h": "419e5a0df8ed82ad",
+  "h": "c936d20cbdfd8772",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-hotel/": {
-  "h": "415b4ca615159ef7",
+  "h": "aa234cc329843a9c",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-insurance/": {
-  "h": "98ed7c31e8a80c69",
+  "h": "e42452548b6a736d",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-lending/": {
-  "h": "07818a849095d4b5",
+  "h": "5e8eb01df38b5290",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-logistics-tms/": {
-  "h": "a11ea6f30fb620d9",
+  "h": "b15a1bd0b4e01955",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-pharmacy/": {
-  "h": "ca1d483717a944eb",
+  "h": "e3cd3dc96a2d5707",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-property-management/": {
-  "h": "4786e20288256dd6",
+  "h": "af1f64323319e61d",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-restaurant/": {
-  "h": "22d90e3f508b65e1",
+  "h": "f21c17a11c7bbee8",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-textile/": {
-  "h": "bf67d26a6317d0ca",
+  "h": "f432cd676b1ad320",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-tour-operator/": {
-  "h": "a1af59ebe2d7d6ec",
+  "h": "3299417e8a0909ef",
   "d": "2026-10-21"
  },
  "/yechimlar/ind-wedding-hall/": {
-  "h": "bbe04dbbaaf23b69",
+  "h": "0cbaf5d4200233ca",
   "d": "2026-10-21"
  },
  "/yechimlar/industry/": {
-  "h": "4ab72b57d635d9b2",
+  "h": "ca191f940474810c",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-access-control/": {
-  "h": "34f60e06bc058364",
+  "h": "325e90ab44c72a5a",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-asset-tracking/": {
-  "h": "94744bdcfaa5a973",
+  "h": "3990b30d18008018",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-cold-chain/": {
-  "h": "dc187f97163a7398",
+  "h": "97ee8bf734e9b35c",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-custom-device/": {
-  "h": "cc451e587a6c4d51",
+  "h": "c078cf532a3c414b",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-factory-monitoring/": {
-  "h": "91a56f480b8eb832",
+  "h": "b746c5300f75ddde",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-fleet-gps/": {
-  "h": "eb66a2c6de026b07",
+  "h": "3f5dfa4573093709",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-greenhouse/": {
-  "h": "ba808803a2c94edc",
+  "h": "82c1ae6ee6dcf371",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-irrigation/": {
-  "h": "2e6c190a8bec63ef",
+  "h": "79940027ffc3b449",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-per-minute-billing/": {
-  "h": "c3cf8aed72980676",
+  "h": "63bb72ff83b315bb",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-smart-metering/": {
-  "h": "651e550e92f8b9b8",
+  "h": "d2737dd8456b519e",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-smart-parking/": {
-  "h": "6489ffed0f91dc35",
+  "h": "901d61b840df0a9f",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-solar-energy/": {
-  "h": "469da9204466d7a8",
+  "h": "5a3e0eb580c1e41c",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-vending-cashless/": {
-  "h": "18619d70caa8555d",
+  "h": "afb03ac4a8935689",
   "d": "2026-10-21"
  },
  "/yechimlar/iot-weighbridge/": {
-  "h": "d257ad9ec053e4c3",
+  "h": "9a746c25eea5c17b",
   "d": "2026-10-21"
  },
  "/yechimlar/iot/": {
-  "h": "7f261668b7273601",
+  "h": "4c3e58bc1ba36e76",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-booking-app/": {
-  "h": "6aaa8fe60857198a",
+  "h": "69e1de66f65ccffa",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-customer-app/": {
-  "h": "94a543834fd910ed",
+  "h": "585c7bf154a2f5f7",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-delivery-suite/": {
-  "h": "4ab92a1f18206735",
+  "h": "ab8d9b39b651ac16",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-education-app/": {
-  "h": "573873e0a61117f2",
+  "h": "c196ca79e1c73837",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-events-tickets/": {
-  "h": "31d83924d20e7f3b",
+  "h": "6974d37cf0a3344d",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-field-sales/": {
-  "h": "c0ea1633179319f1",
+  "h": "8d6f2a6a584e6333",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-fintech-app/": {
-  "h": "e0d9a1f72a6ae2ed",
+  "h": "aa5cc11025f894dd",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-inspection-app/": {
-  "h": "e8cc1b91f29a1213",
+  "h": "2f7575b9dcedd8e6",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-loyalty-platform/": {
-  "h": "aa5e2e8c61cbb10a",
+  "h": "578b8bf223e5d7a7",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-services-marketplace/": {
-  "h": "d17f63b88ddcfd2a",
+  "h": "f1f3a37da81513a4",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-super-app/": {
-  "h": "f267492d8d178491",
+  "h": "fd0d0d7f1db4fb33",
   "d": "2026-10-21"
  },
  "/yechimlar/mob-taxi-app/": {
-  "h": "f4b3dd7d6bbdee76",
+  "h": "7eafafd8e897de5f",
   "d": "2026-10-21"
  },
  "/yechimlar/mobile/": {
-  "h": "b6aaa5346c0323d0",
+  "h": "f70afbe0f97f3a50",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-app-store/": {
-  "h": "39372fbd594dff9b",
+  "h": "bbdc15fa072c05a6",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-code-rescue/": {
-  "h": "25ec9f5c8cce87dd",
+  "h": "135eb029d4915538",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-dedicated-team/": {
-  "h": "dc4456729704bef7",
+  "h": "cab96a63952a4c26",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-discovery/": {
-  "h": "c41246276a7c3366",
+  "h": "ea984027d7329eb5",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-fractional-cto/": {
-  "h": "9659c3cd3f5db55e",
+  "h": "3fa4d6bdde071878",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-qa/": {
-  "h": "b4d60b9e8e784bcf",
+  "h": "59df4ecdda30748c",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-sla/": {
-  "h": "b221ab1ef92369d6",
+  "h": "2d511dd86ca2c971",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-tech-review/": {
-  "h": "f997378004d2cd88",
+  "h": "15f607dcd050c49e",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-training/": {
-  "h": "17c898948f517634",
+  "h": "3885bd67a726ae0a",
   "d": "2026-10-21"
  },
  "/yechimlar/sup-ux-ui/": {
-  "h": "95bf77cdb684780b",
+  "h": "1d1e340680272246",
   "d": "2026-10-21"
  },
  "/yechimlar/support/": {
-  "h": "d37c17f402cbd2aa",
+  "h": "0f14598855de8c64",
   "d": "2026-10-21"
  },
  "/yechimlar/telegram/": {
-  "h": "9bc2a7004afd1764",
+  "h": "24b5d7840058ab41",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-b2b-ordering/": {
-  "h": "d53832b21db61c4b",
+  "h": "3544c27bb0b087ee",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-booking-bot/": {
-  "h": "01f10561d1a14c49",
+  "h": "3303d7eedda4df44",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-channel-automation/": {
-  "h": "c3c0a3bd44ad9f9f",
+  "h": "3740a49ecc10f4f9",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-course-bot/": {
-  "h": "77e57d091d172e73",
+  "h": "3313b094fafca6b2",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-crm-mini-app/": {
-  "h": "14316b1364b125b1",
+  "h": "b2da97fd87240d29",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-field-reports/": {
-  "h": "063ed7d2a14de926",
+  "h": "68f6edfcf12d9e9b",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-freight-board/": {
-  "h": "d21723723accb457",
+  "h": "30ff4580bc2b6e34",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-hr-bot/": {
-  "h": "806e20ca87ccd979",
+  "h": "71f0dd43e45372ca",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-lead-bot/": {
-  "h": "5f7a917e02f50e43",
+  "h": "1bbce5dcc75fe806",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-loyalty-bot/": {
-  "h": "058f5ddd95954283",
+  "h": "098044f768b4afd4",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-mini-app-store/": {
-  "h": "22515574fa82355d",
+  "h": "042b76036f030a5f",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-order-bot/": {
-  "h": "d129e65a258acab5",
+  "h": "55d5a842083c233d",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-paid-access/": {
-  "h": "7f3578531f5b3ba3",
+  "h": "054a5b60b33f6acb",
   "d": "2026-10-21"
  },
  "/yechimlar/tg-support-desk/": {
-  "h": "666657982bf051e0",
+  "h": "daaeed793ba2bbbd",
   "d": "2026-10-21"
  },
  "/yechimlar/web-3d-configurator/": {
-  "h": "182a8adf417ca090",
+  "h": "db5db14cd3f8a19a",
   "d": "2026-10-21"
  },
  "/yechimlar/web-apartment-picker/": {
-  "h": "f937566a3a35afb1",
+  "h": "2efd9a9e2c43ec3f",
   "d": "2026-10-21"
  },
  "/yechimlar/web-booking-engine/": {
-  "h": "08a02c17d2ac1f86",
+  "h": "0c71d14534afad6b",
   "d": "2026-10-21"
  },
  "/yechimlar/web-calculators/": {
-  "h": "8250d963eb2c1a06",
+  "h": "5b12c27a9b02eeae",
   "d": "2026-10-21"
  },
  "/yechimlar/web-client-portal/": {
-  "h": "f78973811cf1d697",
+  "h": "0cd32fa052937cb7",
   "d": "2026-10-21"
  },
  "/yechimlar/web-corporate/": {
-  "h": "a36d4cde63e0bbb0",
+  "h": "02d3d9397820ee2f",
   "d": "2026-10-21"
  },
  "/yechimlar/web-ecommerce/": {
-  "h": "7b3928ee2f538691",
+  "h": "21122d4a1e9ecafb",
   "d": "2026-10-21"
  },
  "/yechimlar/web-immersive-site/": {
-  "h": "b0fd87a7965fb4b8",
+  "h": "270e9bc53ff0e968",
   "d": "2026-10-21"
  },
  "/yechimlar/web-landing/": {
-  "h": "8b3544d7f2301809",
+  "h": "18674de9f434f412",
   "d": "2026-10-21"
  },
  "/yechimlar/web-listings-portal/": {
-  "h": "bd7829e6116de77a",
+  "h": "a8992c8526323bf0",
   "d": "2026-10-21"
  },
  "/yechimlar/web-lms/": {
-  "h": "9e2fe05ba4c7dde7",
+  "h": "12571f9855aa992e",
   "d": "2026-10-21"
  },
  "/yechimlar/web-marketplace/": {
-  "h": "a086528a71f36d3e",
+  "h": "7143fd3cda48aa5d",
   "d": "2026-10-21"
  },
  "/yechimlar/web-pwa/": {
-  "h": "ad6429eaa3c2a650",
+  "h": "dc21dc5d8108991e",
   "d": "2026-10-21"
  },
  "/yechimlar/web-redesign/": {
-  "h": "4018d759d09ab98c",
+  "h": "7b701be8e4f7c837",
   "d": "2026-10-21"
  },
  "/yechimlar/web-saas/": {
-  "h": "835251b16d3eec26",
+  "h": "eaebed0139b10288",
   "d": "2026-10-21"
  },
  "/yechimlar/web-seo/": {
-  "h": "fa9c2e1c24d8e73c",
+  "h": "83d77e22499850b7",
   "d": "2026-10-21"
  },
  "/yechimlar/web/": {
-  "h": "104d462d1df61547",
+  "h": "a3df158435d5e168",
   "d": "2026-10-21"
  }
 }

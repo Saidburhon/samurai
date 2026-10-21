@@ -19,6 +19,7 @@ import { SITE, LANGS, HOME, LOCALE, abs, esc, langNav, headLinks, pathOf, site }
 import { graph } from './pages/ld.mjs';
 import { hasBlog, feedPath } from './pages/blog-feed.mjs';
 import { T } from './pages-i18n.mjs';
+import { CATALOGUE_BASE } from '../src/shared/catalogue.js';
 
 export { SITE };
 export const PATH = HOME;
@@ -85,7 +86,9 @@ export function head(html, lang) {
   // every language switch (top bar, menu, footer), regenerated whole
   html = html.replace(/<nav class="lang"[\s\S]*?<\/nav>/g, () => langNav(lang, HOME));
   // links to the generated pages (footer): <a href="/about/" data-page="about"> points at this language's twin
-  html = html.replace(/<a href="[^"]*" data-page="([\w-]+)"/g, (a, slug) => `<a href="${pathOf(lang, slug)}" data-page="${slug}"`);
+  // (the Solutions catalogue and the price list have a slug of their own per language: /ru/resheniya/, /ja/prices/)
+  const own = { solutions: CATALOGUE_BASE, prices: { uz: '/narxlar/', ru: '/ru/tseny/', en: '/en/prices/', ja: '/ja/prices/' } };
+  html = html.replace(/<a href="[^"]*" data-page="([\w-]+)"/g, (a, slug) => `<a href="${own[slug]?.[lang] || pathOf(lang, slug)}" data-page="${slug}"`);
   return html;
 }
 
