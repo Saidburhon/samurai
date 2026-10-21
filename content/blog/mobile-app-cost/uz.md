@@ -147,6 +147,14 @@ Qoʻllab-quvvatlash narxini ishlab chiqish narxi bilan birga soʻrang va nima xa
 
 Toʻlov testi, admin panel, zaxira nusxalar va xatolar haqidagi ogohlantirishlarda tejamang: bunday tejashning har biri keyin tejalgan puldan qimmatga tushadi.
 
+## Katalogdagi narxlar
+
+Qilich katalogidagi ikki keng tarqalgan ilova turining muddati va narxi quyida. Soʻmdagi summa Markaziy bank kursi boʻyicha hisoblanadi va sayt yangilanganda qayta hisoblanadi. Aniq narx ekranlar, integratsiyalar va platformalarga bogʻliq.
+
+{{solution:mob-customer-app}}
+
+{{solution:mob-booking-app}}
+
 ## Pudratchi bilan gaplashishdan oldin nima tayyorlash kerak
 
 Muddatlar boʻyicha moʻljal (sizning tomoningizdan hammasi oʻz vaqtida tayyor boʻlsa): bitta asosiy yoʻl, admin panel va bitta toʻlov tizimi bilan MVP odatda 2–3 oy oladi. Bonus dasturi va bir nechta integratsiyasi bor toʻliqroq versiya 4–7 oy oladi, kuryerlar uchun alohida ilova esa bu muddatni yana uzaytiradi. Muddatni koʻpincha dasturlash emas, kutish surib yuboradi: toʻlov tizimi bilan shartnoma, D-U-N-S raqami va doʻkon akkauntlari, 1C bazasiga kirish, matn va rasmlar, doʻkondagi birinchi tekshiruv.

@@ -67,19 +67,19 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   // The intro (§4.1, §4.3) on the wall clock from navigation, not on the sum of frame times (G1 r2): a long software
   // frame cannot hold it back. The reveal starts at max(glReady, 1.7 s) and is anchored to fixed times, so the 3 s
   // frame is the same whenever GL was ready (up to 2.6 s): a C1 curve from (start, 0) through (2.9 s, 0.62) and
-  // (3.6 s, 0.84) to (4.0 s, 1), flat at both ends. The steel leaves the habaki, fills the inner half of the blade,
+  // (3.4 s, 0.775) to (3.75 s, 1), flat at both ends. The steel leaves the habaki, fills the inner half of the blade,
   // glides along the outer half at a third of its length per second (the kirari front travelling, §4.1 frame 02:
-  // two thirds steel at 3 s) and comes to rest at the tip by 4.0 s; then the 1.8 s lift, settled by 5.8 s. The glide
-  // keeps 'the 3 s frame' at 60–85 % steel wherever a software renderer's screenshot of it lands (2.85–3.6 s).
-  // GL later than 2.6 s: power2.inOut over max(1.4 s, 4.0 s − start).
+  // two thirds steel at 3 s) and comes to rest at the tip at 3.75 s; then the 1.8 s lift (§4.1: 3.7–5.5 s), settled
+  // by 5.55 s. The glide keeps 'the 3 s frame' at 60–85 % steel wherever a software renderer's screenshot of it
+  // lands (2.85–3.5 s). GL later than 2.6 s: power2.inOut over max(1.4 s, 3.75 s − start).
   if (intro && fz == null && !dir.reduced) {
     const start = Math.max(glReady, 1700), late = start > 2600;
-    const E = late ? start + Math.max(1400, 4000 - start) : 4000;
+    const E = late ? start + Math.max(1400, 3750 - start) : 3750;
     state.intro = { t: 0, start, E, late, L: 1800, tau: 0, at: start, speed: 1 };
     log('revealStart', start); log('revealEnd', E);
   }
   // the reveal (0..1) at wall time v (ms)
-  const K1 = [2900, 0.62, 0.00031], K2 = [3600, 0.84, 0.00031];
+  const K1 = [2900, 0.62, 0.00031], K2 = [3400, 0.775, 0.00031];
   const herm = (u, p0, m0, p1, m1, h) => { const u2 = u * u, u3 = u2 * u; return (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * h * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * h * m1; };
   function revealAt(v) {
     const I = state.intro;

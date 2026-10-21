@@ -106,7 +106,9 @@ html.no-js .clocks, html.no-js .city time { display: none; } /* without JS no cl
   font-weight: 280; font-size: var(--h1); line-height: .98; letter-spacing: -.035em; font-variation-settings: "SHRP" 100;
   text-wrap: balance;
 }
-.ln { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+/* a line mask: its box reaches .12em under the line, so the deepest descender (g, j, p, q, y) is never cut
+   (G1 r2: the mask audit found .08em short by 0.7 px on B1's "Japanese quality.") */
+.ln { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
 .ln > span { display: inline-block; }
 .b-hero .sub { position: absolute; left: calc(var(--m) + 8 * (var(--col) + var(--g))); top: calc(var(--sh) * .664); width: calc(3 * var(--col) + 2 * var(--g)); min-width: 260px; color: var(--fg2); }
 .sub p { font-size: 17px; line-height: 1.45; text-wrap: pretty; }

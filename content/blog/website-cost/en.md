@@ -121,6 +121,16 @@ A site keeps costing money after launch. Ask the contractor to list these costs 
 - **Small edits.** A new page, a Navruz banner, a changed phone number. Agree in advance: a monthly bundle of hours or payment per task.
 - **For a shop**, add payment provider fees, SMS notifications, paid modules if any, and keeping the 1C sync working after 1C itself is updated.
 
+## Prices from our catalogue
+
+Below are the timelines and prices of three kinds of website from the Qilich catalogue. The UZS figure uses the Central Bank rate and is recalculated whenever the site is rebuilt. The exact price depends on the design, the number of pages and the integrations.
+
+{{solution:web-landing}}
+
+{{solution:web-corporate}}
+
+{{solution:web-ecommerce}}
+
 ## How to compare quotes
 
 Ask every contractor the same questions and put the answers side by side.

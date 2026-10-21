@@ -16,10 +16,10 @@
 //   estimate is signed) · error { code: bad_input|too_long|rate_limited|not_configured|refused|upstream|timeout,
 //   retry_after? } (the stream closes after it). The client runs the catalogue matcher on an error before any solution.
 // POST /api/samurai/verify (≤ 64 KB) { payload: { brief_no, lang, generated_at, catalogue_version, rate, pick, details }, sig }
-//   → { ok } or { ok: false, reason: "no_key" | "bad_sig" | "mismatch" }
+//   → { ok } or { ok: false, reason: "no_key" | "bad_sig" | "mismatch" }, 429 { ok: false, reason: "rate_limited" } over RL_READ
 // POST /api/lead (§6, ≤ 24 KB) → { ok: true, via: "telegram" } | 501 { ok: false, fallback: "mailto", subject, text } | 400 | 429.
 //   An Uzbek number must be +998 and nine digits; the estimate link reaches the owner whole (worker/lead.js).
-// GET /api/rate → { uzs_per_usd, date, source } (public, 1 hour)
+// GET /api/rate → { uzs_per_usd, date, source } (public, 1 hour; 429 over RL_READ)
 // Secrets: ANTHROPIC_API_KEY (without it the page answers from the catalogue matcher), SAMURAI_SIGNING_KEY (without it
 // no hanko), TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (without them leads become e-mails). Vars: SAMURAI_EFFORT (low),
 // SAMURAI_FAST (0), SAMURAI_DAILY_USD (15, the spend guard's daily cap).
@@ -97,15 +97,15 @@ async function samurai(request, env, ctx) {
 
   const { readable, writable } = new TransformStream();
   const writer = writable.getWriter();
-  // a write fails once the visitor has gone (the stream was cancelled): its rejection is handled here, never uncaught
-  writer.closed.catch(() => {});
   const enc = new TextEncoder();
-  // the visitor left: request.signal does not always fire under wrangler dev, so a failed write (an event, or the
-  // ping every 10 s) aborts the upstream calls too; the stage-2 calls follow the pick's controller
+  // the visitor left: request.signal does not always fire under wrangler dev, so the response body being cancelled
+  // (the writer's closed promise rejects at once), or failing that a failed write (an event, or the ping every 10 s),
+  // aborts the upstream calls too; the stage-2 calls follow the pick's controller. Every rejection is handled here.
   const left = new AbortController();
   const signal = typeof AbortSignal.any === 'function' && request.signal ? AbortSignal.any([request.signal, left.signal]) : left.signal;
   if (signal === left.signal) request.signal?.addEventListener?.('abort', () => left.abort());
   let gone = false, chain = Promise.resolve();
+  writer.closed.catch(() => { gone = true; left.abort(); });
   const write = (s) => { if (gone) return; chain = chain.then(() => writer.write(enc.encode(s))).catch(() => { gone = true; left.abort(); }); };
   const send = (event, data) => write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   const ping = setInterval(() => write(': ping\n\n'), 10_000);
@@ -158,9 +158,11 @@ async function samurai(request, env, ctx) {
   return new Response(readable, { headers: { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store, no-transform', 'X-Accel-Buffering': 'no', ...SECURITY } });
 }
 
+const readLimited = async (request, env) => over(env.RL_READ, visitorKey(request.headers.get('CF-Connecting-IP') || 'local'));
 async function verifyRoute(request, env) {
   if (request.method !== 'POST') return err(405, 'method_not_allowed', { Allow: 'POST' });
   if (!originOk(request, env)) return err(403, 'forbidden_origin');
+  if (await readLimited(request, env)) return json(429, { ok: false, reason: 'rate_limited' }, { 'Retry-After': '60' });
   // a realistic four-solution Russian estimate is about 22 KB; the validator's caps allow well over 35 KB
   const r = await readJson(request, 64 * 1024);
   if (r.res) return r.res;
@@ -183,7 +185,8 @@ async function leadRoute(request, env) {
   return json(out.status, out.body);
 }
 
-async function rateRoute(ctx) {
+async function rateRoute(request, env, ctx) {
+  if (await readLimited(request, env)) return err(429, 'rate_limited', { 'Retry-After': '60' });
   const rate = await getRate(ctx);
   return json(200, rate, { 'Cache-Control': 'public, max-age=3600' });
 }
@@ -195,7 +198,7 @@ export default {
       if (pathname === '/api/samurai' || pathname === '/api/samurai/') return await samurai(request, env, ctx);
       if (pathname === '/api/samurai/verify') return await verifyRoute(request, env);
       if (pathname === '/api/lead') return await leadRoute(request, env);
-      if (pathname === '/api/rate') return await rateRoute(ctx);
+      if (pathname === '/api/rate') return await rateRoute(request, env, ctx);
       if (pathname.startsWith('/api/')) return err(404, 'not_found');
     } catch (e) {
       log({ api_error: pathname, name: e?.name, message: String(e?.message || '').slice(0, 200) });

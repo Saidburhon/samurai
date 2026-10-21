@@ -11,7 +11,7 @@ inside them, and real capture frames can be added (--extra label=frame.png:proto
 frame next to prototype 02).
 
 Usage: python3 scripts/qa/blind-pairs.py <poster-test out dir> <prototype shots dir> <pack dir> [seed]
-       [--extra label=frame.png:proto.png ...] [--no-mask]
+       [--extra label=frame.png:proto.png ...] [--skip label ...] [--no-mask]
 """
 import json
 import os
@@ -24,6 +24,9 @@ args = [a for a in sys.argv[1:]]
 extra = []
 while '--extra' in args:
     i = args.index('--extra'); extra.append(args[i + 1]); del args[i:i + 2]
+skip = []
+while '--skip' in args:
+    i = args.index('--skip'); skip.append(args[i + 1]); del args[i:i + 2]
 mask = '--no-mask' not in args
 args = [a for a in args if a != '--no-mask']
 out, proto, pack = args[0:3]
@@ -53,7 +56,7 @@ def bands(im):
     return im
 
 
-frames = [f for f in log['frames'] if f.get('proto') and os.path.exists(os.path.join(out, f['file']))]
+frames = [f for f in log['frames'] if f.get('proto') and f['label'] not in skip and os.path.exists(os.path.join(out, f['file']))]
 for e in extra:
     label, rest = e.split('=', 1)
     fp, pp = rest.rsplit(':', 1)

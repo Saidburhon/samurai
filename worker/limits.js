@@ -2,6 +2,7 @@
 //   RL_IP    5 SamurAI requests per 60 s per visitor (a refine counts; the stage-2 calls do not)
 //   RL_ALL   60 per 60 s, all visitors together
 //   RL_LEAD  3 leads per 60 s per visitor
+//   RL_READ  30 signature checks and rate reads per 60 s per visitor (/api/samurai/verify, /api/rate)
 // A missing binding never blocks (the spend guard in worker/spend.js still caps the day).
 
 /** An IPv4 address as it is, an IPv6 address cut to its /64 (one household or phone holds a whole /64). */

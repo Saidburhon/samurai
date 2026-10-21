@@ -133,6 +133,16 @@ Muddatlar boʻyicha moʻljal, agar siz tomondan hamma narsa vaqtida tayyor boʻl
 
 Ehtiyot boʻlish kerak boʻlgan belgilar: biznesingiz haqida birorta savol bermasdan narx aytildi; roʻyxatsiz “hammasi kiradi”; test bosqichi yoʻq; bot dasturchining akkauntida roʻyxatdan oʻtkaziladi.
 
+## Katalogdagi narxlar
+
+Qilich katalogidagi uchta keng tarqalgan bot turining muddati va narxi quyida. Soʻmdagi summa Markaziy bank kursi boʻyicha hisoblanadi va sayt yangilanganda qayta hisoblanadi. Aniq narx integratsiyalar va hajmga bogʻliq.
+
+{{solution:tg-order-bot}}
+
+{{solution:tg-booking-bot}}
+
+{{solution:tg-mini-app-store}}
+
 ## Qilichdan qanday baho olish mumkin
 
 Biz Toshkentda ishlaymiz va Telegram-bot ishlab chiqish narxini qismlar roʻyxatini koʻrgandan keyin aniq aytamiz: shunda uni boshqa takliflar bilan qatorma-qator solishtirsa boʻladi. Bunday baho olish uchun quyidagi savollarga javob bering.

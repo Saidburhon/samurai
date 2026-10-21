@@ -92,8 +92,8 @@ html[lang] .sam.has-result h1 { font-size: 26px; max-width: none; }
 .result > .rtop { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); align-items: start; }
 .rtop > .desk { grid-column: 5 / -1; }
 .brief { grid-column: 1 / span 4; grid-row: 1; position: sticky; top: 96px; padding-right: 12px; }
-.brief .no { color: var(--kurogane); }
-.brief .no b { color: var(--sumi); font-weight: 400; }
+/* the brief number lives in the desk's head (once); the brief opens with the visitor's words */
+.brief > :first-child { margin-top: 0; }
 .brief .lbl { display: block; margin-top: 26px; color: var(--kurogane); }
 .letter { margin-top: 8px; font-size: 17px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
 .letter mark { background: var(--hamon-k) no-repeat 0 100% / 0 5px; color: inherit; padding-bottom: 2px; }

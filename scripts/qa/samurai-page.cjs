@@ -258,8 +258,9 @@ const world = async (p) => p.evaluate(() => {
     const npages = Number(/Pages:\s+(\d+)/.exec(execFileSync('pdfinfo', [path.join(out, 'print.pdf')]).toString())[1]);
     const pageText = Array.from({ length: npages }, (_, i) => execFileSync('pdftotext', ['-layout', '-f', String(i + 1), '-l', String(i + 1), path.join(out, 'print.pdf'), '-']).toString().replace(/\s+/g, ' '));
     const norm = (x) => x.replace(/\s+/g, ' ').toUpperCase();
-    // a solution's page: the page where its title is followed by its last row (the plan table on the cover names it too)
-    const where = titles.map((t) => { const key = norm(t).slice(0, 18); const pg = pageText.findIndex((x) => (norm(x).split(key)[1] || '').includes(norm(lastRow))); return { t: t.slice(0, 30), page: pg + 1, rowsOnSamePage: pg >= 0 }; });
+    // a solution's page: the last page where its title is followed by its last row (the plan table on the cover names
+    // it too, and the cover can read title-then-row by chance: jb2a3 saw a false FAIL)
+    const where = titles.map((t) => { const key = norm(t).slice(0, 18); const pg = pageText.findLastIndex((x) => (norm(x).split(key)[1] || '').includes(norm(lastRow))); return { t: t.slice(0, 30), page: pg + 1, rowsOnSamePage: pg >= 0 }; });
     const cover = norm(pageText[0] || '');
     check('A4 print: every row printed open', openRows.open === openRows.all, openRows);
     check('A4 print: each solution on one page (its title and its last row together)', where.every((x) => x.page > 0 && x.rowsOnSamePage) && new Set(where.map((x) => x.page)).size === where.length, where);

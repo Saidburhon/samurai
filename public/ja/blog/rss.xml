@@ -36,6 +36,13 @@
       <description>オフショア開発のトラブルは、技術力より報告と相談の遅れから広がりがちです。悪い知らせが早く届くか、仕様にないことを独断で決めないかを、契約前の打ち合わせとトライアル発注で確かめる方法を説明します。</description>
     </item>
     <item>
+      <title>小さく始めるMVP開発の外注：最初の発注範囲の決め方と進め方</title>
+      <link>https://qilich.com/ja/blog/mvp-outsourcing/</link>
+      <guid isPermaLink="true">https://qilich.com/ja/blog/mvp-outsourcing/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>新規事業や社内システムを一度に全部作ろうとすると、予算も期間も見通せなくなります。最初のリリースで確かめることを一つに絞り、範囲・金額・納期を固定して発注し、反応を見て広げる進め方を説明します。</description>
+    </item>
+    <item>
       <title>オフショア開発の品質を守る、受け入れテストと検収の進め方</title>
       <link>https://qilich.com/ja/blog/acceptance-testing/</link>
       <guid isPermaLink="true">https://qilich.com/ja/blog/acceptance-testing/</guid>
@@ -48,13 +55,6 @@
       <guid isPermaLink="true">https://qilich.com/ja/blog/offshore-contract-ip-security/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>海外の開発会社に発注するときは、国内の外注とは違う確認点があります。秘密保持契約、契約形態と準拠法、成果物の著作権、個人データの扱い、アカウントの名義、契約終了時の引き継ぎについて整理します。</description>
-    </item>
-    <item>
-      <title>小さく始めるMVP開発の外注：最初の発注範囲の決め方と進め方</title>
-      <link>https://qilich.com/ja/blog/mvp-outsourcing/</link>
-      <guid isPermaLink="true">https://qilich.com/ja/blog/mvp-outsourcing/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>新規事業や社内システムを一度に全部作ろうとすると、予算も期間も見通せなくなります。最初のリリースで確かめることを一つに絞り、範囲・金額・納期を固定して発注し、反応を見て広げる進め方を説明します。</description>
     </item>
     <item>
       <title>日本語で進めるオフショア開発、コミュニケーション体制の作り方</title>

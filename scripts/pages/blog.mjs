@@ -16,9 +16,9 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, unlink
 import { dirname } from 'node:path';
 import { LANGS, HOME, SITE, pathOf, abs, esc, fwWidth, site, has } from '../site.mjs';
 import { ORG_ID } from './ld.mjs';
-import { normalise, CATALOGUE_BASE } from '../../src/shared/catalogue.js';
+import { normalise, CATALOGUE_BASE, solutionUrl } from '../../src/shared/catalogue.js';
 import { uzsRange } from '../../src/shared/price.js';
-import { usd, uzs, weeks, dateNum, NB } from '../../src/shared/format.js';
+import { usd, uzs, weeks, dateNum, NB, plForm } from '../../src/shared/format.js';
 import { convert, frontMatter, MdError } from './blog-md.mjs';
 import { B } from './blog-i18n.mjs';
 import { BLOG_SRC, blogIndex, feedPath } from './blog-feed.mjs';
@@ -43,14 +43,16 @@ function catalogue() {
   return { model, extra, rate };
 }
 
-// the page a related id opens: the solution or group page once the catalogue gate has built it (same URL scheme as
-// src/shared/catalogue.js solutionUrl), otherwise the catalogue, otherwise SamurAI with that solution preselected
+// the page a related id opens: the solution or group page when this build makes it (the same URLs as the catalogue
+// gate: src/shared/catalogue.js solutionUrl, groups at CATALOGUE_BASE/<id>/), otherwise the catalogue, otherwise
+// SamurAI with that solution preselected. `built` is the build's page list so far (scripts/build-pages.mjs), so a link
+// never points at a page the same build is about to remove; without it (a dry run) the files on disk decide.
+const built = (C, path) => (C.built ? C.built.has(path) : existsSync(`public${path}index.html`));
 function target(C, id, lang) {
-  const slugOf = (o) => o?.slug?.[lang === 'ja' ? 'en' : lang] || o?.slug?.en || id;
   const isGroup = Boolean(C.model.groups[id]);
-  const own = `${CATALOGUE_BASE[lang]}${slugOf(isGroup ? C.extra.groups?.[id] : C.extra.solutions?.[id])}/`;
-  if (existsSync(`public${own}index.html`)) return { href: own, page: true };
-  if (existsSync(`public${CATALOGUE_BASE[lang]}index.html`)) return { href: CATALOGUE_BASE[lang], page: false };
+  const own = isGroup ? `${CATALOGUE_BASE[lang]}${id}/` : solutionUrl(C.model.byId.get(id), lang);
+  if (built(C, own)) return { href: own, page: true };
+  if (built(C, CATALOGUE_BASE[lang])) return { href: CATALOGUE_BASE[lang], page: false };
   return { href: isGroup ? pathOf(lang, 'samurai') : `${pathOf(lang, 'samurai')}?solutions=${id}`, page: false };
 }
 
@@ -66,8 +68,8 @@ const pick = (o, lang) => (o ? o[lang] ?? o.en ?? o.uz ?? '' : '');
 // MVP's top weeks; outline only, about 300 bytes
 let SCALE = 52;
 function blade(s) {
-  const W = 132, L = Math.max(18, Math.min(W - 4, (s.full.weeks[1] / SCALE) * (W - 4)));
-  const t = Math.max(6, Math.min(L - 3, (s.mvp.weeks[1] / SCALE) * (W - 4)));
+  const W = 168, L = Math.max(26, Math.min(W - 4, (s.full.weeks[1] / SCALE) * (W - 4)));
+  const t = Math.max(10, Math.min(L - 4, (s.mvp.weeks[1] / SCALE) * (W - 4)));
   const x = (v) => (2 + v).toFixed(1);
   return `<svg class="mb" viewBox="0 0 ${W} 12" width="${W}" height="12" aria-hidden="true" focusable="false"><path d="M2 7.6H6.5M6.5 6.2V9M6.5 7.2C${x(L * .45)} 7.4 ${x(L * .8)} 6.6 ${x(L)} 4.1C${x(L * .78)} 8.4 ${x(L * .4)} 9 6.5 8.8"/><path class="mv" d="M${x(t)} 3V11"/></svg>`;
 }
@@ -75,12 +77,27 @@ function blade(s) {
 function solutionRow(C, s, lang, tag = 'h3') {
   const L = (k) => b(lang, k);
   const tg = target(C, s.id, lang);
-  return `<li class="rel-row">
+  return `<li class="rel-row" data-id="${s.id}">
   <${tag} class="rel-t"><a class="u" href="${tg.href}">${esc(pick(s.title, lang))}</a></${tag}>
   <p class="rel-v">${esc(pick(s.oneliner, lang))}</p>
   <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${weeks(s.mvp.weeks, lang)} · ${money(C, s.mvp.usd, lang)}</dd></div><div><dt>${L('full')}</dt><dd>${weeks(s.full.weeks, lang)} · ${money(C, s.full.usd, lang)}</dd></div></dl>
   ${blade(s)}
 </li>`;
+}
+
+// "from" a single value, as each language says it: 1 haftadan, 12 mln soʻmdan · от 1 недели, от 12 млн сум ·
+// from 1 week, from UZS 12 mln · 1週間から, 1,000ドルから
+function fromWeeks(n, lang) {
+  if (lang === 'uz') return `${weeks([n, n], lang)}dan`;
+  if (lang === 'ru') return `от ${n}${NB}${n === 1 ? 'недели' : 'недель'}`;
+  if (lang === 'ja') return `${weeks([n, n], lang)}から`;
+  return `from ${weeks([n, n], lang)}`;
+}
+function fromMoney(C, u, lang) {
+  if (lang === 'ja') return `${usd([u, u], lang)}から`;
+  const lo = uzsRange([u, u], C.rate.uzs_per_usd)[0];
+  const v = uzs([lo, lo], lang);
+  return lang === 'uz' ? `${v}dan` : lang === 'ru' ? `от ${v}` : `from ${v}`;
 }
 
 function groupRow(C, gid, lang) {
@@ -92,12 +109,10 @@ function groupRow(C, gid, lang) {
   // the group's one sentence: the catalogue's, or for Japanese the blog's own (the catalogue has none yet)
   const line = lang === 'ja' ? (B.ja.groupLines[gid] || '') : pick(g.line, lang);
   const tg = target(C, gid, lang);
-  const fromW = fill(L('from'), { v: weeks([minW, minW], lang) });
-  const fromU = fill(L('from'), { v: lang === 'ja' ? usd([minU, minU], lang) : uzs(uzsRange([minU, minU], C.rate.uzs_per_usd), lang) });
-  return `<li class="rel-row rel-g">
+  return `<li class="rel-row rel-g" data-group="${gid}">
   <h3 class="rel-t"><a class="u" href="${tg.href}">${esc(pick(g.title, lang))}</a></h3>
   <p class="rel-v">${esc(line)}</p>
-  <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${fromW} · ${fromU}</dd></div><div><dt>${fill(L('solutions'), { n: all.length })}</dt><dd></dd></div></dl>
+  <dl class="rel-f mono"><div><dt>${L('mvp')}</dt><dd>${fromWeeks(minW, lang)} · ${fromMoney(C, minU, lang)}</dd></div><div><dt>${L('inCat')}</dt><dd>${plForm(L('solutions'), all.length, lang).replace('{n}', all.length)}</dd></div></dl>
 </li>`;
 }
 
@@ -213,8 +228,12 @@ function load(C) {
   const seen = new Map();
   for (const p of posts) { if (seen.has(p.path)) errors.push(`${p.file}: the URL ${p.path} is also ${seen.get(p.path)}`); seen.set(p.path, p.file); }
   if (errors.length) throw new Error(`blog: ${errors.length} problem(s)\n  ${errors.join('\n  ')}`);
-  // newest first; on the same day, the editorial order of PLAN.json
-  const cmp = (a, b2) => (b2.date.localeCompare(a.date) || a.n - b2.n || a.slug.localeCompare(b2.slug));
+  // newest first; on the same day by topic (in the order PLAN.json first meets it), so a topic reads as one run of
+  // the ledger, then in the editorial order of PLAN.json
+  const topic = {};
+  for (const p of [...posts].sort((a, b2) => a.n - b2.n)) if (p.cluster && !(`${p.lang}:${p.cluster}` in topic)) topic[`${p.lang}:${p.cluster}`] = p.n;
+  const tr = (p) => topic[`${p.lang}:${p.cluster}`] ?? 999;
+  const cmp = (a, b2) => (b2.date.localeCompare(a.date) || tr(a) - tr(b2) || a.n - b2.n || a.slug.localeCompare(b2.slug));
   return posts.sort(cmp);
 }
 
@@ -226,7 +245,8 @@ function minutesOf(p, conv) {
 const time = (d, lang) => `<time datetime="${d}">${dateNum(d, lang)}</time>`;
 
 function titleTag(p) {
-  if (p.lang !== 'ja') return `${p.title} · Qilich`;
+  // the brand only where it fits a search result (about 60 characters); a long title stands alone
+  if (p.lang !== 'ja') return p.title.length <= 60 ? `${p.title} · Qilich` : p.title;
   const branded = `${p.title}｜Qilich`;
   return fwWidth(branded) <= 32 ? branded : p.title;
 }
@@ -241,7 +261,12 @@ function renderPost(C, p, ctx) {
     if (/\/blog\//.test(path) && !known.has(path)) throw new MdError(`${where}: the link ${href} goes to no post`);
     return href;
   };
+  // the micro blades of one page share one scale: the longest full version among the solutions it shows
+  const shown = [...p.related, ...[...p.body.matchAll(/\{\{\s*solution:([\w-]+)/g)].map((m) => m[1])].map((id) => C.model.byId.get(id)).filter(Boolean);
+  SCALE = Math.max(8, ...shown.map((s) => s.full.weeks[1]));
   const conv = convert(p.body, { file: p.file, line: p.bodyLine, link, shortcode: shortcodes(C, lang, p) });
+  // consecutive {{solution:…}} sheets read as one ruled list
+  conv.html = conv.html.replace(/<\/ul>\n<ul class="rel sc">/g, '');
   const mins = minutesOf(p, conv);
   const meta = [
     `<span>${L('published')} ${time(p.date, lang)}</span>`,
@@ -346,9 +371,9 @@ ${items}
 `;
 }
 
-export function buildBlog({ assets, page, t, plates, jaPhrases }) {
+export function buildBlog({ assets, page, t, plates, jaPhrases, built: done }) {
   const C = catalogue();
-  SCALE = Math.max(...C.model.solutions.filter((s) => s.billing !== 'monthly').map((s) => s.full.weeks[1]), 1);
+  if (done) C.built = new Set(done.map((e) => e.path));
   const posts = load(C);
   const paths = new Set(posts.map((p) => p.path));
   // the author: the Qilich team (the Organization) until content/site.json names a person in `blogAuthor`
@@ -359,7 +384,8 @@ export function buildBlog({ assets, page, t, plates, jaPhrases }) {
   };
   const entries = [];
   const write = (path, html, lang) => {
-    const out = lang === 'ja' ? jaPhrases(html) : html;
+    // Japanese: phrase breaks in the text, but not in the breadcrumbs (one line; their names match the JSON-LD's)
+    const out = lang === 'ja' ? jaPhrases(html).replace(/<nav class="crumbs[\s\S]*?<\/nav>/, (m) => m.replace(/<wbr>/g, '')) : html;
     const file = `public${path}index.html`;
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, out);
@@ -382,6 +408,8 @@ export function buildBlog({ assets, page, t, plates, jaPhrases }) {
           lang, slug: 'blog-post', path: p.path, twins, title: titleTag(p), description: p.description, type: 'WebPage',
           crumbs: [...crumbsBase, { name: p.title, path: p.path }], main: r.main, kanji: '記', gloss: L('gloss'),
           assets, ldExtra: r.ld, ogType: 'article',
+          // the language switch: the twin, or that language's blog index, or its home
+          switchTo: Object.fromEntries(LANGS.map((l) => [l, twins[l] || (posts.some((q) => q.lang === l) ? blogIndex(l) : HOME[l])])),
         }));
         entries.push({ lang, path: p.path, file: write(p.path, html, lang), slug: 'blog-post', lastmod: p.updated || p.date });
       } catch (e) { errors.push(e.message); }
@@ -409,4 +437,4 @@ export function buildBlog({ assets, page, t, plates, jaPhrases }) {
 }
 
 // for scripts/qa/blog-check.mjs: the same catalogue, posts and figure functions the pages were built with
-export const _qa = { catalogue, load, money, target, b };
+export const _qa = { catalogue, load, money, target, b, shortcodes, weeks, uzs, usd, uzsRange };

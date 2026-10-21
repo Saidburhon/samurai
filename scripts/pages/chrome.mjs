@@ -10,6 +10,8 @@ import { T } from '../pages-i18n.mjs';
 import { HOME, LANGS, pathOf, abs, esc, langNav, headLinks, site, telHref, nbspPhone } from '../site.mjs';
 import { graph, ldScript } from './ld.mjs';
 import { hasBlog, blogIndex, feedPath } from './blog-feed.mjs';
+import { CATALOGUE_BASE } from '../../src/shared/catalogue.js';
+const PRICES = { uz: '/narxlar/', ru: '/ru/tseny/', en: '/en/prices/', ja: '/ja/prices/' };
 
 export function t(lang, key) {
   const v = T[lang]?.[key];
@@ -35,6 +37,8 @@ const mail = () => `<a href="mailto:${site.email}">${site.email}</a>`;
 const MENU = (lang) => [
   { href: HOME[lang], key: 'home' },
   { href: `${HOME[lang]}#xizmatlar`, key: 'svc' },
+  { href: CATALOGUE_BASE[lang], key: 'sol', slug: 'solutions' },
+  { href: PRICES[lang], key: 'prices', slug: 'prices' },
   { href: pathOf(lang, 'samurai'), key: 'ai', slug: 'samurai' },
   ...(hasBlog(lang) ? [{ href: blogIndex(lang), key: 'blog', slug: 'blog' }] : []),
   { href: pathOf(lang, 'about'), key: 'about', slug: 'about' },
@@ -51,7 +55,8 @@ export function page(p) {
   const L = (k) => t(lang, k);
   const head = headLinks({ lang, path: p.path, twins: p.twins, title: p.title, description: p.description, ogImage: p.ogImage, type: p.ogType || 'website' });
   const ld = graph({ lang, path: p.path, type: p.type, title: p.title, description: p.description, crumbs: p.crumbs, people: p.people, mainEntity: p.mainEntity, extra: p.ldExtra });
-  const sw = langNav(lang, p.twins);
+  // the switch may name a page for a language without a twin (a blog post: that language's blog index)
+  const sw = langNav(lang, p.switchTo || p.twins);
   const crumbs = p.crumbs?.length > 1 ? `<nav class="crumbs mono" aria-label="${esc(L('crumbs'))}"><ol>${p.crumbs.map((c, i) => (i < p.crumbs.length - 1 ? `<li><a href="${c.path}">${c.name}</a></li>` : `<li><span aria-current="page">${c.name}</span></li>`)).join('')}</ol></nav>` : '';
   const hako = p.kanji ? `<div class="hako"><b lang="ja" style="--n:${[...p.kanji].length}">${p.kanji}</b><span class="gl">${p.gloss}</span></div>` : '';
   return `<!doctype html>
@@ -81,7 +86,7 @@ ${SPRITE}
 <header class="nav" id="nav">
   <a class="brand" href="${HOME[lang]}" aria-label="${esc(L('homeLabel'))}"><svg class="mon" aria-hidden="true"><use href="#mon"/></svg><span class="word">QILICH</span></a>
   <p class="clocks mono" aria-hidden="true"><span>${L('tas')}</span> <time class="t-tas">00:00</time> <i>·</i> <span>${L('tok')}</span> <time class="t-tok">00:00</time></p>
-  <nav class="links" aria-label="${esc(L('sections'))}"><a href="${HOME[lang]}#xizmatlar">${L('svc')}</a><a href="${pathOf(lang, 'samurai')}"${cur('samurai', slug)}>${L('ai')}</a>${hasBlog(lang) ? `<a href="${blogIndex(lang)}"${cur('blog', slug)}>${L('blog')}</a>` : ''}<a href="${pathOf(lang, 'about')}"${cur('about', slug)}>${L('about')}</a></nav>
+  <nav class="links" aria-label="${esc(L('sections'))}"><a href="${CATALOGUE_BASE[lang]}"${cur('solutions', slug)}>${L('sol')}</a><a href="${pathOf(lang, 'samurai')}"${cur('samurai', slug)}>${L('ai')}</a>${hasBlog(lang) ? `<a href="${blogIndex(lang)}"${cur('blog', slug)}>${L('blog')}</a>` : ''}<a href="${pathOf(lang, 'about')}"${cur('about', slug)}>${L('about')}</a></nav>
   ${sw}
   <a class="btn" href="${pathOf(lang, 'contact')}" data-cta="nav"${cur('contact', slug)}><span>${L('cta')}</span></a>
   <a class="call" href="${telHref(site.telephone)}" aria-label="${esc(L('call'))}"><svg aria-hidden="true"><use href="#i-call"/></svg></a>

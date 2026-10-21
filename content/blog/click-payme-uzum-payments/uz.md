@@ -160,6 +160,16 @@ Toʻlov tizimidan kelgan har bir soʻrov jurnalda saqlanishi kerak. Mijoz «toʻ
 
 Oxirgi qadam — ishchi rejimda oʻz kartangizdan kichik summa toʻlab, keyin uni qaytarib koʻrish. Shundan keyingina toʻlovni barcha mijozlar uchun yoqing.
 
+## Integratsiya muddati va narxi
+
+Har bir toʻlov tizimini ulash loyihaga qancha vaqt va pul qoʻshishi Qilich katalogi boʻyicha quyida keltirilgan. Soʻmdagi summa Markaziy bank kursi boʻyicha hisoblanadi.
+
+{{integration:payme}}
+
+{{integration:click}}
+
+{{integration:uzum}}
+
 ## Ishga tushirishdan oldingi tekshiruv roʻyxati
 
 Dasturchi bilan:

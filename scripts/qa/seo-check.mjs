@@ -215,7 +215,9 @@ for (const [path, { html: h }] of html) {
       if (at.lang !== l) fail(W, `the ${l} link has lang="${at.lang}"`);
       if (!dec(a).includes(LANG_NAME[l])) fail(W, `the ${l} link does not name it ${LANG_NAME[l]}`);
       const want = set[l] ? toPath(set[l]) : HOME[l];
-      if (at.href !== want) fail(W, `the ${l} link goes to ${at.href}, its twin is ${want}`);
+      // a blog post without a twin in that language links that language's blog index (SOLUTIONS-SPEC §5.1)
+      const blogIdx = !set[l] && /\/blog\/[^/]+\/$/.test(path) ? `${HOME[l]}blog/` : null;
+      if (at.href !== want && at.href !== blogIdx) fail(W, `the ${l} link goes to ${at.href}, its twin is ${want}`);
       if ((l === lang) !== ('aria-current' in at)) fail(W, `aria-current on the wrong language link (${l})`);
     }
   }

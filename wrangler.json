@@ -17,7 +17,8 @@
   "ratelimits": [
     { "name": "RL_IP", "namespace_id": "1101", "simple": { "limit": 5, "period": 60 } },
     { "name": "RL_ALL", "namespace_id": "1102", "simple": { "limit": 60, "period": 60 } },
-    { "name": "RL_LEAD", "namespace_id": "1103", "simple": { "limit": 3, "period": 60 } }
+    { "name": "RL_LEAD", "namespace_id": "1103", "simple": { "limit": 3, "period": 60 } },
+    { "name": "RL_READ", "namespace_id": "1104", "simple": { "limit": 30, "period": 60 } }
   ],
   "durable_objects": { "bindings": [{ "name": "SAMURAI_GUARD", "class_name": "SamuraiGuard" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SamuraiGuard"] }],

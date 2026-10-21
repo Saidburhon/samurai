@@ -42,7 +42,7 @@ export function view(ctx, lang) {
   // the price as this language's reader thinks of it: soʻm first in Uzbekistan, dollars first for a company in Japan
   const prim = (r) => (ja ? fUsd(r, lang) : fUzs(uzsR(r), lang));
   const sec = (r) => (ja ? fUzs(uzsR(r), lang) : fUsd(r, lang));
-  const from = (r) => prim([r[0], r[0]]);
+  const from = (r) => (ja ? fUsd([r[0], r[0]], lang) : fUzs([uzsR(r)[0], uzsR(r)[0]], lang));
   const wk = (r) => fWeeks(r, lang);
   const monthly = (s) => s.billing === 'monthly';
   const maxFull = Math.max(...sols.filter((s) => !monthly(s)).map((s) => s.full.weeks[1]));
@@ -65,7 +65,7 @@ function hamonSymbols() {
   const out = [];
   for (let d = 1; d <= 5; d++) {
     const v = hamonFn(d, 7 + d), pts = [];
-    for (let i = 0; i <= 40; i++) { const s = i / 40; pts.push(`${r1(s * 44)} ${r1(Math.max(0.5, Math.min(9.5, (v(s * 0.6 + 0.1) - 0.5) * 22 + 1.5)))}`); }
+    for (let i = 0; i <= 22; i++) { const s = i / 22; pts.push(`${r1(s * 44)} ${r1(Math.max(0.5, Math.min(9.5, (v(s * 0.6 + 0.1) - 0.5) * 22 + 1.5)))}`); }
     out.push(`<symbol id="hm${d}" viewBox="0 0 44 10"><path d="M${pts.join('L')}"/></symbol>`);
   }
   return `<svg class="sprite" aria-hidden="true" focusable="false">${out.join('')}</svg>`;
@@ -99,12 +99,11 @@ const figures = (s, V) => {
 // the search text of a row: titles and one-liners in every language, the group, the integrations and the
 // industries, folded (Cyrillic Uzbek to Latin, every okina variant dropped), so one query finds it in any script
 function searchText(s, V) {
-  const { model, cat } = V;
+  const { model } = V;
   const parts = [s.id.replace(/-/g, ' ')];
-  for (const l of LANGS) parts.push(s.title?.[l], s.oneliner?.[l], model.groups[s.group].title?.[l]);
-  for (const k of s.integrations) { const i = model.integrations[k]; if (i) parts.push(i.name, ...(i.aliases || [])); }
-  for (const id of s.industries) parts.push(...Object.values(cat.industries[id] || {}), INDUSTRY_JA[id]);
-  return fold(parts.filter(Boolean).join(' ')).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  for (const l of LANGS) if (l !== V.lang && (l !== 'ja' || V.lang === 'en')) parts.push(s.title?.[l]);
+  for (const k of s.integrations) { const i = model.integrations[k]; if (i) parts.push(i.name); }
+  return [...new Set(fold(parts.filter(Boolean).join(' ')).replace(/[^\p{L}\p{N}]+/gu, ' ').trim().split(' '))].join(' ');
 }
 // platform and goal of a row, for the lens (from its group and its words)
 function platformsOf(s) {
@@ -128,28 +127,43 @@ function goalsOf(s, V) {
 }
 
 // ---- one register row (catalogue and group pages) ----------------------------------------------------------------
-function row(s, V, { open = false } = {}) {
+// the opened row's spec sheet: [label, html] pairs (SOLUTIONS-SPEC §4.2: MVP scope, full scope, integrations,
+// who it is for, what we need from you, per month). On the catalogue it comes from the rows file on first open
+// (the HTML stays inside its weight budget); on a group page it is in the HTML.
+function rowSheet(s, V) {
   const { T, lang } = V;
   const sc = V.scopeOf(s);
-  const [f1, f2] = figures(s, V);
+  const sep = lang === 'ja' ? '、' : ', ';
   const dl = [];
-  if (sc?.mvp?.[lang]?.length) dl.push([T.dl.mvpScope, lines(sc.mvp[lang])]);
+  if (sc?.mvp?.[lang]?.length) dl.push([V.monthly(s) ? T.monthly.basic : T.dl.mvpScope, lines(sc.mvp[lang])]);
+  if (sc?.full?.[lang]?.length) dl.push([V.monthly(s) ? T.monthly.ext : T.dl.fullScope, lines(sc.full[lang])]);
   const ints = integrationNames(s, V);
   if (ints.length) dl.push([T.dl.ints, chips(ints)]);
   const who = industryNames(s, V);
-  if (who.length) dl.push([T.dl.who, esc(who.join(lang === 'ja' ? '、' : ', '))]);
+  if (who.length) dl.push([T.dl.who, esc(who.join(sep))]);
   if (s.monthly_usd[1] > 0 && !V.monthly(s)) dl.push([T.dl.month, `<span class="fig">${esc(V.prim(s.monthly_usd))}</span> <span class="note">${esc(T.monthNote)}</span>`]);
+  return dl;
+}
+const sheetHtml = (dl) => dl.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('');
+// the catalogue's rows file: each row's sheet (HTML) and the search words of the other languages' titles
+export function rowsFile(V) {
+  const est = (s) => (V.monthly(s) ? '' : samurai(V.lang, { solutions: s.id, industry: s.industries.find((i) => V.model.industries[i]) }));
+  return { v: 1, estimate: V.T.estimate, rows: Object.fromEntries(V.sols.map((s) => [s.id, [sheetHtml(rowSheet(s, V)), est(s)]])), index: Object.fromEntries(V.sols.map((s) => [s.id, searchText(s, V)])) };
+}
+function row(s, V, { open = false, full = false } = {}) {
+  const { T, lang } = V;
+  const [f1, f2] = figures(s, V);
   const ind = s.industries.find((i) => V.model.industries[i]);
-  const data = `data-id="${s.id}" data-g="${s.group}" data-d="${s.difficulty}" data-w="${s.mvp.weeks[1]}" data-p="${s.mvp.usd[0]}" data-ind="${s.industries.join(' ')}" data-pl="${platformsOf(s).join(' ')}" data-goal="${goalsOf(s, V).join(' ')}"`;
+  const data = `data-id="${s.id}" data-g="${s.group}" data-d="${s.difficulty}" data-w="${s.mvp.weeks[1]}" data-p="${s.mvp.usd[0]}" data-ind="${s.industries.join(' ')}" data-pl="${platformsOf(s).join(' ')}" data-goal="${goalsOf(s, V).join(' ')}"${V.monthly(s) ? ' data-m="1"' : ''}`;
   return `<li class="sr" ${data}>
 <details${open ? ' open' : ''}><summary><span class="sr-t"><h3>${esc(V.L(s.title))}</h3><span class="sr-o">${esc(V.L(s.oneliner))}</span></span><span class="sr-g">${microBlade(s, V)}${microHamon(s.difficulty, `${T.dl.diff}: ${T.diff[s.difficulty - 1]}`)}</span><span class="sr-f mono"><span>${esc(f1)}</span><span>${esc(f2)}</span></span><span class="sr-x" aria-hidden="true"></span></summary>
-<div class="sr-b"><dl class="sheet">${dl.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl><p class="sr-a"><a class="u" href="${solutionUrl(s, lang)}">${esc(T.details)}</a>${V.monthly(s) ? '' : `<a class="u" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}">${esc(T.estimate)}</a>`}</p></div>
-</details>${addBtn(s, V)}</li>`;
+<div class="sr-b"><dl class="sheet"${full ? '' : ' data-lazy'}>${full ? sheetHtml(rowSheet(s, V)) : ''}</dl><p class="sr-a"><a class="u" href="${solutionUrl(s, lang)}">${esc(T.details)}</a>${V.monthly(s) || !full ? '' : `<a class="u" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}">${esc(T.estimate)}</a>`}</p></div>
+</details></li>`;
 }
-function chapter(gid, V, { open = false, head = true } = {}) {
+function chapter(gid, V, { open = false, head = true, full = false } = {}) {
   const list = V.byGroup[gid];
   const h = head ? `<header class="ch-h"><h2 id="g-${gid}"><a href="${groupUrl(gid, V.lang)}">${esc(V.gTitle(gid))}</a></h2><p class="ch-v mono" aria-hidden="true">${esc(V.lang === 'ja' ? gid.toUpperCase() : V.gTitle(gid))}</p><p class="ch-l">${esc(V.gLine(gid))}</p></header>` : '';
-  return `<section class="chap" data-g="${gid}"${head ? ` aria-labelledby="g-${gid}"` : ''}>${h}<ol class="reg">${list.map((s) => row(s, V, { open })).join('\n')}</ol></section>`;
+  return `<section class="chap" data-g="${gid}"${head ? ` aria-labelledby="g-${gid}"` : ''}>${h}<ol class="reg">${list.map((s) => row(s, V, { open, full })).join('\n')}</ol></section>`;
 }
 function lensBar(V) {
   const { T, lang, cat, ja } = V;
@@ -169,7 +183,7 @@ function lensBar(V) {
     <noscript><button class="btn" type="submit"><span>${esc(T.lens.q)}</span></button></noscript>
   </form>
   <div class="lens-out" hidden><p class="starter"></p><p class="found mono" aria-live="polite"></p><button class="clear mono u" type="button">${esc(T.clear)}</button></div>
-  <p class="sort mono" role="group" aria-label="${esc(T.sort)}"><span>${esc(T.sort)}:</span>${['', 'weeks', 'price', 'difficulty'].map((k, i) => `<button type="button" data-sort="${k}" aria-pressed="${i === 0}">${esc(T.sorts[i])}</button>`).join('')}</p>`;
+  <p class="sort mono" role="group" aria-label="${esc(T.sort)}"><span>${esc(T.sort)}${lang === 'ja' ? '：' : ':'}</span>${['', 'weeks', 'price', 'difficulty'].map((k, i) => `<button type="button" data-sort="${k}" aria-pressed="${i === 0}">${esc(T.sorts[i])}</button>`).join('')}</p>`;
 }
 const tray = (V) => `<aside class="tray" id="tray" hidden aria-label="${esc(V.T.basket.h)}"></aside>`;
 // the page's inline data: search index, the lens's starter lines (priced at build time by the same engine),
@@ -186,7 +200,6 @@ function pageData(V, extra = {}) {
 // ---- the catalogue ---------------------------------------------------------------------------------------------
 export function renderCatalogue(V) {
   const { T, lang, groups, sols } = V;
-  const index = Object.fromEntries(sols.map((s) => [s.id, searchText(s, V)]));
   const starters = {};
   for (const [id, ind] of Object.entries(V.model.industries)) {
     const st = V.ctx.starters[lang]?.[id];
@@ -207,9 +220,9 @@ export function renderCatalogue(V) {
   </div>
   <p class="honest"><a class="u" href="${PRICES[lang]}">${esc(T.pricesCrumb)}</a> · <span class="mono">${esc(rateLine(V.rate, lang))}</span></p>
   ${tray(V)}
-  ${pageData(V, { index, starters })}`;
+  ${pageData(V, { rows: V.ctx.rowsFile[lang], starters })}`;
   const url = abs(catalogueUrl(lang));
-  const list = { '@type': 'ItemList', '@id': `${url}#list`, name: T.h1, numberOfItems: sols.length, itemListElement: sols.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(solutionUrl(s, lang)), name: V.L(s.title) })) };
+  const list = { '@type': 'ItemList', '@id': `${url}#list`, name: T.h1, numberOfItems: sols.length, itemListElement: sols.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(solutionUrl(s, lang)) })) };
   return { main, ldExtra: [list], mainEntity: `${url}#list` };
 }
 
@@ -237,7 +250,7 @@ function raises(V, gid, sols) {
   const count = new Map();
   for (const s of sols) for (const k of s.integrations) if (!s.integrations_included.includes(k)) count.set(k, (count.get(k) || 0) + 1);
   const ints = [...count].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => model.integrations[k]).filter(Boolean);
-  for (const i of ints) items.push([`${i.names?.[lang] || i.name}: ${V.L(i.what)}`, `+${V.ja ? fUsd(i.add_usd, lang) : fUzs(V.uzsR(i.add_usd), lang)}, +${V.wk(i.add_weeks)}`]);
+  for (const i of ints) { const nm = i.names?.[lang] || i.name, wh = V.L(i.what); items.push([wh.includes(nm) ? wh : `${nm}: ${wh}`, `+${V.ja ? fUsd(i.add_usd, lang) : fUzs(V.uzsR(i.add_usd), lang)}, +${V.wk(i.add_weeks)}`]); }
   return `<dl class="sheet raise">${items.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd class="mono">${esc(v)}</dd></div>`).join('')}</dl>`;
 }
 function faqBlock(V, qa) {
@@ -254,7 +267,7 @@ function groupQa(gid, V, f) {
   const sep = lang === 'ja' ? '、' : lang === 'en' ? '; ' : '; ';
   const needs = needsOf(f.list[0], V);
   const name = GROUP_SEO[gid][lang];
-  const vals = { t: lang === 'en' ? name.toLowerCase().replace(/^ai /, 'AI ').replace(/^iot /, 'IoT ') : name, usd: fUsd(f.mvpUsd, lang), uzs: fUzs(V.uzsR(f.mvpUsd), lang), fusd: fUsd([f.fullUsd[1], f.fullUsd[1]], lang), weeks: V.wk(f.mvpW), fweeks: V.wk(f.fullW), needs: needs.join(sep) };
+  const vals = { t: lang === 'en' ? name.replace(/^(Mobile|Websites|Games|Business|Cloud|Support|Industry)\b/, (m) => m.toLowerCase()) : name, usd: fUsd(f.mvpUsd, lang), uzs: fUzs(V.uzsR(f.mvpUsd), lang), fusd: fUsd([f.fullUsd[1], f.fullUsd[1]], lang), weeks: V.wk(f.mvpW), fweeks: V.wk(f.fullW), needs: needs.join(sep) };
   void L;
   return T.faqGroup.map(([q, a]) => [fill(q, vals), fill(a, vals)]);
 }
@@ -267,19 +280,19 @@ export function renderGroup(gid, V) {
   const url = abs(groupUrl(gid, lang));
   const main = `
   <header class="pg-head sol-head">
-    <h1>${esc(V.gTitle(gid))}</h1>
+    <h1>${esc(GROUP_SEO[gid][lang])}</h1>
     <p class="lede">${esc(lede)}</p>
     <p class="meta mono">${esc(fill(T.groupRange, { price: V.prim(f.mvpUsd), weeks: V.wk(f.mvpW) }))} · ${esc(rateLine(V.rate, lang))}</p>
     ${samLine(V)}
   </header>
   ${hamonSymbols()}
-  <div class="register reg-group">${chapter(gid, V, { open: true, head: false })}</div>
+  <div class="register reg-group">${chapter(gid, V, { open: true, head: false, full: true })}</div>
   <section class="row" aria-labelledby="rs-h"><h2 id="rs-h">${esc(T.dl.raises)}</h2><div class="row-body">${raises(V, gid, sols)}<p class="fine"><a class="u" href="${PRICES[lang]}">${esc(T.pricesCrumb)}</a></p></div></section>
   ${faqBlock(V, qa)}
   ${postsBlock(V, sols.map((s) => s.id))}
   ${tray(V)}
   ${pageData(V)}`;
-  const list = { '@type': 'ItemList', '@id': `${url}#list`, name: V.gTitle(gid), numberOfItems: sols.length, itemListElement: sols.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(solutionUrl(s, lang)), name: V.L(s.title) })) };
+  const list = { '@type': 'ItemList', '@id': `${url}#list`, name: V.gTitle(gid), numberOfItems: sols.length, itemListElement: sols.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(solutionUrl(s, lang)) })) };
   return { main, ldExtra: [list, faqLd(url, qa)], mainEntity: `${url}#list`, facts: f };
 }
 
@@ -328,13 +341,12 @@ export function renderSolution(s, V) {
   const rel = [...next, ...same.filter((x) => !next.includes(x))].slice(0, 5);
   const main = `
   <header class="pg-head sol-head">
-    <p class="kicker mono"><a class="u" href="${groupUrl(s.group, lang)}">${esc(V.gTitle(s.group))}</a></p>
     <h1 style="view-transition-name:sol-${s.id}">${esc(title)}</h1>
     <p class="lede">${esc(lede)}</p>
     <p class="acts">${mon ? '' : `<a class="btn" href="${esc(samurai(lang, { solutions: s.id, industry: ind }))}"><span>${esc(T.estimate)}</span>${KISSAKI}</a>`}${addBtn(s, V)}</p>
   </header>
   ${plate ? `<figure class="sol-plate" aria-hidden="true">${plate}</figure>` : ''}
-  <section class="row sheet-row" aria-labelledby="sh-h"><h2 id="sh-h">${esc(T.dl.price)}</h2><div class="row-body"><dl class="sheet">${sheet.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>
+  <section class="row sheet-row" aria-labelledby="sh-h"><h2 id="sh-h">${esc(T.sheetH)}</h2><div class="row-body"><dl class="sheet">${sheet.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>
   ${get.length ? `<section class="row" aria-labelledby="gt-h"><h2 id="gt-h">${esc(T.getH)}</h2><div class="row-body"><dl class="sheet get">${get.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div></section>` : ''}
   ${needs.length ? `<section class="row" aria-labelledby="nd-h"><h2 id="nd-h">${esc(T.dl.needs)}</h2><div class="row-body">${lines(needs)}</div></section>` : ''}
   ${mon ? '' : `<section class="row" aria-labelledby="rs-h"><h2 id="rs-h">${esc(T.dl.raises)}</h2><div class="row-body">${raises(V, s.group, [s])}</div></section>`}
@@ -359,14 +371,16 @@ export function renderSolution(s, V) {
 export function renderPrices(V) {
   const { T, lang, groups, model } = V;
   const head = `<thead><tr>${T.th.map((h, i) => `<th scope="col"${i ? ' class="n"' : ''}>${esc(h)}</th>`).join('')}</tr></thead>`;
-  const cell = (r, label) => `<td class="n" data-l="${esc(label)}"><span class="big">${esc(V.prim(r))}</span><span class="sec">${esc(V.sec(r))}</span></td>`;
+  const cssStr = (x) => `'${String(x).replace(/'/g, '’')}'`;
+  const labels = (list) => ` style="${esc(list.map((x, i) => `--l${i + 2}:${cssStr(x)}`).join(';'))}"`;
+  const cell = (r) => `<td><b>${esc(V.prim(r))}</b><i>${esc(V.sec(r))}</i></td>`;
   const tables = groups.map((gid) => {
     const list = V.byGroup[gid].filter((s) => !V.monthly(s));
-    const body = list.map((s) => `<tr><th scope="row"><a href="${solutionUrl(s, lang)}">${esc(V.L(s.title))}</a></th><td class="n" data-l="${esc(T.th[1])}">${esc(V.wk(s.mvp.weeks))}</td>${cell(s.mvp.usd, T.th[2])}<td class="n" data-l="${esc(T.th[3])}">${esc(V.wk(s.full.weeks))}</td>${cell(s.full.usd, T.th[4])}<td class="n" data-l="${esc(T.th[5])}">${s.monthly_usd[1] > 0 ? esc(V.prim(s.monthly_usd)) : '0'}</td></tr>`).join('');
-    return `<section class="ptab" aria-labelledby="p-${gid}"><h2 id="p-${gid}"><a href="${groupUrl(gid, lang)}">${esc(V.gTitle(gid))}</a></h2><table>${head}<tbody>${body}</tbody></table></section>`;
+    const body = list.map((s) => `<tr><th scope="row"><a href="${solutionUrl(s, lang)}">${esc(V.L(s.title))}</a></th><td>${esc(V.wk(s.mvp.weeks))}</td>${cell(s.mvp.usd)}<td>${esc(V.wk(s.full.weeks))}</td>${cell(s.full.usd)}<td>${s.monthly_usd[1] > 0 ? esc(V.prim(s.monthly_usd)) : '0'}</td></tr>`).join('');
+    return `<section class="ptab" aria-labelledby="p-${gid}"><h2 id="p-${gid}"><a href="${groupUrl(gid, lang)}">${esc(V.gTitle(gid))}</a></h2><table${labels(T.th.slice(1))}>${head}<tbody>${body}</tbody></table></section>`;
   });
   const mon = V.sols.filter((s) => V.monthly(s));
-  const monTable = mon.length ? `<section class="ptab" aria-labelledby="p-monthly"><h2 id="p-monthly">${esc(T.monthly.h)}</h2><table><thead><tr><th scope="col">${esc(T.th[0])}</th><th scope="col" class="n">${esc(T.monthly.start)}</th><th scope="col" class="n">${esc(T.monthly.basic)}</th><th scope="col" class="n">${esc(T.monthly.ext)}</th></tr></thead><tbody>${mon.map((s) => `<tr><th scope="row"><a href="${solutionUrl(s, lang)}">${esc(V.L(s.title))}</a></th><td class="n" data-l="${esc(T.monthly.start)}">${esc(V.wk(s.mvp.weeks))}</td>${cell(s.mvp.usd, T.monthly.basic)}${cell(s.full.usd, T.monthly.ext)}</tr>`).join('')}</tbody></table></section>` : '';
+  const monTable = mon.length ? `<section class="ptab" aria-labelledby="p-monthly"><h2 id="p-monthly">${esc(T.monthly.h)}</h2><table${labels([T.monthly.start, T.monthly.basic, T.monthly.ext])}><thead><tr><th scope="col">${esc(T.th[0])}</th><th scope="col" class="n">${esc(T.monthly.start)}</th><th scope="col" class="n">${esc(T.monthly.basic)}</th><th scope="col" class="n">${esc(T.monthly.ext)}</th></tr></thead><tbody>${mon.map((s) => `<tr><th scope="row"><a href="${solutionUrl(s, lang)}">${esc(V.L(s.title))}</a></th><td>${esc(V.wk(s.mvp.weeks))}</td>${cell(s.mvp.usd)}${cell(s.full.usd)}</tr>`).join('')}</tbody></table></section>` : '';
   // the integrations, alphabetical, with what each does, its add and how many solutions use it
   const used = new Map();
   for (const s of V.sols) for (const k of s.integrations) used.set(k, (used.get(k) || 0) + 1);
@@ -392,7 +406,7 @@ export function renderPrices(V) {
   <section class="row" aria-labelledby="md-h"><h2 id="md-h">${esc(T.modsH)}</h2><div class="row-body"><p>${esc(T.modsLede)}</p><dl class="sheet raise">${mods}</dl></div></section>
   <p class="honest">${esc(T.honest.replace(/SamurAI[^.。]*[.。]$/, ''))}<a class="u" href="${pathOf(lang, 'samurai')}">${esc(T.honest.match(/SamurAI[^.。]*[.。]$/)?.[0] || 'SamurAI')}</a></p>`;
   const url = abs(PRICES[lang]);
-  const offers = { '@type': 'OfferCatalog', '@id': `${url}#prices`, name: T.pH1, numberOfItems: project.length, itemListElement: project.map((s) => ({ '@type': 'Offer', name: V.L(s.title), url: abs(solutionUrl(s, lang)), itemOffered: { '@type': 'Service', name: V.L(s.title), url: abs(solutionUrl(s, lang)) }, priceSpecification: { '@type': 'PriceSpecification', minPrice: s.mvp.usd[0], maxPrice: s.mvp.usd[1], priceCurrency: 'USD' } })) };
+  const offers = { '@type': 'OfferCatalog', '@id': `${url}#prices`, name: T.pH1, numberOfItems: project.length, itemListElement: project.map((s) => ({ '@type': 'Offer', url: abs(solutionUrl(s, lang)), priceSpecification: { '@type': 'PriceSpecification', minPrice: s.mvp.usd[0], priceCurrency: 'USD' } })) };
   return { main, ldExtra: [offers], mainEntity: `${url}#prices` };
 }
 
@@ -415,8 +429,8 @@ export function metaSolution(s, V) {
   const { T, lang } = V;
   const t = V.L(s.title);
   if (lang !== 'ja') {
-    if (V.monthly(s)) return { title: fill(T.title_sol, { t }), description: `${t}. ${T.monthly.basic}: ${V.prim(s.mvp.usd)} / ${T.monthly.per}; ${T.monthly.ext}: ${V.prim(s.full.usd)}. ${V.L(s.oneliner)}` };
-    return { title: fill(T.title_sol, { t }), description: fill(T.desc_sol, { t, weeks: V.wk(s.mvp.weeks), price: V.from(s.mvp.usd), fweeks: V.wk(s.full.weeks) }) };
+    if (V.monthly(s)) return { title: fill(t.includes(':') ? T.title_sol.replace(/^\{t\}:/, '{t},') : T.title_sol, { t }), description: `${t}. ${T.monthly.basic}: ${V.prim(s.mvp.usd)} / ${T.monthly.per}; ${T.monthly.ext}: ${V.prim(s.full.usd)}. ${V.L(s.oneliner)}` };
+    return { title: fill(t.includes(':') ? T.title_sol.replace(/^\{t\}:/, '{t},') : T.title_sol, { t }), description: fill(T.desc_sol, { t, weeks: V.wk(s.mvp.weeks), price: V.from(s.mvp.usd), fweeks: V.wk(s.full.weeks) }) };
   }
   const title = fitJa(JA_TAIL.map((x) => t + x), 28, 32, `title for ${s.id}`);
   const nums = V.monthly(s)

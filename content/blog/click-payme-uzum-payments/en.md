@@ -160,6 +160,16 @@ Every request from a provider should be kept in a log. When a customer writes "I
 
 The last step is a real payment of a small amount from your own card in live mode, followed by a refund. Only then open payment to all customers.
 
+## Timeline and price of the integration
+
+Below is what connecting each payment system adds to a project in time and money, from the Qilich catalogue. The UZS figure uses the Central Bank rate.
+
+{{integration:payme}}
+
+{{integration:click}}
+
+{{integration:uzum}}
+
 ## Checklist before launch
 
 With the developer:

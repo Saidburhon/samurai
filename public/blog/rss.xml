@@ -15,18 +15,18 @@
       <description>Avtomatlashtirishni qayerdan boshlash kerak: takroriy ishlarni topish, ularni muhimligiga qarab saralash va jadval yetadigan joyda dasturga pul sarflamaslik.</description>
     </item>
     <item>
+      <title>Avtomatlashtirish oʻzini oqlaydimi: oddiy hisob-kitob usuli</title>
+      <link>https://qilich.com/blog/automation-roi/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/automation-roi/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Dastur yoki botga sarflangan pul qachon qaytadi: tejalgan soatlar, kamaygan xatolar, yoʻqotilmagan buyurtmalar va doimiy xarajatlarni hisoblash.</description>
+    </item>
+    <item>
       <title>Telegram-bot narxi Toshkentda: summa nimalarga bogʻliq</title>
       <link>https://qilich.com/blog/telegram-bot-cost/</link>
       <guid isPermaLink="true">https://qilich.com/blog/telegram-bot-cost/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>Menyuli oddiy botdan toʻlov, CRM va AI bilan ishlaydigan botgacha: Telegram-bot narxini nima belgilaydi, qayerda tejash mumkin, qayerda yoʻq.</description>
-    </item>
-    <item>
-      <title>Sunʼiy intellekt xarajatlarni qayerda haqiqatan kamaytiradi, qayerda yoʻq</title>
-      <link>https://qilich.com/blog/ai-to-cut-costs/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/ai-to-cut-costs/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>AI qaysi ishlarda vaqt va pulni tejaydi (murojaatlarni saralash, hujjatlarni oʻqish, javob qoralamalari) va qayerda faqat xarajat va xavf qoʻshadi.</description>
     </item>
     <item>
       <title>Mobil ilova narxi: byudjet nimalardan tashkil topadi</title>
@@ -36,18 +36,18 @@
       <description>iOS va Android ilova narxi nimaga bogʻliq: mijoz yoʻllari, backend, toʻlovlar, integratsiyalar, doʻkonlarga joylash va ishga tushirilgandan keyingi xarajatlar.</description>
     </item>
     <item>
-      <title>Ilova, sayt yoki Telegram Mini App: biznesingizga qaysi biri kerak</title>
-      <link>https://qilich.com/blog/app-website-or-mini-app/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/app-website-or-mini-app/</guid>
+      <title>Sayt ochish narxi: landing, korporativ sayt va internet-doʻkon</title>
+      <link>https://qilich.com/blog/website-cost/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/website-cost/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Mobil ilova, sayt va Telegram Mini App narx, mijozga yetib borish, toʻlov va qoʻllab-quvvatlash boʻyicha qanday farq qiladi va qaysi birini tanlash kerak.</description>
+      <description>Landing, korporativ sayt va internet-doʻkon narxi nimaga bogʻliq: dizayn, matnlar, boshqaruv paneli, toʻlovlar, 1C bilan bogʻlash va hosting.</description>
     </item>
     <item>
-      <title>Buyurtmani yoʻqotadigan UX xatolari: savatdan toʻlovgacha</title>
-      <link>https://qilich.com/blog/ux-mistakes-that-lose-orders/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/ux-mistakes-that-lose-orders/</guid>
+      <title>Sunʼiy intellekt xarajatlarni qayerda haqiqatan kamaytiradi, qayerda yoʻq</title>
+      <link>https://qilich.com/blog/ai-to-cut-costs/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/ai-to-cut-costs/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Mijoz mahsulotni savatga qoʻshdi-yu, toʻlamay chiqib ketdi. Sayt, ilova va botlarda buyurtmani yoʻqotadigan xatolar, ularni topish va tuzatish yoʻllari.</description>
+      <description>AI qaysi ishlarda vaqt va pulni tejaydi (murojaatlarni saralash, hujjatlarni oʻqish, javob qoralamalari) va qayerda faqat xarajat va xavf qoʻshadi.</description>
     </item>
     <item>
       <title>Telegramda mijozlarga AI javob beradi: nimani ishonib topshirsa boʻladi</title>
@@ -57,25 +57,18 @@
       <description>AI yordamchi Telegramdagi savollarga kecha-yu kunduz javob bera oladi, lekin hammasiga emas. Qanday sozlanadi, qachon odamga uzatadi va qancha turadi.</description>
     </item>
     <item>
-      <title>Sayt ochish narxi: landing, korporativ sayt va internet-doʻkon</title>
-      <link>https://qilich.com/blog/website-cost/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/website-cost/</guid>
+      <title>AI yordamida hujjatlarni qayta ishlash: hisobvaraq-faktura, yuk xati, shartnoma</title>
+      <link>https://qilich.com/blog/ai-document-processing/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/ai-document-processing/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Landing, korporativ sayt va internet-doʻkon narxi nimaga bogʻliq: dizayn, matnlar, boshqaruv paneli, toʻlovlar, 1C bilan bogʻlash va hosting.</description>
+      <description>Qogʻoz va PDF hujjatlarni qoʻlda koʻchirish shart emas: AI ularni oʻqib, maʼlumotni 1C yoki jadvalga kiritadi. Qayerda ishlaydi, qayerda tekshiruv shart.</description>
     </item>
     <item>
-      <title>IT agentlikka brif qanday yoziladi: aniq narx va muddat olish uchun</title>
-      <link>https://qilich.com/blog/brief-for-it-agency/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/brief-for-it-agency/</guid>
+      <title>Ilova, sayt yoki Telegram Mini App: biznesingizga qaysi biri kerak</title>
+      <link>https://qilich.com/blog/app-website-or-mini-app/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/app-website-or-mini-app/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Yaxshi brif narx va muddatni aniqroq hisoblashga yordam beradi. Brifga nima yoziladi: maqsad, foydalanuvchilar, funksiyalar, cheklovlar, byudjet.</description>
-    </item>
-    <item>
-      <title>Click, Payme va Uzum toʻlovlarini ulash: biznes egasi uchun qoʻllanma</title>
-      <link>https://qilich.com/blog/click-payme-uzum-payments/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/click-payme-uzum-payments/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Sayt, ilova yoki Telegram-botga onlayn toʻlovni ulash: shartnoma, texnik qism, fiskal chek, pulni qaytarish va eng koʻp uchraydigan xatolar.</description>
+      <description>Mobil ilova, sayt va Telegram Mini App narx, mijozga yetib borish, toʻlov va qoʻllab-quvvatlash boʻyicha qanday farq qiladi va qaysi birini tanlash kerak.</description>
     </item>
     <item>
       <title>MVP: birinchi versiyaga nimani kiritmaslik kerak</title>
@@ -85,25 +78,11 @@
       <description>Birinchi versiyada hamma narsa boʻlishi shart emas. MVP uchun funksiyalarni qanday tanlash, nimadan voz kechish va keyingi bosqichga qachon oʻtish kerak.</description>
     </item>
     <item>
-      <title>Hōrensō: IT jamoa sizga qanday hisobot berishi kerak</title>
-      <link>https://qilich.com/blog/horenso-reporting/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/horenso-reporting/</guid>
+      <title>Buyurtmani yoʻqotadigan UX xatolari: savatdan toʻlovgacha</title>
+      <link>https://qilich.com/blog/ux-mistakes-that-lose-orders/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/ux-mistakes-that-lose-orders/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Yapon ish madaniyatidagi hōrensō: hisobot berish, xabardor qilish, maslahatlashish. Dasturchilar jamoasidan nimani, qachon va qanday shaklda kutish kerak.</description>
-    </item>
-    <item>
-      <title>Avtomatlashtirish oʻzini oqlaydimi: oddiy hisob-kitob usuli</title>
-      <link>https://qilich.com/blog/automation-roi/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/automation-roi/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Dastur yoki botga sarflangan pul qachon qaytadi: tejalgan soatlar, kamaygan xatolar, yoʻqotilmagan buyurtmalar va doimiy xarajatlarni hisoblash.</description>
-    </item>
-    <item>
-      <title>CRM tanlash: amoCRM, Bitrix24 yoki oʻz CRM tizimingiz</title>
-      <link>https://qilich.com/blog/choosing-a-crm/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/choosing-a-crm/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>amoCRM, Bitrix24 yoki maxsus CRM: sotuv boʻlimingizga qaysi biri mos, tanlashdan oldin nimani solishtirish kerak va oʻz tizimingiz qachon oʻzini oqlaydi.</description>
+      <description>Mijoz mahsulotni savatga qoʻshdi-yu, toʻlamay chiqib ketdi. Sayt, ilova va botlarda buyurtmani yoʻqotadigan xatolar, ularni topish va tuzatish yoʻllari.</description>
     </item>
     <item>
       <title>Oʻzbek va rus tilida soʻzlashuvchi mijozlar uchun interfeys dizayni</title>
@@ -113,25 +92,11 @@
       <description>Ikki tilli auditoriya uchun interfeys: til tanlash, lotin va kirill yozuvi, matn uzunligi, shriftlarda ʻ belgisi, sana va pul formatlari.</description>
     </item>
     <item>
-      <title>AI yordamida hujjatlarni qayta ishlash: hisobvaraq-faktura, yuk xati, shartnoma</title>
-      <link>https://qilich.com/blog/ai-document-processing/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/ai-document-processing/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Qogʻoz va PDF hujjatlarni qoʻlda koʻchirish shart emas: AI ularni oʻqib, maʼlumotni 1C yoki jadvalga kiritadi. Qayerda ishlaydi, qayerda tekshiruv shart.</description>
-    </item>
-    <item>
       <title>Sayt va ilova tezligi: oʻrta narxdagi Android telefonda tekshiring</title>
       <link>https://qilich.com/blog/speed-on-android/</link>
       <guid isPermaLink="true">https://qilich.com/blog/speed-on-android/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>Koʻp mijozlar saytni flagmanda emas, oʻrta narxdagi Android telefonda mobil internet orqali ochadi. Tezlikni qanday tekshirish, nimani birinchi tuzatish kerak.</description>
-    </item>
-    <item>
-      <title>Sayt va Telegram-botni 1C bilan bogʻlash: qoldiq, narx, buyurtma</title>
-      <link>https://qilich.com/blog/1c-integration/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/1c-integration/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Saytdagi qoldiq ombordagi bilan bir xil boʻlsin, buyurtmalar qoʻlda koʻchirilmasin: 1C integratsiyasi qanday ishlaydi va oldindan nimani tekshirish kerak.</description>
     </item>
     <item>
       <title>Mijozning joniga tegmaydigan chatbot: Telegram-bot dizayni qoidalari</title>
@@ -141,11 +106,18 @@
       <description>Cheksiz menyular, keraksiz xabarlar, operator bilan bogʻlanib boʻlmaydi. Mijozlarni botdan qochiradigan xatolar va qulay botning amaliy qoidalari.</description>
     </item>
     <item>
-      <title>Shaxsiy maʼlumotlarni Oʻzbekistonda saqlash: sayt, ilova va bot uchun</title>
-      <link>https://qilich.com/blog/personal-data-in-uzbekistan/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/personal-data-in-uzbekistan/</guid>
+      <title>IT agentlikka brif qanday yoziladi: aniq narx va muddat olish uchun</title>
+      <link>https://qilich.com/blog/brief-for-it-agency/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/brief-for-it-agency/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Oʻzbekiston fuqarolarining shaxsiy maʼlumotlari mamlakat ichidagi serverlarda saqlanishi shart. Sayt, ilova, bot va CRM uchun bu amalda nimani anglatadi?</description>
+      <description>Yaxshi brif narx va muddatni aniqroq hisoblashga yordam beradi. Brifga nima yoziladi: maqsad, foydalanuvchilar, funksiyalar, cheklovlar, byudjet.</description>
+    </item>
+    <item>
+      <title>Hōrensō: IT jamoa sizga qanday hisobot berishi kerak</title>
+      <link>https://qilich.com/blog/horenso-reporting/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/horenso-reporting/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Yapon ish madaniyatidagi hōrensō: hisobot berish, xabardor qilish, maslahatlashish. Dasturchilar jamoasidan nimani, qachon va qanday shaklda kutish kerak.</description>
     </item>
     <item>
       <title>Kaizen: kichik yaxshilanishlar nega katta relizdan foydaliroq</title>
@@ -153,13 +125,6 @@
       <guid isPermaLink="true">https://qilich.com/blog/kaizen-in-software/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>Ishga tushirish loyihaning oxiri emas. Sayt, ilova yoki botni har oy oz-ozdan yaxshilash qanday ishlaydi, bunga qancha soat ketadi va nimani oʻlchash kerak.</description>
-    </item>
-    <item>
-      <title>Sayt, ilova va bot xavfsizligi: kichik biznes uchun minimal choralar</title>
-      <link>https://qilich.com/blog/security-basics/</link>
-      <guid isPermaLink="true">https://qilich.com/blog/security-basics/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Koʻp muammo murakkab hujumdan emas, oddiy xatodan boshlanadi: zaif parol, ochiq admin panel, ishdan ketgan xodimning akkaunti. Avval nimani tekshirish kerak.</description>
     </item>
     <item>
       <title>Ishga tushirgach: ilova va saytni qoʻllab-quvvatlashga nimalar kiradi</title>
@@ -174,6 +139,41 @@
       <guid isPermaLink="true">https://qilich.com/blog/fixed-price-or-hourly/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>Dastur ishlab chiqish shartnomasida nimalar muhim: toʻlov modeli, bosqichlar, qabul qilish mezonlari, kod va akkauntlar kimniki, kafolat va qoʻllab-quvvatlash.</description>
+    </item>
+    <item>
+      <title>Click, Payme va Uzum toʻlovlarini ulash: biznes egasi uchun qoʻllanma</title>
+      <link>https://qilich.com/blog/click-payme-uzum-payments/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/click-payme-uzum-payments/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Sayt, ilova yoki Telegram-botga onlayn toʻlovni ulash: shartnoma, texnik qism, fiskal chek, pulni qaytarish va eng koʻp uchraydigan xatolar.</description>
+    </item>
+    <item>
+      <title>CRM tanlash: amoCRM, Bitrix24 yoki oʻz CRM tizimingiz</title>
+      <link>https://qilich.com/blog/choosing-a-crm/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/choosing-a-crm/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>amoCRM, Bitrix24 yoki maxsus CRM: sotuv boʻlimingizga qaysi biri mos, tanlashdan oldin nimani solishtirish kerak va oʻz tizimingiz qachon oʻzini oqlaydi.</description>
+    </item>
+    <item>
+      <title>Sayt va Telegram-botni 1C bilan bogʻlash: qoldiq, narx, buyurtma</title>
+      <link>https://qilich.com/blog/1c-integration/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/1c-integration/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Saytdagi qoldiq ombordagi bilan bir xil boʻlsin, buyurtmalar qoʻlda koʻchirilmasin: 1C integratsiyasi qanday ishlaydi va oldindan nimani tekshirish kerak.</description>
+    </item>
+    <item>
+      <title>Shaxsiy maʼlumotlarni Oʻzbekistonda saqlash: sayt, ilova va bot uchun</title>
+      <link>https://qilich.com/blog/personal-data-in-uzbekistan/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/personal-data-in-uzbekistan/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Oʻzbekiston fuqarolarining shaxsiy maʼlumotlari mamlakat ichidagi serverlarda saqlanishi shart. Sayt, ilova, bot va CRM uchun bu amalda nimani anglatadi?</description>
+    </item>
+    <item>
+      <title>Sayt, ilova va bot xavfsizligi: kichik biznes uchun minimal choralar</title>
+      <link>https://qilich.com/blog/security-basics/</link>
+      <guid isPermaLink="true">https://qilich.com/blog/security-basics/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Koʻp muammo murakkab hujumdan emas, oddiy xatodan boshlanadi: zaif parol, ochiq admin panel, ishdan ketgan xodimning akkaunti. Avval nimani tekshirish kerak.</description>
     </item>
   </channel>
 </rss>

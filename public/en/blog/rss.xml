@@ -15,18 +15,18 @@
       <description>Where to start with automation: find the repetitive work, rank it by cost and risk, and don't pay for software where a spreadsheet will do.</description>
     </item>
     <item>
+      <title>Will automation pay for itself? A simple way to calculate it</title>
+      <link>https://qilich.com/en/blog/automation-roi/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/automation-roi/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>When the money spent on software or a bot comes back: how to count hours saved, fewer errors, orders not lost, and the running costs.</description>
+    </item>
+    <item>
       <title>Telegram bot cost in Tashkent: what drives the price</title>
       <link>https://qilich.com/en/blog/telegram-bot-cost/</link>
       <guid isPermaLink="true">https://qilich.com/en/blog/telegram-bot-cost/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>From a menu bot to one with payments, CRM sync and AI: what really sets the price of a Telegram bot, where you can save and where you shouldn't.</description>
-    </item>
-    <item>
-      <title>Where AI actually lowers business costs, and where it doesn't</title>
-      <link>https://qilich.com/en/blog/ai-to-cut-costs/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/ai-to-cut-costs/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>The jobs where AI saves time and money: sorting requests, reading documents, drafting replies. And the jobs where it only adds cost and risk.</description>
     </item>
     <item>
       <title>What a mobile app costs in Tashkent: where the budget goes</title>
@@ -36,18 +36,18 @@
       <description>What sets the price of an iOS and Android app: user journeys, backend, payments, integrations, store publishing, and the costs that start after launch.</description>
     </item>
     <item>
-      <title>App, website or Telegram Mini App: which one your business needs</title>
-      <link>https://qilich.com/en/blog/app-website-or-mini-app/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/app-website-or-mini-app/</guid>
+      <title>Website cost in Tashkent: from landing page to online shop</title>
+      <link>https://qilich.com/en/blog/website-cost/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/website-cost/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>How a mobile app, a website and a Telegram Mini App differ in cost, reach, payments and upkeep, and a simple way to choose for your own case.</description>
+      <description>What drives the price of a landing page, a company website and an online shop: design, content, CMS, payments, 1C sync and hosting.</description>
     </item>
     <item>
-      <title>UX mistakes that lose orders, from cart to payment</title>
-      <link>https://qilich.com/en/blog/ux-mistakes-that-lose-orders/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/ux-mistakes-that-lose-orders/</guid>
+      <title>Where AI actually lowers business costs, and where it doesn't</title>
+      <link>https://qilich.com/en/blog/ai-to-cut-costs/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/ai-to-cut-costs/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>A customer adds to cart and leaves. The mistakes in websites, apps and bots that cost businesses orders, and how to find and fix them.</description>
+      <description>The jobs where AI saves time and money: sorting requests, reading documents, drafting replies. And the jobs where it only adds cost and risk.</description>
     </item>
     <item>
       <title>AI answering customers in Telegram: what to trust it with</title>
@@ -57,25 +57,18 @@
       <description>An AI assistant can answer Telegram questions around the clock, but not all of them. How to set one up, when to hand over to a person, and what it costs.</description>
     </item>
     <item>
-      <title>Website cost in Tashkent: from landing page to online shop</title>
-      <link>https://qilich.com/en/blog/website-cost/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/website-cost/</guid>
+      <title>AI for document processing: invoices, waybills and contracts</title>
+      <link>https://qilich.com/en/blog/ai-document-processing/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/ai-document-processing/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>What drives the price of a landing page, a company website and an online shop: design, content, CMS, payments, 1C sync and hosting.</description>
+      <description>AI reads paper and PDF documents and enters the data into 1C or a spreadsheet, so nobody retypes it. Where it works and where a human check is a must.</description>
     </item>
     <item>
-      <title>How to write a brief for an IT agency and get an accurate quote</title>
-      <link>https://qilich.com/en/blog/brief-for-it-agency/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/brief-for-it-agency/</guid>
+      <title>App, website or Telegram Mini App: which one your business needs</title>
+      <link>https://qilich.com/en/blog/app-website-or-mini-app/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/app-website-or-mini-app/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>A good brief makes the estimate sharper and the deadline more reliable. What to put on one or two pages: goal, users, features, limits, budget.</description>
-    </item>
-    <item>
-      <title>Accepting Click, Payme and Uzum payments: a guide for business owners</title>
-      <link>https://qilich.com/en/blog/click-payme-uzum-payments/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/click-payme-uzum-payments/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>How to add online payment to a website, app or Telegram bot: merchant agreements, the technical side, fiscal receipts, refunds and common mistakes.</description>
+      <description>How a mobile app, a website and a Telegram Mini App differ in cost, reach, payments and upkeep, and a simple way to choose for your own case.</description>
     </item>
     <item>
       <title>MVP: what to leave out of the first version</title>
@@ -85,25 +78,11 @@
       <description>The first version doesn't need everything. How to choose MVP features, what to drop without regret, and how to know when it's time for the next step.</description>
     </item>
     <item>
-      <title>Hōrensō: how your software team should report to you</title>
-      <link>https://qilich.com/en/blog/horenso-reporting/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/horenso-reporting/</guid>
+      <title>UX mistakes that lose orders, from cart to payment</title>
+      <link>https://qilich.com/en/blog/ux-mistakes-that-lose-orders/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/ux-mistakes-that-lose-orders/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>The Japanese practice of hōrensō: report, inform, consult. What to expect from a development team, how often and in what form, so there are no surprises.</description>
-    </item>
-    <item>
-      <title>Will automation pay for itself? A simple way to calculate it</title>
-      <link>https://qilich.com/en/blog/automation-roi/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/automation-roi/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>When the money spent on software or a bot comes back: how to count hours saved, fewer errors, orders not lost, and the running costs.</description>
-    </item>
-    <item>
-      <title>Choosing a CRM: amoCRM, Bitrix24 or a custom system</title>
-      <link>https://qilich.com/en/blog/choosing-a-crm/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/choosing-a-crm/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>amoCRM, Bitrix24 or a custom-built CRM: which fits your sales team, what to compare before choosing, and when building your own is worth it.</description>
+      <description>A customer adds to cart and leaves. The mistakes in websites, apps and bots that cost businesses orders, and how to find and fix them.</description>
     </item>
     <item>
       <title>Designing for Uzbek and Russian speakers in one interface</title>
@@ -113,25 +92,11 @@
       <description>Interfaces for a bilingual audience: choosing the language, Latin and Cyrillic, text length, the ʻ mark in fonts, dates and money formats.</description>
     </item>
     <item>
-      <title>AI for document processing: invoices, waybills and contracts</title>
-      <link>https://qilich.com/en/blog/ai-document-processing/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/ai-document-processing/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>AI reads paper and PDF documents and enters the data into 1C or a spreadsheet, so nobody retypes it. Where it works and where a human check is a must.</description>
-    </item>
-    <item>
       <title>Speed on a mid-range Android phone: why it costs you orders</title>
       <link>https://qilich.com/en/blog/speed-on-android/</link>
       <guid isPermaLink="true">https://qilich.com/en/blog/speed-on-android/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>Many customers open your site on a mid-range Android over mobile data, not a flagship on office Wi-Fi. How to test speed and what to fix first.</description>
-    </item>
-    <item>
-      <title>Connecting 1C to your site and Telegram bot: stock, prices, orders</title>
-      <link>https://qilich.com/en/blog/1c-integration/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/1c-integration/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Real stock on your site and no more retyping orders: how a 1C integration works and what to check before the work starts.</description>
     </item>
     <item>
       <title>A chatbot customers don't hate: design rules for Telegram bots</title>
@@ -141,11 +106,18 @@
       <description>Endless menus, unwanted broadcasts, no way to reach a person. The mistakes that drive customers out of a bot, and practical rules for a usable one.</description>
     </item>
     <item>
-      <title>Storing personal data in Uzbekistan: sites, apps and bots</title>
-      <link>https://qilich.com/en/blog/personal-data-in-uzbekistan/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/personal-data-in-uzbekistan/</guid>
+      <title>How to write a brief for an IT agency and get an accurate quote</title>
+      <link>https://qilich.com/en/blog/brief-for-it-agency/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/brief-for-it-agency/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Personal data of Uzbek citizens must be stored on servers in the country. Here is what that means in practice for your website, app, bot and CRM.</description>
+      <description>A good brief makes the estimate sharper and the deadline more reliable. What to put on one or two pages: goal, users, features, limits, budget.</description>
+    </item>
+    <item>
+      <title>Hōrensō: how your software team should report to you</title>
+      <link>https://qilich.com/en/blog/horenso-reporting/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/horenso-reporting/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>The Japanese practice of hōrensō: report, inform, consult. What to expect from a development team, how often and in what form, so there are no surprises.</description>
     </item>
     <item>
       <title>Kaizen in software: why small improvements beat big releases</title>
@@ -153,13 +125,6 @@
       <guid isPermaLink="true">https://qilich.com/en/blog/kaizen-in-software/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>Launch is not the end of the project. How to improve a site, app or bot a little every month, how many hours to budget, and what to measure.</description>
-    </item>
-    <item>
-      <title>Security for your site, app and bot: the minimum for a small business</title>
-      <link>https://qilich.com/en/blog/security-basics/</link>
-      <guid isPermaLink="true">https://qilich.com/en/blog/security-basics/</guid>
-      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
-      <description>Many problems start not with a clever attack but with a simple slip: a weak password, an open admin panel, an ex-employee's login. What to check first.</description>
     </item>
     <item>
       <title>After launch: what maintaining an app or website actually involves</title>
@@ -174,6 +139,41 @@
       <guid isPermaLink="true">https://qilich.com/en/blog/fixed-price-or-hourly/</guid>
       <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
       <description>The questions that matter in a development contract: payment model, stages, acceptance criteria, who owns the code and accounts, and the warranty.</description>
+    </item>
+    <item>
+      <title>Accepting Click, Payme and Uzum payments: a guide for business owners</title>
+      <link>https://qilich.com/en/blog/click-payme-uzum-payments/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/click-payme-uzum-payments/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>How to add online payment to a website, app or Telegram bot: merchant agreements, the technical side, fiscal receipts, refunds and common mistakes.</description>
+    </item>
+    <item>
+      <title>Choosing a CRM: amoCRM, Bitrix24 or a custom system</title>
+      <link>https://qilich.com/en/blog/choosing-a-crm/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/choosing-a-crm/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>amoCRM, Bitrix24 or a custom-built CRM: which fits your sales team, what to compare before choosing, and when building your own is worth it.</description>
+    </item>
+    <item>
+      <title>Connecting 1C to your site and Telegram bot: stock, prices, orders</title>
+      <link>https://qilich.com/en/blog/1c-integration/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/1c-integration/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Real stock on your site and no more retyping orders: how a 1C integration works and what to check before the work starts.</description>
+    </item>
+    <item>
+      <title>Storing personal data in Uzbekistan: sites, apps and bots</title>
+      <link>https://qilich.com/en/blog/personal-data-in-uzbekistan/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/personal-data-in-uzbekistan/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Personal data of Uzbek citizens must be stored on servers in the country. Here is what that means in practice for your website, app, bot and CRM.</description>
+    </item>
+    <item>
+      <title>Security for your site, app and bot: the minimum for a small business</title>
+      <link>https://qilich.com/en/blog/security-basics/</link>
+      <guid isPermaLink="true">https://qilich.com/en/blog/security-basics/</guid>
+      <pubDate>Wed, 21 Oct 2026 07:00:00 +0000</pubDate>
+      <description>Many problems start not with a clever attack but with a simple slip: a weak password, an open admin panel, an ex-employee's login. What to check first.</description>
     </item>
   </channel>
 </rss>

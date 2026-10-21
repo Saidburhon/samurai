@@ -44,6 +44,11 @@ export class Ink {
     this.svg = document.getElementById('osh');
     this.stip = document.getElementById('stip');
     this.front = document.getElementById('front');
+    // the luminous front lies over the steel (the prototype's #frontfx, z 3 above the canvas): its streak crosses the
+    // blade and flares past both edges. In the markup it sits in #ink (z 1, under #gl), where the steel hid it; it is
+    // moved next to the canvas, in the same box (#ink is inset 0 in #stage)
+    const gl = document.getElementById('gl');
+    if (this.front && gl && this.front.parentNode !== gl.parentNode) gl.after(this.front);
     const vb = (this.svg.getAttribute('viewBox') || '-60 -450 1402 565').split(/\s+/).map(Number);
     this.vb = vb;
     this.hero = document.getElementById('osh-hero');

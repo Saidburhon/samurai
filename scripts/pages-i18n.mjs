@@ -6,7 +6,7 @@ export const T = {
   uz: {
     team: 'Jamoa', logoAlt: 'Qilich belgisi (mon)', logoPng: 'PNG, 512 × 512', logoSvg: 'SVG, vektor',
     skip: 'Asosiy matnga oʻtish', home: 'Bosh sahifa', homeLabel: 'Qilich — bosh sahifa', sections: 'Boʻlimlar',
-    blog: 'Blog', blogFeed: 'Qilich blogi', svc: 'Xizmatlar', ai: 'SamurAI', about: 'Biz haqimizda', contact: 'Aloqa', press: 'Matbuot uchun', privacy: 'Maxfiylik siyosati',
+    sol: 'Yechimlar', prices: 'Narxlar', blog: 'Blog', blogFeed: 'Qilich blogi', svc: 'Xizmatlar', ai: 'SamurAI', about: 'Biz haqimizda', contact: 'Aloqa', press: 'Matbuot uchun', privacy: 'Maxfiylik siyosati',
     cta: 'Bogʻlanish', call: 'Qoʻngʻiroq qilish', menu: 'Menyu', crumbs: 'Siz shu yerdasiz', pages: 'Sahifalar',
     tas: 'Toshkent', tok: 'Tokio', tel: 'Telefon', mail: 'Pochta', top: 'Yuqoriga', copy: 'Nusxa olish', copied: 'Nusxalandi',
     mei: 'Imzo: Toshkentda yashovchi Qilich qoʻli bilan', updated: 'Yangilangan',
@@ -30,7 +30,7 @@ export const T = {
   ru: {
     team: 'Команда', logoAlt: 'Знак Qilich (мон)', logoPng: 'PNG, 512 × 512', logoSvg: 'SVG, вектор',
     skip: 'Перейти к основному тексту', home: 'Главная', homeLabel: 'Qilich — главная', sections: 'Разделы',
-    blog: 'Блог', blogFeed: 'Блог Qilich', svc: 'Услуги', ai: 'SamurAI', about: 'О компании', contact: 'Контакты', press: 'Для прессы', privacy: 'Политика конфиденциальности',
+    sol: 'Решения', prices: 'Цены', blog: 'Блог', blogFeed: 'Блог Qilich', svc: 'Услуги', ai: 'SamurAI', about: 'О компании', contact: 'Контакты', press: 'Для прессы', privacy: 'Политика конфиденциальности',
     cta: 'Связаться', call: 'Позвонить', menu: 'Меню', crumbs: 'Вы здесь', pages: 'Страницы',
     tas: 'Ташкент', tok: 'Токио', tel: 'Телефон', mail: 'Почта', top: 'Наверх', copy: 'Скопировать', copied: 'Скопировано',
     mei: 'Подпись: работа Qilich, житель Ташкента', updated: 'Обновлено',
@@ -51,7 +51,7 @@ export const T = {
   en: {
     team: 'Team', logoAlt: 'The Qilich mark (mon)', logoPng: 'PNG, 512 × 512', logoSvg: 'SVG, vector',
     skip: 'Skip to content', home: 'Home', homeLabel: 'Qilich — home', sections: 'Sections',
-    blog: 'Blog', blogFeed: 'Qilich blog', svc: 'Services', ai: 'SamurAI', about: 'About', contact: 'Contact', press: 'Press', privacy: 'Privacy policy',
+    sol: 'Solutions', prices: 'Prices', blog: 'Blog', blogFeed: 'Qilich blog', svc: 'Services', ai: 'SamurAI', about: 'About', contact: 'Contact', press: 'Press', privacy: 'Privacy policy',
     cta: 'Get in touch', call: 'Call', menu: 'Menu', crumbs: 'You are here', pages: 'Pages',
     tas: 'Tashkent', tok: 'Tokyo', tel: 'Phone', mail: 'Email', top: 'Back to top', copy: 'Copy', copied: 'Copied',
     mei: 'Signature: made by Qilich, resident of Tashkent', updated: 'Updated',
@@ -72,7 +72,7 @@ export const T = {
   ja: {
     team: 'チーム', logoAlt: 'Qilichのシンボルマーク（紋）', logoPng: 'PNG（512×512 px）', logoSvg: 'SVG（ベクター）',
     skip: '本文へ移動', home: 'ホーム', homeLabel: 'Qilich ホーム', sections: 'セクション',
-    blog: 'ブログ', blogFeed: 'Qilich ブログ', svc: '開発領域', ai: 'SamurAI', about: '会社概要', contact: 'お問い合わせ', press: 'プレス向け情報', privacy: 'プライバシーポリシー',
+    sol: 'ソリューション', prices: '費用相場', blog: 'ブログ', blogFeed: 'Qilich ブログ', svc: '開発領域', ai: 'SamurAI', about: '会社概要', contact: 'お問い合わせ', press: 'プレス向け情報', privacy: 'プライバシーポリシー',
     cta: 'お問い合わせ', call: '電話をかける', menu: 'メニュー', crumbs: 'パンくずリスト', pages: 'ページ',
     tas: 'タシケント', tok: '東京', tel: '電話', mail: 'メール', top: 'ページの先頭へ', copy: 'コピー', copied: 'コピーしました',
     mei: '銘：タシケント住キリチ作', updated: '改定日',

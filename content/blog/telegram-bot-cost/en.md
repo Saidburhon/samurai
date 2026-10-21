@@ -133,6 +133,16 @@ As a rough guide, if everything on your side is ready on time: a menu bot takes 
 
 Warning signs: a price given without a single question about your business; "everything included" without a list; no testing stage; the bot registered on the developer's account.
 
+## Prices from our catalogue
+
+Below are the timelines and prices of three common kinds of bot from the Qilich catalogue. The UZS figure uses the Central Bank rate and is recalculated whenever the site is rebuilt. The exact price depends on the integrations and the scope.
+
+{{solution:tg-order-bot}}
+
+{{solution:tg-booking-bot}}
+
+{{solution:tg-mini-app-store}}
+
 ## How to get a quote from Qilich
 
 We give an exact figure for a Telegram bot once we have seen the list of parts, so you can compare it with other quotes line by line. To get one, answer the questions below.

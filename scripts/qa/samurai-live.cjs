@@ -17,6 +17,11 @@ const nokey = process.argv.includes('--nokey');
 // case ids (comma separated) may follow in either mode: node samurai-live.cjs <base> <out> --nokey ru-autowash,ja-dental
 const only = (process.argv.slice(4).find((x) => !x.startsWith('--')) || '').split(',').filter(Boolean);
 const EXTRA = JSON.parse(fs.readFileSync(path.join(__dirname, '../../content/solutions-extra.json'), 'utf8'));
+// the brief's label (jb2a3 must-fix 5): "what we understood" only over a model's summary, the catalogue label otherwise;
+// the impact row never prints a failure string (jb2a3 must-fix 4)
+const HEARD = { uz: 'Tushunganimiz', ru: 'Что мы поняли', en: 'What we understood', ja: 'ご相談内容の要約' };
+const BY_CATALOGUE = { uz: 'Katalog boʻyicha tanlandi', ru: 'Подобрано по каталогу', en: 'Chosen from the catalogue', ja: 'サービス一覧から選定' };
+const FAILED = /could not be calculated|посчитать не удалось|hisoblab boʻlmadi|試算できませんでした/;
 const FALLBACK_NOTE = { uz: 'SamurAI hozir ishlamayapti', ru: 'SamurAI сейчас недоступен', en: 'SamurAI is unavailable', ja: '現在SamurAIをご利用いただけない' };
 fs.mkdirSync(out, { recursive: true });
 const PAGE = { uz: '/samurai/', ru: '/ru/samurai/', en: '/en/samurai/', ja: '/ja/samurai/' };
@@ -63,7 +68,8 @@ const check = (name, ok, info = '') => { results.push({ name, ok: !!ok, info });
     const tag = `${nokey ? 'nokey' : 'done'}-${c.phone ? 'p' : 'd'}`;
     await p.screenshot({ path: path.join(out, `${c.id}-${tag}.png`) });
     await p.screenshot({ path: path.join(out, `${c.id}-${tag}-full.png`), fullPage: true });
-    const r = await p.evaluate(() => ({
+    const W = c.phone ? 390 : 1440;
+    const r = await p.evaluate((W) => ({
       sheets: [...document.querySelectorAll('.sheet')].map((s) => ({ id: s.dataset.id, title: s.querySelector('h3')?.textContent.trim(), big: s.querySelector('.big')?.textContent.trim(), rows: s.querySelectorAll('.rows summary').length, wait: s.querySelectorAll('.rows .v.wait').length })),
       notes: [...document.querySelectorAll('.desk .note')].map((n) => n.textContent.trim()),
       broken: !!document.querySelector('.broken'),
@@ -72,9 +78,11 @@ const check = (name, ok, info = '') => { results.push({ name, ok: !!ok, info });
       totals: document.querySelector('.totals')?.innerText.replace(/\s+/g, ' ').slice(0, 160) || '',
       gantt: !!document.querySelector('.gantt'),
       summary: document.querySelector('.brief')?.innerText.replace(/\s+/g, ' ').slice(0, 300) || '',
+      brief: document.querySelector('.brief')?.innerText.replace(/\s+/g, ' ') || '',
       text: document.querySelector('#result, .result')?.innerText || '',
-      overflow: document.documentElement.scrollWidth - innerWidth,
-    }));
+      // against the device width: a phone's layout viewport grows with what overflows, so innerWidth would hide it
+      overflow: Math.max(document.documentElement.scrollWidth, innerWidth) - W,
+    }), W);
     const keyLeak = bodies.some((t) => /sk-ant-|ANTHROPIC_API_KEY/.test(t)) || /sk-ant-/.test(await p.content());
     const run = { id: c.id, lang: c.lang, firstSheetMs: first, doneMs, sheets: r.sheets, notes: r.notes, signed: r.signed, totals: r.totals, summary: r.summary, errors, hosts: [...hosts] };
     // the Japanese page serves a company in Japan: no service that exists only in Uzbekistan, no Telegram it did not name
@@ -82,6 +90,8 @@ const check = (name, ok, info = '') => { results.push({ name, ok: !!ok, info });
     // a short last word is never mistaken for an abbreviation: no "…них.Simple" glued tail anywhere (jb2a must-fix 2)
     check(`${c.id}: no glued junk ending (a stop followed by a capital with no space)`, !/[a-zа-яёʻ]\.[A-ZА-ЯЁ][a-zа-яё]/u.test(r.text.replace(c.text, '').replace(/\b(?:Next|Node|Vue|Nuxt)\.js\b/g, '')), (r.text.replace(c.text, '').match(/.{20}[a-zа-яё]\.[A-ZА-ЯЁ][a-zа-яё].{10}/u) || [''])[0]);
     runs.push(run);
+    check(`${c.id}: the impact row never prints a failure string`, !FAILED.test(r.text), (r.text.match(FAILED) || [''])[0]);
+    if (r.sheets.length) check(`${c.id}: the brief's label says who chose (${nokey ? 'the catalogue' : 'the model'})`, nokey ? r.brief.includes(BY_CATALOGUE[c.lang]) && !r.brief.includes(HEARD[c.lang]) : r.brief.includes(HEARD[c.lang]) && !r.brief.includes(BY_CATALOGUE[c.lang]), r.brief.slice(-160));
     check(`${c.id}: no console errors, no overflow`, !errors.length && r.overflow <= 0, errors);
     check(`${c.id}: the browser talks only to the site (no model host) and never sees a key`, [...hosts].every((h) => h === new URL(base).host || /fonts\.|cdn/.test(h)) && !keyLeak, [...hosts]);
     if (nokey) {
@@ -100,7 +110,7 @@ const check = (name, ok, info = '') => { results.push({ name, ok: !!ok, info });
       await pp.waitForSelector('.stamp', { timeout: 15000 }).catch(() => null);
       await pp.waitForTimeout(800);
       await pp.screenshot({ path: path.join(out, `${c.id}-nokey-p.png`) });
-      const ov = await pp.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      const ov = await pp.evaluate(() => Math.max(document.documentElement.scrollWidth, innerWidth) - 390);
       check(`${c.id} (no key): phone, no overflow`, ov <= 0, ov);
       await pc.close();
       }
@@ -124,7 +134,7 @@ const check = (name, ok, info = '') => { results.push({ name, ok: !!ok, info });
         await pp.waitForTimeout(800);
         await pp.screenshot({ path: path.join(out, `${c.id}-shared-p.png`) });
         await pp.screenshot({ path: path.join(out, `${c.id}-shared-p-full.png`), fullPage: true });
-        const s = await pp.evaluate(() => ({ no: document.querySelector('.res-head .no')?.textContent.trim() || '', sheets: document.querySelectorAll('.sheet').length, signed: !!document.querySelector('.stamp.signed'), overflow: document.documentElement.scrollWidth - innerWidth }));
+        const s = await pp.evaluate(() => ({ no: document.querySelector('.res-head .no')?.textContent.trim() || '', sheets: document.querySelectorAll('.sheet').length, signed: !!document.querySelector('.stamp.signed'), overflow: Math.max(document.documentElement.scrollWidth, innerWidth) - 390 }));
         check(`${c.id}: the share link reopens on a phone as the same brief, signed, with no model request and no overflow`, s.no === no && s.sheets === r.sheets.length && s.signed && !api.length && s.overflow <= 0, { ...s, expected: no });
         await pc.close();
       } else check(`${c.id}: the share link was copied`, false, url.slice(0, 80));

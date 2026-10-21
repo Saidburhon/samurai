@@ -17,6 +17,8 @@ import { createHash } from 'node:crypto';
 import { EN, RU, JA } from './i18n.mjs';
 import { SITE, LANGS, HOME, LOCALE, abs, esc, langNav, headLinks, pathOf, site } from './site.mjs';
 import { graph } from './pages/ld.mjs';
+import { hasBlog, feedPath } from './pages/blog-feed.mjs';
+import { T } from './pages-i18n.mjs';
 
 export { SITE };
 export const PATH = HOME;
@@ -73,6 +75,9 @@ export function head(html, lang) {
   // hreflang: the four homes and x-default, written whole after the canonical
   html = html.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">\n?/g, '')
     .replace(/(<link rel="canonical"[^>]*>\n?)/, (c) => `${c.endsWith('\n') ? c : c + '\n'}${links.alternates}\n`);
+  // the blog's feed in this language (SOLUTIONS-SPEC §5.4: every page carries it), written whole after the hreflang
+  html = html.replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>\n?/g, '');
+  if (hasBlog(lang)) html = html.replace(/(<link rel="alternate" hreflang="x-default"[^>]*>\n?)/, (c) => `${c.endsWith('\n') ? c : c + '\n'}<link rel="alternate" type="application/rss+xml" title="${esc(T[lang].blogFeed)}" href="${abs(feedPath(lang))}">\n`);
   // og:locale:alternate after og:locale
   const alt = LANGS.filter((l) => l !== lang).map((l) => `<meta property="og:locale:alternate" content="${LOCALE[l]}">`).join('\n');
   html = html.replace(/<meta property="og:locale:alternate"[^>]*>\n?/g, '')

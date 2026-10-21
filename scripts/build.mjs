@@ -73,6 +73,10 @@ if (watch) {
 }
 
 async function finish(meta) {
+  // the Solutions pages' bundle is built on its own (same options, same folder), so it shares no chunk with
+  // /samurai/ and neither page's weight depends on the other's code
+  const solBuild = await esbuild.build({ ...options, entryPoints: { solutions: 'src/solutions/main.js', solutions_css: 'src/styles/solutions.css' } });
+  Object.assign(meta.outputs, solBuild.metafile.outputs);
   const outs = Object.entries(meta.outputs);
   const pub = (f) => '/' + f.replace(/^public\//, '');
   const entry = (e, ext) => outs.find(([f, o]) => o.entryPoint === e && f.endsWith(ext))?.[0];
@@ -84,7 +88,8 @@ async function finish(meta) {
   const landing = buildLangs();
   const pageJs = entry('src/pages/main.js', '.js'), pagesCss = entry('src/styles/pages.css', '.css'), analyticsJs = entry('src/ui/analytics.js', '.js');
   const samuraiJs = entry('src/samurai/main.js', '.js'), samuraiCss = entry('src/styles/samurai.css', '.css');
-  const pages = buildPages({ landing, assets: { css: pub(pagesCss), js: pub(pageJs), analytics: pub(analyticsJs), samurai: pub(samuraiJs), samuraiCss: pub(samuraiCss) } });
+  const solJs = entry('src/solutions/main.js', '.js'), solCss = entry('src/styles/solutions.css', '.css');
+  const pages = buildPages({ landing, assets: { css: pub(pagesCss), js: pub(pageJs), analytics: pub(analyticsJs), samurai: pub(samuraiJs), samuraiCss: pub(samuraiCss), solutions: pub(solJs), solutionsCss: pub(solCss) } });
   // 6
   const fonts = await buildFonts(pages);
   // 7: the GL chunk is the output that imports src/gl/index.js dynamically; preload it and every chunk it imports
@@ -112,7 +117,8 @@ async function finish(meta) {
   const pageImports = (meta.outputs[pageJs].imports || []).filter((i) => i.kind === 'import-statement').map((i) => i.path);
   const samuraiImports = (meta.outputs[samuraiJs].imports || []).filter((i) => i.kind === 'import-statement').map((i) => i.path);
   for (const p of pages) {
-    const js = p.entry === 'samurai' ? samuraiJs : pageJs, imports = p.entry === 'samurai' ? samuraiImports : pageImports;
+    let js = p.entry === 'samurai' ? samuraiJs : pageJs, imports = p.entry === 'samurai' ? samuraiImports : pageImports;
+    if (p.entry === 'solutions') { js = solJs; imports = (meta.outputs[solJs].imports || []).filter((i) => i.kind === 'import-statement').map((i) => i.path); }
     const lines = [
       ...fonts.pagePreload[p.lang].map((n) => `<link rel="preload" href="${fonts.files[n]}" as="font" type="font/woff2" crossorigin>`),
       `<link rel="modulepreload" href="${pub(js)}">`,
@@ -145,6 +151,42 @@ async function finish(meta) {
     const cssGz = gz(pagesCss) + gz(samuraiCss);
     const over = [jsGz > 35 * 1024 && `samurai JS ${kb(jsGz)} gz > 35 KB`, htmlGz > 25 * 1024 && `samurai HTML ${kb(htmlGz)} gz > 25 KB`, gz(pagesCss) > 14 * 1024 && `pages_css ${kb(gz(pagesCss))} gz > 14 KB`, heavy.length && `samurai imports ${heavy.join(', ')}`].filter(Boolean);
     console.log(`samurai budget: JS ${kb(jsGz)} gz (${graph.size} files, ${dynamic.size} loaded dynamically: ${kb([...dynamic].reduce((a, f) => a + gz(f), 0))}), HTML ${kb(htmlGz)} gz, CSS ${kb(cssGz)} gz (pages_css ${kb(gz(pagesCss))})`);
+    if (over.length) { console.error(`budget: ${over.join('; ')}`); process.exitCode = 1; if (!watch) throw new Error(over.join('; ')); }
+  }
+  // the Solutions pages (SOLUTIONS-SPEC §7.5): the catalogue's HTML ≤ 40 KB gz and its JS (with the basket's engine,
+  // loaded dynamically) ≤ 16 KB gz; group, solution and price pages ≤ 20 KB gz HTML and ≤ 8 KB gz JS on first load
+  // (the engine loads only once the basket holds something); no three.js, GSAP or Lenis. Over budget fails the build.
+  {
+    const { gzipSync } = await import('node:zlib');
+    const gz = (f) => gzipSync(readFileSync(f)).length;
+    const walk = (f, set, dyn) => { if (set.has(f)) return; set.add(f); for (const i of meta.outputs[f]?.imports || []) if (i.kind === 'import-statement' || (dyn && i.kind === 'dynamic-import')) walk(i.path, set, dyn); };
+    const first = new Set(), all = new Set();
+    walk(solJs, first, false); walk(solJs, all, true);
+    const sum = (set) => [...set].reduce((a, f) => a + gz(f), 0);
+    const heavy = [...all].flatMap((f) => Object.keys(meta.outputs[f].inputs || {})).filter((i) => /node_modules\/(three|gsap|lenis)\//.test(i) || /src\/gl\//.test(i));
+    const sol = pages.filter((p) => p.entry === 'solutions');
+    const isCat = (p) => /^\/(?:(?:ru|en|ja)\/)?(?:yechimlar|resheniya|solutions)\/$/.test(p.path);
+    const big = (list) => list.reduce((a, p) => { const g = gz(p.file); return g > a[0] ? [g, p.path] : a; }, [0, '']);
+    const [catGz, catPath] = big(sol.filter(isCat)), [subGz, subPath] = big(sol.filter((p) => !isCat(p)));
+    const over = [catGz > 40 * 1024 && `catalogue HTML ${kb(catGz)} gz > 40 KB (${catPath})`, subGz > 20 * 1024 && `solutions page HTML ${kb(subGz)} gz > 20 KB (${subPath})`,
+      sum(first) > 8 * 1024 && `solutions JS ${kb(sum(first))} gz > 8 KB`, sum(all) > 16 * 1024 && `solutions JS with the basket ${kb(sum(all))} gz > 16 KB`, heavy.length && `solutions imports ${heavy.join(', ')}`].filter(Boolean);
+    console.log(`solutions budget: ${sol.length} pages; catalogue HTML ${kb(catGz)} gz (${catPath}); largest other ${kb(subGz)} gz (${subPath}); JS ${kb(sum(first))} gz first load, ${kb(sum(all))} gz with the basket; CSS ${kb(gz(solCss))} gz`);
+    if (over.length) { console.error(`budget: ${over.join('; ')}`); process.exitCode = 1; if (!watch) throw new Error(over.join('; ')); }
+  }
+  // the blog (SOLUTIONS-SPEC §7.5): every index and post ≤ 20 KB gz HTML, its JS (the shared page bundle) ≤ 8 KB gz,
+  // no three.js, GSAP or Lenis. Over budget fails the build.
+  {
+    const { gzipSync } = await import('node:zlib');
+    const gz = (f) => gzipSync(readFileSync(f)).length;
+    const set = new Set();
+    const walk = (f) => { if (set.has(f)) return; set.add(f); for (const i of meta.outputs[f]?.imports || []) if (i.kind === 'import-statement' || i.kind === 'dynamic-import') walk(i.path); };
+    walk(pageJs);
+    const jsGz = [...set].reduce((a, f) => a + gz(f), 0);
+    const heavy = [...set].flatMap((f) => Object.keys(meta.outputs[f].inputs || {})).filter((i) => /node_modules\/(three|gsap|lenis)\//.test(i) || /src\/gl\//.test(i));
+    const blog = pages.filter((p) => p.slug === 'blog' || p.slug === 'blog-post');
+    const [bGz, bPath] = blog.reduce((a, p) => { const g = gz(p.file); return g > a[0] ? [g, p.path] : a; }, [0, '']);
+    const over = [bGz > 20 * 1024 && `blog HTML ${kb(bGz)} gz > 20 KB (${bPath})`, jsGz > 8 * 1024 && `blog JS ${kb(jsGz)} gz > 8 KB`, heavy.length && `blog imports ${heavy.join(', ')}`].filter(Boolean);
+    console.log(`blog budget: ${blog.length} pages; largest HTML ${kb(bGz)} gz (${bPath}); JS ${kb(jsGz)} gz`);
     if (over.length) { console.error(`budget: ${over.join('; ')}`); process.exitCode = 1; if (!watch) throw new Error(over.join('; ')); }
   }
   console.log(outs.map(([f, o]) => `${f.replace(OUT + '/', '')} ${kb(o.bytes)}`).join(', '));

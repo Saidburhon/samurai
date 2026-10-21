@@ -147,6 +147,14 @@ Ask for the support price at the same time as the build price, and agree in adva
 
 Don't save on payment testing, the admin panel, backups or error alerts: each of those savings ends up costing more than it saved.
 
+## Prices from our catalogue
+
+Below are the timelines and prices of two common kinds of app from the Qilich catalogue. The UZS figure uses the Central Bank rate and is recalculated whenever the site is rebuilt. The exact price depends on the screens, the integrations and the platforms.
+
+{{solution:mob-customer-app}}
+
+{{solution:mob-booking-app}}
+
 ## What to prepare before you talk to developers
 
 Timelines, assuming everything on your side is ready on time: an MVP with one core journey, an admin panel and one payment provider usually takes 2–3 months. A fuller version with loyalty and several integrations takes 4–7 months, and a separate courier app adds to that. What usually moves the date is not the programming but the waiting: the merchant contract, the D-U-N-S number and store accounts, access to 1C, texts and photos, the first store review.

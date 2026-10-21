@@ -121,6 +121,16 @@ Sayt ishga tushgandan keyin ham pul talab qiladi. Pudratchidan bu xarajatlarni y
 - **Mayda tuzatishlar.** Yangi sahifa, Navroʻz banneri, telefon raqamini almashtirish. Oldindan kelishib oling: oyiga soatlar paketi yoki har bir vazifa uchun alohida toʻlov.
 - **Doʻkon uchun** toʻlov tizimlari komissiyasi, SMS-xabarnomalar, pullik modullar (agar boʻlsa) va 1C yangilanganidan keyin almashinuvni qayta sozlashni ham hisobga oling.
 
+## Katalogdagi narxlar
+
+Qilich katalogidagi uch xil saytning muddati va narxi quyida. Soʻmdagi summa Markaziy bank kursi boʻyicha hisoblanadi va sayt yangilanganda qayta hisoblanadi. Aniq narx dizayn, sahifalar soni va integratsiyalarga bogʻliq.
+
+{{solution:web-landing}}
+
+{{solution:web-corporate}}
+
+{{solution:web-ecommerce}}
+
 ## Takliflarni qanday solishtirish kerak
 
 Har bir pudratchiga bir xil savollarni bering va javoblarni yonma-yon qoʻying.
