@@ -69,7 +69,7 @@ function kissakiHead(x, y, dir, size = 8) {
 // a dimension line with kissaki arrowheads at both ends (tips on the extension lines), its label above
 function dimension(x1, x2, y, label, cls = 'dim') {
   const size = Math.min(8, Math.max(4, (x2 - x1) / 3));
-  return `<g class="${cls}"><path class="k4" d="M${r1(x1 + 2)} ${r1(y)}H${r1(x2 - 2)}"/><path class="ah" d="${kissakiHead(x1, y, -1, size)}${kissakiHead(x2, y, 1, size)}"/><path class="k5 ext" d="M${r1(x1)} ${r1(y - 5)}v10M${r1(x2)} ${r1(y - 5)}v10"/><text x="${r1(x1 + 4)}" y="${r1(y - 7)}">${esc(label)}</text></g>`;
+  return `<g class="${cls}"><path class="k4" d="M${r1(x1)} ${r1(y)}H${r1(x2)}"/><path class="ah" d="${kissakiHead(x1, y, -1, size)}${kissakiHead(x2, y, 1, size)}"/><path class="k5 ext" d="M${r1(x1)} ${r1(y - 5)}v10M${r1(x2)} ${r1(y - 5)}v10"/><text x="${r1(x1 + 4)}" y="${r1(y - 7)}">${esc(label)}</text></g>`;
 }
 
 /**

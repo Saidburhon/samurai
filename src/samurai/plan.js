@@ -98,13 +98,13 @@ export function totalsHtml(C, st) {
   const launch = t.count ? F.dateRange(endOfWork(st.start, t.weeks[0]), endOfWork(st.start, t.weeks[1]), lang) : '';
   const mon = money(C, t.monthly_usd, t.monthly_uzs)[0];
   const rows = [
-    [S.total, `<b>${R(main)}</b>${SEP}${R(other)}${SEP}${R(F.weeks(t.weeks, lang))}${launch ? `${SEP}${h(S.launch).replace('{d}', `<span class="nw">${h(launch)}</span>`)}` : ''}`],
+    [S.total, `<b>${R(main)}</b><span>${R(other)}</span><span>${R(F.weeks(t.weeks, lang))}</span>${launch ? `<span>${h(S.launch).replace('{d}', `<span class="nw">${h(launch)}</span>`)}</span>` : ''}`],
     [S.month, `≈ ${R(mon)}`],
   ];
   if (t.shared_saving_usd[1] > 0) rows.push([S.shared, `−${R(money(C, t.shared_saving_usd, t.shared_saving_uzs)[0])}`]);
   if (t.parallel) rows.push(['', h(S.parallel)]);
   rows.push(['', h(F.rateLine(C.rate, lang))]);
-  return `<dl class="totals" aria-live="polite">${rows.map(([k, v]) => `<div><dt>${h(k)}</dt><dd>${v}</dd></div>`).join('')}</dl>`;
+  return `<dl class="totals" aria-live="polite">${rows.map(([k, v], i) => `<div><dt>${h(k)}</dt><dd${i ? '' : ' class="gap"'}>${v}</dd></div>`).join('')}</dl>`;
 }
 
 export function planHtml(C, sols, st, width) {

@@ -75,9 +75,18 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true 
   // only at the first draw), then a fence; resolves when the GPU has built them
   const warm = async () => {
     const t2 = performance.now();
-    const pw = stage.prewarm([stage.blade, stage.parts.tsuba, stage.parts.tsuka, stage.parts.fuchi], { finish: false });
-    log('drawn', performance.now() - t2);
-    if (/[?&]rp\b/.test(location.search)) stage.finish(); else await stage.gpuDone();
+    // dev: ?rp waits with a read-back instead of a fence; ?split times the steel and the fittings apart
+    const q = location.search, wait = () => (/[?&]rp\b/.test(q) ? Promise.resolve(stage.finish()) : stage.gpuDone());
+    let pw;
+    if (/[?&]split\b/.test(q)) {
+      pw = stage.prewarm([stage.blade], { finish: false }); await wait(); log('steelJit', performance.now() - t2);
+      const t3 = performance.now();
+      Object.assign(pw, stage.prewarm([stage.parts.tsuba, stage.parts.tsuka, stage.parts.fuchi], { finish: false })); await wait(); log('metalJit', performance.now() - t3);
+    } else {
+      pw = stage.prewarm([stage.blade, stage.parts.tsuba, stage.parts.tsuka, stage.parts.fuchi], { finish: false });
+      log('drawn', performance.now() - t2);
+      await wait();
+    }
     log('compile', performance.now() - t2);
     if (window.__qilich) window.__qilich.prewarm = pw;
     return pw;

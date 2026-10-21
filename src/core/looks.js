@@ -46,5 +46,23 @@ L.noto = {
   ...L.sumi, uCeil: [0.003, 0.003, 0.004], uStrip: [1.8, 1.75, 1.7], uStripA: [0.95, 1.5], uKey: [0.6, 0.6, 0.65],
   uLampCol: [1.6, 1.45, 1.25],
 };
+// G3: the other looks of Appendix B, starting values (rough; tuned with their scenes at G4)
+L['ro'] = {
+  ...L.sumi, uCeil: [0.004, 0.004, 0.005], uCeilHi: [0.05, 0.05, 0.055], uKey: [0.8, 0.82, 0.9], uFloor: [0.05, 0.02, 0.01],
+  uRim: [0.35, 0.12, 0.04], uFrostLight: 0.9, uStrip: [0.7, 0.68, 0.66], uLampCol: [1.2, 1.1, 1.0], uRidge: 0.6, nie: 900,
+};
+L['ro-hot'] = { ...L.ro, uLampCol: [0, 0, 0], uExposure: 0.85, uRim: [0.6, 0.2, 0.06], uKey: [0.9, 0.55, 0.35] };
+L['mizu-hot'] = {
+  ...L.ro, uCeil: [0.003, 0.006, 0.010], uCeilHi: [0.03, 0.06, 0.09], uKey: [0.5, 0.62, 0.8], uFloor: [0.01, 0.03, 0.05],
+  uRim: [0.10, 0.18, 0.26], uLampCol: [0, 0, 0], uStrip: [0.5, 0.62, 0.75],
+};
+L['mizu'] = { ...L['mizu-hot'], uKey: [0.7, 0.8, 1.0], uRim: [0.35, 0.55, 0.80], uFrostLight: 1.1, uLampCol: [0.8, 0.9, 1.1] };
+L['ai-carpet'] = { ...L.ai, uLampCol: [2.4, 1.7, 0.9] };
+L['ai-warm'] = { ...L['ai-carpet'], uFloor: [0.25, 0.18, 0.12] };
+L['ganch'] = {
+  ...L.washi, uCeil: [0.05, 0.04, 0.03], uCeilHi: [0.35, 0.30, 0.24], uFloor: [0.82, 0.70, 0.52], uKey: [2.2, 1.9, 1.5],
+  uLampCol: [0, 0, 0], uGlintCol: [0, 0, 0], shadowCol: [0.30, 0.20, 0.12], shadowA: 0.6, shadowSoft: 0.18,
+};
+L['temur'] = { ...L.ganch, uStrip: [1.6, 1.5, 1.35], uStripA: [0.95, 1.5], shadowA: 0.7 };
 export const LOOKS = L;
 export const UNIFORM_KEYS = Object.keys(DEF).filter((k) => k[0] === 'u');

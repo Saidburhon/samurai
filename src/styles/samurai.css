@@ -12,6 +12,9 @@
 svg .nie { stroke-linecap: round } svg .n0 { stroke-width: .9; opacity: .5 } svg .n1 { stroke-width: 1.25; opacity: .4 } svg .n2 { stroke-width: 1.7; opacity: .3 }
 :is(.sam, .sheet, .legend-sheet) svg path.ah { fill: var(--sumi); stroke: none; opacity: .8 } svg .pin { fill: var(--sumi) }
 .nw { white-space: nowrap; }
+/* items in a row that wraps: a gap between them, never a separator that could start or end a line */
+.gap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 18px; }
+.totals dd.gap { column-gap: 16px; }
 svg .off { opacity: .32 }
 .sam svg text, .sheet svg text, .gantt text { font: 400 13px/1 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; fill: var(--sumi); }
 
@@ -122,7 +125,8 @@ html.no-js .nojs { display: block; }
 .qline { padding: 16px 0; border-bottom: 1px solid var(--line); }
 .qline p { font-weight: 380; font-size: 20px; line-height: 1.35; }
 .qopts { margin-top: 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 22px; }
-.qopts button { padding: 6px 0; font: 400 13px/1.3 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; background: var(--hamon-k) no-repeat 0 100% / 0 5px; transition: background-size .45s var(--ui); }
+.qopts button { padding: 6px 0; font: 400 13px/1.3 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; background: var(--hamon-k) no-repeat 0 100% / 0 5px; box-shadow: inset 0 -1px 0 var(--line); transition: background-size .45s var(--ui); }
+.qopts button[aria-pressed=true] { box-shadow: none; }
 .qopts button[aria-pressed=true] { background-size: 100% 5px; }
 .qopts i { font-style: normal; opacity: .45; margin: 0 10px; font-family: var(--mono); font-size: 13px; }
 .qnote { margin-top: 8px; color: var(--kurogane); display: flex; align-items: center; gap: 8px; }
@@ -382,26 +386,30 @@ html.legend-open .hako { visibility: hidden; }
   html, body { background: #fff !important; }
   .nav, .sheet-menu, .crumbs, .foot, .grain, .toast, .skip, .hako, .intake, .lede, .blank-plate, .how, .questions, .refine, .actions, .strip, .cur, .fitter, .presets, .scope, .res-status, dialog, .sam-head, .brief .tlink, .examples, .fit-out, .next-st { display: none !important; }
   .pg { padding: 0 !important; display: block; }
-  .sam, .result, .result > .rtop { display: block; margin: 0; }
+  .sam { display: block; margin: 0; }
+  /* a proposal: the cover (what we understood, the plan, the totals, the stamp, the contacts), then one solution per page */
+  .result { display: flex; flex-direction: column; margin: 0; }
+  .result > .rtop { display: contents; }
+  .rtop > .desk { display: contents; }
+  .result > .print-head { order: 0; } .brief, .desk > .note { order: 1; } .result > .plan { order: 2; } .desk > .nr, .result > .stamp { order: 3; } .result > .print-foot { order: 4; } .desk > .sheet { order: 5; }
   .print-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid #0F0E0C; font: 400 9pt/1.4 var(--mono); }
   .print-head b { font: 600 11pt/1 var(--sans); letter-spacing: .2em; display: flex; align-items: center; gap: 8px; }
   .print-head svg { width: 16px; height: 16px; fill: #0F0E0C; }
-  .print-foot { display: block; margin-top: 10px; padding-top: 6px; border-top: 1px solid #0F0E0C; font: 400 8pt/1.4 var(--mono); }
+  .print-foot { display: block; margin-top: 0; padding: 6px 0 4px; border-bottom: 1px solid #0F0E0C; font: 400 8pt/1.4 var(--mono); }
   /* the brief: compact, never a page of its own */
   .brief { position: static; display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; padding: 0 0 6px; border-bottom: 1px solid #0F0E0C; max-width: none; }
-  .brief .no { grid-column: 1 / -1; }
+  .brief .no, .res-head { display: none !important; } /* the print head carries the brief number and the date */
   .brief .lbl { margin-top: 4px; font-size: 7.5pt; }
-  .brief .letter { display: block !important; -webkit-line-clamp: none; font-size: 9pt; line-height: 1.4; margin-top: 2px; }
+  /* the proposal carries what we understood; the visitor's own words (or their quotes) stay on the screen */
+  .brief .letter, .brief .lbl:has(+ .letter) { display: none !important; }
   .heard-sum { font-size: 10.5pt; line-height: 1.35; margin-top: 2px; }
-  .res-head { padding-bottom: 4px; margin-top: 6px; }
-  .res-head h2 { font-size: 15pt; }
   .note { margin-top: 4px; font-size: 9pt; }
   /* each solution on one A4 page: the plate smaller, the facts in two columns, every row open, in two columns */
   .sheet { break-inside: avoid; page-break-inside: avoid; padding: 8px 0 6px; }
   .sheet.ghost, .sheet[data-state=off] { display: none; }
   .sh-top { font-size: 7.5pt; }
-  .sheet h3 { font-size: 14pt; margin-top: 2px; }
-  .plate-svg { margin-top: 2px; max-height: 66px; width: auto; max-width: 100%; }
+  .sheet h3 { font-size: 13pt; margin-top: 1px; }
+  .plate-svg { margin-top: 0; max-height: 52px; width: auto; max-width: 100%; }
   .sfacts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; margin-top: 2px; }
   .sfacts > div { grid-template-columns: 6.8em minmax(0, 1fr); gap: 1px 8px; padding: 3px 0; }
   .sfacts > div:last-child { grid-column: 1 / -1; grid-template-columns: 6.8em minmax(0, 1fr); }
@@ -415,15 +423,15 @@ html.legend-open .hako { visibility: hidden; }
   .rows summary .v, .rows summary .caret { display: none; }
   .rows details::details-content { content-visibility: visible; display: contents; }
   .rows details > *:not(summary) { display: block !important; }
-  .rbody { margin-left: 0; padding: 1px 0 4px; font-size: 8pt; line-height: 1.35; }
-  .rbody li { padding: 1px 0 1px 11px; } .rbody li::before { width: 6px; top: .72em; }
+  .rbody { margin-left: 0; padding: 1px 0 3px; font-size: 7.6pt; line-height: 1.28; }
+  .rbody li { padding: 0 0 1px 11px; } .rbody li::before { width: 6px; top: .66em; }
   .cols2 { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .phase-t td { padding: 1px 6px 1px 0; } .phase-t td:first-child, .phase-t td:nth-child(2) { font-size: 7.5pt; }
   .chips { gap: 2px 10px; } .chips button, .chips span { font-size: 7.5pt; }
   .risk + .risk { margin-top: 3px; } .risk .flag { font-size: 7.5pt; }
   .needs label { padding: 0; } .needs input { width: 9px; height: 9px; }
-  .formula { gap: 0 12px; line-height: 1.5; } .formula input { font-size: 8pt; width: 5em; } .formula .tag { font-size: 7pt; }
-  .bar { height: 6px; margin: 4px 0 2px; } .bar-l li, .bar-l li b { font-size: 7.5pt; }
+  .formula { gap: 0 12px; line-height: 1.5; } .formula label { white-space: normal; } .formula input { font-size: 8pt; width: 5em; } .formula .tag { font-size: 7pt; }
+  .bar { height: 5px; margin: 3px 0 2px; } .bar-l li, .bar-l li b { font-size: 7.3pt; line-height: 1.3; }
   .nr { margin-top: 8px; break-inside: avoid; } .nr h3 { font-size: 11pt; } .nr li { padding: 3px 0; grid-template-columns: 90px 1fr; } .nr svg { width: 90px; } .nr .w { font-size: 8pt; }
   .plan { margin-top: 10px; padding-top: 8px; } .plan h2 { font-size: 13pt; }
   .gantt { display: none; }

@@ -6,6 +6,7 @@
 import { stipple, frame, ANCHORS, SC } from '../sword/drawing.js';
 import { axisEnds, bp2 } from '../sword/geom-core.js';
 import { paperTile, grainTiles, toVar } from './tiles.js';
+import { stipSurface } from '../fx/stipsurface.js';
 
 const Q = window.__qilich || (window.__qilich = { boot: {} });
 const idle = window.requestIdleCallback || ((f) => setTimeout(f, 60));
@@ -44,9 +45,10 @@ function placement(r) {
   return { a: c, b: s, c: -s, d: c, e: Ks[0], f: Ks[1], k };
 }
 // A CPU canvas (willReadFrequently): on a software renderer an accelerated 2D canvas of this size keeps the GPU
-// process busy for about a second after the intro (measured: the GL boot then waits behind it, §4.1). Whoever asks
-// for the context first fixes its kind, so fx/ink.js gets the same one.
-const ink2d = () => cv.getContext('2d', { willReadFrequently: true });
+// process busy for about a second after the intro (measured: the GL boot then waits behind it, §4.1); it is shown
+// through fx/stipsurface.js (one texture upload per batch, no raster), which fx/ink.js shares.
+const surf = cv ? stipSurface(cv) : null;
+const ink2d = () => surf.ctx;
 let sig = '';
 function layout() {
   const r = stageEl.getBoundingClientRect();
@@ -54,14 +56,14 @@ function layout() {
   // one canvas pixel per device pixel (at most 2 per CSS px): the dots are drawn with analytic coverage,
   // so a finer canvas adds nothing on screen, only upload work (each of the 12 batches re-uploads the canvas)
   const dpr = Math.min(2, window.devicePixelRatio || 1);
-  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  surf.size(Math.round(r.width * dpr), Math.round(r.height * dpr));
   place = { ...p, dpr };
   sig = [r.width, r.height, p.a, p.b, p.e, p.f].map((v) => v.toFixed(1)).join();
   Q.boot.place = sig; Q.boot.layouts = (Q.boot.layouts || 0) + 1; // for the probes
   drawn = 0;
   const ctx = ink2d();
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.clearRect(0, 0, r.width, r.height);
 }
 function drawTo(n) {
   if (!place || n <= drawn) return;
@@ -74,6 +76,7 @@ function drawTo(n) {
   }
   ctx.globalAlpha = 1;
   drawn = n;
+  surf.present();
   Q.boot.stipN = drawn;
 }
 if (cv && stageEl) {

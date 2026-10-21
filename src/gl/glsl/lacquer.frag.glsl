@@ -19,11 +19,13 @@ void main(){
   float isHorn = uPart > .5 ? 0. : 1. - smoothstep(uHornEnd - .004, uHornEnd + .004, x);
   float isBand = uPart > .5 ? 0. : (1. - isHorn) * (1. - smoothstep(uBandEnd - .006, uBandEnd + .006, x));
   vec3 base = mix(mix(black, band, isBand), horn, isHorn);
-  float rough = mix(.05, .24, isHorn);
   float NoV = clamp(dot(N, V), 0., 1.);
   float F0 = mix(.04, .035, isHorn);
-  float F = F0 + (1. - F0) * pow(1. - NoV, 5.);
+  // the grazing Fresnel and the strip's reflection near the silhouette are filtered over the pixel (common.glsl):
+  // the lower edge's rim light dims to a soft line instead of beads (G1, B21)
+  float F = F0 + (1. - F0) * schlickAA(NoV);
   vec3 R = reflect(-V, N);
+  float rough = aaRough(R, mix(.05, .24, isHorn));
   vec3 L = normalize(uLampPos - vWPos);
   vec3 col = studio(R, rough) * F + lampSpec(N, V, vWPos, vec3(F), rough);
   col += base * (studioIrr(N) * 1.0 + uLampCol * max(dot(N, L), 0.) * .22);

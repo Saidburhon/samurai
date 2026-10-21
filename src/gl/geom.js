@@ -48,15 +48,21 @@ function lerpProfile(a, b, n) { const o = []; for (let i = 0; i <= n; i++) o.pus
 
 // one strip = one facet group: smooth inside, hard against its neighbours
 function strip(s0, s1, nS, prof, side, region, sDist) {
-  const nP = prof.length, pos = [], uv = [], reg = [], ax = [];
+  const nP = prof.length, pos = [], uv = [], reg = [], ax = [], mu = [], ha = [];
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
   for (let i = 0; i <= nS; i++) {
     let t = i / nS; if (sDist) t = sDist(t);
     const s = s0 + (s1 - s0) * t, k = G.thick(s);
+    // this ring's two outer facets on this side, as vectors (straight blade): the mune (peak -> shoulder) and the ha
+    // (bevel -> edge). The vertex shader projects them, so every fragment of the ring knows whether the silhouette is
+    // the facet's outer row or the crease inside it (§2.1, contract 2)
+    const m = sub(G.bladePoint(s, side * P.shoulder[0] * k, P.shoulder[1], 0), G.bladePoint(s, 0, P.peak[1], 0));
+    const h = sub(G.bladePoint(s, 0, P.edge[1], 0), G.bladePoint(s, side * P.bevel[0] * k, P.bevel[1], 0));
     for (let j = 0; j < nP; j++) {
       const [yf, zf] = prof[j];
       const p = G.bladePoint(s, side * yf * k, zf, 0); // straight
       const q = G.bladePoint(s, 0, zf, 1); // finished, for the axial coordinate
-      pos.push(p[0], p[1], p[2]); uv.push(s, zf); reg.push(region); ax.push(axialOf(q[0], q[2]));
+      pos.push(p[0], p[1], p[2]); uv.push(s, zf); reg.push(region); ax.push(axialOf(q[0], q[2])); mu.push(...m); ha.push(...h);
     }
   }
   const idx = [];
@@ -69,6 +75,8 @@ function strip(s0, s1, nS, prof, side, region, sDist) {
   g.setAttribute('uv', new Float32BufferAttribute(uv, 2));
   g.setAttribute('aRegion', new Float32BufferAttribute(reg, 1));
   g.setAttribute('aAxial', new Float32BufferAttribute(ax, 1));
+  g.setAttribute('aMune', new Float32BufferAttribute(mu, 3));
+  g.setAttribute('aHa', new Float32BufferAttribute(ha, 3));
   g.setIndex(idx); g.computeVertexNormals();
   return g.toNonIndexed();
 }

@@ -5,7 +5,9 @@
 // (オフショア開発パート／ナー), and a line of fewer than five characters fails as ja-short-line unless it is a whole
 // authored segment (品質は、 between a .ln edge and a <br class="sp">; アプリ after a <wbr>), so no 水準で。 or 手仕事。
 // left alone under a longer line.
-// G0 checks flow mode (the catalogue); from G3 it also checks every cinema hold (?beat=k).
+// G0 checks flow mode (the catalogue); from G3 it also checks every cinema hold (?beat=k). G1 adds the top bar (its
+// groups never closer than 24 px, also at 1600 where the language names return) and the object band of the cinema
+// holds whose text sits beside the 3D object (B21: every text line 40 px or more from the rendered silhouette).
 // Usage: node scripts/qa/fit-check.cjs [baseUrl=http://localhost:8800] [outDir=.cache/qa/fit]
 // Writes <outDir>/fit.json, one annotated screenshot per page and viewport (violations boxed in red), and exits 1 on failure.
 // The dial (svg text, so its size is the font size times the svg's scale): every numeral and ring name renders at
@@ -24,7 +26,12 @@ const VIEWS = [
   { name: '1280x720', w: 1280, h: 720, phone: false },
   { name: '390x844', w: 390, h: 844, phone: true },
   { name: '360x740', w: 360, h: 740, phone: true },
+  // the top bar alone where the language names come back (critical.css: codes below 1600 px)
+  { name: '1600x900', w: 1600, h: 900, phone: false, navOnly: true },
 ];
+// the top bar: its groups (brand, clocks, links, languages, sound, button, call, menu) in order, never closer than
+// NAV_GAP px (G1: at 1440 the Tokio clock ran into the links)
+const NAV_GAP = { desktop: 24, phone: 8 };
 
 // runs in the page: measure every visible line of text and the hero's blade band
 function measure() {
@@ -82,10 +89,15 @@ function measure() {
       polys.push(pts);
     }
   }
+  const nav = [...document.querySelectorAll('.nav > *')].filter((el) => vis(el) && el.getBoundingClientRect().width > 1).map((el) => {
+    // the clocks' box is their text: measure the glyphs, not the paragraph
+    const r = el.getBoundingClientRect();
+    return { l: r.left, r: r.right, t: r.top, b: r.bottom, text: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40), sel: el.tagName.toLowerCase() + '.' + String(el.className).trim().split(/\s+/).join('.') };
+  }).sort((a, b) => a.l - b.l);
   const ja = document.documentElement.lang === 'ja' ? jaLines() : [];
   const m = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 0;
   const navH = document.querySelector('.nav')?.getBoundingClientRect().height || 0;
-  return { W, H, docW: document.documentElement.scrollWidth, docH: document.documentElement.scrollHeight, boxes, wraps, polys, navH, ja, lang: document.documentElement.lang, margin: getComputedStyle(document.body).getPropertyValue('--m') || m, dial: dialAudit() };
+  return { W, H, docW: document.documentElement.scrollWidth, docH: document.documentElement.scrollHeight, boxes, wraps, polys, navH, nav, ja, lang: document.documentElement.lang, margin: getComputedStyle(document.body).getPropertyValue('--m') || m, dial: dialAudit() };
 
   // Japanese: the rendered lines of every block of words, with the authored break points and the word boundaries
   function jaLines() {
@@ -191,6 +203,42 @@ function rectHitsPoly(b, poly) {
   return false;
 }
 
+
+// The cinema holds whose text sits beside the 3D object (G1: B21's contact block on the saya's lacquer): the hold is
+// rendered (?beat=name), the object's silhouette is the difference between the frame with and without the GL canvas,
+// and every text line of the scene keeps OBJ_GAP px from it.
+const OBJ_HOLDS = [{ beat: 'noto.contact', scene: '#aloqa' }];
+const OBJ_GAP = 40;
+async function objectBand(page, scene) {
+  const withGl = (await page.screenshot()).toString('base64');
+  await page.evaluate(() => { document.getElementById('gl').style.visibility = 'hidden'; });
+  await page.waitForTimeout(150);
+  const noGl = (await page.screenshot()).toString('base64');
+  await page.evaluate(() => { document.getElementById('gl').style.visibility = ''; });
+  return page.evaluate(async ([a, b, sel, gapPx]) => {
+    const load = async (s) => { const bm = await createImageBitmap(await (await fetch('data:image/png;base64,' + s)).blob()); const c = document.createElement('canvas'); c.width = bm.width; c.height = bm.height; const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(bm, 0, 0); return x.getImageData(0, 0, c.width, c.height); };
+    const A = await load(a), B = await load(b), W = A.width, H = A.height;
+    const mask = new Uint8Array(W * H);
+    for (let i = 0; i < W * H; i++) { const d = Math.abs(A.data[i * 4] - B.data[i * 4]) + Math.abs(A.data[i * 4 + 1] - B.data[i * 4 + 1]) + Math.abs(A.data[i * 4 + 2] - B.data[i * 4 + 2]); if (d > 12) mask[i] = 1; }
+    const root = document.querySelector(sel), out = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      if (!n.textContent.trim()) continue;
+      const el = n.parentElement; if (!el || el.closest('svg, .plate')) continue;
+      const r = document.createRange(); r.selectNodeContents(n);
+      for (const q of r.getClientRects()) {
+        if (q.width < 1 || q.height < 1) continue;
+        let best = 1e9;
+        const x0 = Math.max(0, Math.floor(q.left - gapPx - 20)), x1 = Math.min(W - 1, Math.ceil(q.right + gapPx + 20)), y0 = Math.max(0, Math.floor(q.top - gapPx - 20)), y1 = Math.min(H - 1, Math.ceil(q.bottom + gapPx + 20));
+        for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (mask[y * W + x]) { const dx = Math.max(q.left - x, 0, x - q.right), dy = Math.max(q.top - y, 0, y - q.bottom); const d = Math.hypot(dx, dy); if (d < best) best = d; }
+        out.push({ text: n.textContent.trim().slice(0, 40), l: Math.round(q.left), t: Math.round(q.top), r: Math.round(q.right), b: Math.round(q.bottom), gap: best > 1e8 ? null : Math.round(best) });
+      }
+    }
+    let top = H; for (let x = 0; x < W; x++) for (let y = 0; y < H; y++) if (mask[y * W + x]) { if (y < top) top = y; break; }
+    return { boxes: out, maskPx: mask.reduce((s, v) => s + v, 0), W, H };
+  }, [withGl, noGl, scene, OBJ_GAP]);
+}
+
 (async () => {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const report = { when: new Date().toISOString(), base, results: [] };
@@ -203,6 +251,19 @@ function rectHitsPoly(b, poly) {
     await page.waitForTimeout(400);
     const m = await page.evaluate(measure);
     const issues = [];
+    // the top bar: consecutive groups keep their gap
+    const gap = v.phone ? NAV_GAP.phone : NAV_GAP.desktop;
+    for (let i = 1; i < m.nav.length; i++) {
+      const a = m.nav[i - 1], b = m.nav[i];
+      if (b.l - a.r < gap) issues.push({ kind: 'nav-gap', detail: `${Math.round(b.l - a.r)}px between "${a.text}" (${a.sel}) and "${b.text}" (${b.sel}), needs ${gap}`, box: { ...b, t: b.t + 0, b: b.b } });
+    }
+    if (v.navOnly) {
+      report.results.push({ page: lang, view: v.name, lang: m.lang, nav: m.nav.map((n) => [n.sel, Math.round(n.l), Math.round(n.r)]), issues: issues.map((i) => ({ kind: i.kind, detail: i.detail })) });
+      fails += issues.length;
+      console.log(`${issues.length ? 'FAIL' : 'ok  '} ${lang}-${v.name} (top bar): ${m.nav.length} groups, min gap ${Math.round(Math.min(...m.nav.slice(1).map((b, i) => b.l - m.nav[i].r)))}px${issues.length ? '\n   ' + issues.map((i) => i.detail).join('\n   ') : ''}`);
+      await ctx.close();
+      continue;
+    }
     const margin = v.phone ? 16 : Math.min(48, Math.max(20, v.w * 0.0278));
     if (m.docW > m.W) issues.push({ kind: 'overflow-x', detail: `document ${m.docW}px wide in a ${m.W}px viewport` });
     const B = m.boxes.filter((b) => !b.clipped);
@@ -246,6 +307,32 @@ function rectHitsPoly(b, poly) {
     report.results.push({ page: lang, view: v.name, lang: m.lang, boxes: m.boxes.length, issues: issues.map((i) => ({ kind: i.kind, detail: i.detail, text: i.box?.text, sel: i.box?.sel, at: i.box ? [Math.round(i.box.l), Math.round(i.box.t)] : undefined, other: i.other?.text })) });
     fails += issues.length;
     console.log(`${issues.length ? 'FAIL' : 'ok  '} ${name}: ${m.boxes.length} text boxes, ${issues.length} issue(s)${issues.length ? '\n   ' + issues.slice(0, 12).map((i) => `${i.kind} ${i.detail || ''} ${i.box ? `"${i.box.text}" (${i.box.sel}) at ${Math.round(i.box.l)},${Math.round(i.box.t)}` : ''}${i.other ? ` x "${i.other.text}"` : ''}`).join('\n   ') : ''}`);
+    await ctx.close();
+  }
+  // the object bands of the cinema holds (desktop views, every language)
+  for (const [lang, p] of Object.entries(PAGES)) for (const v of VIEWS.filter((x) => !x.phone && !x.navOnly)) for (const h of OBJ_HOLDS) {
+    const ctx = await browser.newContext({ viewport: { width: v.w, height: v.h }, deviceScaleFactor: 1 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}${p}?beat=${h.beat}`, { waitUntil: 'domcontentloaded' });
+    await page.mouse.move(v.w / 2, v.h / 2);
+    let ok = true;
+    try { await page.waitForFunction(() => window.__qilich && (window.__qilich.posterReady || window.__qilich.glError), null, { timeout: 240000 }); } catch (e) { ok = false; }
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(300);
+    const name = `${lang}-${v.name}-${h.beat}`;
+    const issues = [];
+    if (!ok) issues.push({ kind: 'no-poster', detail: 'the hold did not render' });
+    else {
+      const ob = await objectBand(page, h.scene);
+      if (ob.maskPx < 1000) issues.push({ kind: 'no-object', detail: `${ob.maskPx} object px` });
+      for (const b of ob.boxes) if (b.gap != null && b.gap < OBJ_GAP) issues.push({ kind: 'object-band', detail: `"${b.text}" ${b.gap}px from the object (needs ${OBJ_GAP})`, box: b });
+      const minGap = Math.min(...ob.boxes.map((b) => (b.gap == null ? 1e9 : b.gap)));
+      console.log(`${issues.length ? 'FAIL' : 'ok  '} ${name}: ${ob.boxes.length} text lines, nearest ${minGap > 1e8 ? '-' : minGap + 'px'} from the object${issues.length ? '\n   ' + issues.map((i) => i.detail).join('\n   ') : ''}`);
+      await page.evaluate((iss) => { const layer = document.createElement('div'); layer.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none'; for (const i of iss) if (i.box) { const d = document.createElement('div'); const b = i.box; d.style.cssText = `position:absolute;left:${b.l}px;top:${b.t}px;width:${b.r - b.l}px;height:${b.b - b.t}px;outline:2px solid #f00`; layer.appendChild(d); } document.body.appendChild(layer); }, issues);
+      await page.screenshot({ path: path.join(out, `${name}.png`) });
+    }
+    report.results.push({ page: lang, view: v.name, beat: h.beat, issues: issues.map((i) => ({ kind: i.kind, detail: i.detail })) });
+    fails += issues.length;
     await ctx.close();
   }
   await browser.close();

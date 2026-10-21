@@ -12,7 +12,9 @@ uniform vec3 uAxisW, uBackGlow, uFaceU, uFaceV;
 uniform sampler2D tIshime;    // the tsuba face: rg = height gradient, b = coarse variation, a = height
 uniform sampler2D tSilk;
 uniform float uReveal, uFront;
+uniform float uGlintWide;     // this part's backlight glint lobe, × (B14: the copper habaki and the gilt seppa catch it)
 void main(){
+  gGlintW = uGlintWide;
   if (vAxial > uReveal) discard;
   vec3 N0 = normalize(vWNrm);
   vec3 N = N0;
@@ -48,6 +50,14 @@ void main(){
     float rr = length(lp.zy * vec2(1., 1./1.03));
     vec4 ish = texture2D(tIshime, lp.zy / 0.82 + .5);
     float n = ish.b, ha = ish.a;
+    // the outer wall's polygons are flat-shaded (the extruded guard is not indexed): there the normal is rebuilt from
+    // the oval's own radial direction, keeping the facet's tilt along the axis (the bevels), so the edge-on rim (B21)
+    // shades smoothly instead of in bands
+    if (length(vec2(lp.z / 1.03, lp.y)) > .382) {
+      float ax = dot(N, uAxisW);
+      vec3 Nr0 = normalize(uFaceU * (lp.z / 1.0609) + uFaceV * lp.y);
+      N = normalize(Nr0 * sqrt(max(0., 1. - ax * ax)) * sign(dot(N, Nr0) + 1e-4) + uAxisW * ax);
+    }
 #ifdef IRON_FULL
     // the full guard (Tsuba, Nōtō): the baked ishime as a normal map (on the hero's guard, about 70 px across, the
     // hammered relief is under a pixel, so the boot program keeps only its tone)
@@ -116,7 +126,13 @@ void main(){
   if (uKind > 1.5 && uKind < 2.5) {
     float rq = length(vec2(lp.z / 1.03, lp.y));                 // 0.39 on the outline (geom.js buildTsuba)
     float onFace = smoothstep(.5, .8, abs(dot(N0, uAxisW)));
-    alpha = mix(rq > .385 ? nvRamp : 1., clamp((.393 - rq) / max(fwidth(rq), 1e-5) + .5, 0., 1.), onFace);
+    // the rim's polygons carry flat normals (the extruded guard is not indexed), so their N·V steps from facet to
+    // facet and its ramp cannot see the outline: the rim's ideal normal (radial on the oval) is used instead, smooth
+    // along it, so the edge-on guard's outline ramps over a pixel (G1, B21)
+    vec3 Nr = normalize(uFaceU * (lp.z / 1.0609) + uFaceV * lp.y);
+    float nr = abs(dot(Nr, V));
+    float rimRamp = clamp(nr / max(fwidth(nr) * 1.5, 1e-4), 0., 1.);
+    alpha = mix(rq > .385 ? rimRamp : 1., clamp((.393 - rq) / max(fwidth(rq), 1e-5) + .5, 0., 1.), onFace);
   }
   gl_FragColor = vec4(col, 1.);
   #include <tonemapping_fragment>

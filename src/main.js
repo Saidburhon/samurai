@@ -1,6 +1,6 @@
 // The entry: language, mode, the site furniture; in cinema mode the GL chunk (three.js and the sword), imported
-// after the intro drawing has finished (or at once for a hold, ?beat). G1: cinema renders holds (core/poster.js);
-// the director, the scroll and the transitions arrive at G3.
+// after the intro drawing has finished (or at once for a hold, ?beat). G3: once GL is ready the film runs (core/film.js:
+// the director, the state function, the freezes); ?beat freezes it on a beat (?beat=x&poster=1: G1's hold renderer).
 import { initNav } from './ui/nav.js';
 import { initMenu } from './ui/menu.js';
 import { initLang } from './ui/lang.js';
@@ -32,7 +32,7 @@ function startCinema() {
   // whole drawing to bring it (the build does not modulepreload it: flow-mode phones must not pay for it, Addendum 2);
   // evaluating its modules is only class definitions. Nothing GL runs before the gate below (0.80 s).
   let mods = null;
-  const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js')]).then((m) => { log('fetched', performance.now()); return m; }));
+  const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js'), import('./core/film.js')]).then((m) => { log('fetched', performance.now()); return m; }));
   if (!q.has('beat')) setTimeout(() => load().then(([gl]) => gl.prebuild()), 0);
   requestAnimationFrame(() => log('raf1', performance.now()));
   // GL work starts when the drawing's animations have ended, checked from 0.80 s, at most 0.40 s later (§4.1).
@@ -62,7 +62,10 @@ function startCinema() {
     log('import', performance.now());
     // the grain holds still while the programs compile: its re-composites share the GPU process with them
     html.classList.add('gl-boot');
-    const [{ boot }, poster] = await load();
+    // on the boot path the canvas stays out of the page until glReady: the prewarm draws then never ask the
+    // compositor for a frame of it (a software composite of the whole page, in the GPU process, between the programs)
+    if (!q.has('beat')) html.classList.add('gl-warm');
+    const [{ boot }, poster, filmM] = await load();
     log('imported', performance.now());
     // wait for the cinema stylesheet (app_css loads without blocking the first paint)
     for (let i = 0; i < 200 && !getComputedStyle(html).getPropertyValue('--cinema-css'); i++) await new Promise((r) => setTimeout(r, 15));
@@ -71,7 +74,8 @@ function startCinema() {
     Q.stage = stage;
     if (q.has('beat')) {
       await warm();
-      await poster.runPoster(stage, log);
+      if (q.has('poster')) await poster.runPoster(stage, log);
+      else await filmM.holdFilm({ stage, log, q });
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
     } else {
       // the boot path (G2 animates from here): the first frame at the reveal pose with nothing revealed yet
@@ -85,9 +89,12 @@ function startCinema() {
       await warm(); t = performance.now();
       p.render(); if (q.has('rp')) stage.finish(); else await stage.gpuDone();
       log('frame1', performance.now() - t);
-      Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
+      Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot', 'gl-warm');
       if (p.applyDom) p.applyDom();
+      // the film takes over: the reveal and the lift, then the scroll (G3)
+      const F = filmM.startFilm({ stage, log, q, intro: html.classList.contains('intro') });
       await stage.bake(); log('baked', performance.now());
+      F.film.dirty = true;
       stage.atlas().then(() => log('atlas', performance.now()));
       // the programs of the later scenes, one per idle period from 6.2 s (never during the reveal or the lift, §6.3),
       // before any of their scenes can be reached: the full guard (Tsuba, Nōtō), the tang, the lacquer, the floor and
@@ -107,5 +114,5 @@ function startCinema() {
         ric(step);
       }, Math.max(0, 6200 - performance.now()));
     }
-  }).catch((e) => { Q.glError = String(e && e.stack || e); console.error(e); }).finally(() => html.classList.remove('gl-boot'));
+  }).catch((e) => { Q.glError = String(e && e.stack || e); console.error(e); }).finally(() => html.classList.remove('gl-boot', 'gl-warm'));
 }

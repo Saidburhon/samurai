@@ -47,8 +47,11 @@ html.cinema[data-ground=washi] #labels, html.cinema[data-ground=togi] #labels { 
 /* ---------------- the scenes ---------------- */
 html.cinema #story { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
 html.cinema .scene { position: absolute; inset: 0; display: none; min-height: 0; padding: 0; background: none; }
-html.cinema .scene.on { display: block; }
-html.cinema .scene [data-beat]:not(.now) { display: none !important; }
+/* G1's hold renderer (?beat=…&poster=1) shows the scene .on and its beat's .now; before the film starts (the first
+   second and a half of the boot) the hero alone is on screen */
+html.cinema:not(.film) .scene.on, html.cinema:not(.film):not([data-beat]) #mei { display: block; }
+html.cinema:not(.film) .scene [data-beat]:not(.now) { display: none !important; }
+html.cinema:not(.film):not([data-beat]) #mei .b-hero { display: block !important; }
 html.cinema .scene a, html.cinema .scene button { pointer-events: auto; }
 html.cinema .plate { display: none; }
 html.cinema .foot { display: none; }
@@ -60,6 +63,8 @@ html.cinema.dark .nav .btn { border-color: rgba(236, 230, 218, .5); }
 html.cinema.dark .grain { background-image: var(--grain-w, none); opacity: .05; }
 /* the grain holds still while the GL programs compile (main.js, gate -> glReady, about a second) */
 html.gl-boot .grain { animation-play-state: paused; }
+/* the boot path's canvas is out of the page until glReady (main.js): its prewarm draws trigger no composite */
+html.cinema.gl-warm #gl { display: none; }
 
 /* 銘 B0 is the flow hero (critical.css); B1: the promise, top-left; the mei and the hanko leave with the h1 */
 html.cinema .b-hero { position: absolute; inset: 0; height: auto; min-height: 0; }
@@ -96,6 +101,12 @@ html.cinema .s-tsuba .hako { top: 118px; }
 html.cinema .s-noto .st { position: absolute; left: var(--m); top: 128px; margin: 0; font-size: clamp(40px, calc(64 * var(--fit)), 64px); }
 html.cinema .s-noto .pre { position: absolute; left: var(--m); top: 128px; }
 html.cinema .contact { position: absolute; left: var(--m); top: calc(128px + 1.1 * clamp(40px, calc(64 * var(--fit)), 64px) + 56px); margin: 0; }
+/* the buttons, the SamurAI line and the city clock share one row, so the block ends 40 px or more above the saya's
+   lacquer in every language (G1: fit-check measures the text against the rendered silhouette) */
+html.cinema .contact { display: flex; flex-wrap: wrap; align-items: center; column-gap: 32px; row-gap: 10px; width: calc(100vw - 2 * var(--m)); }
+html.cinema .contact .row { flex: 0 0 100%; }
+html.cinema .contact .btns, html.cinema .contact .ai, html.cinema .contact .city { margin-top: 22px; }
+html.cinema .contact .ai { margin-left: 8px; }
 html.cinema .contact .tel { font-size: clamp(56px, calc(120 * var(--fit)), 120px); }
 html.cinema .contact .mail { font-size: clamp(24px, calc(40 * var(--fit)), 40px); }
 html.cinema .contact .hanko-c { width: 28px; height: 28px; rotate: -3deg; margin-left: 6px; align-self: flex-start; margin-top: 10px; }
@@ -114,3 +125,97 @@ html.cinema .s-noto .hako { top: 118px; }
 }
 :root { --cinema-css: 1; }
 html.cinema #osh-paper.no-annot .o-annot, html.cinema #osh-paper.no-annot #osh-detail, html.cinema #osh-paper.no-annot .osh-labels { display: none; }
+
+/* ======================= G3: the film (html.film, core/film.js) ======================= */
+/* only #track scrolls (its height is the film's length, core/director.js); the stage and the text stay fixed */
+html.film, html.film body { overflow: visible; height: auto; }
+html.film { scrollbar-width: none; }
+html.film::-webkit-scrollbar { display: none; }
+html.film #track { display: block; position: relative; width: 1px; pointer-events: none; }
+html.lenis.lenis-smooth { scroll-behavior: auto !important; }
+html.lenis.lenis-stopped { overflow: hidden; }
+/* every scene laid out, shown by its blocks' masks; only the scene of the nearest beat takes clicks (§3.1) */
+html.film .scene { display: block; opacity: 0; }
+html.film .scene.vis { opacity: 1; }
+html.film .scene:not(.on), html.film .scene:not(.on) *, html.film .foot:not(.on), html.film .foot:not(.on) * { pointer-events: none !important; }
+/* one text grammar (§5.6): a block rises into place through its own mask and leaves upward through it.
+   --t: 0 at rest, 1 below the mask (not arrived), −1 above it (gone) (scenes/dom.js) */
+html.film .tk { translate: 0 calc(var(--t, 0) * 105%); clip-path: inset(max(0%, calc(var(--t, 0) * -105%)) -100vw max(0%, calc(var(--t, 0) * 105%)) -100vw); }
+
+/* the dial lies on the paper under the sword (the flow page's own element, moved by the film) */
+#dialw { position: absolute; left: 0; top: 0; width: 1000px; height: 1000px; transform-origin: 500px 500px; pointer-events: none; color: #5C4630; }
+#dialw .dial { width: 1000px; height: 1000px; --sun: var(--sun-a, 135deg); }
+#dialw .hand { display: none; }
+html.film .s-toki .dial-plate { display: none; }
+/* the plaster's raking light follows the sun (Toki, Temur) */
+html.film .sheet[data-g=ganch] { background: linear-gradient(var(--sun-a, 135deg), rgba(255, 250, 238, .22), rgba(255, 250, 238, 0) 45%, rgba(74, 52, 28, 0) 55%, rgba(74, 52, 28, .2)), var(--ganch) var(--ganch-tile, none) 0 0 / 512px 512px; }
+html.film[data-beat="temur.quote"] .sheet[data-g=ganch] { background: linear-gradient(90deg, rgba(255, 244, 222, .30), rgba(255, 250, 238, 0) 38%, rgba(74, 52, 28, .06) 70%, rgba(54, 36, 18, .26)), var(--ganch) var(--ganch-tile, none) 0 0 / 512px 512px; }
+
+/* the freeze layer (fx/cut.js): the frozen hold, split by a cut or under a moving mask */
+html.cinema #cut { position: absolute; inset: 0; z-index: 4; pointer-events: none; display: none; overflow: hidden; }
+html.cinema #cut.on { display: block; }
+#cut .fz-half, #cut .fz-one { position: absolute; inset: 0; will-change: transform; }
+#cut .fz { position: absolute; inset: 0; overflow: hidden; }
+#cut .fz-l, #cut .fz-dial { position: absolute; inset: 0; }
+#cut .fz-dial { inset: auto; }
+#cut .fz-gl { width: 100%; height: 100%; }
+#cut .fz-ink { color: var(--sumi); }
+#cut .fz-labels { color: var(--sumi); }
+#cut .fz-story > .scene { position: absolute; inset: 0; display: block; opacity: 1; }
+#cut .fz-story > .foot { position: absolute; }
+#cut .fz-slash { position: absolute; height: 1.5px; transform-origin: 50% 50%; background: linear-gradient(90deg, transparent, #F6F1E6 30%, #fff 50%, #F6F1E6 70%, transparent); }
+#cut .fz-rim { position: absolute; inset: 0; mix-blend-mode: screen; pointer-events: none; }
+
+/* 銘 B1 and 映: as G1; 焼 B7–B10: the step word and its line top-left, the hakogaki in the strip */
+html.film .s-yaki > .kick { position: absolute; left: var(--m); top: 112px; padding: 0; }
+html.film .s-yaki .beat { position: absolute; inset: 0; display: block; padding: 0; background: none; border: 0; }
+html.film .s-yaki .big { position: absolute; left: var(--m); top: 140px; margin: 0; }
+html.film .s-yaki .line { position: absolute; left: var(--m); top: calc(140px + 1.08 * clamp(48px, calc(96 * var(--fit)), 96px) + 14px); max-width: 28em; padding: 0; color: var(--hagane); }
+html.film .s-yaki .hako, html.film .s-yaki .beat[data-beat="yaki.quench"] .hako { top: 128px; }
+/* 研: the rub hint near the blade (B11), "even after launch" under the statement (B13) */
+html.film .s-togi .hint { display: block; position: absolute; left: var(--m); bottom: 112px; font-size: 13px; color: var(--kurogane); }
+html.film .s-togi .hint .tch { display: none; }
+html.film .s-togi .after { display: block; position: absolute; left: var(--m); top: calc(128px + 2.1 * clamp(40px, calc(64 * var(--fit)), 64px) + 24px); margin: 0; }
+html.film .s-togi .hako[data-beat] { display: flex; }
+/* 鍔 B15–B16 */
+html.film .s-tsuba .b-carpet { position: absolute; left: var(--m); bottom: 120px; margin: 0; width: calc(7 * var(--col) + 6 * var(--g)); }
+html.film .s-tsuba .b-team { position: absolute; left: var(--m); top: 50%; margin: 0; padding: 0; border: 0; transform: translateY(-50%); }
+/* 時 B17–B19: the kicker, the big clocks and one line on the left; the dial on the paper */
+html.film .s-toki > .kick { position: absolute; left: var(--m); top: 112px; }
+html.film .s-toki .clocks-big { position: absolute; left: var(--m); top: 150px; margin: 0; }
+html.film .s-toki .lines { position: absolute; inset: 0; display: block; margin: 0; }
+html.film .s-toki .lines .beat { position: absolute; inset: 0; }
+html.film .s-toki .lines .line { position: absolute; left: var(--m); top: calc(150px + 2 * clamp(56px, calc(96 * var(--fit)), 96px) + 76px); width: calc(5 * var(--col) + 4 * var(--g)); margin: 0; color: var(--sumi); }
+html.film .s-toki .hako.hrs { position: absolute; display: flex; }
+/* Addendum 1, the Temur poster: the quote in the statement face on the carved wall, the name in mono caps */
+.s-temur .tq { margin: 0; }
+.s-temur .q { font-weight: 280; letter-spacing: -.03em; line-height: 1.04; font-size: clamp(40px, calc(72 * var(--fit)), 72px); font-variation-settings: "SHRP" 100; text-wrap: balance; color: var(--sumi); }
+html[lang=ru] .s-temur .q { font-size: clamp(36px, calc(60 * var(--fit)), 60px); }
+.s-temur .by { margin-top: 28px; font: 400 13px/1 var(--mono); font-stretch: 87.5%; letter-spacing: .08em; text-transform: uppercase; color: var(--kurogane); }
+html:not(.cinema) .s-temur .tq { grid-column: 1 / span 9; }
+html.film .s-temur .tq { position: absolute; left: var(--m); top: 140px; width: calc(8 * var(--col) + 7 * var(--g)); }
+/* 納: the small line under the h2 at B20 (the contact block takes its place at B21) */
+html.film .s-noto .pre { top: calc(128px + 1.1 * clamp(40px, calc(64 * var(--fit)), 64px) + 28px); max-width: 34em; }
+/* the footer row of the end poster (B23) */
+html.film .foot { display: grid; position: fixed; left: 0; right: 0; bottom: 44px; z-index: 6; padding: 0 var(--m); gap: 14px; background: none; color: var(--sumi); }
+html.film .foot .colophon { padding-top: 14px; }
+
+@media (aspect-ratio < 1.2) {
+  html.film .s-yaki > .kick { top: 76px; }
+  html.film .s-yaki .big { top: 96px; font-size: 48px; }
+  html.film .s-yaki .line { top: auto; bottom: 120px; right: var(--m); font-size: 16px; }
+  html.film .s-togi .after { top: auto; bottom: 150px; font-size: 24px; }
+  html.film .s-tsuba .b-carpet { top: 92px; bottom: auto; width: auto; right: var(--m); }
+  html.film .s-tsuba .b-carpet .st { font-size: 26px; }
+  html.film .s-tsuba .b-team { top: auto; bottom: 96px; transform: none; }
+  html.film .s-tsuba .st.xl { font-size: 34px; }
+  html.film .s-toki > .kick { top: 76px; }
+  html.film .s-toki .clocks-big { top: 100px; }
+  html.film .s-toki .clocks-big time { font-size: 48px; }
+  html.film .s-toki .lines .line { top: 236px; width: auto; right: var(--m); font-size: 16px; }
+  html.film .s-temur .tq { top: 92px; right: var(--m); width: auto; }
+  html.film .s-temur .q { font-size: 34px; }
+  html.film .s-noto .pre { font-size: 16px; }
+  html.film .foot { bottom: 16px; gap: 10px; font-size: 12px; }
+  html.film .foot .foot-links { display: none; }
+}

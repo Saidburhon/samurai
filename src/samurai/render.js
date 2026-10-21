@@ -11,8 +11,9 @@ export const fill = (s, o) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in o 
 const CARET = '<svg class="caret" viewBox="0 0 8 6" aria-hidden="true"><path d="M.6 .8h6.8L4 5.4z"/></svg>';
 const KISSAKI = '<svg viewBox="0 0 30 8" aria-hidden="true"><use href="#kissaki"/></svg>';
 export const money = (C, usdR, uzsR) => F.money(usdR, uzsR, C.cur, C.lang);
-// a separator that never starts a line: the dot is tied to the word before it, the line may break after it
-export const SEP = '\u00a0· ';
+// a separator that never starts or ends a line: the dot is tied to the words on both sides (rows of buttons or long
+// items use a flex gap instead, with no dot at all)
+export const SEP = '\u00a0·\u00a0';
 // a range with its unit never breaks across lines ("19–27 недель", "$16 900–26 200", "3,000〜4,100ドル"): wrapped in a
 // nowrap span. Runs on escaped HTML text, never on markup with attributes.
 const RANGE = /\$?\d[\d\u00a0.,]*万?(?:[–〜]\$?\d[\d\u00a0.,]*万?)?(?:\u00a0[^\s<&·]+(?:\u00a0[^\s<&·]+)?|ドル|週間|か月|スム)?/g;
@@ -50,7 +51,7 @@ export function markQuotes(text, quotes = []) {
 export function briefHtml(C, st) {
   const { S } = C, heard = st.pick?.heard;
   const words = st.text ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${markQuotes(st.text, heard?.quotes)}</p><button class="tlink more" type="button" data-act="more">${h(S.showText)}</button>`
-    : heard?.quotes?.length ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${heard.quotes.map((q, i) => `«<mark class="on" style="--i:${i}">${h(q)}</mark>»`).join(SEP)}</p>` : '';
+    : heard?.quotes?.length ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${heard.quotes.map((q, i) => `${C.lang === 'ja' ? '「' : '«'}<mark class="on" style="--i:${i}">${h(q)}</mark>${C.lang === 'ja' ? '」' : '»'}`).join(C.lang === 'ja' ? '' : SEP)}</p>` : '';
   return `<aside class="brief${st.briefOpen ? ' open' : ''}" aria-label="${h(S.res)}">
     ${st.source === 'sample' ? `<p class="mono note k">${h(S.sample)}</p>` : ''}
     <p class="no mono">${h(S.res)} <b>${h(st.meta?.brief_no || '')}</b></p>
@@ -107,7 +108,13 @@ function rows(C, s, st, entry) {
     const price = s.usd[state];
     const pb = paybackShown(imp.model, inputs, price, s.monthly_usd), gain = monthlyGain(imp.model, inputs) || 0;
     const run = (s.monthly_usd[0] + s.monthly_usd[1]) / 2;
-    const one = (u) => money(C, [u, u], C.uzs([Math.max(0, u), Math.max(0, u)]))[0];
+    // one amount, not a range: rounded to the nearest step (0.1 mln soʻm, 10 thousand under a million, $10)
+    const one = (u) => {
+      const v = Math.max(0, u);
+      if (C.cur === 'usd') { const d = Math.round(v / 10) * 10; return F.usd([d, d], lang); }
+      const z = v * C.rate.uzs_per_usd, r = z < 1e6 ? Math.round(z / 1e4) * 1e4 : Math.round(z / 1e5) * 1e5;
+      return F.uzs([r, r], lang);
+    };
     const verdict = pb.months ? fill(S.sumImpact, { m: F.months(pb.months, lang) }) : pb.why === 'long' ? S.impactLong : S.impactNa;
     impSum = pb.months ? R(verdict) : h(pb.why === 'long' ? S.impactNone : S.impactNa);
     const money1 = (u) => (C.cur === 'usd' ? u : Math.round(u * C.rate.uzs_per_usd / 1000) * 1000);
@@ -121,7 +128,7 @@ function rows(C, s, st, entry) {
   // 9 the price breakdown: one ruled line split into proportional segments, labelled under it
   const lines = s.price_lines[state];
   const tot = lines.reduce((a, l) => a + l.usd[1], 0) || 1;
-  row('breakdown', lines.length > 1 ? h(N(C, S.sumBreak, lines.length - 1)) : h(S.sumBase), `<div class="bar" aria-hidden="true">${lines.map((l) => `<span style="flex:${(l.usd[1] / tot).toFixed(3)}"></span>`).join('')}</div><ul class="bar-l">${lines.map((l) => `<li><span>${h(l.label)}</span><b>${R(money(C, l.usd.map(Math.round), C.uzs(l.usd))[0])}</b></li>`).join('')}</ul>`);
+  row('breakdown', lines.length > 1 ? h(N(C, S.sumBreak, lines.length - 1)) : h(S.sumBase), `<div class="bar" aria-hidden="true">${lines.map((l) => `<span style="flex:${(l.usd[1] / tot).toFixed(3)}"></span>`).join('')}</div><ul class="bar-l">${lines.map((l) => `<li><span>${h(l.label).replace(/ · /g, SEP)}</span><b>${R(money(C, l.usd.map(Math.round), C.uzs(l.usd))[0])}</b></li>`).join('')}</ul>`);
   return out.join('');
 }
 
@@ -150,8 +157,8 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
     <h3 id="t-${h(id)}">${h(s.title)}</h3>
     ${plate}
     <dl class="sfacts">
-      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small">${R(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
-      <div><dt>${h(S.row.time)}</dt><dd class="mono-v">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span>${SEP}<span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
+      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
+      <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
       <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div>
       <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
       <div><dt>${h(S.row.why)}</dt><dd class="why">${h(s.why)}</dd></div>

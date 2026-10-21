@@ -4,10 +4,14 @@
 // front and draws the luminous front (svg#front).
 import * as G from '../sword/geom-core.js';
 import { stipple, frame, SC, WEIGHTS } from '../sword/drawing.js';
+import { stipSurface } from './stipsurface.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const { K, T } = G.axisEnds(1);
 const LKT = Math.hypot(T[0] - K[0], T[1] - K[1]) * SC;
+// the bookend drawing runs from K to the kojiri J, the Yaki plan from the machi to the tip of the straight blade
+const LKJ = () => { const J = G.kojiriEnd(1); return Math.hypot(J[0] - K[0], J[1] - K[1]) * SC; };
+const LPLAN = () => { const a = G.bp2(0, 0, 0), b = G.bp2(1, 0, 0); return Math.hypot(b[0] - a[0], b[1] - a[1]) * SC; };
 let dots = null;
 
 // paper (x, z) -> screen px, for a solved td camera; and back
@@ -69,6 +73,69 @@ export class Ink {
     this.drawStipple(stage, reveal);
     this.drawFront(stage, reveal, front, S);
   }
+  // G3, the film (scenes/frame.js), every frame: which drawing lies on the paper ('hero', 'saya' for the bookend,
+  // 'plan' for Yaki), its opacity, the reveal. crisp (inside a hold window): the stipple is redrawn from its dot list;
+  // between holds it keeps its last raster, moved by the change of the paper's matrix (one CSS matrix, no redraw).
+  film(stage, pose, { draw = 'hero', alpha = 1, reveal = 2, front = 0, annot = true, crisp = true } = {}) {
+    const td = stage.td, W = stage.w, H = stage.h;
+    if (!this.hair) { hairlines(); this.hair = true; }
+    if (!this.groups) this.groups = { hero: this.hero, plan: document.getElementById('osh-plan'), saya: document.getElementById('osh-saya') };
+    if (!pose || !td || alpha <= 0.002) {
+      if (this.shown !== false) { this.paper.style.visibility = 'hidden'; this.stip.style.visibility = 'hidden'; this.front.innerHTML = ''; this.shown = false; }
+      return;
+    }
+    if (this.shown !== true) { this.paper.style.visibility = ''; this.shown = true; }
+    if (this.draw !== draw) {
+      for (const [k, g] of Object.entries(this.groups)) if (g) g.toggleAttribute('hidden', k !== draw);
+      this.draw = draw; this.stipM = null;
+    }
+    this.paper.style.opacity = alpha < 0.999 ? alpha.toFixed(3) : '';
+    this.paper.classList.toggle('no-annot', !annot || draw !== 'hero');
+    const S = (u, v) => { const p = svgToPaper(pose, u, v); return paperToScreen(td, W, H, p[0], p[1]); };
+    const e0 = S(0, 0), eu = S(1, 0), ev = S(0, 1);
+    const ex = [eu[0] - e0[0], eu[1] - e0[1]], ey = [ev[0] - e0[0], ev[1] - e0[1]];
+    const [vx, vy] = this.vb;
+    const tx = e0[0] + vx * ex[0] + vy * ey[0], ty = e0[1] + vx * ex[1] + vy * ey[1];
+    const k = Math.hypot(ex[0], ex[1]), ang = Math.atan2(ex[1], ex[0]);
+    const st = this.paper.style, mtx = `matrix(${ex[0]},${ex[1]},${ey[0]},${ey[1]},${tx},${ty})`;
+    if (this.mtx !== mtx) {
+      st.transform = mtx; this.mtx = mtx;
+      st.setProperty('--osh-rot', `${(ang * 180 / Math.PI).toFixed(3)}deg`);
+      st.setProperty('--ik', (1 / k).toFixed(5));
+    }
+    // while the matrix changes the wrapper is a layer; at rest it re-rasterises crisp (§3.8)
+    st.willChange = crisp ? '' : 'transform';
+    this.m = { e0, ex, ey, k };
+    const u0 = reveal < 1.5 ? reveal * LKT : null;
+    const blade = draw === 'hero' ? this.blade : draw === 'saya' && this.groups.saya ? this.groups.saya.children : [];
+    this.clipOn(blade, draw === 'saya' && u0 != null ? reveal * (this.lkj || (this.lkj = LKJ())) : u0);
+    if (draw === 'hero') {
+      this.stip.style.visibility = '';
+      const ku = u0 == null ? -1 : Math.round(u0 * 4);
+      if (crisp || !this.stipM || ku !== this.stipU) {
+        this.drawStipple(stage, reveal); this.stipM = { e0, ex, ey }; this.stipU = ku; this.stip.style.transform = '';
+      } else {
+        // the delta from the drawn matrix to this one: q = e0 + A·A0⁻¹·(q0 − e0')
+        const { e0: f0, ex: a, ey: b } = this.stipM, det = a[0] * b[1] - b[0] * a[1] || 1;
+        const i00 = b[1] / det, i01 = -b[0] / det, i10 = -a[1] / det, i11 = a[0] / det;
+        const L00 = ex[0] * i00 + ey[0] * i10, L01 = ex[0] * i01 + ey[0] * i11, L10 = ex[1] * i00 + ey[1] * i10, L11 = ex[1] * i01 + ey[1] * i11;
+        const t0 = e0[0] - (L00 * f0[0] + L01 * f0[1]), t1 = e0[1] - (L10 * f0[0] + L11 * f0[1]);
+        this.stip.style.transformOrigin = '0 0';
+        this.stip.style.transform = `matrix(${L00},${L10},${L01},${L11},${t0},${t1})`;
+      }
+      this.drawFront(stage, reveal, front, S);
+    } else {
+      this.stip.style.visibility = 'hidden';
+      if (this.front.firstChild) this.front.innerHTML = '';
+    }
+  }
+  clipOn(els, u0) {
+    if (this.clipEls && this.clipEls !== els) for (const g of this.clipEls) g.removeAttribute('clip-path');
+    this.clipEls = els;
+    const keep = this.blade; this.blade = els;
+    this.clip(u0);
+    this.blade = keep;
+  }
   clip(u0) {
     let cp = this.svg.querySelector('#rvclip');
     if (u0 == null) { for (const g of this.blade) g.removeAttribute('clip-path'); return; }
@@ -91,9 +158,10 @@ export class Ink {
     }
     const dpr = Math.min(2, window.devicePixelRatio || 1); // one canvas px per device px, as boot.js
     const W = stage.w, H = stage.h, cv = this.stip;
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const surf = stipSurface(cv); // the boot script's surface: a CPU canvas presented as one texture
+    surf.size(Math.round(W * dpr), Math.round(H * dpr));
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
-    const ctx = cv.getContext('2d', { willReadFrequently: true }); // a CPU canvas, as the boot script made it
+    const ctx = surf.ctx;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#0F0E0C';
     const { e0, ex, ey, k } = this.m, u0 = reveal < 1.5 ? reveal * LKT : -1e9;
@@ -105,6 +173,7 @@ export class Ink {
       ctx.beginPath(); ctx.arc(x, y, Math.min(2.2, Math.max(0.35, r * k)), 0, 6.2832); ctx.fill();
     }
     ctx.globalAlpha = 1;
+    surf.present();
   }
   // the luminous front where ink turns into steel (prototype oshigata.js)
   drawFront(stage, reveal, front, S) {
@@ -132,4 +201,4 @@ export class Ink {
   // the screen point of a sword-space paper point under the current placement (for labels)
   screenOf(u, v) { const { e0, ex, ey } = this.m; return [e0[0] + u * ex[0] + v * ey[0], e0[1] + u * ex[1] + v * ey[1]]; }
 }
-export { LKT };
+export { LKT, LKJ, LPLAN };

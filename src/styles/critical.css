@@ -85,6 +85,15 @@ html.no-js .clocks, html.no-js .city time { display: none; } /* without JS no cl
 .sound svg { width: 20px; height: 12px; stroke: currentColor; stroke-width: 1.2; fill: none; opacity: .7; }
 .btn { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border: 1px solid currentColor; transition: background-color .45s var(--ui), color .45s var(--ui); }
 .call, .menu { display: none; }
+/* The bar's language switch below 1600 px (G1 review: at 1440 the Tokio clock ran into the links). The names
+   (lang.css), the SamurAI link and the two clocks need about 1520 px; below 1600 the bar shows the codes UZ RU EN JA,
+   as §7.1 draws it. Each name stays the link's accessible name (visually hidden, not display: none, which would leave
+   the link nameless: the code is aria-hidden) and is written out in the menu sheet and the footer. fit-check measures
+   the bar at 1280, 1440 and 1600 in every language. */
+@media (max-width: 1599px) {
+  .nav > .lang .nm { display: inline; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .nav > .lang .cd { display: inline; }
+}
 
 /* ---------------- the hero (B0): the drawing, the h1, the subline, the mei ---------------- */
 .s-mei { position: relative; }

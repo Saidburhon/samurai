@@ -3,13 +3,47 @@
 // committed. The page renders them instantly, labelled "Namuna", re-priced with the catalogue and the rate of the day.
 // Cost: about $0.12 per sample on a warm cache (≈ $3 for all). The key comes from ANTHROPIC_API_KEY or .dev.vars.
 // Usage: node scripts/samurai-samples.mjs [--only uz,ru] [--id clinic]
+//        node scripts/samurai-samples.mjs --lint   (free: every model string is clean, see sampleProblems())
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { normalise, fnv } from '../src/shared/catalogue.js';
 import { runSamurai } from '../worker/samurai.js';
 import { BANNED } from '../worker/copy-rules.js';
+import { sampleProblems } from './qa/sample-lint.mjs';
+import { tidy, jaWage } from '../worker/validate.js';
 
 const J = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const m = normalise(J('content/solutions.json'), J('content/solutions-extra.json'), J('content/pricing.json'));
+
+// --clean (free): what the validator now does to model strings, applied to the committed samples: tidy() on every
+// model string, the Japanese office hour, no separate "not needed yet" list. Then --lint must pass.
+if (process.argv.includes('--clean')) {
+  const file = J('content/samurai-samples.json');
+  const T = (lang) => (t) => (typeof t === 'string' ? tidy(t, lang) : t);
+  for (const [lang, list] of Object.entries(file.samples)) for (const x of list) {
+    const t = T(lang), p = x.pick;
+    delete x.nr;
+    p.heard.summary = t(p.heard.summary); p.roadmap_note = t(p.roadmap_note); p.first_step = t(p.first_step); p.assumptions = p.assumptions.map(t);
+    for (const n of p.not_recommended) n.why = t(n.why);
+    for (const s of p.solutions) { s.title = t(s.title); s.why = t(s.why); s.difficulty_reason = t(s.difficulty_reason); }
+    for (const q of p.questions) { q.text = t(q.text); for (const o of q.options) o.label = t(o.label); }
+    for (const d of Object.values(x.details)) {
+      d.deliverables_mvp = d.deliverables_mvp.map(t); d.deliverables_full = d.deliverables_full.map(t); d.needs = d.needs.map(t);
+      for (const ph of d.phases) ph.deliverable = t(ph.deliverable);
+      for (const r of d.risks) { r.text = t(r.text); r.mitigation = t(r.mitigation); }
+      d.impact.summary = t(d.impact.summary);
+      for (const i of d.impact.inputs) i.label = t(i.label);
+      jaWage(lang, d.impact.inputs);
+    }
+  }
+  writeFileSync('content/samurai-samples.json', JSON.stringify(file, null, 1) + '\n');
+  console.log('samples: cleaned');
+}
+if (process.argv.includes('--lint') || process.argv.includes('--clean')) {
+  let n = 0;
+  for (const [lang, list] of Object.entries(J('content/samurai-samples.json').samples)) for (const x of list) for (const b of sampleProblems(x, lang)) { n++; console.log(`${lang}/${x.id}: ${b}`); }
+  console.log(n ? `samples: ${n} problems` : 'samples: clean');
+  process.exit(n ? 1 : 0);
+}
 const key = process.env.ANTHROPIC_API_KEY || (existsSync('.dev.vars') ? (readFileSync('.dev.vars', 'utf8').match(/^ANTHROPIC_API_KEY\s*=\s*"?([^"\n]+)"?/m) || [])[1] : '');
 if (!key) { console.error('samples: no ANTHROPIC_API_KEY'); process.exit(1); }
 const rate = existsSync('content/rate.json') ? { ...J('content/rate.json'), source: 'cbu' } : { uzs_per_usd: 12012.3, date: '2026-10-21', source: 'fallback' };
@@ -36,9 +70,11 @@ async function one(lang, s) {
     randomHex: () => (fnv(`${s.id}:${lang}`) & 0xffff).toString(16).padStart(4, '0'),
   });
   if (out.status !== 'ok' || !out.pick?.solutions?.length) throw new Error(`${lang}/${s.id}: ${out.status}`);
-  const nr = events.find((e) => e.event === 'not_recommended')?.data || [];
-  const entry = { id: s.id, industry: s.industry, text, intake: s.intake, meta: { ...out.meta, source: 'sample' }, pick: out.pick, details: out.details, nr };
+  // "not needed yet" is read from the pick (its titles from the catalogue), so the entry carries no separate list
+  const entry = { id: s.id, industry: s.industry, text, intake: s.intake, meta: { ...out.meta, source: 'sample' }, pick: out.pick, details: out.details };
   for (const x of strings(entry)) for (const [re, what] of BANNED) if (re.test(x)) throw new Error(`${lang}/${s.id}: ${what}: ${x}`);
+  const bad = sampleProblems(entry, lang);
+  if (bad.length) throw new Error(`${lang}/${s.id}: ${bad.join('; ')}`);
   console.log(`${lang}/${s.id}: ${out.pick.solutions.map((x) => x.catalogue_id).join(', ')} · ${Object.keys(out.details).length} details · ${(out.ms / 1000).toFixed(1)} s · $${out.cost.toFixed(3)}${out.partial ? ' · PARTIAL' : ''}`);
   return { entry, cost: out.cost, partial: out.partial };
 }

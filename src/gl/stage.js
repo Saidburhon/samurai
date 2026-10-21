@@ -31,6 +31,7 @@ export function buildGeometries(have = {}) {
 
 const D = Math.PI / 180;
 const v3 = (x = 0, y = 0, z = 0) => new Vector3(x, y, z);
+const IDENT = new Matrix4();
 
 export class Stage {
   constructor(canvas, tier, context) {
@@ -101,6 +102,7 @@ export class Stage {
     const dpr = window.devicePixelRatio || 1;
     this.U.uAA.value = pr / dpr;
     const bw = Math.round(w * pr), bh = Math.round(h * pr);
+    this.mat.steelU.uRes.value.set(bw, bh);
     this.soft.setSize(bw, bh);
     // the rays are soft: they run at half the device resolution (a quarter on T1), whatever the supersampling
     this.rays.setSize(bw, bh, (this.tier.tier === 1 ? 0.25 : 0.5) / Math.max(1, this.U.uAA.value));
@@ -141,6 +143,18 @@ export class Stage {
     this.sayaG.visible = !!this.vis.saya;
     this.floor.visible = !!this.vis.floor;
   }
+  // G3 (§2.7): sheath in [0, 1] slides the saya along the blade's arc, about the arc's centre, so the blade stands
+  // (1 - sheath) of its length out of the koiguchi; 1 is fully home (the saya's own geometry)
+  setSheath(v = 1) {
+    const th = (1 - Math.max(0, Math.min(1, v))) * G.L_STRAIGHT / G.R_ARC;
+    const te = (G.L_STRAIGHT / 2) / G.R_ARC, cx = G.R_ARC * Math.sin(te), cz = -G.R_ARC * Math.cos(te);
+    const m = this.sayaG.matrix;
+    this.sayaG.matrixAutoUpdate = false;
+    m.makeTranslation(cx, 0, cz).multiply(new Matrix4().makeRotationY(th)).multiply(new Matrix4().makeTranslation(-cx, 0, -cz));
+    this.sheath = v;
+    this.sheathW = th ? m.clone() : null;
+    this.sword.updateMatrixWorld(true);
+  }
   world(p) { return p.clone().applyMatrix4(this.sword.matrixWorld); }
   worldH(p) { return p.clone().applyMatrix4(this.handle.matrix).applyMatrix4(this.sword.matrixWorld); }
   dirW(p) { return p.clone().transformDirection(this.sword.matrixWorld); }
@@ -150,7 +164,9 @@ export class Stage {
     const sg = this.pose.sori;
     if (spec === 'K') { const { K } = G.axisEnds(sg); return this.world(v3(K[0], 0, K[1])); }
     if (spec === 'T') { const { T } = G.axisEnds(sg); return this.world(v3(T[0], 0, T[1])); }
-    if (spec === 'koiguchi') return this.worldH(v3(GM.SAYA_MOUTH + 0.02, 0, 0));
+    // the koiguchi rides with the saya (G3: the sheathing slides the saya along the arc, setSheath)
+    if (spec === 'koiguchi') return v3(GM.SAYA_MOUTH + 0.02, 0, 0).applyMatrix4(this.handle.matrix).applyMatrix4(this.sheathW || IDENT).applyMatrix4(this.sword.matrixWorld);
+    if (spec === 'J') { const J = G.kojiriEnd(sg); return this.world(v3(J[0], 0, J[1])); }
     if (spec === 'tsuba') return this.worldH(v3((G.H.tsuba[0] + G.H.tsuba[1]) / 2, 0, 0));
     const p = G.bladePoint(spec.s, spec.y || 0, spec.zf ?? 0.5, sg);
     return this.world(v3(p[0], p[1], p[2]));
@@ -183,10 +199,13 @@ export class Stage {
     this.td = { f, Hc, r, d, C, phi };
   }
   // around a target on the sword, in its heading frame (yaw and pitch, no roll: blade rolls stay visible)
-  solveOrbit({ target, az = 0, el = 45, dist = 3, vec, fov, ang = 0, chord, off = [0, 0] }) {
+  // G3: targetW (a world point) replaces the target between two holds; frame 'floor' takes the orbit in the Tsuba
+  // floor's frame (up = the floor's normal, towards the sword), so el 90° looks straight down onto the floor
+  solveOrbit({ target, targetW, az = 0, el = 45, dist = 3, vec, fov, ang = 0, chord, off = [0, 0], frame }) {
     const c = this.camera;
-    const T = this.point(typeof target === 'string' ? target : { s: target.s, zf: target.zf ?? 0.5 });
+    const T = targetW ? targetW.clone() : this.point(typeof target === 'string' ? target : { s: target.s, zf: target.zf ?? 0.5 });
     const head = new Matrix4().makeRotationZ(this.pose.pitch);
+    if (frame === 'floor') head.multiply(new Matrix4().makeRotationX(-Math.PI / 2));
     let dir, dd;
     if (vec) { dir = v3(...vec); dd = dir.length(); dir.normalize(); }
     else { dir = v3(Math.sin(az * D) * Math.cos(el * D), Math.sin(el * D), Math.cos(az * D) * Math.cos(el * D)); dd = dist; }
@@ -196,7 +215,7 @@ export class Stage {
     c.up.set(0, 1, 0).transformDirection(head);
     if (Math.abs(el) > 89) c.up.set(0, 0, -1).transformDirection(head);
     c.lookAt(T); c.updateMatrixWorld();
-    const s = typeof target === 'string' ? 0.12 : target.s;
+    const s = typeof target === 'string' || !target ? 0.12 : target.s;
     const [c0, c1] = chord || [Math.max(0.02, s - 0.1), Math.min(0.98, s + 0.1)];
     const want = ang * D;
     for (let i = 0; i < 5; i++) {

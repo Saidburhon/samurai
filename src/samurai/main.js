@@ -18,7 +18,9 @@ import { encode, decode, verify } from './share.js';
 import { openLead, deckleFor } from '../ui/lead.js';
 
 const $ = (s, r = document) => r.querySelector(s);
-const cfg = JSON.parse($('#sam-config').textContent), S = JSON.parse($('#sam-strings').textContent);
+// every " · " in the page's words is tied to the words on both sides, so a separator never starts or ends a line
+const tie = (v) => (typeof v === 'string' ? v.replace(/ · /g, SEP) : Array.isArray(v) ? v.map(tie) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, tie(x)])) : v);
+const cfg = JSON.parse($('#sam-config').textContent), S = tie(JSON.parse($('#sam-strings').textContent));
 const lang = cfg.lang, today = tashkentToday();
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } } };
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -87,7 +89,7 @@ function paint() {
   if (st.source === 'fallback' && !st.unavailable) notes.push(`<p class="note mono">${h(S.srcFallback)}</p>`);
   if (st.unavailable) notes.push(`<p class="note">${h(S.unavailable)}</p>`);
   if (st.error) notes.push(`<div class="broken"><img src="${h(brokenSrc())}" alt="" width="220" height="80"><div><p>${h(S.errDrop)}</p><p class="acts"><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button><a href="tel:${h(cfg.phone.replace(/[^\d+]/g, ''))}">${h(cfg.phone.replace(/ /g, '\u00a0'))}</a></p></div></div>`);
-  if (st.partial && st.done) notes.push(`<p class="note mono">${h(S.partial)}${SEP}<button class="tlink" type="button" data-act="retry">${h(S.retry)}</button></p>`);
+  if (st.partial && st.done) notes.push(`<p class="note mono gap"><span>${h(S.partial)}</span><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button></p>`);
   // the currency switch, the stamp and the actions belong to an estimate: only with at least one solution
   const cur = hasSols ? `<p class="cur" role="group" aria-label="${h(S.cur.label)}"><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'usd' : 'uzs'}" aria-pressed="${C.cur === (lang === 'ja' ? 'usd' : 'uzs')}">${h(lang === 'ja' ? S.cur.usd : S.cur.uzs)}</button><i></i><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'uzs' : 'usd'}" aria-pressed="${C.cur === (lang === 'ja' ? 'uzs' : 'usd')}">${h(lang === 'ja' ? S.cur.uzs : S.cur.usd)}</button></p>` : '';
   const desk = `<div class="desk">
@@ -486,7 +488,8 @@ addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout((
       const p = (await sanitizer()).cleanPayload(raw, model);
       if (p && p.pick.solutions.length) {
         const el = $('.reopen');
-        el.innerHTML = `${h(fill(S.reopen, { no: p.meta.brief_no, date: F.dateNum(p.meta.generated_at.slice(0, 10), lang) }))}${SEP}<button class="tlink" type="button">${h(S.open)}</button>`;
+        el.innerHTML = `<span>${h(fill(S.reopen, { no: p.meta.brief_no, date: F.dateNum(p.meta.generated_at.slice(0, 10), lang) }))}</span><button class="tlink" type="button">${h(S.open)}</button>`;
+        el.classList.add('gap');
         el.hidden = false;
         el.querySelector('button').onclick = () => openPayload(raw, { last: true });
       }

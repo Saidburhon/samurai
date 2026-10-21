@@ -7,6 +7,7 @@
 // Noise is baked (bake.js) into blade-UV textures: tHada = (hada, mist, suna, ashi), tHamon = hamonV(u).
 varying vec2 vUv; varying float vRegion; varying float vAxial;
 varying vec3 vWPos; varying vec3 vWNrm; varying vec3 vLPos;
+varying vec2 vOut;                // the ring's mune and ha widths on screen, buffer px, < 0 facing away (sword.vert)
 uniform sampler2D tHada, tHamon;
 uniform float uNie, uTime;
 uniform float uPolishFront;       // polish(u) = 1 behind the front, 0.1 ahead of it (Togi); >= 1.05 fully polished
@@ -16,6 +17,8 @@ uniform float uEdgeLine;          // the bright habuchi along the cutting edge
 uniform float uNieAvg;            // the sparkle that sub-pixel nie average to
 uniform float uMacro;             // 1: the macro treatment up close (sunagashi, grain, a sharper mirror); 0: the prototype's mist
 uniform float uLampSpec;          // the lamp's specular lobe on the steel (a magnified view shows it as a blob)
+uniform float uGlintGain;         // the steel's share of the studio glint (B14: the fittings catch it, the blade a line)
+uniform float uBackEdge;          // B14: the backlight caught along the blade's outline, a thin warm line (0 elsewhere)
 // reflected sign (utsuri)
 uniform sampler2D uWords;
 uniform float uWordAlpha, uWordRowA, uWordRowB, uWordMix, uWordStretch, uWordSlide;
@@ -43,11 +46,14 @@ vec3 signAt(vec3 Rf, float row, float slide, float bias){
   st.x = (st.x - 0.5 - slide) / max(uWordStretch, 0.2) + 0.5;
   if (st.x < 0. || st.x > 1. || st.y < 0. || st.y > 1.) return vec3(0.);
   vec2 at = vec2(st.x, (row + 1. - st.y) / 6.); // the atlas is not flipped: row r spans v r/6 .. (r+1)/6, top down
-  return texture2D(uWords, at, bias).rgb + texture2D(uWords, at, bias + 4.0).rgb * .07;
+  // (no blurred second tap: at the capture's sample density the prototype's 7 % halo read as neon around every
+  // glyph, G1; the glyph edges stay as crisp as the atlas's mips allow)
+  return texture2D(uWords, at, bias).rgb;
 }
 #endif
 
 void main(){
+  gGlint = uGlintGain;
   float u = vUv.x, v = vUv.y;
   if (vAxial > uReveal + fwidth(vAxial)) discard;   // the reveal (uReveal = 2 when the steel is whole)
   vec3 N = normalize(vWNrm);
@@ -57,6 +63,19 @@ void main(){
   float hv = texture2D(tHamon, vec2(uTex(uu), .5)).r;
   float d = v - hv;
   float r = vRegion;
+  // The outline at the spine and at the edge (contract 2). The mune (v 0–.035) and the ha (.93–1) are the outer
+  // facets: while one of them is a device pixel or more wide on screen and faces the camera, the outline is its outer
+  // row; narrower, it is dropped and the outline is the crease inside it, its own fragments shaded as the inner facet
+  // and ramped from the crease outwards; turned away (culled), the outline is that crease too. The widths come from
+  // the ring (sword.vert), the same for the fragments on both sides of a crease (G1: B1's spine near the kissaki).
+  float fwv = max(fwidth(v), 1e-6);
+  vec3 Gv0 = dFdx(vWPos) * dFdx(v) + dFdy(vWPos) * dFdy(v);     // towards the edge, in the surface
+  Gv0 = normalize(Gv0 - N * dot(Gv0, N) + vec3(1e-7));
+  float mw = vOut.x / uAA, hw = vOut.y / uAA;                 // device px; < 0 facing away
+  float muneOut = 1. - smoothstep(.8, 1.6, mw), haOut = 1. - smoothstep(.8, 1.6, hw);
+  float mFace = step(0., mw), hFace = step(0., hw);
+  if (r < .5 && muneOut * mFace > .5) { r = 1.; N = normalize(N * cos(1.03) + Gv0 * sin(1.03)); }   // the mune's 59° crease
+  if (r > 2.5 && haOut * hFace > .5) { r = 2.; N = normalize(N * cos(.14) - Gv0 * sin(.14)); }      // the ha's 8°
   vec4 hd = texture2D(tHada, vec2(uTex(u), v));
   float hada = hd.r - .5, mist = hd.g, suna = hd.b, ashi = hd.a;
 
@@ -76,10 +95,10 @@ void main(){
   float cr = r < .5 ? .035 : r < 1.5 ? (v < .16 ? .035 : .28) : r < 2.5 ? (v < .6 ? .28 : .93) : .93;
   float up = step(v, cr);                                       // 1: the neighbour lies towards the edge (+v)
   float ro = r + up * 2. - 1.;                                  // the neighbour's region
-  float wo = clamp(.5 - abs(v - cr) / max(fwidth(v), 1e-6), 0., .5);   // its share of this pixel
+  float wo = clamp(.5 - abs(v - cr) / fwv, 0., .5);   // its share of this pixel
+  wo *= cr < .1 ? 1. - muneOut : cr > .9 ? 1. - haOut : 1.;     // no blend into a dropped outer facet: it is the outline
   if (wo > 0.) {
-    vec3 Gv = dFdx(vWPos) * dFdx(v) + dFdy(vWPos) * dFdy(v);    // towards the edge, in the surface
-    Gv = normalize(Gv - N * dot(Gv, N) + vec3(1e-7));
+    vec3 Gv = Gv0;
     // the crease angles of the section (geom-core PROFILE); the mune's 60° crease is not bent: its in-between normal
     // catches the studio's strip as a sub-pixel line that the buffer samples into dots (B6), so it only blends
     float ang = cr < .1 ? 0. : (cr < .5 ? .20 : .14);
@@ -163,6 +182,9 @@ void main(){
   col += (ridge + yoko * .8) * uRidge * mix(.45, 1., pol);
   // the edge line (habuchi)
   col += thinLine(v, 0.992, 0.0035) * step(2.5, r) * uEdgeLine;
+  // B14 (the blade seen from its point): the backlight behind the guard caught along the blade's two outlines, the
+  // edge and the spine, as thin warm lines, so the spike reads as steel pointing at the viewer
+  if (uBackEdge > 0.) col += uBackEdge * vec3(1., .70, .40) * (thinLine(v, .994, .003) + thinLine(v, .006, .003));
   // the wet polish line at the front
 #ifdef TOGI
   if (uPolishFront < 1.04) col += thinLine(u, uPolishFront, 0.004) * vec3(.6) * step(.5, r);
@@ -198,12 +220,13 @@ void main(){
   float fr = vAxial - uReveal;
   if (uFront > 0.) col += uFront * vec3(.86,.93,1.) * (thinLine(fr, 0., 0.0011)*5.0 + exp(-pow(fr/0.012,2.))*.25);
   col *= uExposure;
-  // coverage: the spine and edge rows ramp to 0 over one pixel, so the outline is anti-aliased without MSAA (contract 2)
-  // A mune narrower than about a pixel is left out of the outline: its thin bright facet would only be sampled here
-  // and there along a diagonal and read as a dashed line; the ramp then starts at the shinogi-ji
-  float fz = fwidth(v) * 1.2;
-  float vm = 0.035 * smoothstep(0.02, 0.04, fz);
-  float alpha = smoothstep(vm, vm + fz, v) * smoothstep(1., 1. - fz, v);
+  // coverage (contract 2): the outline ramps to 0 over a pixel, so the diagonal is anti-aliased without MSAA. At an
+  // outer row (a true silhouette: no fragment exists outside it) the ramp is inset over 1.2 px; at a crease that is
+  // the outline because the facet outside it was dropped, that facet's own fragments carry the outer half, so the
+  // ramp is centred on the crease over 1.5 buffer px (one device px at the software supersample)
+  float aS = mix(smoothstep(0., 1.2 * fwv, v), mix(smoothstep(.035, .035 + 1.2 * fwv, v), clamp((v - .035) / (1.5 * fwv) + .5, 0., 1.), mFace), muneOut);
+  float aE = mix(smoothstep(1., 1. - 1.2 * fwv, v), mix(smoothstep(.93, .93 - 1.2 * fwv, v), clamp((.93 - v) / (1.5 * fwv) + .5, 0., 1.), hFace), haOut);
+  float alpha = aS * aE;
   if (uReveal < 1.5) alpha *= smoothstep(0., fwidth(vAxial) * 1.2, uReveal - vAxial + fwidth(vAxial) * .6);
   gl_FragColor = vec4(col, 1.);
   #include <tonemapping_fragment>

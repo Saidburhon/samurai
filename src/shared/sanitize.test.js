@@ -53,3 +53,19 @@ test('a genuine payload round-trips to the same signed part', () => {
   assert.deepEqual(c.details, p.details);
   assert.deepEqual(c.state.sel, p.state.sel);
 });
+
+test('even unsanitized, a sheet escapes every model field it prints (the difficulty included)', async () => {
+  const { sheetHtml } = await import('../samurai/render.js');
+  const { S } = await import('../../scripts/pages/samurai-i18n.mjs');
+  const { enrichSolution } = await import('./price.js');
+  const rate = { uzs_per_usd: 12012.3, date: '2026-10-21', source: 'cbu' };
+  const x = samples[0];
+  const sol = enrichSolution(m, x.pick.solutions[0], { lang: 'uz', rate, detail: x.details[x.pick.solutions[0].catalogue_id] });
+  const evil = '<img src=x onerror="window.__xss=1">';
+  const s = { ...sol, difficulty: evil, difficulty_reason: evil, title: evil, why: evil };
+  const C = { S: S.uz, lang: 'uz', cfg: { cataloguePages: false, validity: 30, phone: '+998 97 270 70 07', email: 'inbox@qilich.com' }, model: m, cur: 'uzs', rate, uzs: (u) => u, dates: () => '' };
+  const st = { sel: new Map([[s.catalogue_id, '"><img src=x>']]), open: new Set(), impact: {}, ticks: new Set(), struck: new Set(), source: 'shared', done: true, plan: null, start: '2026-10-26' };
+  const html = sheetHtml(C, s, st, { scale: 20, width: 700, inkIn: false });
+  assert.ok(!/<img/.test(html), 'no raw markup in the sheet');
+  assert.ok(html.includes('&lt;img'), 'the text is shown escaped');
+});

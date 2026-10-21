@@ -12,11 +12,13 @@
 //   status { status } · heard {…} · question {…}* · solution {…}* (priced by src/shared/price.js, detail null)
 //   not_recommended [...] · plan { selection, tracks, totals, roadmap_note, first_step, assumptions, pick, source }
 //   detail { catalogue_id, n, detail }* (any order) · reset {} (a server-side fallback took over: discard after meta)
-//   done { sig, partial, ms } · error { code: bad_input|too_long|rate_limited|not_configured|refused|upstream|timeout,
+//   done { sig, partial, ms } (sig is "" unless status is ok with at least one solution from the model: only a genuine
+//   estimate is signed) · error { code: bad_input|too_long|rate_limited|not_configured|refused|upstream|timeout,
 //   retry_after? } (the stream closes after it). The client runs the catalogue matcher on an error before any solution.
-// POST /api/samurai/verify { payload: { brief_no, lang, generated_at, catalogue_version, rate, pick, details }, sig }
+// POST /api/samurai/verify (≤ 64 KB) { payload: { brief_no, lang, generated_at, catalogue_version, rate, pick, details }, sig }
 //   → { ok } or { ok: false, reason: "no_key" | "bad_sig" | "mismatch" }
-// POST /api/lead (§6) → { ok: true, via: "telegram" } | 501 { ok: false, fallback: "mailto", subject, text } | 400 | 429
+// POST /api/lead (§6, ≤ 24 KB) → { ok: true, via: "telegram" } | 501 { ok: false, fallback: "mailto", subject, text } | 400 | 429.
+//   An Uzbek number must be +998 and nine digits; the estimate link reaches the owner whole (worker/lead.js).
 // GET /api/rate → { uzs_per_usd, date, source } (public, 1 hour)
 // Secrets: ANTHROPIC_API_KEY (without it the page answers from the catalogue matcher), SAMURAI_SIGNING_KEY (without it
 // no hanko), TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (without them leads become e-mails). Vars: SAMURAI_EFFORT (low),

@@ -18,11 +18,15 @@ export async function streamSamurai(body, onEvent, signal) {
     return;
   }
   const reader = res.body.getReader(), dec = new TextDecoder();
-  let buf = '';
+  let buf = '', last = Date.now(), closed = false;
+  // the Worker pings every 10 s: 30 s of silence is a dropped connection, and a stream that ends without "done" or
+  // "error" was cut; either way the page shows what arrived as partial (or the catalogue answer) instead of waiting
+  const dog = setInterval(() => { if (Date.now() - last > 30000) reader.cancel().catch(() => {}); }, 5000);
   try {
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
+      last = Date.now();
       buf += dec.decode(value, { stream: true });
       let k;
       while ((k = buf.indexOf('\n\n')) >= 0) {
@@ -33,10 +37,14 @@ export async function streamSamurai(body, onEvent, signal) {
         if (!ev) continue;
         let parsed = null;
         try { parsed = data ? JSON.parse(data) : null; } catch { continue; }
+        if (ev === 'done' || ev === 'error') closed = true;
         onEvent(ev, parsed);
       }
     }
   } catch (e) {
-    if (!signal?.aborted) onEvent('error', { code: 'network' });
+    if (!signal?.aborted) { closed = true; onEvent('error', { code: 'network' }); }
+  } finally {
+    clearInterval(dog);
   }
+  if (!closed && !signal?.aborted) onEvent('error', { code: 'network' });
 }

@@ -313,3 +313,18 @@ export const JA = {
   'dial.tas': 'タシケント',
   'dial.tok': '東京',
 };
+
+// The Temur poster (HITOFURI Addendum 1, the landing's beat temur.quote), added by the landing builder: the owner's
+// wording, verbatim (RU, EN); the Japanese line is a first draft for the Japanese reviewer (scripts/qa/ja-review.mjs).
+Object.assign(RU, {
+  'tm.q': '«Всякий, кто усомнится в нашем могуществе, пусть устремит взор на величие созданных нами строений».',
+  'tm.by': '— Амир Темур (Тамерлан)',
+});
+Object.assign(EN, {
+  'tm.q': '“If any man doubt our power, let him behold the monuments we have built.”',
+  'tm.by': '— Amir Temur (Tamerlane)',
+});
+Object.assign(JA, {
+  'tm.q': '「われらの力を疑う者は、われらの築いた建物を見よ。」',
+  'tm.by': '— アミール・ティムール',
+});

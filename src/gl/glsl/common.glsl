@@ -19,6 +19,8 @@ uniform vec3 uLampPos, uLampCol;
 uniform float uExposure;
 uniform float uAA;         // drawing-buffer px per device px (the supersample factor): lines are kept >= 1 device px
 
+// the backlight's glint seen in this material's reflections (1 everywhere; the steel sets its own share, uGlintGain)
+float gGlint = 1., gGlintW = 1.;
 float box1(float x, float a, float b, float s){ return smoothstep(a-s, a+s, x) * (1.-smoothstep(b-s, b+s, x)); }
 vec3 studio(vec3 Rw, float r){
   vec3 R = uStudio * Rw;
@@ -33,8 +35,8 @@ vec3 studio(vec3 Rw, float r){
   c += uKey   * box1(a, uKeyA.x,   uKeyA.y,   s + uKeySoft) * box1(b, uKeyB.x, uKeyB.y, s*1.6+.14) * hemi;
   c += uStrip * box1(a, uStripA.x, uStripA.y, s*.8)   * box1(b, -1.25, 1.25, s*1.6+.08) * hemi;
   c += uRim   * box1(a, uRimA.x,   uRimA.y,   s)      * box1(b, -0.25, 1.30, s*1.6+.20) * hemi;
-  float gs = uGlintSize + r*0.08;
-  c += uGlintCol * exp(-(1. - dot(Rw, uGlintDir)) / (gs*gs*0.5));
+  float gs = (uGlintSize + r*0.08) * gGlintW;
+  c += uGlintCol * gGlint * exp(-(1. - dot(Rw, uGlintDir)) / (gs*gs*0.5));
   return c;
 }
 vec3 studioIrr(vec3 Nw){
@@ -63,6 +65,18 @@ float thinLine(float x, float c, float w){
   float fw = max(w, 0.8 * fwidth(x) * uAA);
   return exp(-pow((x - c) / fw, 2.)) * (w / fw);
 }
+// Schlick's (1 − n·v)^5 averaged over the pixel's span of n·v (a box filter, exact): at a grazing silhouette the
+// Fresnel rim is narrower than a pixel, and sampled at pixel centres it breaks into beads; averaged it dims instead
+// (AA contract 1, for the Fresnel term; G1: the saya's lower edge at B21)
+float schlickAA(float nv){
+  float h = .5 * fwidth(nv) * uAA;
+  float a = clamp(nv - h, 0., 1.), b = clamp(nv + h, 0., 1.);
+  if (b - a < 1e-4) return pow(1. - nv, 5.);
+  return (pow(1. - a, 6.) - pow(1. - b, 6.)) / (6. * (b - a));
+}
+// the roughness of a studio lookup widened to the reflection's own spread over a device pixel: where the reflected
+// direction turns quickly (a curved silhouette), a thin strip or highlight dims and widens instead of shimmering
+float aaRough(vec3 R, float rough){ float d = length(fwidth(R)) * uAA; return max(rough, (.6 * d - .025) / 1.1); }
 // a periodic term whose cycle shrinks under the pixel fades to its mean (no moiré): 1 when crisp, 0 when sub-pixel
 float lod(float phaseRate){ return 1. - smoothstep(0.35, 0.7, phaseRate); }
 // output: ±0.5/255 display-space dither (dark gradients never band), static per pixel so stills are stable

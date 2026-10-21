@@ -44,11 +44,12 @@ export function makeMaterials(U, T) {
     uNie: { value: 520 }, uNieAvg: { value: 0.05 }, uMacro: { value: 0 }, uLampSpec: { value: 1 }, uPolishFront: { value: 2 }, uShinogiSheen: { value: 0 }, uShinogiRough: { value: 0.045 }, uEdgeLine: { value: 0 },
     uWords: { value: null }, uWordAlpha: { value: 0 }, uWordRowA: { value: 0 }, uWordRowB: { value: 0 }, uWordMix: { value: 0 }, uWordStretch: { value: 1 }, uWordSlide: { value: 0 },
     uSignO: { value: v3() }, uSignU: { value: v3(1, 0, 0) }, uSignV: { value: v3(0, 1, 0) }, uSignN: { value: v3(0, 0, 1) },
-    uFlatten: { value: 0.8 }, uBladeN: { value: v3(0, 1, 0) }, uSori: { value: 1 },
+    uFlatten: { value: 0.8 }, uBladeN: { value: v3(0, 1, 0) }, uSori: { value: 1 }, uRes: { value: new Vector2(1, 1) },
+    uGlintGain: { value: 1 }, uBackEdge: { value: 0 },
   };
   // the blade is a closed shell with outward faces: front faces only, so its far flat is never shaded under the near one
   const steel = (defines) => new ShaderMaterial({ ...base, side: FrontSide, vertexShader: swordV, fragmentShader: frag(STEEL_F), uniforms: steelU, defines: { BEND: '', ...defines } });
-  const metalU = (o) => ({ ...U, tIshime: { value: T.ishime }, tSilk: { value: T.silk }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) }, uBackGlow: { value: v3() }, ...o });
+  const metalU = (o) => ({ ...U, tIshime: { value: T.ishime }, tSilk: { value: T.silk }, uAxisW: { value: v3(1, 0, 0) }, uFaceU: { value: v3(0, 0, 1) }, uFaceV: { value: v3(0, 1, 0) }, uBackGlow: { value: v3() }, uGlintWide: { value: 1 }, ...o });
   // the fittings are closed, outward-wound shells: front faces only, so they all share one program (the tang, wound
   // both ways, keeps its own; it is never drawn on the boot path)
   const metal = (o, defines = {}, side = FrontSide) => new ShaderMaterial({ ...base, side, vertexShader: swordV, fragmentShader: frag(METAL_F), uniforms: metalU(o), defines });

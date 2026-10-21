@@ -233,7 +233,7 @@ const world = async (p) => p.evaluate(() => {
       const bytes = Uint8Array.from(atob(h.slice(1).replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
       const raw = h[0] === 'z' ? new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()) : bytes;
       const o = JSON.parse(new TextDecoder().decode(raw));
-      o.meta.valid_until = '2020-01-01';
+      o.meta.generated_at = '2020-01-01T10:00:00+05:00'; // validity counts from the signed date (valid_until is not trusted)
       const enc = new TextEncoder().encode(JSON.stringify(o));
       let s = ''; for (const c of enc) s += String.fromCharCode(c);
       return l.split('#r=')[0] + '#r=j' + btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -245,11 +245,26 @@ const world = async (p) => p.evaluate(() => {
     await p4.click('[data-act=reprice]');
     const after4 = await p4.evaluate(() => !document.querySelector('[data-act=reprice]'));
     check('after valid_until: "Muddati oʻtgan" and a re-price with no API call', after4 && n4 === 0 && !p4.api.some((u) => u === '/api/samurai'), p4.api);
-    // T21: A4 print
-    const pdf = await p2.pdf({ format: 'A4', printBackground: true, margin: { top: '14mm', bottom: '14mm', left: '14mm', right: '14mm' } });
+    // T21: A4 print: each solution on one page, every row printed open, no near-empty first page
+    const titles = await p2.$$eval('.sheet:not([data-state=off]) h3', (els) => els.map((e) => e.textContent.trim()));
+    const lastRow = await p2.$eval('.sheet .rows details:last-of-type summary .k', (e) => e.textContent.trim());
+    await p2.emulateMedia({ media: 'print' });
+    const openRows = await p2.evaluate(() => { window.dispatchEvent(new Event('beforeprint')); const d = [...document.querySelectorAll('.sheet .rows details')]; return { all: d.length, open: d.filter((x) => x.open || getComputedStyle(x.querySelector('.rbody') || x).display !== 'none').length }; });
+    const pdf = await p2.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true });
+    await p2.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+    await p2.emulateMedia({ media: 'screen' });
     fs.writeFileSync(path.join(out, 'print.pdf'), pdf);
-    const printed = await p2.evaluate(() => { const st = document.createElement('style'); document.head.append(st); return true; });
-    check('the A4 print renders (print.pdf)', pdf.length > 10000 && printed, `${(pdf.length / 1024).toFixed(0)} KB`);
+    const { execFileSync } = require('child_process');
+    const npages = Number(/Pages:\s+(\d+)/.exec(execFileSync('pdfinfo', [path.join(out, 'print.pdf')]).toString())[1]);
+    const pageText = Array.from({ length: npages }, (_, i) => execFileSync('pdftotext', ['-layout', '-f', String(i + 1), '-l', String(i + 1), path.join(out, 'print.pdf'), '-']).toString().replace(/\s+/g, ' '));
+    const norm = (x) => x.replace(/\s+/g, ' ').toUpperCase();
+    // a solution's page: the page where its title is followed by its last row (the plan table on the cover names it too)
+    const where = titles.map((t) => { const key = norm(t).slice(0, 18); const pg = pageText.findIndex((x) => (norm(x).split(key)[1] || '').includes(norm(lastRow))); return { t: t.slice(0, 30), page: pg + 1, rowsOnSamePage: pg >= 0 }; });
+    const cover = norm(pageText[0] || '');
+    check('A4 print: every row printed open', openRows.open === openRows.all, openRows);
+    check('A4 print: each solution on one page (its title and its last row together)', where.every((x) => x.page > 0 && x.rowsOnSamePage) && new Set(where.map((x) => x.page)).size === where.length, where);
+    check('A4 print: page 1 is a cover, not near-empty: what we understood, the plan totals, the stamp and the contacts', cover.length > 600 && /QL-\d{4}-[0-9A-F]{4}/.test(cover) && /\+998/.test(cover) && npages <= titles.length + 2, { pages: npages, coverChars: cover.length, solutions: where });
+    check('A4 print: brief number, validity and contacts present', /QL-/.test(pageText.join(' ')) && /\+998/.test(pageText.join(' ')), `${npages} pages, ${(pdf.length / 1024).toFixed(0)} KB`);
     // T19 client side: an invalid phone is refused before sending; without bot secrets the lead becomes an e-mail
     await p2.click('[data-act=lead]');
     await p2.fill('#ld-name', 'QA');
@@ -298,6 +313,10 @@ const world = async (p) => p.evaluate(() => {
       check(`state ${name} ${w}: renders, no spinner, no overflow, no errors`, !st.spinner && wd.overflow <= 0 && !p.errors.length, { ...st, overflow: wd.overflow, errors: p.errors });
       if (name === 'rate_limited') check(`state rate_limited ${w}: the message stays and the button counts down`, st.btn && st.status.length > 10 && /\d/.test(await p.textContent('.go-btn')), { status: st.status, btn: st.btn });
       if (name === 'need_more') check(`state need_more ${w}: the questions and "calculate with the answers"`, (await p.$$('.questions [data-act=answer]')).length >= 2 && !!(await p.$('[data-act=run-answers]')), { sheets: st.sheets });
+      if (name === 'need_more' || name === 'not_business') {
+        const est = await p.evaluate(() => ({ stamp: !!document.querySelector('#result .stamp'), hanko: !!document.querySelector('#result .hanko'), actions: !!document.querySelector('#result .actions'), cur: !!document.querySelector('#result .cur'), no: /QL-\d/.test(document.querySelector('#result').innerText) }));
+        check(`state ${name} ${w}: no stamp, hanko, actions or currency switch (nothing that reads as an estimate)`, !est.stamp && !est.hanko && !est.actions && !est.cur && (name !== 'not_business' || !est.no), est);
+      }
       await p.context().close();
     }
   }

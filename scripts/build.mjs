@@ -22,7 +22,7 @@ import { buildPages } from './build-pages.mjs';
 
 const OUT = 'public/assets/build';
 const watch = process.argv.includes('--watch');
-const CINEMA = false; // the WebGL film ships from G1/G3; until then every visitor gets flow mode
+const CINEMA = true; // G3: the WebGL film ships (cinema mode after a real WebGL2 probe, boot/head.js); flow mode otherwise
 const PAGES = { uz: 'public/index.html', ru: 'public/ru/index.html', en: 'public/en/index.html', ja: 'public/ja/index.html' };
 const t0 = Date.now();
 const node = (script, args = []) => execFileSync('node', [script, ...args], { stdio: 'inherit' });

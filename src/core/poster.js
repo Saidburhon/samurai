@@ -84,6 +84,9 @@ export class Poster {
     st.setStudio(S.studioRoll || 0, S.studioYaw || 0);
     st.setPose({ ...S.pose, lift: S.cam.mode === 'td' ? S.cam.lift : 0 });
     st.setVis({ koshirae: S.koshirae, nakago: S.nakago, saya: S.saya, floor: S.floor });
+    // sheathed, the habaki is inside the koiguchi: not drawn (its wedge, thickest at the back, would cut through the
+    // oval mouth's narrow ends as a sliver over the horn, G1)
+    if (S.saya && (S.sheath ?? 1) >= 0.999) st.parts.habaki.visible = false;
     st.solve(S.cam);
     // materials
     const sU = st.mat.steelU, U = st.U;
@@ -97,6 +100,8 @@ export class Poster {
     P.tsuka.material = reveal ? R.silk : M.silk; P.mekugi.material = reveal ? R.gold : M.gold;
     U.uReveal.value = reveal ? S.reveal : 2; U.uFront.value = S.front;
     sU.uPolishFront.value = S.polishFront;
+    sU.uGlintGain.value = S.steelGlint ?? 1; sU.uBackEdge.value = S.backEdge ?? 0;
+    for (const m of [M.copper, M.gold]) m.uniforms.uGlintWide.value = S.fittingsGlintW ?? 1;
     // the lamp
     if (S.glint) {
       let s = S.glint.s;

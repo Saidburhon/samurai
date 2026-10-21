@@ -84,9 +84,13 @@ test('tidy drops the junk tails the model left in short fields, and leaves clean
     ['Mashina va buyurtmani bogʻlash kerak.Ustalar odatlanishi', 'uz', 'Mashina va buyurtmani bogʻlash kerak.'],
     ['Qogʻozdan oʻtish kerak..', 'uz', 'Qogʻozdan oʻtish kerak.'],
     ['Buyurtmani kuryerga berish.Bot', 'uz', 'Buyurtmani kuryerga berish.'],
+    ['Menyu, toʻlov va yetkazish manzilini bir oqimga ulash kerak. ok.', 'uz', 'Menyu, toʻlov va yetkazish manzilini bir oqimga ulash kerak.'],
+    ['Uch filial, turli rollar va daftardagi maʼlumotni koʻchirish kerak.)', 'uz', 'Uch filial, turli rollar va daftardagi maʼlumotni koʻchirish kerak.'],
+    ['Стандартный бот, нужно аккуратно оцифровать меню и зоны доставки.)', 'ru', 'Стандартный бот, нужно аккуратно оцифровать меню и зоны доставки.'],
+    ['Uch filial, shifokorlar jadvali va Exceldagi qarzlarni koʻchirish kerak.Infos.', 'uz', 'Uch filial, shifokorlar jadvali va Exceldagi qarzlarni koʻchirish kerak.'],
   ];
   for (const [i, lang, want] of bad) assert.equal(tidy(i, lang), want);
-  for (const [i, lang] of [['Standart bot, menyu va yetkazish manzili, bitta filial', 'uz'], ['Built with Next.js', 'en'], ['Нужно перенести данные, т.е. клиентов', 'ru'], ['He said "hello."', 'en'], ['日報項目の標準化が主な課題です。', 'ja'], ['Hmm...', 'en'], ['Uch filial. Har birida alohida kassa', 'uz'], ['Kassa «Mijoz».', 'uz']]) assert.equal(tidy(i, lang), i);
+  for (const [i, lang] of [['Standart bot, menyu va yetkazish manzili, bitta filial', 'uz'], ['Built with Next.js', 'en'], ['Нужно перенести данные, т.е. клиентов', 'ru'], ['He said "hello."', 'en'], ['日報項目の標準化が主な課題です。', 'ja'], ['Hmm...', 'en'], ['Uch filial. Har birida alohida kassa', 'uz'], ['Kassa «Mijoz».', 'uz'], ['Bot (Telegram).', 'uz'], ['Kassa bor. Ha.', 'uz'], ['Works well with Next.js.', 'en'], ['Uses the existing stack, e.g.Telegram.', 'en']]) assert.equal(tidy(i, lang), i);
 });
 
 test('a long summary is cut at a clause boundary and ends with "…", never mid-clause (rv2a must-fix 2)', async () => {
@@ -98,4 +102,20 @@ test('a long summary is cut at a clause boundary and ends with "…", never mid-
   assert.ok(!/, а…$/.test(ru));
   assert.equal(cut('Short one.', 150), 'Short one.');
   assert.ok([...cut('x '.repeat(200), 150)].length <= 150);
+});
+
+test('the committed samples are clean: no junk endings, no copy-rule hits, every summary a whole sentence', async () => {
+  const { sampleProblems } = await import('../scripts/qa/sample-lint.mjs');
+  const all = J('content/samurai-samples.json').samples;
+  const bad = Object.entries(all).flatMap(([lang, list]) => list.flatMap((x) => sampleProblems(x, lang).map((b) => `${lang}/${x.id}: ${b}`)));
+  assert.deepEqual(bad, []);
+});
+
+test('the Japanese page prices a Japanese office hour: an assumed Tashkent wage is raised, the visitor’s own is kept', async () => {
+  const { jaWage, JA_HOUR } = await import('./validate.js');
+  const ja = context(m, { lang: 'ja', text: '', intake: {} });
+  const d = validateDetail(ja, { impact: { model: 'hours_saved', summary: '時間が減ります。', inputs: [{ key: 'hours_per_week', label: '時間', value: 10, basis: 'assumed' }, { key: 'hourly_cost_usd', label: '時給', value: 3, basis: 'assumed' }] } });
+  assert.equal(d.impact.inputs.find((i) => i.key === 'hourly_cost_usd').value, JA_HOUR);
+  assert.equal(jaWage('ja', [{ key: 'hourly_cost_usd', value: 4, basis: 'from_text' }])[0].value, 4);
+  assert.equal(jaWage('uz', [{ key: 'hourly_cost_usd', value: 3, basis: 'assumed' }])[0].value, 3);
 });

@@ -43,7 +43,7 @@ function stripQuotes(t) {
   for (;;) {
     const c = t.slice(-1);
     const n = (ch) => t.split(ch).length - 1;
-    const stray = /[\s'`ʻʼ‘’,;:]/u.test(c) || (c === '"' && n('"') % 2 === 1) || (c === '»' && n('«') < n('»')) || (c === '”' && n('“') + n('„') < n('”'));
+    const stray = /[\s'`ʻʼ‘’,;:]/u.test(c) || (c === '"' && n('"') % 2 === 1) || (c === '»' && n('«') < n('»')) || (c === '”' && n('“') + n('„') < n('”')) || (c === ')' && n('(') < n(')')) || (c === ']' && n('[') < n(']'));
     if (!stray || t.length < 2) return t;
     t = t.slice(0, -1);
   }
@@ -66,10 +66,13 @@ export function tidy(s, lang) {
       else if (/^\p{L}/u.test(tail) && !TECH.test(tail)) t = head; // "system.uh", "kerak.Ustalar odatlanishi"
       else if (/^\s/.test(tail) && words.length <= 2 && tail.trim().length <= 12 && [...head].length >= 24) t = head; // "kerak. ҳ"
     }
-    // a final "sentence" with no letter or digit in it: "setup. ','."
+    // a final "sentence" with no letter or digit in it ("setup. ','."), or one stray short word ("kerak. ok.")
     if (STOPS.includes(t.slice(-1))) {
       const q = lastStop(t.slice(0, -1)), seg = t.slice(q + 1, -1);
       if (q >= 0 && seg.length && !/[\p{L}\p{N}]/u.test(seg)) t = t.slice(0, q + 1);
+      else if (q >= 0 && lang !== 'ja' && /^\s\p{L}{1,3}$/u.test(seg) && !ABBR.test(t.slice(0, q + 1)) && [...t.slice(0, q + 1)].length >= 24) t = t.slice(0, q + 1);
+      // a last "sentence" glued to the stop before it: "kerak.Infos."
+      else if (q >= 0 && lang !== 'ja' && /^\p{L}/u.test(seg) && !TECH.test(seg) && !ABBR.test(t.slice(0, q + 1)) && !/\d\.$/.test(t.slice(0, q + 1)) && [...t.slice(0, q + 1)].length >= 24) t = t.slice(0, q + 1);
     }
     if (OTHER[lang]) t = t.replace(new RegExp(`(^|\\s)${OTHER[lang].source}{1,2}(?=[\\s.,;:!?]|$)`, 'gu'), '$1').replace(/\s+([.,;:!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
     if (t === before) break;
@@ -183,6 +186,17 @@ export function finalizePick(ctx, raw, { heard, questions, solutions }) {
   };
 }
 
+/**
+ * The Japanese page estimates for a company in Japan: an assumed office hour there is not a Tashkent hour (2–4 USD).
+ * An assumed hourly cost under JA_HOUR_MIN becomes JA_HOUR (the visitor's own figure, from_text, is kept).
+ */
+export const JA_HOUR_MIN = 15, JA_HOUR = 25;
+export function jaWage(lang, inputs) {
+  if (lang !== 'ja') return inputs;
+  for (const i of inputs) if (i.key === 'hourly_cost_usd' && i.basis !== 'from_text' && i.value < JA_HOUR_MIN) i.value = JA_HOUR;
+  return inputs;
+}
+
 /** One stage-2 detail. Phases are always the four, in order; a missing deliverable is '' (the page uses the default). */
 export function validateDetail(ctx, d) {
   const list = (v, n, max) => (Array.isArray(v) ? v : []).map((x) => textOf(ctx, x, n)).filter(Boolean).slice(0, max);
@@ -197,6 +211,7 @@ export function validateDetail(ctx, d) {
     if (!IMPACT_KEYS.includes(i?.key) || inputs.some((x) => x.key === i.key) || typeof i.value !== 'number' || !Number.isFinite(i.value)) continue;
     inputs.push({ key: i.key, label: textOf(ctx, i.label, 80, { money: false }) || i.key, value: i.value, basis: i.basis === 'from_text' ? 'from_text' : 'assumed' });
   }
+  jaWage(ctx.lang, inputs);
   if (model !== 'none' && NEEDS_KEYS[model].some((k) => !inputs.some((x) => x.key === k))) model = 'none';
   return {
     deliverables_mvp: list(d?.deliverables_mvp, 70, 6), deliverables_full: list(d?.deliverables_full, 70, 5), phases,
