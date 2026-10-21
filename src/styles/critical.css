@@ -51,7 +51,10 @@ img { max-width: 100%; height: auto; }
 #ink { position: absolute; inset: 0; }
 #stip { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #osh { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.osh-labels { position: absolute; inset: 0; }
+/* the labels' wrapper has no box of its own (PERF-1): each .ol is placed on #osh-paper's box, exactly as before. As
+   an inset-0 box it was resized and moved with the paper when the film's matrix took over (html.osh-set), a layout
+   shift of the whole drawing's area (CLS 0.38–0.52) */
+.osh-labels { display: contents; }
 .ol {
   position: absolute; left: var(--x); top: var(--y); white-space: nowrap; transform-origin: 0 0;
   transform: rotate(var(--r)) translate(0, -78%);
@@ -159,13 +162,14 @@ html.intro #osh-hero .o-kosh path { --t: .14s; --d: .5s; }
 html.intro #osh-hero .o-annot path, html.intro #osh-detail path { --t: .40s; --d: .36s; }
 html.intro #osh-hero .fill, html.intro #osh-hero path:not([pathLength]), html.intro .ol { animation: tick calc(.3s * var(--k)) linear calc(.42s * var(--k)) both; }
 html.intro #osh-detail .fill { animation-delay: calc(.48s * var(--k)); }
-html.intro .h1 .ln > span { animation: rise calc(.6s * var(--k)) var(--hone) calc(.1s * var(--k)) both; }
+/* the h1 and the subline are painted whole in the first frame (F1: they are the page's LCP; a line under its mask
+   or at opacity 0 is not), and hone in place: only their sharpness moves, never their box or their ink's extent */
+html.intro .h1 .ln > span, html.intro .b-hero .sub > p { animation: hone calc(.6s * var(--k)) var(--hone) calc(.1s * var(--k)) both; }
 html.intro .h1 .ln + .ln > span { animation-delay: calc(.18s * var(--k)); }
 html.intro .mei { animation: tick calc(.4s * var(--k)) linear calc(.4s * var(--k)) both; }
-/* the subline and the CTA rise each through its own mask (the mask is the block's box, grown .3em above and .5em
-   below for the glyphs): until 1.3 s neither is on the page, so the three-line subline and the CTA never overprint */
-html.intro .b-hero .sub > * { animation: rise-m .55s var(--hone) 1.3s both; }
-html.intro .b-hero .sub > * + * { animation-delay: 1.38s; }
+/* the CTA rises through its own mask (the mask is its box, grown .3em above and .5em below for the glyphs), clear
+   of the subline above it */
+html.intro .b-hero .sub > .cta { animation: rise-m .55s var(--hone) 1.38s both; }
 @keyframes rise-m {
   from { transform: translateY(calc(105% + .8em)); clip-path: inset(calc(-105% - 1.1em) -2em calc(105% + .3em) -2em); font-variation-settings: "SHRP" 0; }
   to { clip-path: inset(-.3em -2em -.5em -2em); }
@@ -174,7 +178,7 @@ html.intro .hanko { animation: stamp .12s cubic-bezier(.3, 0, .2, 1) .9s both; }
 html.intro .cue { animation: tick .4s linear 8s both; }
 @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes tick { from { opacity: 0; } }
-@keyframes rise { from { transform: translateY(105%); font-variation-settings: "SHRP" 0; } }
+@keyframes hone { from { font-variation-settings: "SHRP" 0; } }
 @keyframes stamp { from { scale: 1.15; opacity: 0; } }
 
 /* ---------------- phone / portrait hero (M0) ---------------- */
@@ -195,10 +199,10 @@ html.intro .cue { animation: tick .4s linear 8s both; }
   .h1 { top: 92px; bottom: auto; left: var(--m); max-width: min(330px, calc(100vw - 2 * var(--m))); font-size: var(--h1); line-height: 1.0; }
   .h1 .ln { display: inline; overflow: visible; }
   .h1 .ln > span { display: inline; }
-  /* the lines run inline here: one fade for the whole h1, not one per inline span (a composited inline span that
-     breaks across lines can keep a stale tile at its line end under software raster) */
+  /* the lines run inline here: one hone for the whole h1, not one per inline span (an inline span that breaks
+     across lines can keep a stale tile at its line end under software raster); painted from the first frame (F1) */
   html.intro .h1 .ln > span { animation: none; }
-  html.intro .h1 { animation: tick calc(.6s * var(--k)) linear calc(.1s * var(--k)) both; }
+  html.intro .h1 { animation: hone calc(.6s * var(--k)) linear calc(.1s * var(--k)) both; }
   .b-hero .sub { left: var(--m); top: auto; bottom: 40px; width: min(228px, calc(62.6vw - var(--m) - 30px)); min-width: 0; }
   .sub p { font-size: 15px; }
   .cta { margin-top: 18px; }

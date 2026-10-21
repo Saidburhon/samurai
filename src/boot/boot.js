@@ -93,7 +93,7 @@ if (cv && stageEl) {
     requestAnimationFrame(() => {
       const c = performance.now(), k = Math.max(0.375, Math.min(kk, (680 - c) / 800));
       if (k < kk - 0.005) document.documentElement.style.setProperty('--k', k.toFixed(3));
-      for (const a of document.getAnimations()) if (/^(draw|tick|rise)$/.test(a.animationName) && a.effect && a.effect.target && a.effect.target.closest('#osh-paper, .h1, .mei')) a.startTime = c;
+      for (const a of document.getAnimations()) if (/^(draw|tick|hone)$/.test(a.animationName) && a.effect && a.effect.target && a.effect.target.closest('#osh-paper, .h1, .b-hero .sub, .mei')) a.startTime = c;
       Q.boot.animStart = Math.round(c); Q.boot.k = +k.toFixed(3);
     });
     // 12 batches, tang to tip, from 0.05 s to 0.62 s after navigation start (compressed with the CSS when late)
