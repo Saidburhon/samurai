@@ -179,6 +179,9 @@ html.film #paper .sheet.on { will-change: opacity; }
 /* software renderer: the dial's engraving keeps one sun (11:30) through Toki; every change of --sun re-rasterised
    the whole dial (its numerals and rosettes three times over), a second of software raster each (G3) */
 html.film.sw #dialw .dial, html.film.sw #cut .fz-dial .dial { --sun: 352deg; }
+/* and it draws the engraving once, without its relief copies (a light and a shadow copy of every rosette and numeral,
+   offset by less than half a device pixel at the capture's scale): a third of the paths to rasterise */
+html.film.sw #dialw .dial .lo, html.film.sw #dialw .dial .hi, html.film.sw #cut .fz-dial .lo, html.film.sw #cut .fz-dial .hi { display: none; }
 html.film .s-toki .dial-plate { display: none; }
 /* the plaster's raking light follows the sun (Toki, Temur) */
 html.film .sheet[data-g=ganch] { background: linear-gradient(var(--sun-a, 135deg), rgba(255, 250, 238, .22), rgba(255, 250, 238, 0) 45%, rgba(74, 52, 28, 0) 55%, rgba(74, 52, 28, .2)), var(--ganch) var(--ganch-tile, none) 0 0 / 512px 512px; }
