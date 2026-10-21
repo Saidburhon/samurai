@@ -5,7 +5,13 @@ For every poster-test frame that has a prototype frame, the prototype is downsca
 says which is which. A juror scores each pair with JUROR.md (written next to the images); key.json, kept apart, says
 which side is production.
 
+G1 r2: the bars that would tell production from the prototype (the top bar, where production has SAMURAI, JA and
+other clocks, and the bottom ruler, where production names the scene) are masked in both images with the ground just
+inside them, and real capture frames can be added (--extra label=frame.png:prototype.png, e.g. the boot path's 3 s
+frame next to prototype 02).
+
 Usage: python3 scripts/qa/blind-pairs.py <poster-test out dir> <prototype shots dir> <pack dir> [seed]
+       [--extra label=frame.png:proto.png ...] [--no-mask]
 """
 import json
 import os
@@ -14,8 +20,14 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
-out, proto, pack = sys.argv[1:4]
-seed = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+args = [a for a in sys.argv[1:]]
+extra = []
+while '--extra' in args:
+    i = args.index('--extra'); extra.append(args[i + 1]); del args[i:i + 2]
+mask = '--no-mask' not in args
+args = [a for a in args if a != '--no-mask']
+out, proto, pack = args[0:3]
+seed = int(args[3]) if len(args) > 3 else 1
 rnd = random.Random(seed)
 log = json.load(open(os.path.join(out, 'poster-log.json')))
 os.makedirs(os.path.join(pack, 'pairs'), exist_ok=True)
@@ -24,12 +36,35 @@ try:
 except Exception:
     font = ImageFont.load_default()
 
+def bands(im):
+    """the top bar and the bottom ruler, filled with the ground just inside each (a vertical blend of that row)"""
+    W, H = im.size
+    phone = H > W
+    top = round((60 if phone else 72) * (1.5 if phone else 0.75))
+    bot = 0 if phone else round(40 * 0.75)
+    px = im.load()
+    for (y0, y1, ref) in ((0, top, min(H - 1, top + 2)), (H - bot, H, max(0, H - bot - 3))):
+        if y1 <= y0:
+            continue
+        row = [px[x, ref] for x in range(W)]
+        for y in range(y0, y1):
+            for x in range(W):
+                px[x, y] = row[x]
+    return im
+
+
+frames = [f for f in log['frames'] if f.get('proto') and os.path.exists(os.path.join(out, f['file']))]
+for e in extra:
+    label, rest = e.split('=', 1)
+    fp, pp = rest.rsplit(':', 1)
+    frames.append({'label': label, 'file': os.path.abspath(fp), 'proto': pp})
+
 key, n = {}, 0
-for f in log['frames']:
-    if not f.get('proto') or not os.path.exists(os.path.join(out, f['file'])):
-        continue
+for f in frames:
     prod = Image.open(os.path.join(out, f['file'])).convert('RGB')
     ref = Image.open(os.path.join(proto, f['proto'])).convert('RGB').resize(prod.size, Image.LANCZOS)
+    if mask:
+        prod, ref = bands(prod), bands(ref)
     n += 1
     left_is_prod = rnd.random() < 0.5
     L, R = (prod, ref) if left_is_prod else (ref, prod)
@@ -50,7 +85,8 @@ with open(os.path.join(pack, 'pairs', 'JUROR.md'), 'w') as fh:
 
 Each image in this folder shows two renders of the same poster of a website, side by side ("Left" and "Right"),
 at the size a juror's screenshots have (1080 x 675 desktop, 585 x 1266 phone). One is a prototype, the other a
-production build; you are not told which.
+production build; you are not told which. The top bar and the bottom ruler are blanked in both (they differ by
+design, not by quality); judge the poster between them.
 
 For every pair, judge only what is visible:
 1. Materials: does the steel read as polished steel (a dark mirror with a crisp streak, a frosty temper line), the

@@ -49,6 +49,9 @@ export function markQuotes(text, quotes = [], on = false) {
   return html + h(text.slice(at));
 }
 
+// the catalogue matcher answered (no key, an error, a refusal, a pick with nothing usable, or such an estimate shared
+// on; main.js sets the source then): its line is a catalogue line, never "what we understood", which only ever heads a model's own summary
+export const byCatalogue = (st) => st.source === 'fallback' || st.meta?.source === 'fallback';
 export function briefHtml(C, st) {
   const { S } = C, heard = st.pick?.heard;
   const words = st.text ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${markQuotes(st.text, heard?.quotes, st.marked)}</p><button class="tlink more" type="button" data-act="more">${h(S.showText)}</button>`
@@ -57,7 +60,7 @@ export function briefHtml(C, st) {
     ${st.source === 'sample' ? `<p class="mono note k">${h(S.sample)}</p>` : ''}
     <p class="no mono">${h(S.res)} <b>${h(st.meta?.brief_no || '')}</b></p>
     ${words}
-    ${heard?.summary ? `<span class="lbl mono">${h(S.heard)}</span><p class="heard-sum${st.fresh.has('heard') ? ' rise' : ''}">${h(heard.summary)}</p>` : ''}
+    ${heard?.summary ? `<span class="lbl mono">${h(byCatalogue(st) ? S.srcFallback : S.heard)}</span><p class="heard-sum${st.fresh.has('heard') ? ' rise' : ''}">${h(heard.summary)}</p>` : ''}
     ${st.source !== 'shared' ? `<button class="tlink edit" type="button" data-act="edit">${h(S.edit)}</button>` : ''}
   </aside>`;
 }
@@ -100,14 +103,16 @@ function rows(C, s, st, entry) {
   row('risks', risks.length ? h(N(C, S.sumRisks, risks.length, { w: W([worst, worst]) })) : h(S.noRisks), risks.length ? risks.map((r) => `<div class="risk"><p>${h(r.text)}</p><p class="k">${h(r.mitigation)}</p>${r.adds_weeks ? `<span class="flag">+${R(W([r.adds_weeks, r.adds_weeks]))}${SEP}+${R(money(C, r.adds_usd, C.uzs(r.adds_usd))[0])}</span>` : ''}</div>`).join('') : `<p>${h(S.noRisks)}</p>`, waiting);
   // 7 needed from you: ticks strike the item and travel in the share link
   row('needs', h(`${N(C, S.sumNeeds, needs.length)}${SEP}${needs[0] || ''}`), `<div class="needs">${needs.map((x, i) => `<label><input type="checkbox" data-act="tick" data-k="${h(`${id}:${i}`)}"${st.ticks.has(`${id}:${i}`) ? ' checked' : ''}><span class="t">${h(x)}</span></label>`).join('')}</div>`, waiting);
-  // 8 impact: the formula as a sentence with editable numbers. A payback beyond three years is never shown as a
-  // number (a Tashkent office hour nets little after running costs): the row says it is hard to measure in money.
+  // 8 impact: the formula as a sentence with editable numbers. A payback beyond three years, or a running cost that
+  // takes the whole saving, is never shown as a number (a Tashkent office hour nets little after running costs): the
+  // row says so, and the numbers stay editable. A model missing an input keeps the plain "hard to measure" line.
   const imp = d?.impact;
   let impSum = h(S.impactNone), impBody = `<p>${h(S.impactNone)}${imp?.summary ? `. ${h(imp.summary)}` : ''}</p>`;
-  if (imp && imp.model !== 'none' && NEEDS_KEYS[imp.model]) {
-    const inputs = imp.inputs.map((i) => ({ ...i, value: st.impact[`${id}:${i.key}`] ?? i.value }));
+  const inputs = (imp?.inputs || []).map((i) => ({ ...i, value: st.impact[`${id}:${i.key}`] ?? i.value }));
+  const gain = NEEDS_KEYS[imp?.model] ? monthlyGain(imp.model, inputs) : null;
+  if (gain != null) {
     const price = s.usd[state];
-    const pb = paybackShown(imp.model, inputs, price, s.monthly_usd), gain = monthlyGain(imp.model, inputs) || 0;
+    const pb = paybackShown(imp.model, inputs, price, s.monthly_usd);
     const run = (s.monthly_usd[0] + s.monthly_usd[1]) / 2;
     // one amount, not a range: rounded to the nearest step (0.1 mln soʻm, 10 thousand under a million, $10)
     const one = (u) => {
@@ -116,8 +121,8 @@ function rows(C, s, st, entry) {
       const z = v * C.rate.uzs_per_usd, r = z < 1e6 ? Math.round(z / 1e4) * 1e4 : Math.round(z / 1e5) * 1e5;
       return F.uzs([r, r], lang);
     };
-    const verdict = pb.months ? fill(S.sumImpact, { m: F.months(pb.months, lang) }) : pb.why === 'long' ? S.impactLong : S.impactNa;
-    impSum = pb.months ? R(verdict) : h(pb.why === 'long' ? S.impactNone : S.impactNa);
+    const verdict = pb.months ? fill(S.sumImpact, { m: F.months(pb.months, lang) }) : pb.why === 'long' ? S.impactLong : S.impactLow;
+    impSum = pb.months ? R(verdict) : h(S.impactNone);
     const money1 = (u) => (C.cur === 'usd' ? u : Math.round(u * C.rate.uzs_per_usd / 1000) * 1000);
     impBody = `<p>${h(imp.summary)}</p><p class="formula">${inputs.map((i) => {
       const isMoney = i.unit === 'usd' || i.unit === 'usd_per_hour';
@@ -160,7 +165,7 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
     <h3 id="t-${h(id)}">${h(s.title)}</h3>
     ${plate}
     <dl class="sfacts">
-      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.big)}</span>` : ''}<span class="big">${bigHtml}</span><span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
+      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.big)}</span>` : ''}${bigHtml}<span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
       <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
       <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div>
       <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
@@ -170,22 +175,26 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
     <div class="rows">${rows(C, s, st, entry)}</div>
   </article>`;
 }
-// the large price: its numeric range stays on one line (the unit may wrap), and when it changed only the characters
-// that changed rise (T40)
+// the large price: its range and its unit are each one unbreakable piece ("27,5–42,5" "mln soʻm", "UZS" "27.5–42.5
+// mln", "3,800万〜5,200万" "スム"); a line may break only between the pieces, never inside ドル, スム or "mln soʻm".
+// --u is its width in em (Martian figures .68, kana and kanji 1.05), --w its longest piece's: the CSS sets it on one
+// line in its column, or, when that would take it under 24 px, on two lines between the pieces (samurai.css).
+// When it changed, only the characters that changed rise (T40).
+const RNG = /\$?\d[\d\u00a0.,億]*万?(?:[–〜]\$?\d[\d\u00a0.,億]*万?)?/;
+const em = (t) => [...t].reduce((a, c) => a + (c > '\u3000' ? 1.05 : 0.68), 0.3).toFixed(1);
 function bigDigits(a, b) {
   let i = 0, j = 0;
   if (a !== b) {
     while (i < a.length && i < b.length && a[i] === b[i]) i++;
     while (j < a.length - i && j < b.length - i && a[a.length - 1 - j] === b[b.length - 1 - j]) j++;
   } else i = b.length;
-  const m = /\$?\d[\d\u00a0.,億]*万?(?:[–〜]\$?\d[\d\u00a0.,億]*万?)?/.exec(b);
-  let out = '';
-  for (let k = 0; k < b.length; k++) {
-    if (m && k === m.index) out += '<span class="nw">';
-    out += k >= i && k < b.length - j ? `<span class="dg">${h(b[k])}</span>` : h(b[k]);
-    if (m && k === m.index + m[0].length - 1) out += '</span>';
-  }
-  return out;
+  const m = RNG.exec(b) || { index: 0, 0: b };
+  const r0 = m.index, pre = b.slice(0, r0).trimEnd().length;
+  // with a prefix ("UZS") the unit stays with the range; else the unit is its own piece after a space or a <wbr>
+  const r1 = pre ? b.length : r0 + m[0].length, u0 = b.length - b.slice(r1).trimStart().length;
+  const cuts = [[0, pre], [r0, r1], [u0, b.length]].filter(([x, y]) => y > x);
+  const piece = ([from, to]) => { let o = ''; for (let k = from; k < to; k++) o += k >= i && k < b.length - j && b[k] !== ' ' ? `<span class="dg">${h(b[k])}</span>` : h(b[k]); return `<span class="nw">${o}</span>`; };
+  return `<span class="big" style="--u:${em(b)};--w:${Math.max(...cuts.map(([x, y]) => em(b.slice(x, y))))}">${cuts.map((c, k) => (k ? (b[c[0] - 1] === ' ' ? ' ' : '<wbr>') : '') + piece(c)).join('')}</span>`;
 }
 
 export function skeletonHtml(C, width) {

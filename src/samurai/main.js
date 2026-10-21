@@ -9,7 +9,7 @@ import { match } from '../shared/match.js';
 import * as F from '../shared/format.js';
 import { firstMonday, snapMonday, tashkentToday, endOfWork, addDays, daysBetween } from '../shared/holidays.js';
 import { streamSamurai } from './stream.js';
-import { h, fill, money, SEP, briefHtml, questionsHtml, sheetHtml, skeletonHtml, notNeededHtml, refineHtml, stampHtml, actionsHtml } from './render.js';
+import { h, fill, money, SEP, byCatalogue, briefHtml, questionsHtml, sheetHtml, skeletonHtml, notNeededHtml, refineHtml, stampHtml, actionsHtml } from './render.js';
 import { planHtml } from './plan.js';
 // a link or the reopened last estimate is data anyone can type: only the shapes Qilich writes get through
 import { cleanPayload } from './sanitize.js';
@@ -87,7 +87,8 @@ function paint() {
     return;
   }
   const notes = [];
-  if (st.source === 'fallback' && !st.unavailable) notes.push(`<p class="note mono">${h(S.srcFallback)}</p>`);
+  // "chosen from the catalogue" heads the brief's line when there is one (render.js briefHtml), else the desk
+  if (byCatalogue(st) && !st.unavailable && !st.pick.heard?.summary) notes.push(`<p class="note mono">${h(S.srcFallback)}</p>`);
   if (st.unavailable) notes.push(`<p class="note">${h(S.unavailable)}</p>`);
   if (st.error) notes.push(`<div class="broken"><img src="${h(brokenSrc())}" alt="" width="220" height="80"><div><p>${h(S.errDrop)}</p><p class="acts"><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button><a href="tel:${h(cfg.phone.replace(/[^\d+]/g, ''))}">${h(cfg.phone.replace(/ /g, '\u00a0'))}</a></p></div></div>`);
   if (st.partial && st.done) notes.push(`<p class="note mono gap"><span>${h(S.partial)}</span><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button></p>`);
@@ -297,7 +298,8 @@ async function openPayload(raw, { last = false } = {}) {
   const p = cleanPayload(raw, model);
   if (!p) return false;
   st = fresh();
-  st.meta = p.meta; st.pick = p.pick; st.details = p.details; st.sig = p.sig;
+  // a shared catalogue-matcher estimate keeps saying so (render.js byCatalogue); the source is not part of the signature
+  st.meta = p.src === 'fallback' ? { ...p.meta, source: 'fallback' } : p.meta; st.pick = p.pick; st.details = p.details; st.sig = p.sig;
   st.source = p.src === 'sample' ? 'sample' : last ? (p.src === 'shared' ? 'shared' : p.src) : 'shared';
   st.sel = new Map(p.state.sel); st.answers = p.state.ans; st.ticks = new Set(p.state.ticks);
   st.budgetUsd = p.state.budget; st.deadline = p.state.deadline; st.start = p.state.start || st.start; st.impact = p.state.impact;

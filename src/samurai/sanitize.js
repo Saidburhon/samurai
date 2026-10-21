@@ -3,10 +3,14 @@
 // lists, difficulty an integer 1–5, ids known to the catalogue, strings that are strings within the validator's
 // lengths, dates that are dates. What does not fit is dropped. A genuine payload passes unchanged, so its signature
 // still verifies; a changed one fails verification and loses the hanko, or loses the field.
-// Pure, no DOM: node --test runs it (src/shared/price.test.js) against real and hostile payloads.
+// A string that carries a link, a foreign e-mail, an @handle or a phone or card number is dropped (the copy guard's
+// rule, src/shared/contact.js): a genuine payload passed the Worker's guard, so it never carries one, and a crafted
+// link cannot put "pay to card …" on qilich.com. A solution whose title is dropped shows the catalogue's own title.
+// Pure, no DOM: node --test runs it (src/shared/sanitize.test.js) against real and hostile payloads.
 // The lists come from the engine and the catalogue the page already holds (no second copy to drift).
 import { NEEDS_KEYS, PHASES } from '../shared/price.js';
 import { LANGS } from '../shared/catalogue.js';
+import { hasContact } from '../shared/contact.js';
 const STATES = ['off', 'mvp', 'full'];
 const IMPACT_KEYS = [...new Set(Object.values(NEEDS_KEYS).flat())];
 const IMPACT_MODELS = [...Object.keys(NEEDS_KEYS), 'none'];
@@ -18,8 +22,9 @@ const VERSION = /^[\w.-]{1,40}$/;
 
 const obj = (v) => v && typeof v === 'object' && !Array.isArray(v);
 const arr = (v) => (Array.isArray(v) ? v : []);
-// a string within n characters (the validator's cap plus room for its "…"), else '' (a non-string is never rendered)
-const s = (v, n) => (typeof v === 'string' && [...v].length <= n + 1 ? v : '');
+// a string within n characters (the validator's cap plus room for its "…") and free of contacts, else '' (a
+// non-string is never rendered)
+const s = (v, n) => (typeof v === 'string' && [...v].length <= n + 1 && !hasContact(v) ? v : '');
 const oneOf = (v, list, d) => (list.includes(v) ? v : d);
 const int = (v, lo, hi) => (Number.isInteger(v) && v >= lo && v <= hi ? v : null);
 const num = (v, lo, hi) => (typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi ? v : null);
@@ -39,13 +44,13 @@ export function cleanMeta(m) {
 }
 
 /** The pick (stage 1, as worker/validate.js finalizePick returns it), with only known ids. */
-export function cleanPick(p, model) {
+export function cleanPick(p, model, lang = 'uz') {
   if (!obj(p)) return null;
   const sol = (id) => typeof id === 'string' && model.byId.has(id);
   const ids = (v, ok, max = 12) => arr(v).filter((x) => typeof x === 'string' && ok(x)).slice(0, max);
   const isMod = (x) => !!model.modifiers[x], isInt = (x) => !!model.integrations[x];
   const h = obj(p.heard) ? p.heard : {};
-  const heard = { summary: s(h.summary, 300), quotes: arr(h.quotes).filter((q) => typeof q === 'string' && q.length <= 300).slice(0, 4), industry: typeof h.industry === 'string' && /^[a-z_-]{1,40}$/.test(h.industry) ? h.industry : 'other', size: oneOf(h.size, ['solo', 'small', 'medium', 'large'], 'small') };
+  const heard = { summary: s(h.summary, 300), quotes: arr(h.quotes).filter((q) => s(q, 300)).slice(0, 4), industry: typeof h.industry === 'string' && /^[a-z_-]{1,40}$/.test(h.industry) ? h.industry : 'other', size: oneOf(h.size, ['solo', 'small', 'medium', 'large'], 'small') };
   const questions = arr(p.questions).slice(0, 3).map((q) => {
     if (!obj(q) || typeof q.id !== 'string' || !SLUG.test(q.id) || !s(q.text, 80)) return null;
     const options = arr(q.options).slice(0, 4).map((o) => {
@@ -64,7 +69,7 @@ export function cleanPick(p, model) {
     const n = int(x.n, 1, 9), difficulty = int(x.difficulty, 1, 5);
     if (n == null || difficulty == null) return null;
     return {
-      n, catalogue_id: x.catalogue_id, based_on: based, title: s(x.title, 80), why: s(x.why, 300),
+      n, catalogue_id: x.catalogue_id, based_on: based, title: s(x.title, 80) || ((t) => t[lang] || t.en)(model.byId.get(custom ? based[0] : x.catalogue_id).title), why: s(x.why, 300),
       priority: oneOf(x.priority, ['must', 'should', 'could'], 'should'), scope: oneOf(x.scope, ['mvp', 'full'], 'mvp'), size: oneOf(x.size, ['s', 'm', 'l'], 's'),
       modifiers: ids(x.modifiers, isMod), integrations: ids(x.integrations, isInt), depends_on: ids(x.depends_on, sol), difficulty, difficulty_reason: s(x.difficulty_reason, 110),
     };
@@ -114,7 +119,7 @@ export function cleanState(st, pick) {
 export function cleanPayload(p, model) {
   if (!obj(p)) return null;
   const meta = cleanMeta(p.meta);
-  const pick = meta && cleanPick(p.pick, model);
+  const pick = meta && cleanPick(p.pick, model, meta.lang);
   if (!pick) return null;
   const details = {};
   if (obj(p.details)) {

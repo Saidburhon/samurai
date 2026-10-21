@@ -8,6 +8,7 @@
 import { DataTexture, DataUtils, RGBAFormat, HalfFloatType, UnsignedByteType, LinearFilter, LinearMipmapLinearFilter, ClampToEdgeWrapping, NoColorSpace,
   Scene, Mesh, BufferGeometry, Float32BufferAttribute } from 'three';
 import { Stage, buildGeometries, buildPart, PART_NAMES } from './stage.js';
+import { SoftPass } from './softpass.js';
 import { bakeAll } from './bake.js';
 import { bakePool, heroJobs } from './bakecpu.js';
 
@@ -130,6 +131,9 @@ export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true,
   r.setRenderTarget(null); r.setScissorTest(true); r.setScissor(0, 0, 1, 1);
   r.render(two, stage.camera);
   r.setScissorTest(false);
+  // and the soft shadow's two programs (the reveal draws the shadow from its first frame on)
+  stage.soft = stage.soft || new SoftPass(r);
+  stage.soft.warm(stage.camera);
   log('proxied', performance.now() - t0);
   // dev (?pxwait=ms): let the proxies' pipelines finish before warm(), to see whether the real draws find them built
   const pxw = +(new URLSearchParams(location.search).get('pxwait') || 0);

@@ -30,7 +30,7 @@ import { parseRequest, runSamurai } from './samurai.js';
 import { verify } from './sign.js';
 import { parseLead, sendLead } from './lead.js';
 import { visitorKey, over } from './limits.js';
-import { GUARD } from './spend.js';
+import { GUARD } from './budget.js';
 import { tashkentToday } from '../src/shared/holidays.js';
 
 export { SamuraiGuard } from './spend.js';
@@ -82,6 +82,7 @@ async function readJson(request, max) {
   try { return { body: JSON.parse(b.text) }; } catch { return { res: err(400, 'bad_input') }; }
 }
 
+const GUARD_HOLD = GUARD.RESERVE_USD;
 const guardOf = (env) => (env.SAMURAI_GUARD ? env.SAMURAI_GUARD.get(env.SAMURAI_GUARD.idFromName('global')) : null);
 const log = (o) => console.log(JSON.stringify(o));
 
@@ -96,12 +97,21 @@ async function samurai(request, env, ctx) {
 
   const { readable, writable } = new TransformStream();
   const writer = writable.getWriter();
+  // a write fails once the visitor has gone (the stream was cancelled): its rejection is handled here, never uncaught
+  writer.closed.catch(() => {});
   const enc = new TextEncoder();
+  // the visitor left: request.signal does not always fire under wrangler dev, so a failed write (an event, or the
+  // ping every 10 s) aborts the upstream calls too; the stage-2 calls follow the pick's controller
+  const left = new AbortController();
+  const signal = typeof AbortSignal.any === 'function' && request.signal ? AbortSignal.any([request.signal, left.signal]) : left.signal;
+  if (signal === left.signal) request.signal?.addEventListener?.('abort', () => left.abort());
   let gone = false, chain = Promise.resolve();
-  const write = (s) => { if (gone) return; chain = chain.then(() => writer.write(enc.encode(s))).catch(() => { gone = true; }); };
+  const write = (s) => { if (gone) return; chain = chain.then(() => writer.write(enc.encode(s))).catch(() => { gone = true; left.abort(); }); };
   const send = (event, data) => write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   const ping = setInterval(() => write(': ping\n\n'), 10_000);
 
+  let guard = null, booking = null, settled = false;
+  const settle = (usd) => { if (settled || !guard || !booking?.ok) return; settled = true; ctx.waitUntil(guard.settle({ rid: booking.rid, usd }).catch(() => null)); };
   const run = (async () => {
     const t0 = Date.now();
     try {
@@ -113,32 +123,33 @@ async function samurai(request, env, ctx) {
       }
       const rate = await getRate(ctx);
       const hasKey = Boolean(env.ANTHROPIC_API_KEY);
-      // the daily spend cap and per-visitor limits (worker/spend.js); without the binding the rate limits still hold
-      const guard = hasKey ? guardOf(env) : null;
-      let booking = null;
+      // the daily spend cap and per-visitor limits (worker/budget.js); without the binding the rate limits still hold
+      guard = hasKey ? guardOf(env) : null;
       if (guard) {
         try { booking = await guard.reserve({ key, dailyUsd: env.SAMURAI_DAILY_USD }); } catch (e) { booking = { ok: false, reason: 'error' }; }
         if (!booking?.ok) {
-          const code = booking?.reason === 'budget' || booking?.reason === 'error' ? 'not_configured' : 'rate_limited';
+          // over the day's cap, or this visitor's share of it, or their answers for the day: the page answers from the
+          // catalogue matcher ("SamurAI is not working now, chosen from the catalogue"); a burst only waits a moment
+          const code = ['budget', 'error', 'day', 'usd'].includes(booking?.reason) ? 'not_configured' : 'rate_limited';
           send('error', { code, ...(code === 'rate_limited' ? { retry_after: Math.min(booking?.retry || 60, 600) } : {}) });
           log({ samurai: { event: 'guard', reason: booking?.reason || 'none' } });
           return;
         }
       }
       const out = await runSamurai({
-        m: MODEL, input, rate, send, signal: request.signal, log,
+        m: MODEL, input, rate, send, signal, log,
         apiKey: env.ANTHROPIC_API_KEY, signingKey: env.SAMURAI_SIGNING_KEY,
         effort: ['low', 'medium', 'high'].includes(env.SAMURAI_EFFORT) ? env.SAMURAI_EFFORT : 'low', fast: env.SAMURAI_FAST === '1',
       });
-      // settle at the metered cost; a run with a call that never reported its usage keeps the whole reservation, so
-      // leaving mid-stream never makes an answer free for the daily cap
-      const spent = out.blind ? Math.max(out.cost, GUARD.RESERVE_USD) : out.cost;
-      if (guard && booking?.ok) ctx.waitUntil(guard.settle({ rid: booking.rid, usd: spent }).catch(() => null));
-      log({ samurai: { lang: input.lang, refine: Boolean(input.refine), status: out.status, source: out.source || null, solutions: out.pick?.solutions?.length ?? 0, partial: out.partial, ms: Date.now() - t0, cost_usd: out.cost, settled_usd: spent, blind: out.blind || 0, calls: out.calls } });
+      // settle at what the run cost (worker/samurai.js meters every call, cut short or refused): the hold was only a hold
+      settle(out.cost);
+      log({ samurai: { lang: input.lang, refine: Boolean(input.refine), status: out.status, source: out.source || null, solutions: out.pick?.solutions?.length ?? 0, partial: out.partial, ms: Date.now() - t0, cost_usd: out.cost, settled_usd: out.cost, blind: out.blind || 0, gone, calls: out.calls } });
     } catch (e) {
       log({ samurai_error: 'handler', name: e?.name, message: String(e?.message || '').slice(0, 200) });
       send('error', { code: 'upstream' });
     } finally {
+      // a run that threw after its hold was booked keeps the hold (its calls may have been billed): never left open
+      settle(GUARD_HOLD);
       clearInterval(ping);
       chain.then(() => writer.close()).catch(() => {});
     }

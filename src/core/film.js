@@ -65,19 +65,21 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
   });
   dir.onResize = () => { stage.setSize(innerWidth, innerHeight, true); film.reset(); cut.reset(); state.key = ''; };
   // The intro (§4.1, §4.3) on the wall clock from navigation, not on the sum of frame times (G1 r2): a long software
-  // frame cannot hold it back. The reveal starts at max(glReady, 1.7 s) and is anchored to fixed times, so the 3 s frame is the
-  // same whenever GL was ready (up to 2.6 s): a C1 curve from (start, 0) through (3.1 s, 0.725) to (3.8 s, 1), flat at
-  // both ends. The steel leaves the habaki, glides through the middle of the blade at about half its length per
-  // second (the 3 s frame shows three quarters steel, §4.1 frame 02; the band 60–85 % spans 2.9–3.3 s) and comes to
-  // rest at the tip by 3.8 s; then the 1.8 s lift. GL later than 2.6 s: power2.inOut over max(1.4 s, 3.9 s − start).
+  // frame cannot hold it back. The reveal starts at max(glReady, 1.7 s) and is anchored to fixed times, so the 3 s
+  // frame is the same whenever GL was ready (up to 2.6 s): a C1 curve from (start, 0) through (3.0 s, 0.69) to
+  // (4.0 s, 1), flat at both ends. The steel leaves the habaki, glides through the outer half of the blade at about a
+  // third of its length per second (the 3 s frame shows two thirds to three quarters steel, §4.1 frame 02; the band
+  // 60–85 % spans about 2.8–3.4 s, which is what a software renderer's screenshot of 'the 3 s frame' can show) and
+  // comes to rest at the tip by 4.0 s; then the 1.8 s lift, settled by 5.8 s. GL later than 2.6 s: power2.inOut over
+  // max(1.4 s, 4.0 s − start).
   if (intro && fz == null && !dir.reduced) {
     const start = Math.max(glReady, 1700), late = start > 2600;
-    const E = late ? start + Math.max(1400, 3900 - start) : 3800;
+    const E = late ? start + Math.max(1400, 4000 - start) : 4000;
     state.intro = { t: 0, start, E, late, L: 1800, tau: 0, at: start, speed: 1 };
     log('revealStart', start); log('revealEnd', E);
   }
   // the reveal (0..1) at wall time v (ms)
-  const K1 = [3100, 0.725, 0.00052];
+  const K1 = [3000, 0.69, 0.0003];
   const herm = (u, p0, m0, p1, m1, h) => { const u2 = u * u, u3 = u2 * u; return (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * h * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * h * m1; };
   function revealAt(v) {
     const I = state.intro;

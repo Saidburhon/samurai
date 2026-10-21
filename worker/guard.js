@@ -3,10 +3,11 @@
 //   1. NFC, the allowed characters only
 //   2. Uzbek: the okina after o/g, the tutuq between letters
 //   3. every language: yarat- → qur- (Latin and Cyrillic), keeping case and suffix
-//   4. no @handles (but inbox@qilich.com), no URLs, no t.me, no product names, no phone numbers but Qilich's
+//   4. no @handles (but inbox@qilich.com), no URLs, no t.me, no product names, no phone or card numbers but Qilich's
 //   5. dashes: Russian NBSP before —, English " — " → ", "
 //   6. the BANNED list again: a string that still fails is dropped (null), and its card shows the catalogue text
 import { BANNED, NOT_ALLOWED } from './copy-rules.js';
+import { DIGIT_RUN, QILICH_DIGITS, hasContact } from '../src/shared/contact.js';
 
 const EMAIL = 'inbox@qilich.com';
 const PHONE = '+998 97 270 70 07';
@@ -52,13 +53,17 @@ export function guard(input, lang) {
   s = s.replace(URLS, '').replace(PRODUCTS, '');
   s = s.replace(EMAILS, (m) => (m.toLowerCase() === EMAIL ? m : ''));
   s = s.replace(HANDLES, '$1');
-  s = s.replace(PHONES, (m) => (m.replace(/\D/g, '') === '998972707007' ? PHONE : m.replace(/\D/g, '').length >= 9 ? '' : m));
+  s = s.replace(PHONES, (m) => (m.replace(/\D/g, '') === QILICH_DIGITS ? PHONE : m.replace(/\D/g, '').length >= 9 ? '' : m));
+  // a card or account number, or a phone in any other grouping: nine digits or more (the page refuses them too)
+  s = s.replace(DIGIT_RUN, (m) => (m.replace(/\D/g, '') === QILICH_DIGITS ? m : ''));
   if (lang === 'en') for (const [re, to] of BUZZ) s = s.replace(re, to);
   if (lang === 'ru') s = s.replace(/ +—/g, '\u00a0—');
   if (lang === 'en') s = s.replace(/\s+—\s+/g, ', ');
   s = s.replace(/[ \t]{2,}/g, ' ').replace(/ +([,.;:!?])/g, '$1').trim();
   if (s !== before) stats.changed++;
   for (const [re] of BANNED) if (re.test(s)) { stats.dropped++; return null; }
+  // what survives only in another form (full-width ｈｔｔｐｓ, ０９０…): the field is dropped, as the page would drop it
+  if (hasContact(s)) { stats.dropped++; return null; }
   return s;
 }
 

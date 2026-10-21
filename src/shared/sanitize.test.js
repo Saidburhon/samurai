@@ -69,3 +69,39 @@ test('even unsanitized, a sheet escapes every model field it prints (the difficu
   assert.ok(!/<img/.test(html), 'no raw markup in the sheet');
   assert.ok(html.includes('&lt;img'), 'the text is shown escaped');
 });
+
+test('a crafted link cannot put contacts on qilich.com: links, e-mails, handles, phone and card numbers are dropped', async () => {
+  const { hasContact } = await import('./contact.js');
+  const hostile = [
+    'https://evil.example', 'see www.evil.example/pay', 'Kanal: t.me/evil', 'telegram.me/evil', 'yozing: pay@evil.example',
+    'Telegram @evil_shop', 'Call +998 90 111 22 33', 'pay to card 8600 1234 5678 9012', '90-111-22-33', '+998 (90) 111-22-33',
+    'ｈｔｔｐｓ://evil.example', '０９０ １１１ ２２ ３３ ４４', 'karta 8600123456789012',
+  ];
+  for (const t of hostile) assert.equal(hasContact(t), true, t);
+  const fine = ['Qoʻngʻiroq qiling: +998 97 270 70 07', 'inbox@qilich.com', 'Restoran, 2 filial, 12 xodim', '2026-10-21', '19–27 недель', 'Next.js va 1C', 'Oyiga 300 ta buyurtma', '3,000〜4,100ドル'];
+  for (const t of fine) assert.equal(hasContact(t), false, t);
+
+  const p = genuine();
+  const [s0, s1] = p.pick.solutions;
+  s0.title = 'https://evil.example';
+  s0.why = 'Call +998 90 111 22 33, pay to card 8600 1234 5678 9012';
+  s1.difficulty_reason = 'Yozing @evil_shop';
+  p.pick.heard.summary = 'Call +998 90 111 22 33, pay to card 8600 1234 5678 9012';
+  p.pick.heard.quotes = ['t.me/evil'];
+  const k = s0.catalogue_id === 'custom' ? `custom-${s0.n}` : s0.catalogue_id;
+  if (p.details[k]) p.details[k].needs = ['Pul oʻtkazing: 8600 1234 5678 9012', ...p.details[k].needs.slice(1)];
+  const c = cleanPayload(p, m);
+  const text = JSON.stringify(c);
+  assert.ok(!/evil|8600|111 22 33/.test(text), 'nothing of the contacts survives');
+  assert.equal(c.pick.heard.summary, '');
+  assert.deepEqual(c.pick.heard.quotes, []);
+  assert.equal(c.pick.solutions[0].why, '');
+  assert.equal(c.pick.solutions[0].title, m.byId.get(s0.catalogue_id === 'custom' ? s0.based_on[0] : s0.catalogue_id).title[p.meta.lang], 'a dropped title shows the catalogue title');
+  assert.equal(c.pick.solutions[1].difficulty_reason, '');
+});
+
+test('every committed sample is free of contacts (the rule never drops a genuine string)', async () => {
+  const { hasContact } = await import('./contact.js');
+  const walk = (v, at) => { if (typeof v === 'string') assert.equal(hasContact(v), false, `${at}: ${v}`); else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, `${at}.${k}`); };
+  for (const x of samples) { walk(x.pick, `${x.meta.lang}/${x.id}.pick`); walk(x.details, `${x.meta.lang}/${x.id}.details`); }
+});

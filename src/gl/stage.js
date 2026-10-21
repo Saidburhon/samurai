@@ -83,7 +83,7 @@ export class Stage {
     this.floor.position.set(0, 0, 0.72); // the edge side of the guard: the screen's bottom in the opponent's view
     this.floor.rotation.x = Math.PI;      // its face towards the guard (front faces only)
     hg.add(this.floor);
-    this.soft = new SoftPass(this.renderer);
+    this.soft = this.soft || new SoftPass(this.renderer);
     this.rays = new Rays(this.renderer, hg);
   }
 

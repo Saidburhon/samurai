@@ -25,6 +25,8 @@ const CAP_MS = 120_000;
 // USD per million tokens (cache writes are 1-hour entries, 2× input); fallback models at the higher Opus rates
 const PRICE = { [MODEL_ID]: { in: 4, out: 20, read: 0.2, write: 8 } };
 const OTHER = { in: 5, out: 25, read: 0.5, write: 10 };
+// the cached prefix of every call (system prompt, language block, output schema), as cache reads measured it live: 19–23K
+const CACHED_TOKENS = 24_000;
 
 let prepared = null;
 export function prepare(m) {
@@ -118,6 +120,7 @@ export async function runSamurai(opts) {
   const ctrl = new AbortController();
   const onAbort = () => ctrl.abort();
   opts.signal?.addEventListener?.('abort', onAbort);
+  if (opts.signal?.aborted) ctrl.abort();
   const cap = setTimeout(() => { capped = true; ctrl.abort(); }, CAP_MS);
   let capped = false;
   const ctx = context(m, { lang, text: input.text, intake: input.intake });
@@ -137,9 +140,19 @@ export async function runSamurai(opts) {
   let cost = 0, partial = false;
   // every call is metered from its stream events, so a run that is cut short (the visitor left, a timeout) still
   // counts what it spent: the input as message_start reports it, the output estimated from the text streamed so far.
-  // A call that never reported (blind) makes the spend guard keep the whole reservation (worker/index.js).
+  // A call cut before message_start (blind) counts its input only: the cached prompt at the read rate plus the user
+  // turn (about $0.01). A call the API refused with an HTTP status before it started is not billed and counts nothing,
+  // and a call never sent (the visitor had already left) is not metered at all. The spend guard settles the run at
+  // this cost (worker/budget.js), so dropped or refused requests never drain the daily cap.
   const meters = [];
-  const meter = () => { const mt = { usage: null, model: null, chars: 0, done: false }; meters.push(mt); return mt; };
+  const meter = (userJson) => {
+    const r = PRICE[MODEL_ID];
+    const mt = { usage: null, model: null, chars: 0, done: false, rejected: false, est: (CACHED_TOKENS * r.read + (userJson.length / 3) * r.in) / 1e6 };
+    meters.push(mt);
+    return mt;
+  };
+  // an HTTP error from the API before the stream began (401, 429, 5xx, 529): nothing was billed
+  const refused = (mt, err) => { if (!mt.usage && typeof err?.status === 'number') mt.rejected = true; };
   const onEvent = (mt) => (ev) => {
     if (ev.type === 'message_start') { mt.model = ev.message?.model || null; mt.usage = { ...(ev.message?.usage || {}) }; }
     else if (ev.type === 'message_delta' && ev.usage) mt.usage = { ...(mt.usage || {}), ...Object.fromEntries(Object.entries(ev.usage).filter(([, v]) => v != null)) };
@@ -149,10 +162,11 @@ export async function runSamurai(opts) {
     let usd = 0, blind = 0;
     for (const mt of meters) {
       if (mt.done) continue;
-      if (!mt.usage) { blind++; continue; }
+      mt.done = true;
+      if (mt.rejected) continue;
+      if (!mt.usage) { blind++; usd += mt.est; continue; }
       const { iterations, ...u } = mt.usage;
       usd += costUsd({ ...u, output_tokens: Math.max(u.output_tokens || 0, Math.ceil((mt.chars / 2.5) * 1.1)) }, mt.model || MODEL_ID);
-      mt.done = true;
     }
     return { usd: Math.round(usd * 1e6) / 1e6, blind };
   };
@@ -170,9 +184,10 @@ export async function runSamurai(opts) {
       solution: sol,
       entry: { id: entry.id, title: entry.title.en, what: entry.oneliner.en, mvp_scope: entry.scope?.mvp, full_scope: entry.scope?.full, note: entry.notes, can_add: entry.integrations.filter((x) => !entry.integrations_included.includes(x)), included: entry.integrations_included, typical_team: entry.team, typical_stack: entry.stack },
     };
-    const mt = meter();
+    if (att.ctrl.signal.aborted) return;
+    const content = JSON.stringify(user), mt = meter(content);
     try {
-      const s = client.beta.messages.stream({ ...base(P.schemas.detail, 4000), messages: [{ role: 'user', content: JSON.stringify(user) }] }, { signal: att.ctrl.signal });
+      const s = client.beta.messages.stream({ ...base(P.schemas.detail, 4000), messages: [{ role: 'user', content }] }, { signal: att.ctrl.signal });
       s.on?.('streamEvent', onEvent(mt));
       const msg = await s.finalMessage();
       mt.done = true;
@@ -189,8 +204,9 @@ export async function runSamurai(opts) {
       details[solId(sol)] = v;
       send('detail', { catalogue_id: sol.catalogue_id, n: sol.n, detail: v });
     } catch (err) {
+      refused(mt, err);
       if (att === attempt) partial = true;
-      calls.push({ stage: 'detail', id: sol.catalogue_id, ms: Date.now() - t1, error: String(err?.name || err?.message || err).slice(0, 80) });
+      calls.push({ stage: 'detail', id: sol.catalogue_id, ms: Date.now() - t1, error: String(err?.name || err?.message || err).slice(0, 80), ...(err?.status ? { status: err.status } : {}) });
     }
   };
 
@@ -216,9 +232,12 @@ export async function runSamurai(opts) {
   let firstText = 0, timedOut = false, final = null, errCode = null;
   const firstTimer = setTimeout(() => { if (!firstText) { timedOut = true; ctrl.abort(); } }, FIRST_TEXT_MS);
   const t1 = Date.now();
-  const pm = meter();
+  const content = JSON.stringify(user);
+  // the visitor left before the call was made (the rate or the guard took that long): nothing is sent or spent
+  const pm = ctrl.signal.aborted ? null : meter(content);
   try {
-    const stream = client.beta.messages.stream({ ...base(P.schemas.pick, 8000), messages: [{ role: 'user', content: JSON.stringify(user) }] }, { signal: ctrl.signal });
+    if (!pm) throw Object.assign(new Error('aborted before the call'), { name: 'AbortError' });
+    const stream = client.beta.messages.stream({ ...base(P.schemas.pick, 8000), messages: [{ role: 'user', content }] }, { signal: ctrl.signal });
     for await (const ev of stream) {
       onEvent(pm)(ev);
       if (ev.type === 'content_block_start' && ev.content_block?.type === 'fallback') {
@@ -234,6 +253,7 @@ export async function runSamurai(opts) {
     final = await stream.finalMessage();
     pm.done = true;
   } catch (err) {
+    if (pm) refused(pm, err);
     errCode = timedOut || capped ? 'timeout' : opts.signal?.aborted ? 'aborted' : mapError(err);
     log({ samurai_error: 'pick', name: err?.name, status: err?.status, message: String(err?.message || '').slice(0, 200) });
   } finally {

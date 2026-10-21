@@ -91,6 +91,16 @@ export class SoftPass {
     if (this.rt.width !== w || this.rt.height !== h) { this.rt.setSize(w, h); this.dirty = true; }
     this.compU.uRes.value.set(bw, bh);
   }
+  // prewarm (§6.3): both programs drawn once, 1 × 1 scissored, so a software renderer builds their pipelines at boot
+  // (gl/index.js, with the hero's), not in the reveal's first frames (G1 r2: those frames took 0.3–0.6 s)
+  warm(camera) {
+    const r = this.r;
+    this.rt.scissor.set(0, 0, 1, 1); this.rt.scissorTest = true;
+    r.setRenderTarget(this.rt); r.render(this.scene, camera);
+    this.rt.scissorTest = false; r.setRenderTarget(null);
+    r.setScissorTest(true); r.setScissor(0, 0, 1, 1); r.render(this.compScene, camera); r.setScissorTest(false);
+    this.dirty = true;
+  }
   // render the target if needed, then composite it onto the current framebuffer
   draw(camera) {
     const r = this.r;

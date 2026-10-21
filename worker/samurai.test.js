@@ -48,13 +48,14 @@ test('a visitor who leaves mid-stream still costs what the calls spent: never $0
   assert.equal(out.blind, 0);
 });
 
-test('a call that never reported its usage is counted blind, so the guard keeps the whole reservation', async () => {
+test('a call cut before it reported its usage counts its input only (blind), never the whole reservation', async () => {
   const visitor = new AbortController();
   const client = { beta: { messages: { stream: (p, { signal }) => ({ on() { return this; }, async *[Symbol.asyncIterator]() { await new Promise((_, rej) => signal.addEventListener('abort', () => rej(abortError()), { once: true })); }, finalMessage: () => new Promise(() => {}) }) } } };
   setTimeout(() => visitor.abort(), 30);
   const out = await runSamurai({ m, input, rate, apiKey: 'test', signingKey: '', client, send: () => {}, signal: visitor.signal });
   assert.equal(out.status, 'aborted');
   assert.equal(out.blind, 1);
+  assert.ok(out.cost > 0 && out.cost <= 0.05, `input-only estimate ${out.cost}`);
 });
 
 test('the signature is given only to a genuine estimate: not_business gets none, an ok estimate is signed', async () => {

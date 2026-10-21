@@ -276,7 +276,13 @@ export function hold(name, layout, opt = {}) {
     // gilt seppa so the collar sparks warm at the centre; a soft warm light in front (view space, upper left) lets the
     // fittings read as metal; the blade, seen point-on, keeps a small share of the glint and carries the backlight
     // as thin warm lines along its edge and spine, so the spike reads as steel pointing at the viewer (G1 review)
-    if (cand === 'a') out.lookOver = { ...out.lookOver, steelGlint: 0.25, backEdge: 2.0, fittingsGlintW: 4, fittingsFill: [0.75, 0.55, 0.35], fillDirV: [-0.45, 0.45, 1] };
+    // G1 r2: the camera aims 2.5 % short of the tip (aim 0.975), so the blade ends in one point inside the collar
+    // instead of a fork beyond it, and no pale end-on 'capsule' shows above it; the copper keeps a narrower glint and a
+    // deeper fill so the habaki reads copper, not salmon
+    if (cand === 'a') {
+      out.lookOver = { ...out.lookOver, steelGlint: 0.25, backEdge: 2.0, fittingsGlintW: 1.6, fittingsFill: [0.55, 0.32, 0.16], fillDirV: [-0.45, 0.45, 1] };
+      out.cam.aim = out.cam.aim ?? 0.975;
+    }
   }
   if (name === 'intro' && opt.reveal != null) out.reveal = opt.reveal;
   // dev: overrides for tuning a hold (?tune=json or __qilich.tune): nested objects merge one level deep

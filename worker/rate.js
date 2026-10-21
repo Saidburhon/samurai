@@ -21,14 +21,16 @@ export function parseCbu(json) {
 }
 
 let memo = null;
+// both CBU addresses at once, the first good answer wins: the Worker waits at most timeoutMs in all, never one per URL
 async function fetchCbu(timeoutMs) {
-  for (const url of CBU) {
-    try {
-      const res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(timeoutMs) });
-      if (res.ok) { const r = parseCbu(await res.json()); if (r) return r; }
-    } catch { /* the next URL */ }
-  }
-  return null;
+  const signal = AbortSignal.timeout(timeoutMs);
+  const one = async (url) => {
+    const res = await fetch(url, { headers: { Accept: 'application/json' }, signal });
+    const r = res.ok ? parseCbu(await res.json()) : null;
+    if (!r) throw new Error('no rate');
+    return r;
+  };
+  try { return await Promise.any(CBU.map(one)); } catch { return null; }
 }
 
 /** { uzs_per_usd, date (YYYY-MM-DD), source: "cbu" | "fallback" }. Never throws. */

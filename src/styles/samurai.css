@@ -84,7 +84,8 @@ html.no-js .nojs { display: block; }
 /* ---------------- with a result: the appraiser's desk ---------------- */
 .sam.has-result .intake, .sam.has-result .lede, .sam.has-result .blank-plate, .sam.has-result .reopen { display: none; }
 .sam.has-result .sam-head { margin-top: 28px; grid-column: 1 / -1; }
-.sam.has-result h1 { font-size: 26px; max-width: none; }
+/* html[lang]: beats the per-language sizes of the poster (html[lang=ru] .sam h1, html[lang=ja] .pg h1) in every language */
+html[lang] .sam.has-result h1 { font-size: 26px; max-width: none; }
 .result { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); margin-top: 36px; align-items: start; }
 .result > * { grid-column: 5 / -1; }
 .result[hidden] { display: none; }
@@ -147,7 +148,10 @@ html.no-js .nojs { display: block; }
 .sfacts > div { display: grid; grid-template-columns: 9.5em 1fr; gap: 4px 20px; padding: 12px 0; border-top: 1px solid var(--line); align-items: baseline; }
 .sfacts dt, .rows summary .k { font: 400 13px/1.5 var(--mono); font-stretch: 87.5%; letter-spacing: .06em; text-transform: uppercase; color: var(--kurogane); }
 .sfacts dt button { font: inherit; text-transform: inherit; letter-spacing: inherit; color: inherit; box-shadow: inset 0 -1px 0 var(--line); padding: 0; }
-.big { display: block; font: 300 clamp(34px, calc(48 * var(--fit)), 48px)/1.05 var(--mono); font-stretch: 87.5%; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+/* the large price fits its column on one line (render.js bigDigits gives its width in em, --u, and its longest
+   unbreakable piece's, --w); the facts' values are size containers for it */
+.sfacts dd { container-type: inline-size; }
+.big { display: block; font: 300 min(clamp(34px, calc(48 * var(--fit)), 48px), 100cqw / var(--u, 9))/1.05 var(--mono); font-stretch: 87.5%; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .small { display: block; margin-top: 6px; font: 400 13px/1.4 var(--mono); font-stretch: 87.5%; letter-spacing: .04em; color: var(--kurogane); }
 .mid { display: block; margin-top: 4px; font: 400 15px/1.4 var(--mono); font-stretch: 87.5%; }
 .mono-v { font: 400 15px/1.4 var(--mono); font-stretch: 87.5%; font-variant-numeric: tabular-nums; }
@@ -315,7 +319,8 @@ dialog::backdrop { background: rgba(15, 14, 12, .32); }
 .lead-done { margin-top: 26px; font-size: 20px; line-height: 1.4; }
 .lead-done p + p { margin-top: 12px; font-size: 15px; color: var(--kurogane); }
 .legend-sheet ol { list-style: none; margin-top: 18px; }
-.legend-sheet li { display: grid; grid-template-columns: 2.4em 1fr 120px; gap: 10px 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.legend-sheet li { display: grid; grid-template-columns: 2.4em minmax(0, 1fr) 120px; gap: 10px 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.legend-sheet li svg { max-width: 100%; }
 .legend-sheet li b { font: 900 26px/1 var(--jp); }
 .legend-sheet li span { font: 400 13px/1.4 var(--mono); font-stretch: 87.5%; }
 .legend-sheet p { margin-top: 22px; max-width: 26em; }
@@ -354,6 +359,8 @@ html.legend-open .hako { visibility: hidden; }
   .blank-form.level { display: block; }
   .sam-head { margin-top: 28px; padding-right: 52px; }
 }
+/* the hakogaki strip runs down the right edge past the head: the result's first block keeps the h1's inset */
+@media screen and (max-width: 860px) { .sam.has-result .rtop > :first-child { padding-right: 52px; } }
 /* the phases table on a phone screen: the phase and its weeks on one line, what it delivers under them (never one word
    a line); the printout keeps its table */
 @media screen and (max-width: 760px) {
@@ -365,6 +372,9 @@ html.legend-open .hako { visibility: hidden; }
 @media (max-width: 760px) {
   .sam, .result, .how { grid-template-columns: minmax(0, 1fr); }
   .sam h1 { font-size: 34px; }
+  /* on one line from 34 px down to 24 px; a longer one (a Japanese スム range) breaks between its pieces, the unit under
+     the range, with air between the lines */
+  .big { font-size: clamp(min(24px, 100cqw / var(--w, 9)), 100cqw / var(--u, 9), 34px); line-height: 1.22; }
   html[lang=ru] .sam h1 { font-size: 31px; }
   html[lang=ja] .sam h1 { font-size: 26px; line-height: 1.4; }
   .sentence { font-size: 22px; line-height: 1.7; }
@@ -389,6 +399,10 @@ html.legend-open .hako { visibility: hidden; }
   .totals { grid-template-columns: minmax(0, 1fr); }
   .totals dd { border-top: 0; line-height: 1.6; padding-bottom: 6px; }
   .stamp { grid-template-columns: minmax(0, 1fr); }
+  /* the legend's strip goes under its name on a phone, so it is never cut at the sheet's edge */
+  .legend-sheet li { grid-template-columns: 2.4em minmax(0, 1fr); row-gap: 6px; }
+  .legend-sheet li b { grid-row: span 2; }
+  .legend-sheet li svg { grid-column: 2; }
   .lead-sheet[open], .legend-sheet[open] { inset: auto 0 0 0; width: 100%; height: auto; max-height: 92svh; padding: 34px 20px calc(24px + env(safe-area-inset-bottom)); }
   .strip { display: flex; position: fixed; z-index: 8; left: 0; right: 0; bottom: 0; height: calc(56px + env(safe-area-inset-bottom)); padding: 0 var(--m) env(safe-area-inset-bottom); align-items: center; justify-content: space-between; gap: 12px; background: var(--washi); box-shadow: 0 -1px 0 var(--line); font: 400 13px/1.3 var(--mono); font-stretch: 87.5%; font-variant-numeric: tabular-nums; transform: translateY(110%); transition: transform .45s var(--ui); }
   .strip.on { transform: none; }

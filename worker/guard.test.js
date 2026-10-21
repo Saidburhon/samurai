@@ -23,6 +23,9 @@ test('handles, links, t.me, emoji and other phone numbers are removed; Qilich’
   assert.equal(guard('see https://example.com now', 'en'), 'see now');
   assert.equal(guard('inbox@qilich.com yoki other@mail.ru', 'uz'), 'inbox@qilich.com yoki');
   assert.equal(guard('call +998 90 123 45 67', 'en'), 'call');
+  assert.equal(guard('pay to card 8600 1234 5678 9012 today', 'en'), 'pay to card today');
+  assert.equal(guard('Qoʻngʻiroq: +998 97 270 70 07', 'uz'), 'Qoʻngʻiroq: +998 97 270 70 07');
+  assert.equal(guard('ｈｔｔｐｓ://evil.example', 'ja'), null, 'a full-width link drops the field');
 });
 test('dashes: ru NBSP before —, en " — " → ", "', () => {
   assert.equal(guard('Бот — для заказов', 'ru'), 'Бот\u00a0— для заказов');
