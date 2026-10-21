@@ -36,7 +36,9 @@ export function cut(s, n) {
 // tail (and a lone letter of the other script in Latin Uzbek or English) and leaves a clean text exactly as it was.
 const STOPS = '.!?。！？';
 const lastStop = (x) => Math.max(...[...STOPS].map((c) => x.lastIndexOf(c)));
-const ABBR = /(?:^|[\s.])\p{L}{1,3}\.$/u; // т.е., e.g., etc. — a stop that is not a sentence end
+// a stop that is not a sentence end: only real abbreviations (т.е., т.к., и т.д., e.g., i.e., etc., h.k., va b.),
+// never any short last word ("из них.Simple roles.", "hammasi bor.Infos.", "it is new.Roles." are junk tails)
+const ABBR = /(?:^|[^\p{L}])(?:т\.\s?[екдпн]|e\.g|i\.e|h\.k|va b|etc|vs|incl|approx|напр|др|пр|гг?|ул|руб|млн|млрд|тыс|шт|mln|mlrd)\.$/iu;
 const TECH = /^(?:js|ts|io|net|com|org|uz|ru|jp|ai|py|me)\b/i; // Next.js, qilich.com
 const OTHER = { uz: /[\u0400-\u04ff]/u, en: /[\u0400-\u04ff]/u };
 function stripQuotes(t) {
