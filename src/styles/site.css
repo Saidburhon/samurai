@@ -22,3 +22,8 @@ html[lang=ja] .foot-links a, html[lang=ja] .colophon .top { letter-spacing: .06e
   html[lang=ja] .s-tsuba .st.xl { font-size: 28px; }
   html[lang=ja] .s-yaki .big { font-size: min(40px, 10vw); }
 }
+/* the phone measures (max-width in em) are set for Latin words; a Japanese phrase never breaks inside, so a measure
+   that is a few pixels too narrow would push it under the .ln mask */
+@media (aspect-ratio < 1.2), (max-width: 760px) {
+  html[lang=ja] :is(.scene .st, .scene .h2, .scene .big) { max-width: none; }
+}

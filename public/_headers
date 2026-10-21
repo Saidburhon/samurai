@@ -3,7 +3,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Strict-Transport-Security: max-age=31536000
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 # Icons and share images keep their names, so they cache briefly. Everything else under /assets/ has a content hash
 # in its name and never changes. No two rules overlap (Cloudflare would join their values with commas).

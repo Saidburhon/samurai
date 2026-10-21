@@ -5,11 +5,13 @@ title: "Fixed price or hourly: how to set up a software development contract"
 description: "The questions that matter in a development contract: payment model, stages, acceptance criteria, who owns the code and accounts, and the warranty."
 date: 2026-10-21
 tags: [contract, fixed price, time and materials, acceptance, process]
-related: [mobile, web, telegram, backend]
+related: [mobile, web, telegram, support]
 reading_minutes: 8
 ---
 
-A familiar story: you agreed a price, paid the advance, and two months later the project is "almost done" while the contractor asks for extra money for work you thought was included from the start. Or the reverse: you paid by the hour, the reports kept coming, and the budget ran out before there was anything you could actually use. These disputes rarely start with bad code. They start with a contract that leaves out the parts that matter. The payment model, fixed price or time and materials, is important, but less than most people think. What protects you more is a handful of clauses: what counts as done, what you pay for and when, whose name the code and accounts are in, and what happens after acceptance. Below: how to choose a model and what to check before you sign, whether you're hiring an agency or a freelancer.
+A familiar story: you agreed a price, paid the advance, and two months later the project is "almost done" while the contractor asks for extra money for work you thought was included from the start. Or the reverse: you paid by the hour, the reports kept coming, and the budget ran out before there was anything you could actually use. These disputes rarely start with bad code. They start with a contract that leaves out the parts that matter.
+
+The choice between fixed price and time and materials matters, but less than most people think. What protects you more is a handful of clauses: what counts as done, what you pay for and when, whose name the code and accounts are in, and what happens after acceptance. The same questions apply whether you hire an agency in Tashkent, a team abroad or a freelancer. Below: how to choose a payment model and what to check in the contract before you sign.
 
 ## Fixed price: when it works
 
@@ -23,7 +25,7 @@ Fixed price only works if the contract has three things:
 - **An explicit "not included" list**: entering content, moving data from the old system, publishing to the App Store and Google Play, copywriting, photos.
 - **A change request procedure.** Every change is put in writing: what changes, why, what it costs, how far the date moves. Work on it starts only after you approve it.
 
-The sign of a bad fixed price: the contractor quotes without asking a single question and agrees to everything. After that, an argument about what was "included" is close to guaranteed.
+A warning sign: the contractor quotes a fixed price without asking a single question and agrees to everything. After that, an argument about what was "included" is close to guaranteed.
 
 ## Hourly or time and materials: when it works
 
@@ -39,14 +41,14 @@ The risk is now yours: if the team is slow or the task turns out harder than exp
 
 ## The middle path: plan first, then fixed stages
 
-Most projects are clear in outline but not yet in detail, and for them a third option fits best. It starts with a short, paid planning stage: an analyst and a designer walk through your processes, write the specification, draw the key screens and estimate the work part by part. Depending on the number of roles and integrations, that usually takes one to three weeks. After that, each development stage gets its own fixed price and date.
+Most projects are clear in outline but not yet in detail, and for them a third option fits best. It starts with a short, paid planning stage: an analyst and a designer walk through your processes, write the specification, draw the key screens and estimate the work part by part. Depending on the number of roles and integrations, that usually takes one to two weeks, or three to five if you also want a clickable prototype. After that, each development stage gets its own fixed price and date.
 
 Why this works in the client's favour:
 
 - you commit a small sum before you commit the whole budget;
 - the planning output (specification, prototype, estimate) stays with you, even if you take it to another contractor;
 - each stage is priced against a clear scope, so the risk margin is smaller;
-- after every stage you can revisit the plan, dropping or adding things without tearing up the contract.
+- after every stage you can revisit the plan, dropping or adding things without rewriting the contract.
 
 This is the Japanese habit of planning before building. A mistake is cheapest to fix on paper and most expensive to fix in finished code. What to prepare for the planning stage is covered in [How to write a brief for an IT agency](/en/blog/brief-for-it-agency/).
 
@@ -55,7 +57,7 @@ The three models side by side:
 | | Fixed price | Time and materials | Plan, then fixed stages |
 |---|---|---|---|
 | Fits when | scope is clear and stable | the product keeps changing | the task is clear in outline |
-| Estimate risk sits with | the contractor (who adds a margin) | the client | shared: a small planning stage, then the contractor stage by stage |
+| Estimate risk sits with | the contractor (who adds a margin) | the client | shared: you carry the small planning stage, the contractor carries each stage after it |
 | What you control | the scope document and changes | hours, the ceiling, demo results | acceptance of each stage |
 | Typical trap | arguing over what was "included" | budget gone, no product | stages that are too large |
 
@@ -67,13 +69,13 @@ How to cut the stages:
 
 1. Each stage ends with something you can see and check: a working menu in a test bot, a Click payment in test mode, an operator panel.
 2. Keep stages short. If more than six to eight weeks pass between acceptances, you go too long without seeing results. Two to six weeks is a comfortable length.
-3. Order them by importance: first the main path from opening the app to paying, then everything else.
+3. Order them by importance: first the main path from the first screen to payment, then everything else.
 
-For example, a booking bot for a dental clinic with two branches might be staged like this: planning and specification; the booking flow in the bot; reminders and prepayment through Click and Payme; the receptionists' admin panel; doctors' schedules; launch and test period.
+For example, an ordering bot for a restaurant with three branches might be staged like this: planning and specification; menu, cart and checkout; payment through Click and Payme; operator and courier screens; data exchange with 1C; launch and test period.
 
 The advance is a negotiation. The contractor needs it to commit a team to you; you don't want to pay for things that don't exist yet. A sensible compromise is an advance for the first stage, not for the whole project. Some clients also hold back part of the final payment until the test period ends.
 
-For companies in Uzbekistan, a stage is closed with an act of completed work, and the act and the invoice often go through Didox or Faktura.uz. Agree in advance who on your side signs them with the company's electronic signature, or payment can sit for a week.
+For companies in Uzbekistan, a stage is closed with an act of completed work, and the act and the invoice often go through Didox or Faktura.uz. Agree in advance who on your side signs them with an electronic signature, or payment can sit for a week.
 
 ## Acceptance criteria: what "done" means
 
@@ -99,10 +101,10 @@ What should be in your name or handed over to you:
 - **Source code**, in a repository (GitHub, GitLab) owned by your company, with the contractor working in it as a member. Not an archive at the end of the project, but access from day one.
 - **Design files**: Figma mockups in your workspace, or handed over in their original form.
 - **The domain**, registered to your company.
-- **Hosting and servers**, on an account in your name. If the system stores personal data of Uzbek citizens, the personal data law requires the server to be in Uzbekistan.
+- **Hosting and servers**, on an account in your name. If the system stores personal data of Uzbek citizens, Uzbekistan's personal data law requires that data to be stored on servers in Uzbekistan. More in [Storing personal data in Uzbekistan](/en/blog/personal-data-in-uzbekistan/).
 - **App Store and Google Play developer accounts**, in your organisation's name. Registering an organisation takes time (Apple, for example, asks for a D-U-N-S number), so start in the first week.
 - **The Telegram bot**, registered from a Telegram account your company controls, not from a developer's personal account. The contractor gets the bot token from you.
-- **Merchant accounts with Click, Payme and Uzum**: the business signs the contracts with payment providers.
+- **Merchant accounts with Click, Payme and Uzum**: the business itself, not the contractor, signs the contracts with payment providers.
 - **Access and documentation**: a list of every service, password and key, and instructions for deploying the system.
 
 Paying for the work doesn't always mean the rights to the code have passed to you. Write in a transfer of exclusive rights to the code and design once each stage is paid, and state separately on what terms the contractor may use its own existing libraries and open-source components. Have a lawyer check these clauses: this article covers the business side of the contract and isn't legal advice.
@@ -115,13 +117,13 @@ Warranty and support are different things, and the contract should keep them apa
 
 What the warranty doesn't cover: new features, changes you ask for after acceptance, problems caused by someone else editing the code, and changes on the side of Telegram, the payment providers or 1C.
 
-**Support** is a separate agreement that starts when the warranty ends: servers, backups, updates, app store requirements, small changes, response times for outages. It's usually paid monthly, either as a fixed fee or as hours with a cap. Ask for the support price in writing before you sign the main contract, so you know the full cost of the first year. What it should cover: [After launch: what maintaining an app or website actually involves](/en/blog/maintenance-after-launch/).
+**Support** is a separate agreement that starts when the warranty ends: servers, backups, updates, App Store and Google Play requirements, small changes, response times for outages. It's usually paid monthly, either as a fixed fee or as hours with a cap. Ask for the support price in writing before you sign the main contract, so you know the full cost of the first year. What it should cover: [After launch: what maintaining an app or website actually involves](/en/blog/maintenance-after-launch/).
 
 ## Communication belongs in the contract too
 
-Half of all disputes aren't about code but about who said what, and when. So the rules of communication deserve the same treatment as deadlines.
+Many disputes aren't about code at all, but about who said what, and when. So the rules of communication deserve the same treatment as deadlines.
 
-- **Reporting rhythm.** A weekly report in the same format every time: done, next, what's needed from you, timeline and budget status. Bad news the same day. Japanese teams call this hōrensō; more in [Hōrensō: how your software team should report to you](/en/blog/horenso-reporting/).
+- **Reporting rhythm.** A weekly report in the same format every time: what was done, what's next, what's needed from you, where the timeline and budget stand. Bad news the same day. Japanese teams call this hōrensō; more in [Hōrensō: how your software team should report to you](/en/blog/horenso-reporting/).
 - **Contact people.** One person on each side who can make decisions, plus a stand-in for holidays.
 - **Response times on both sides.** If you take a week to grant access to 1C, the deadline moves, and the contract should say so.
 - **How decisions are recorded.** Anything agreed on a call or in a Telegram voice message gets confirmed in writing in the shared chat or by email. Scope changes go only through a change request.

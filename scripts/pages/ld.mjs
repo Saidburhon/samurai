@@ -3,7 +3,9 @@
 //   WebSite       https://qilich.com/#website        the same node on every page
 //   WebPage       <url>#webpage                      or AboutPage / ContactPage, with inLanguage and isPartOf
 //   BreadcrumbList <url>#breadcrumb                  every page below a home page
-//   Person        https://qilich.com/en/about/#person-<slug>   only for people listed in content/site.json
+//   Person        https://qilich.com/en/about/#person-<slug>   on the about and press pages, for the people listed in
+//                 content/site.json, each worksFor the Organization (the Organization itself names nobody, so its node
+//                 stays the same on every page and every reference resolves on the page that carries it)
 // Facts come from content/site.json and nothing else: legalName, foundingDate, sameAs, people, the Japanese entity
 // and the street address appear only when they are filled in. No ratings, no reviews, no keywords.
 import { SITE, LANGS, site, has, abs } from '../site.mjs';
@@ -48,7 +50,6 @@ export function organization(lang) {
   o.address = addresses.length === 1 ? addresses[0] : addresses;
   o.contactPoint = point;
   if (has(site.japan.legalName)) o.subOrganization = { '@type': 'Organization', name: site.japan.legalName, address: addresses[1] || undefined, telephone: has(j.telephone) ? j.telephone : undefined };
-  if (has(site.people)) o.employee = site.people.map((p) => ({ '@id': personId(p) }));
   if (has(site.sameAs)) o.sameAs = site.sameAs;
   return o;
 }

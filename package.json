@@ -9,7 +9,11 @@
     "qa:flow": "node scripts/qa/flow-probe.cjs",
     "dev": "wrangler dev",
     "deploy": "npm run build && wrangler deploy",
-    "deploy:www": "wrangler deploy -c workers/www-redirect/wrangler.json"
+    "deploy:www": "wrangler deploy -c workers/www-redirect/wrangler.json",
+    "indexnow": "node scripts/indexnow.mjs",
+    "qa:seo": "node scripts/qa/seo-check.mjs",
+    "qa:pages": "node scripts/qa/pages-probe.cjs",
+    "qa:ja": "node scripts/qa/ja-review.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",

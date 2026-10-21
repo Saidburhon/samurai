@@ -1,0 +1,39 @@
+# Qilich
+
+> Qilich is a Japanese IT agency in Tashkent that builds mobile apps, websites, Telegram bots, backend systems and AI integrations to Japanese standards.
+
+Qilich builds iOS and Android apps, websites and web platforms, Telegram bots, backend systems and integrations, desktop apps, IoT and AI integration, for businesses in Uzbekistan and for companies in Japan that are looking for an offshore development partner. The team works in Tashkent, Uzbekistan (UTC+5), four hours behind Tokyo; five working hours overlap with the Japanese working day. Qilich is new in Uzbekistan and shows no portfolio or client names.
+
+Contact: inbox@qilich.com, +998 97 270 70 07. The site is in four languages: Oʻzbekcha, Русский, English, 日本語.
+
+## English
+
+- [Qilich — a Japanese IT agency in Tashkent: apps, websites, bots](https://qilich.com/en/): A Japanese IT agency, now in Uzbekistan: iOS and Android apps, websites, Telegram bots, backend, IoT and AI. Japanese quality, Tashkent prices.
+- [About Qilich, a Japanese IT agency working in Tashkent](https://qilich.com/en/about/): How Qilich works and what we build: mobile apps, websites, Telegram bots, backend and AI integration. A Tashkent team, Japanese working standards, company facts.
+- [Press kit: Qilich in one sentence, facts and logo files](https://qilich.com/en/press/): For journalists and partners: Qilich in one sentence, a short boilerplate, the company facts and the logo files, all ready to use as they are.
+- [Contact Qilich: phone, email and project enquiry form](https://qilich.com/en/contact/): Need an app, a website, a bot or a system? Call Qilich on +998 97 270 70 07, write to inbox@qilich.com or fill in the form. The team is in Tashkent.
+- [Privacy policy: how Qilich handles your personal data](https://qilich.com/en/privacy/): What personal data qilich.com collects, why, who receives it and how to have it corrected or deleted. Covers the Uzbek law on personal data and Japan’s APPI.
+
+## 日本語 (for Japanese companies looking for an offshore development partner)
+
+- [ウズベキスタンのオフショア開発｜日本品質の開発チーム Qilich](https://qilich.com/ja/): ウズベキスタン・タシケントの開発チームが、アプリ、Webシステム、業務システム、AI連携を日本の品質水準で開発します。東京との時差は4時間で、日本時間の午後に業務時間が5時間重なります。
+- [会社概要｜日本品質で開発する、タシケントの開発チーム Qilich](https://qilich.com/ja/about/): Qilich（キリチ）の会社概要です。ウズベキスタンのタシケントに開発チームを置き、日本の品質水準でアプリや業務システムを開発しています。仕事の進め方、拠点と時差、会社情報をご紹介します。
+- [プレス向け情報｜会社紹介文・会社データ・ロゴデータ Qilich](https://qilich.com/ja/press/): 報道関係者やパートナー企業の方に向けて、Qilich（キリチ）の短い紹介文、会社紹介文、会社データ、ロゴデータをまとめました。記事や資料に、そのまま転載してご利用いただけます。
+- [お問い合わせ｜オフショア開発・システム開発のご相談 Qilich](https://qilich.com/ja/contact/): アプリ、Webシステム、業務システムのオフショア開発をご検討中の方は、メール、お電話、フォームからお気軽にご相談ください。ウズベキスタン・タシケントの開発チームよりご返信します。
+- [プライバシーポリシー｜個人情報の取り扱いと利用目的 Qilich](https://qilich.com/ja/privacy/): Qilich（キリチ）がqilich.comで取得する個人情報の種類と利用目的、外国にある第三者への提供、開示・訂正・利用停止のご請求方法を説明します。日本の個人情報保護法を踏まえて作成しています。
+
+## Oʻzbekcha (Uzbek, the primary market)
+
+- [Qilich — yapon IT agenstvasi Toshkentda: ilovalar, saytlar, botlar](https://qilich.com/): Yapon IT agenstvasi endi Oʻzbekistonda: iOS va Android ilovalar, saytlar, Telegram-botlar, backend, IoT va AI. Yapon sifati, Toshkent narxi.
+- [Biz haqimizda: Toshkentdagi yapon IT agenstvasi · Qilich](https://qilich.com/about/): Qilich qanday ishlaydi va nimalarni quradi: ilovalar, saytlar, Telegram-botlar, backend va AI. Toshkentdagi jamoa, yapon ish uslubi va kompaniya maʼlumotlari.
+- [Matbuot uchun: Qilich haqida qisqacha, faktlar va logotip](https://qilich.com/press/): Jurnalistlar va hamkorlar uchun Qilich haqida bir jumlada, qisqa matn, asosiy faktlar va logotip fayllari. Matnni oʻzgartirmasdan ishlatishingiz mumkin.
+- [Qilich bilan aloqa: telefon, email va soʻrov shakli](https://qilich.com/contact/): Ilova, sayt, bot yoki tizim kerakmi? Qilichga qoʻngʻiroq qiling: +998 97 270 70 07, inbox@qilich.com manziliga yozing yoki shaklni toʻldiring. Jamoa Toshkentda.
+- [Maxfiylik siyosati: shaxsiy maʼlumotlaringiz va Qilich](https://qilich.com/privacy/): qilich.com qanday shaxsiy maʼlumotlarni yigʻadi, nima uchun, kimga uzatadi va ularni qanday tuzatish yoki oʻchirish mumkin. Oʻzbekiston qonuni va Yaponiya APPI.
+
+## Русский (Russian)
+
+- [Qilich — японское IT-агентство в Ташкенте: приложения, сайты, боты](https://qilich.com/ru/): Японское IT-агентство теперь в Узбекистане: приложения для iOS и Android, сайты, Telegram-боты, бэкенд, IoT и ИИ. Японское качество, ташкентские цены.
+- [О компании: японское IT-агентство в Ташкенте · Qilich](https://qilich.com/ru/about/): Как работает Qilich и что мы строим: приложения, сайты, Telegram-боты, бэкенд и ИИ. Команда в Ташкенте, японский подход к работе и основные факты о компании.
+- [Для прессы: Qilich в одном предложении, факты и логотип](https://qilich.com/ru/press/): Для журналистов и партнёров: Qilich в одном предложении, короткая справка, основные факты и файлы логотипа. Их можно использовать без изменений.
+- [Контакты Qilich: телефон, почта и заявка на проект](https://qilich.com/ru/contact/): Нужно приложение, сайт, бот или система? Позвоните в Qilich: +998 97 270 70 07, напишите на inbox@qilich.com или заполните форму. Команда в Ташкенте.
+- [Политика конфиденциальности и персональные данные · Qilich](https://qilich.com/ru/privacy/): Какие персональные данные собирает qilich.com, зачем, кому их передаёт и как их исправить или удалить. Закон Узбекистана о персональных данных и японский APPI.

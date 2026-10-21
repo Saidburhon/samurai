@@ -1,7 +1,8 @@
 // Inlined in <head> (<script data-gen="head">), before the first paint: the mode classes.
 //   js       JavaScript runs (no-js is the page as authored)
 //   cinema   the WebGL scroll film: only with a real WebGL2 context, never with ?tier=0 (flow-forced);
-//            the build ships it only once the GL code exists (__CINEMA__)
+//            the build ships it to visitors once the director exists (__CINEMA__); until then the dev hooks
+//            ?beat=k (one hold, G1 poster test) and ?cinema=1 (the boot path, GL timing) turn it on
 //   intro    the drawing inks itself (not with a hash, ?nointro, ?beat, ?og or reduced motion)
 // It also anchors the intro to navigation start: if this ran late, the CSS animations are compressed (--k).
 /* global __CINEMA__ */
@@ -11,7 +12,7 @@
   const tierQ = q.get('tier');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cinema = false;
-  if (__CINEMA__ && tierQ !== '0') {
+  if ((__CINEMA__ || q.has('beat') || q.get('cinema') === '1') && tierQ !== '0') {
     try {
       const c = document.createElement('canvas'); c.width = c.height = 1;
       const g = c.getContext('webgl2');

@@ -1,0 +1,112 @@
+/* Cinema mode (html.cinema): one fixed stage and every scene fixed over it; the director shows the scene that owns
+   the current beat (.on) and, inside it, the elements of that beat (.now). G1: the holds (poster mode, ?beat=k);
+   G3 adds the track, the transitions and the masks. Flow mode never sees any of this. */
+
+html.cinema { overflow: hidden; }
+html.cinema body { overflow: hidden; background: var(--sumi); }
+html.cinema #stage { position: fixed; inset: 0; width: 100vw; height: 100lvh; min-height: 0; z-index: 0; }
+html.cinema #paper, html.cinema #gl, html.cinema #labels, html.cinema #front { display: block; }
+html.cinema #paper { position: absolute; inset: 0; }
+html.cinema #paper .sheet { position: absolute; inset: 0; display: none; }
+html.cinema #paper .sheet.on { display: block; }
+.sheet[data-g=washi] { background: var(--washi) var(--washi-tile, none) 0 0 / 512px 512px; }
+.sheet[data-g=togi] { background: var(--togi) var(--togi-tile, none) 0 0 / 512px 512px; }
+.sheet[data-g=sumi] { background: var(--sumi); }
+.sheet[data-g=ai] { background: radial-gradient(120% 90% at 64% 50%, #1B2546 0%, var(--ai) 55%, #0C1124 100%); }
+.sheet[data-g=ro] { background: radial-gradient(80% 70% at 50% 55%, #3A1206 0%, var(--ro) 65%); }
+.sheet[data-g=mizu] { background: var(--mizu); }
+.sheet[data-g=ganch] { background: var(--ganch) var(--ganch-tile, none) 0 0 / 512px 512px; }
+/* the deckle: the paper's own light, warm at the top right, darker at the edges; on dark grounds a vignette */
+html.cinema #paper .deckle { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(62% 56% at 66% 36%, rgba(255, 247, 230, .26), transparent 72%), radial-gradient(130% 115% at 56% 38%, transparent 46%, rgba(64, 46, 24, .13) 100%); }
+html.cinema.dark #paper .deckle { background: radial-gradient(130% 110% at 50% 50%, transparent 50%, rgba(0, 0, 0, .35) 100%); }
+html.cinema[data-ground=togi] #paper .deckle { background: radial-gradient(130% 115% at 50% 40%, transparent 52%, rgba(64, 52, 36, .08) 100%); }
+html.cinema #paper .lamp-pool { display: none; }
+html.cinema #ink { z-index: 1; }
+html.cinema #gl { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
+html.cinema #front { position: absolute; left: 0; top: 0; z-index: 3; overflow: visible; }
+html.cinema #labels { position: absolute; inset: 0; z-index: 3; }
+/* the drawing: one matrix() from svg units to the screen (fx/ink.js) */
+html.cinema #osh-paper { left: 0; top: 0; width: 1402px; translate: none; rotate: none; transform-origin: 0 0; }
+html.cinema #osh path, html.cinema #osh circle { vector-effect: non-scaling-stroke; }
+html.cinema .ol { font-size: calc(13px * var(--ik, 1)); }
+html.cinema .ol b { font-size: calc(14px * var(--ik, 1)); }
+html.cinema #osh-hero path[pathLength] { stroke-dasharray: none; }
+
+/* the part, stone and tip labels: kanji 26 px (Mincho 500), gloss 15 px (mono), a hairline leader */
+.plabel { position: absolute; inset: 0; }
+.plabel .lead { position: absolute; inset: 0; overflow: visible; }
+.plabel .lead path { stroke: currentColor; stroke-width: 1; opacity: .55; fill: none; }
+.plabel .lead circle { fill: currentColor; opacity: .7; }
+.plabel .lt { position: absolute; display: flex; align-items: baseline; gap: 10px; white-space: nowrap; transform: translate(-50%, -100%); padding-bottom: 8px; }
+.plabel .lt b { font: 500 26px/1 var(--jp); letter-spacing: .04em; }
+.plabel .lt i, .plabel .lt .mono { font: 400 15px/1 var(--mono); font-stretch: 87.5%; font-style: normal; letter-spacing: .04em; opacity: .78; }
+html.cinema #labels { color: var(--fg); }
+html.cinema[data-ground=washi] #labels, html.cinema[data-ground=togi] #labels { color: var(--sumi); }
+
+/* ---------------- the scenes ---------------- */
+html.cinema #story { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+html.cinema .scene { position: absolute; inset: 0; display: none; min-height: 0; padding: 0; background: none; }
+html.cinema .scene.on { display: block; }
+html.cinema .scene [data-beat]:not(.now) { display: none !important; }
+html.cinema .scene a, html.cinema .scene button { pointer-events: auto; }
+html.cinema .plate { display: none; }
+html.cinema .foot { display: none; }
+html.cinema .nav { position: fixed; }
+html.cinema .ruler { position: fixed; top: auto; bottom: 0; }
+html.cinema.dark { --fg: var(--washi); --fg2: var(--hagane); --line: rgba(236, 230, 218, .18); }
+html.cinema.dark .nav, html.cinema.dark .ruler { color: var(--washi); --line: rgba(236, 230, 218, .18); }
+html.cinema.dark .nav .btn { border-color: rgba(236, 230, 218, .5); }
+html.cinema.dark .grain { mix-blend-mode: screen; opacity: .05; }
+
+/* 銘 B0 is the flow hero (critical.css); B1: the promise, top-left; the mei and the hanko leave with the h1 */
+html.cinema .b-hero { position: absolute; inset: 0; height: auto; min-height: 0; }
+html.cinema .b-promise { position: absolute; left: var(--m); top: 128px; display: block; padding: 0; width: calc(7 * var(--col) + 6 * var(--g)); }
+html.cinema .b-promise .st { font-size: clamp(40px, calc(72 * var(--fit)), 72px); }
+html.cinema .b-promise .st-sub { margin-top: 20px; max-width: 26em; font-size: clamp(16px, calc(18 * var(--fit)), 18px); }
+html.cinema[data-beat="mei.promise"] .s-mei > .mei, html.cinema[data-beat="mei.promise"] .s-mei > .hanko { display: none; }
+html.cinema[data-beat="intro"] .b-hero .sub, html.cinema[data-beat="intro"] .s-mei > .hanko, html.cinema[data-beat="intro"] .cue { display: none; }
+
+/* 映 B2–B6: the h2 top-left, the full list bottom-right (the active items lit), the hakogaki at the right edge */
+html.cinema .s-utsuri .h2 { position: absolute; left: var(--m); top: 128px; font-size: clamp(36px, calc(54 * var(--fit)), 54px); }
+html.cinema .svc { position: absolute; left: calc(var(--m) + 8 * (var(--col) + var(--g))); bottom: 86px; font-size: 18px; color: rgba(236, 230, 218, .42); }
+html.cinema .svc li { border: 0; padding: 7px 0 7px 28px; white-space: nowrap; transition: color .45s var(--ui), font-size .45s var(--ui); }
+html.cinema .svc li::before { opacity: 0; }
+html.cinema .svc li.on { color: var(--washi); font-size: 22px; }
+html.cinema .svc li.on::before { opacity: 1; }
+html.cinema .svc li:last-child { border: 0; }
+
+/* 研 B11–B13: the statement top-left, honed with the polish */
+html.cinema .s-togi .st { position: absolute; left: var(--m); top: 128px; max-width: 12em; font-size: clamp(40px, calc(64 * var(--fit)), 64px); }
+html.cinema[data-beat="togi.front"] .s-togi .st { font-variation-settings: "SHRP" 72; }
+html.cinema .s-togi .after, html.cinema .s-togi .hint { display: none; }
+html.cinema .s-togi .hako[data-beat] { display: none; }
+
+/* 鍔 B14: the statement bottom-left, the caption under it, the hakogaki top-right */
+html.cinema .s-tsuba .b-guard { position: absolute; left: var(--m); bottom: 160px; }
+html.cinema .s-tsuba .st.big { font-size: clamp(42px, calc(72 * var(--fit)), 72px); line-height: 1.02; }
+html.cinema .s-tsuba .cap { margin-top: 40px; }
+html.cinema .s-tsuba .hako { top: 118px; }
+
+/* 納 B21: the contact block, the number at 120 px on one line (the climax of the type scale) */
+html.cinema .s-noto .st { position: absolute; left: var(--m); top: 128px; margin: 0; font-size: clamp(40px, calc(64 * var(--fit)), 64px); }
+html.cinema .s-noto .pre { position: absolute; left: var(--m); top: 128px; }
+html.cinema .contact { position: absolute; left: var(--m); top: calc(128px + 1.1 * clamp(40px, calc(64 * var(--fit)), 64px) + 56px); margin: 0; }
+html.cinema .contact .tel { font-size: clamp(56px, calc(120 * var(--fit)), 120px); }
+html.cinema .contact .mail { font-size: clamp(24px, calc(40 * var(--fit)), 40px); }
+html.cinema .contact .hanko-c { width: 28px; height: 28px; rotate: -3deg; margin-left: 6px; align-self: flex-start; margin-top: 10px; }
+html.cinema .contact .hanko-c svg { width: 100%; height: 100%; filter: url(#inked); }
+html.cinema .contact .hanko-c rect { fill: var(--shu); }
+html.cinema .contact .hanko-c .m { fill: var(--washi); }
+html.cinema .s-noto .hako { top: 118px; }
+
+/* phone */
+@media (aspect-ratio < 1.2) {
+  html.cinema .b-promise { left: var(--m); right: var(--m); top: 92px; width: auto; }
+  html.cinema .b-promise .st { font-size: 34px; }
+  html.cinema .b-promise .st-sub { font-size: 15px; }
+  html.cinema .plabel .lt b { font-size: 22px; }
+  html.cinema .plabel .lt i, html.cinema .plabel .lt .mono { font-size: 13px; }
+}
+:root { --cinema-css: 1; }
+html.cinema #osh-paper.no-annot .o-annot, html.cinema #osh-paper.no-annot #osh-detail, html.cinema #osh-paper.no-annot .osh-labels { display: none; }

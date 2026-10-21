@@ -14,13 +14,14 @@
   "url": "https://qilich.com",
   "legalName": "",
   "foundingDate": "",
+  "representative": "",
   "email": "inbox@qilich.com",
   "telephone": "+998 97 270 70 07",
   "description": {
     "uz": "Qilich Toshkentda ishlaydigan yapon IT agenstvasi boʻlib, mobil ilovalar, saytlar, Telegram-botlar, backend tizimlar va AI integratsiyalarini yapon standartlarida quradi.",
     "ru": "Qilich — японское IT-агентство в Ташкенте, которое разрабатывает мобильные приложения, сайты, Telegram-ботов, бэкенд-системы и интеграции с ИИ по японским стандартам.",
     "en": "Qilich is a Japanese IT agency in Tashkent that builds mobile apps, websites, Telegram bots, backend systems and AI integrations to Japanese standards.",
-    "ja": "Qilich（キリチ）は、ウズベキスタンのタシケントに開発チームを置き、モバイルアプリ、Webシステム、業務システム、AI連携を日本の品質基準で開発するIT企業です。"
+    "ja": "Qilich（キリチ）は、ウズベキスタンのタシケントに開発チームを置き、iOS・Androidアプリ、Webシステム、業務システム、AI連携などの開発を日本の品質水準で手がけるIT企業です。"
   },
   "contact": {
     "availableLanguage": ["uz", "ru", "en", "ja"],

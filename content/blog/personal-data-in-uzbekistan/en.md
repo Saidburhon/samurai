@@ -1,11 +1,11 @@
 ---
 slug: personal-data-in-uzbekistan
 lang: en
-title: "Storing personal data in Uzbekistan: what it means for your site, app and bot"
-description: "Personal data of Uzbek citizens must be stored on servers in the country. What that means in practice for your website, app, bot and CRM."
+title: "Storing personal data in Uzbekistan: sites, apps and bots"
+description: "Personal data of Uzbek citizens must be stored on servers in the country. Here is what that means in practice for your website, app, bot and CRM."
 date: 2026-10-21
 tags: [personal data, compliance, hosting, security, backend, telegram-bot]
-related: [backend, web, mobile, telegram]
+related: [cloud-data-compliance, cloud-hosting-uz, cloud-backup-dr, cloud-migration]
 reading_minutes: 10
 ---
 
@@ -14,20 +14,20 @@ Almost every business with a website, bot or CRM collects personal data: names, 
 ## What the law says, briefly
 
 - **The main law.** The Law of the Republic of Uzbekistan "On Personal Data", No. ZRU-547 of 2 July 2019. It defines personal data, the owner and the operator of a database, when a person's consent is needed, and the person's rights: to know what is stored about them, to have it corrected, to withdraw consent, and to ask for deletion.
-- **The localisation rule.** In 2021 Article 27¹ was added. An owner or operator processing personal data of Uzbek citizens with information technology, including on the internet, must collect, organise and store it in databases on hardware physically located in Uzbekistan.
-- **Registration.** Those databases have to be registered in the State Register of Personal Data Databases. The law names the State Personalization Centre under the Cabinet of Ministers as the authorised body. Procedures and responsible agencies change over time, so check the current process with a lawyer.
-- **Enforcement.** Violations carry administrative and criminal liability, and access to a service can be restricted. In 2021, access to several large foreign social networks was restricted with this localisation rule given as the reason.
+- **The localisation rule.** In 2021 Article 27¹ was added. An owner or operator processing personal data of Uzbek citizens with information technology, including on the internet, must collect, organise and store it in databases on hardware physically located in Uzbekistan. This is what people mean by personal data localisation in Uzbekistan.
+- **Registration.** Those databases have to be registered in the State Register of Personal Data Databases. The law names the State Personalisation Centre under the Cabinet of Ministers as the authorised body. Procedures and responsible agencies change over time, so check the current registration process with a lawyer.
+- **Liability.** Violations carry administrative and criminal liability, and access to a service can be restricted. In 2021, access to several large foreign social networks was restricted, with the localisation rule cited as the reason.
 
 Find the current text with all amendments on [lex.uz](https://lex.uz) and read that, not someone's summary, this one included. This article is not legal advice. It is meant to help you prepare questions for your lawyer and your developer.
 
 ## What counts as personal data in your product
 
-The law defines personal data broadly: any information about a specific person, or that makes it possible to identify them. In a typical bot, app or CRM that includes:
+The law defines personal data broadly: any information that relates to a specific person or makes it possible to identify them. In a typical bot, app or CRM that includes:
 
 - name, phone number, email, date of birth;
 - Telegram ID and username, which identify a person even if they never shared a phone number;
 - delivery addresses and any location a customer sent to the bot;
-- order history. For a pharmacy or a clinic it shows what someone is being treated for, and the law puts health data in a separate, more sensitive category;
+- order history. For a pharmacy or a clinic it shows what someone is being treated for, and the law treats health data as a special category with stricter rules;
 - photos and documents: a selfie for identity checks, "before and after" photos at a clinic, passport scans;
 - passport details and the personal identification number (PINFL), common in hotels, clinics, training centres and instalment plans;
 - children's data at training centres, sports clubs and private schools;
@@ -48,7 +48,7 @@ Fill in a table like this one for your own product, together with your developer
 |---|---|---|---|
 | Main database of the site or bot | Customers, orders, addresses | Depends on the host | Country and data centre written into the contract |
 | Backups | A full copy of the database | Often not where the main server is | Where they go, how long they are kept |
-| CRM | Names, phones, chats, deals | For a cloud CRM, on the vendor's servers | Which country your account is stored in |
+| CRM | Names, phones, chats, deals | For a cloud CRM, on the vendor's servers | Which country your account's data is stored in |
 | SMS, email, push | Phone numbers, email addresses, message text | A local gateway or a foreign service | Whether extra details end up in the text |
 | Analytics and session recordings | Site activity, sometimes form contents | Usually abroad | Whether phone numbers are sent, whether fields are masked |
 | AI services | Chats, documents, requests | Usually abroad | What exactly goes into each request |
@@ -57,7 +57,7 @@ Fill in a table like this one for your own product, together with your developer
 | Spreadsheets and cloud drives | Customer lists made "for now" | Usually abroad | Who made them and who has access |
 | Laptops and test servers | Copies of the production database | Anywhere | Whether real data exists outside production |
 
-Telegram itself is a separate question. Messages a customer sends to your bot pass through Telegram's servers, and you cannot change that. What you control is what your bot stores and where it sends it next. One useful engineering detail: a form inside a Telegram Mini App sends data straight to your server, not as a message through Telegram. If your bot collects something sensitive, such as a photo of an ID document, it is better to do that in a mini app with its backend in Uzbekistan. How to treat Telegram as a channel under the law is a question for your lawyer.
+Telegram itself is a separate question. Messages a customer sends to your bot pass through Telegram's servers, and you cannot change that. What you control is what your bot stores and where it sends it next. One useful engineering detail: a Telegram Mini App is a web page that opens inside Telegram, and a form in it sends data straight to your server, not as a message through Telegram. If your bot collects something sensitive, such as a photo of an ID document, it is better to do that in a mini app with its backend in Uzbekistan. How to treat Telegram as a channel under the law is a question for your lawyer.
 
 The most common findings when a business draws this map for the first time: backups in another country, a spreadsheet of phone numbers made "for a couple of weeks" two years ago, and a copy of the production database on the laptop of a developer who stopped working with you long ago.
 
@@ -73,7 +73,7 @@ What to ask a provider before you sign:
 4. **Support.** Hours, channel, language, and how fast they respond at night and on weekends.
 5. **What is included.** Just a virtual server, or also a managed database, file storage, a load balancer, DDoS protection, monitoring. Anything the provider does not offer, your team has to set up and run itself.
 6. **Connectivity.** A connection to TAS-IX, so the site loads fast for local users, and the speed of the international link if your system calls foreign APIs.
-7. **Paperwork.** A legal entity in Uzbekistan, a contract, payment in soʻm by bank transfer, e-invoices through Didox or Faktura.uz. Your accountant will be glad you asked.
+7. **Paperwork.** A legal entity in Uzbekistan, a contract, payment in UZS by bank transfer, e-invoices through Didox or Faktura.uz. Your accountant will be glad you asked.
 8. **How to leave.** Whether you can export your data and server images if you decide to switch providers.
 
 An honest word about cost. For a small business's bot or website, server rent is usually not the main expense. Looking after the servers costs more: updates, monitoring, checking that backups actually restore. Local providers offer fewer ready-made managed services, so there can be more of this work than in a global cloud. Budget for it in monthly maintenance, not only in the one-off development cost.
@@ -82,7 +82,7 @@ An honest word about cost. For a small business's bot or website, server rent is
 
 Dropping every foreign service is usually neither necessary nor realistic. The working principle: the master copy of the data lives in Uzbekistan, and each external service gets only what it cannot work without. Whether a particular transfer abroad is allowed in your setup is for your lawyer to decide, because the law treats cross-border transfer separately.
 
-- **CRM.** Ask the vendor or partner which country your cloud account's data is physically stored in. If it is not Uzbekistan, the options are an on-premise version on your own server in Uzbekistan, your own system on local hosting, or a setup where the CRM receives as few fields as possible. More in [Choosing a CRM](/en/blog/choosing-a-crm/).
+- **CRM.** Ask the vendor or partner which country your cloud account's data is physically stored in. If it is not Uzbekistan, the options are an on-premise version on your own server in Uzbekistan (Bitrix24, for example, has one), your own system on local hosting, or a setup where the CRM receives as few fields as possible. More in [Choosing a CRM](/en/blog/choosing-a-crm/).
 - **Analytics.** A visitor counter does not need names or phone numbers. Keep them out of events and parameters, use an internal ID instead of a phone number, and turn on input masking for session recordings.
 - **AI services.** Most strong models run on servers abroad. Before sending text, replace names, phone numbers, addresses and document numbers with placeholders such as [NAME] and [PHONE], then put the real values back on your side when the answer comes in. For sensitive tasks, consider a model running on your own server. More in [AI answering customers in Telegram](/en/blog/ai-support-in-telegram/).
 - **SMS, email and push.** The service needs a number and a text, nothing more. Keep the text short: "Your order is ready", not the order contents and the address. Local SMS gateways exist.
@@ -97,10 +97,10 @@ In most cases the law requires a person's consent before you process their perso
 
 - **In a bot:** before asking for a phone number, the bot briefly explains why it needs it, links to the privacy notice and shows an "I agree" button. The customer then sends the number with the "Share contact" button.
 - **On a website or in an app:** a separate checkbox next to the form, not ticked in advance, with a link to the notice.
-- **Marketing messages** need their own consent, separate from the consent to process an order.
+- **For marketing messages,** ask for separate consent rather than relying on the consent given with an order.
 - **Record the consent:** who agreed, when, and to which version of the text. Without that record, consent is hard to prove.
 
-The privacy notice should be in plain language, in Uzbek and Russian, saying the same thing in both versions:
+Write the privacy notice in plain language, in Uzbek and Russian, and make both versions say the same thing:
 
 1. who you are: company name, tax ID (STIR), contacts;
 2. what data you collect;
@@ -116,7 +116,7 @@ Deletion on request has to actually work. The data must be deleted or anonymised
 
 ## Design it in from the start
 
-In a new project, localisation costs almost nothing: it is a choice of host plus a few architecture decisions, usually a few days of work inside the project. Moving an existing system is a project of its own, from one or two weeks for a bot with a single database to several months for a system with a CRM, analytics and integrations. The timeline grows with the number of places the data lives, the size of the database, whether the CRM has to be replaced, how much downtime you can accept, and whether the developer who built the system is still around.
+In a new project, localisation costs little: it is a choice of host plus a few architecture decisions, usually a few days of work inside the project. Moving an existing system is a project of its own, from one or two weeks for a bot with a single database to several months for a system with a CRM, analytics and integrations. The timeline grows with the number of places the data lives, the size of the database, whether the CRM has to be replaced, how much downtime you can accept, and whether the developer who built the system is still around.
 
 Decisions that make localisation easy:
 
@@ -125,9 +125,9 @@ Decisions that make localisation easy:
 - **Personal data kept apart.** Separate tables or a separate service for customer data, especially passports and medical details, with their own access rights, encryption and a separate store for scanned documents.
 - **Backups inside the country.** Encrypted, in a different data centre or with a different provider in Uzbekistan, with restores tested regularly.
 - **Lean logs.** Phone and document numbers masked, short retention.
-- **Fake data for development.** Test servers and developers' laptops work with generated or anonymised data.
+- **No real data in development.** Test servers and developers' laptops work with generated or anonymised data.
 - **Roles and an audit log.** You can see who viewed, exported and deleted data.
-- **Portability.** Containers and infrastructure described in code, so you can change providers in days rather than months.
+- **Portability.** Containers and infrastructure described in code, so that if you need to, you can change providers in days rather than months.
 
 For the other protective measures, see [Security for your site, app and bot](/en/blog/security-basics/).
 

@@ -5,11 +5,11 @@ title: "Choosing a CRM: amoCRM, Bitrix24 or a custom system"
 description: "amoCRM, Bitrix24 or a custom-built CRM: which fits your sales team, what to compare before choosing, and when building your own is worth it."
 date: 2026-10-21
 tags: [crm, amocrm, bitrix24, sales, integrations, personal-data]
-related: [backend, telegram, web]
+related: [biz-crm, biz-1c-integration, biz-payments, tg-crm-mini-app]
 reading_minutes: 9
 ---
 
-Leads land in three managers' Telegram chats, some get written in a notebook, some in an Excel file that one person keeps. To find out how many enquiries came in last week and how many turned into payments, the owner has to call each manager. When a manager leaves, the clients leave with their phone. The opposite happens too: the company already pays for a CRM every month, but deals get entered on Friday evening from memory and the real work still happens in chats. Either way, "amoCRM or Bitrix24?" is being asked too early. Choose by how your sales actually work and by whether your team will use the system, not by the feature list. Here is how to compare the ready-made options, when building your own makes sense, and how to keep a CRM from turning into an expensive address book.
+Leads land in three managers' Telegram chats; some get written in a notebook, some in an Excel file that one person keeps. To find out how many enquiries came in last week and how many turned into payments, the owner has to call each manager. When a manager leaves, the clients leave with their phone. The opposite happens too: the company already pays for a CRM every month, but deals get entered on Friday evening from memory and the real work still happens in chats. Either way, "amoCRM or Bitrix24?" is being asked too early. Choose by how your sales actually work and by whether your team will use the system, not by the feature list. Here is how to compare the ready-made options, when building your own makes sense, and how to keep a CRM from turning into an expensive address book.
 
 ## What a CRM should do for you
 
@@ -39,12 +39,12 @@ If the process fits into one or two pipelines of five to nine stages, almost any
 
 amoCRM is built around the sales pipeline. Deals are cards that managers drag from stage to stage, and messages from messengers, email and website forms arrive in a shared incoming stream where they are turned into deals. Each stage can trigger an automatic action: send the client a message, set a task, reassign the deal. For a team that sells through conversations this works well, because the manager replies from the deal card and sees the whole history.
 
-Its strengths are a fast start (basic setup takes from a few days to two weeks), an interface people pick up quickly, a mobile app, and plenty of ready integrations and integrators in Tashkent who know it. It is weaker beyond sales: company-wide tasks, documents, projects, complex work after the deal closes.
+Its strengths are a fast start (basic setup takes from a few days to two weeks), an interface people pick up quickly, a mobile app, and plenty of ready-made integrations and integrators in Tashkent who know it. It is weaker beyond sales: company-wide tasks, documents, projects, complex work after the deal closes.
 
 Check before you buy:
 
 - **How Telegram connects.** Through a bot or through managers' personal accounts? Built in, or through a third-party service with its own monthly fee? Does the chat history stay if you switch that service off? Can a manager message a client first? Ask to see it working in a trial account, not in a presentation.
-- **Interface language.** At the time of writing the interface is available in Russian and English, and we found no Uzbek version. For a team comfortable reading Russian that's fine. If some of your managers only work confidently in Uzbek, test it during the trial. The interface language doesn't limit the language of conversations: you can write to clients in Uzbek, Russian or anything else.
+- **Interface language.** At the time of writing the interface offers Russian and English; we found no Uzbek. For a team comfortable reading Russian that's fine. If some of your managers are only comfortable in Uzbek, have them try the interface during the trial. The interface language doesn't limit the language of conversations: you can write to clients in Uzbek, Russian or anything else.
 - **Price per user.** amoCRM is billed per user per month, and the plan sets the limits and how much automation you get. Count everyone who needs access, not just salespeople: the head of sales, the accountant, whoever confirms payments. Plans and prices change, so check them on the amoCRM site or with a partner at the time you buy.
 - **Where it runs.** Cloud only. There is no version you can install on your own server, which matters for data storage (more on that below).
 
@@ -55,11 +55,11 @@ Bitrix24 is more than a CRM. It has tasks and projects, internal chat and video 
 It comes in two versions:
 
 - **Cloud.** You can start right after signing up. Plans are priced for the whole company with a user limit rather than per person, and there is a free plan with restrictions. If many people need access, this can work out cheaper than paying per user.
-- **On-premise.** You buy a licence and install it on your own server, including a server in Uzbekistan. Updates and support are renewed every year. In return you need someone, on staff or a contractor, who is responsible for the server, backups and updates.
+- **On-premise.** You buy a licence and install it on your own server, including a server in Uzbekistan. Updates and support are renewed every year. But then you need someone, on staff or a contractor, who is responsible for the server, backups and updates.
 
 In the cloud version each employee picks their own interface language. Russian and English are available; we didn't find Uzbek in the official materials, so check the language menu in your own portal.
 
-The main drawback for a small team is weight. Three to five salespeople who only need a pipeline end up wading through menus, notifications and sections they never use. Setup usually takes longer too, especially when a partner suggests switching everything on at once. If you choose Bitrix24 for sales, start with just the CRM and Open Channels, hide the rest, and add things as you need them.
+The main drawback for a small team is how heavy it is. Three to five salespeople who only need a pipeline end up wading through menus, notifications and sections they never use. Setup usually takes longer too, especially when a partner suggests switching everything on at once. If you choose Bitrix24 for sales, start with just the CRM and Open Channels, hide the rest, and add things as you need them.
 
 Bitrix24 makes sense when you need tasks and communication for the whole company and not just sales, when you run several pipelines, or when the data has to sit on your own server.
 
@@ -68,20 +68,20 @@ Bitrix24 makes sense when you need tasks and communication for the whole company
 Building your own system makes sense in a few situations:
 
 - **The process is unusual.** For example, a training centre with groups, attendance, monthly fees per student and parents as separate contacts. Or a property developer with a unit availability chart, reservations and instalment plans. Or a distributor taking orders every day from hundreds of shops, with delivery routes and receivables. You can bend a ready-made CRM to fit, but you will be working around it every day.
-- **Heavy integrations.** Two-way 1C (products, prices, stock, debts), Click, Payme and Uzum, your own app or Mini App where clients place orders themselves, telephony, e-invoicing.
+- **Heavy integrations.** Two-way sync with 1C (products, prices, stock, debts), Click, Payme and Uzum, your own app or Mini App where clients place orders themselves, telephony, e-invoicing.
 - **The data must stay on your servers in Uzbekistan**, and you don't want to maintain an on-premise Bitrix24.
 - **The CRM is part of your product.** Clients see their order status in a customer portal or a Telegram Mini App, and your team works on the same data.
 
 It isn't justified when what you want is "like amoCRM, but ours": you would pay for months to rebuild what a subscription already gives you. Nor is it justified while the process is still changing. Work in a ready-made system for six months first and you will know exactly what you need.
 
-On timeline and cost: a first working version for one documented process, with roles, a pipeline, tasks, leads from Telegram and one integration, usually takes two to four months. What moves the cost most:
+**Timeline and cost.** A first working version for one documented process, with roles, a pipeline, tasks, leads from Telegram and one integration, usually takes two to four months. What moves the cost most:
 
 - the number of roles and access rights: manager, head of sales, accountant, branch, owner;
 - the number of pipelines and stage rules;
 - integrations, especially with a customised 1C;
 - reports, since each new report is a separate piece of work;
 - whether managers on the road need a mobile app or the web is enough;
-- a bilingual interface;
+- a bilingual interface (Uzbek and Russian);
 - moving old data out of Excel and chats;
 - a server in Uzbekistan and support after launch.
 
@@ -107,7 +107,7 @@ For many companies in Tashkent the sensible answer isn't ready-made or custom bu
 - **Your app or Mini App.** Client orders land in the same pipeline.
 - **A summary for the owner.** A short Telegram message once a day or once a week with the key numbers.
 
-One integration usually takes one to four weeks, depending on how customised your 1C is, how much data moves in each direction and how often. Decide two things up front.
+One integration usually takes one to four weeks, depending on the system (how customised your 1C is, for example), how much data moves in each direction and how often. Decide two things up front.
 
 First, who checks that the integrations are working. Tokens expire, APIs change, request rates are limited, and website leads can quietly stop arriving. Set up an alert: if a channel sends no leads for several working hours, someone gets a message.
 
@@ -126,7 +126,7 @@ People usually ask about this after a dispute with a former employee or contract
 
 ## Getting the team to use it
 
-CRM projects fail less often because of the wrong system than because nobody built the system into the daily work. What helps:
+CRM projects fail less often because of the wrong system than because nobody made it part of the daily work. What helps:
 
 1. **Start small.** One pipeline, five to seven stages, as few required fields as possible: name, phone, source, next step. Every extra required field is a reason not to enter the deal.
 2. **Leads arrive in the CRM by themselves.** Telegram bot, website forms, Instagram, calls: connect everything you can before launch. Managers will copy messages into cards by hand for a week, then stop.

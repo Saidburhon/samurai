@@ -2,18 +2,18 @@
 slug: kaizen-in-software
 lang: en
 title: "Kaizen in software: why small improvements beat big releases"
-description: "Launch is not the end of the project. How small, measurable, regular improvements work, and why they serve a business better than rare big releases."
+description: "Launch is not the end of the project. How to improve a site, app or bot a little every month, how many hours to budget, and what to measure."
 date: 2026-10-21
 tags: [kaizen, continuous improvement, product development, maintenance, process]
-related: [mobile, web, telegram, backend]
-reading_minutes: 7
+related: [sup-sla, cloud-devops, sup-qa, sup-dedicated-team]
+reading_minutes: 8
 ---
 
-Your site, app or bot is live and orders are coming in. Six months later you have a list of complaints: the booking form is too long, operators grumble about the admin panel, and the chat gets the same question every day. The usual response is to save it all for "version two", then, two or three years on, to order a full rebuild. That costs a lot, takes months, and can break things that used to work. There is another way, which Japanese companies call kaizen: change the product a little at a time, every month, and check each time whether it actually got better. Below: what that looks like in practice, how many hours to budget, how to change things often without breaking them, and what to measure.
+Your site, app or bot is live and orders are coming in. Six months later you have a list of complaints: the booking form is too long, operators grumble about the admin panel, and the chat gets the same question every day. The usual response is to save it all for "version two" and then, two or three years on, to order a full rebuild. That costs a lot, takes months, and can break things that used to work. There is another way, known in Japan as kaizen: change the product a little at a time, every month, and check each time whether it actually got better. Below: what that looks like in practice, how many hours to budget, how to change things often without breaking them, and what to measure.
 
 ## What kaizen means, without the myth
 
-Kaizen (改善) is simply the Japanese word for "improvement", a change for the better. It became widely known through Japanese manufacturing, above all the Toyota Production System, where people on the line keep finding small losses and removing them without waiting for a big reorganisation. It is a working habit, not a slogan for the wall.
+Kaizen (改善) is simply the Japanese word for "improvement", a change for the better. It became widely known through Japanese manufacturing, above all the Toyota Production System, where workers on the line keep finding small losses and removing them without waiting for a big reorganisation. It is a working habit, not a slogan for the wall.
 
 In software, kaizen is a rhythm of work:
 
@@ -24,7 +24,7 @@ In software, kaizen is a rhythm of work:
 
 What kaizen is not:
 
-- **An excuse for a half-finished launch.** "We'll fix it later" is not kaizen. Small improvements sit on top of a reliable foundation, they don't replace it.
+- **An excuse for a half-finished launch.** "We'll fix it later" is not kaizen. Small improvements sit on top of a reliable foundation; they don't replace it.
 - **A ban on big changes.** Sometimes a module has to be rewritten or the platform replaced. That too can be done in pieces.
 - **Cosmetics.** Recolouring a button for the monthly report is not an improvement if no number moved.
 
@@ -50,9 +50,9 @@ Every improvement goes through the same steps:
 4. **Wait and measure.** Usually two to four weeks, longer if traffic is low. Compare like with like: an ordinary week against an ordinary week, not a holiday week around Navruz or the month of Ramadan against a normal month.
 5. **Keep or roll back.** If the number improved, keep the change and pick the next task. If it didn't move or got worse, revert and write down what you learned. A negative result still counts: nobody has to argue about that idea again.
 
-A hypothetical example. A restaurant with three branches takes table bookings through a Telegram bot. The form has eight fields: name, phone, email, branch, date, time, number of guests, and "how did you hear about us". Analytics show that plenty of people start a booking, but noticeably fewer reach the confirmation. The number to watch: the share of started bookings that get confirmed. The change: drop the email and "how did you hear about us" fields, and take the phone number through Telegram's "share contact" button instead of typing. After a month, compare with the previous month. If the share went up, keep it. If the hosts now miss some information, bring one field back, but as a separate, later step.
+A hypothetical example. A restaurant with three branches takes table bookings through a Telegram bot. The form has eight fields: name, phone, email, branch, date, time, number of guests, and "how did you hear about us". Analytics show that plenty of people start a booking, but noticeably fewer reach the confirmation. The number to watch: the share of started bookings that get confirmed. The change: drop the email and "how did you hear about us" fields, and take the phone number through Telegram's "share contact" button instead of typing. After a month, compare with the previous month. If the share went up, keep it. If the hosts now find they are missing information, bring one field back, but as a separate, later step.
 
-One honest limit. If you have few customers, say a few dozen a week, an A/B test that splits users into two groups will tell you almost nothing: the difference gets lost in random noise. In that case compare before and after over a longer period, and add observation. Ask five to ten customers to book while you watch and to think out loud, or spend an hour sitting next to the host who takes bookings.
+One honest caveat. If you have few customers, say a few dozen a week, an A/B test that splits users into two groups will tell you almost nothing: the difference gets lost in random noise. In that case compare before and after over a longer period, and add observation: ask five to ten customers to book while you watch and to think out loud, or spend an hour sitting next to the host who takes bookings.
 
 ## Where improvement ideas come from
 
@@ -99,16 +99,16 @@ What to put in the contract:
 
 For everything else that post-launch work covers besides improvements, see [After launch: what maintaining an app or website actually involves](/en/blog/maintenance-after-launch/).
 
-To be straight about the limits: kaizen doesn't rule out a rebuild forever. If the platform is obsolete, the business model has changed, or every change breaks something elsewhere, that needs a proper conversation. The difference is that with regular work you make that call based on facts, not because "everything piled up".
+To be straight about the limits: kaizen doesn't mean you will never need a rebuild. If the platform is obsolete, the business model has changed, or every change breaks something elsewhere, that needs a proper conversation. The difference is that with regular work you make that call based on facts, not because "everything piled up".
 
 ## Changing often without breaking things
 
 Frequent change is only safe when a few conditions are in place:
 
-- **Automated tests for the critical paths:** ordering, payment, login, booking. Every release passes them before it reaches customers.
+- **Automated tests for the critical paths:** ordering, payment, login, booking. Every release has to pass them before it reaches customers.
 - **A test copy.** A separate test bot, a test server, the payment provider's test mode.
 - **Gradual rollout.** Google Play lets you release an update to a share of users first, and the App Store has phased release. On the web and in a bot, a new feature can be switched on for one branch or for staff only before everyone else.
-- **Fast rollback.** A website or bot can go back to the previous version in minutes, if this was set up in advance. Mobile apps are harder: you can't pull back a version already installed on someone's phone, and a fix has to pass store review again. So risky features in an app are best switched on and off from the server.
+- **Fast rollback.** A website or bot can go back to the previous version in minutes, if this was set up in advance. Mobile apps are harder: you can't pull back a version already installed on someone's phone, and a fix has to pass store review again. That is why risky features in an app should be built with a switch on the server, so they can be turned off without a new release.
 - **A database backup** before every change to its structure.
 - **Error alerts.** The team should learn about a failure before a customer writes about it in the chat.
 - **Sensible release timing.** Not on Friday evening, and not the day before a big promotion.

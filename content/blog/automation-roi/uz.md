@@ -74,7 +74,7 @@ Pul qayerda yoʻqoladi:
 - eng gavjum soatlarda qoʻngʻiroqlar javobsiz qolgan;
 - mijoz buyurtmani rasmiylashtirishni boshlagan, lekin oxiriga yetkazmagan. Buni faqat ishga tushirgandan keyin, botda yoki saytda sotuv voronkasi paydo boʻlgach oʻlchash mumkin.
 
-Qanday hisoblash kerak: «oldin» oʻlchovidan mijoz baribir buyurtma bermagan murojaatlar sonini oling va uni buyurtma summasiga emas, bitta buyurtmadan qoladigan marjaga koʻpaytiring. Masalan, buyurtma narxi 50 000 soʻm, xarid, kuryer va qadoq xarajatidan keyin esa sizda 20 000 soʻm qoladi: hisobga 20 000 kiradi. Keyin yangi tizim bu odamlarning faqat bir qismini, masalan yarmini yoki undan kamini qaytaradi, deb hisoblang. Kimdir baribir qoʻngʻiroq qilishni afzal koʻradi, kimdir esa darhol javob olsa ham ketib qolardi.
+Qanday hisoblash kerak: «oldin» oʻlchovidan mijoz baribir buyurtma bermagan murojaatlar sonini oling va uni buyurtma summasiga emas, bitta buyurtmadan qoladigan marjaga koʻpaytiring. Masalan, buyurtma narxi 50 000 soʻm, xarid, kuryer va qadoq xarajatidan keyin esa sizda 20 000 soʻm qoladi: hisobga 20 000 kiradi. Keyin yangi tizim bu odamlarning faqat bir qismini, masalan yarmini yoki undan kamini qaytaradi, deb hisoblang. Kimdir baribir qoʻngʻiroq qilishni afzal koʻradi, kimdir esa darhol javob olsa ham ketib qolardi.
 
 Nima qilmaslik kerak: faqat qulay bot paydo boʻlgani uchun sotuv oʻsadi, deb rejaga yozmang. Yangi mijozlar reklama, assortiment va narx tufayli keladi. Loyiha faqat sotuv oʻssagina oʻzini oqlasa, bu endi hisob-kitob emas, umid.
 
@@ -97,32 +97,32 @@ Hammasini ikki ustunga ajrating: bir martalik va oylik. Oylik xarajatlar har oy 
 
 Toshkentdagi shartli ichimlik suvi yetkazib berish xizmatini olaylik. Quyidagi barcha raqamlar tushuntirish uchun oʻylab topilgan: bu bozor narxlari ham, bizning smetamiz ham emas, usulni koʻrsatishga qulay yaxlit sonlar.
 
-**Hozir qanday ishlashadi.** Oyiga 3 000 ga yaqin buyurtma, telefon va Telegram orqali. Operatorlar buyurtmani qabul qiladi, jadvalga yozadi va kuryerlar guruhiga yuboradi, bir buyurtmaga oʻrtacha 4 daqiqa ketadi. Ikki haftalik oʻlchovda 15 ta xato yigʻildi (notoʻgʻri manzil, notoʻgʻri yozilgan miqdor, unutilgan buyurtma), yaʼni oyiga 30 ga yaqin. Har biri oʻrtacha 60 000 soʻmga tushadi: kuryer qayta boradi va mijozga bir idish suv sovgʻa qilinadi. Oyiga 80 ga yaqin odam kechqurun yoki tunda yozgan, javobni ertalab olgan va buyurtma bermagan.
+**Hozir qanday ishlashadi.** Oyiga 3 000 ga yaqin buyurtma, telefon va Telegram orqali. Operatorlar buyurtmani qabul qiladi, jadvalga yozadi va kuryerlar guruhiga yuboradi, bir buyurtmaga oʻrtacha 4 daqiqa ketadi. Ikki haftalik oʻlchovda 15 ta xato yigʻildi (notoʻgʻri manzil, notoʻgʻri yozilgan miqdor, unutilgan buyurtma), yaʼni oyiga 30 ga yaqin. Har biri oʻrtacha 60 000 soʻmga tushadi: kuryer qayta boradi va mijozga bir idish suv sovgʻa qilinadi. Oyiga 80 ga yaqin odam kechqurun yoki tunda yozgan, javobni ertalab olgan va buyurtma bermagan.
 
-**Rejada nima bor.** Buyurtmalar uchun Telegram-bot: oldingi buyurtmani bitta tugma bilan takrorlash, Click va Payme orqali toʻlov, kuryerlar uchun manzillar roʻyxati va egasiga kechki hisobot. Qoʻngʻiroqlar qoladi, lekin operatorlar bunday buyurtmalarni ham oʻsha botga kiritadi. Buyurtmalarning koʻp qismini bot oʻzi qabul qilgani uchun operatorlarning bir buyurtmaga sarflaydigan oʻrtacha vaqti 4 daqiqadan 1,5 daqiqaga tushadi: (4 − 1,5) × 3 000 = 7 500 daqiqa, yaʼni oyiga 125 soat.
+**Rejada nima bor.** Buyurtmalar uchun Telegram-bot: oldingi buyurtmani bitta tugma bilan takrorlash, Click va Payme orqali toʻlov, kuryerlar uchun manzillar roʻyxati va egasiga kechki hisobot. Qoʻngʻiroqlar qoladi, lekin operatorlar bunday buyurtmalarni ham oʻsha botga kiritadi. Buyurtmalarning koʻp qismini bot oʻzi qabul qilgani uchun operatorlarning bir buyurtmaga sarflaydigan oʻrtacha vaqti 4 daqiqadan 1,5 daqiqaga tushadi: (4 − 1,5) × 3 000 = 7 500 daqiqa, yaʼni oyiga 125 soat.
 
 | Modda | Qanday hisoblandi | Oyiga, soʻm |
 |---|---|---|
-| Tejalgan vaqt | 125 soatdan faqat mijozlarga qoʻngʻiroq qilish va qaytariladigan idishlarni hisoblashga ketadigan 60 soat olindi; bir soat 35 000 soʻm: 60 × 35 000 | 2 100 000 |
-| Kamroq xato | 30 ta xatoning yarmi; 15 × 60 000 | 900 000 |
-| Saqlab qolingan buyurtmalar | 80 ta yoʻqotilganning yarmi; 40 × 20 000 marja | 800 000 |
-| **Jami samara** | | **3 800 000** |
-| Oʻzbekistondagi server | | −400 000 |
-| Qoʻllab-quvvatlash va kichik oʻzgartirishlar | | −700 000 |
-| Komissiya va SMS | | −200 000 |
-| **Sof samara** | | **2 500 000** |
+| Tejalgan vaqt | 125 soatdan faqat mijozlarga qoʻngʻiroq qilish va qaytariladigan idishlarni hisoblashga ketadigan 60 soat olindi; bir soat 35 000 soʻm: 60 × 35 000 | 2 100 000 |
+| Kamroq xato | 30 ta xatoning yarmi; 15 × 60 000 | 900 000 |
+| Saqlab qolingan buyurtmalar | 80 ta yoʻqotilganning yarmi; 40 × 20 000 marja | 800 000 |
+| **Jami samara** | | **3 800 000** |
+| Oʻzbekistondagi server | | −400 000 |
+| Qoʻllab-quvvatlash va kichik oʻzgartirishlar | | −700 000 |
+| Komissiya va SMS | | −200 000 |
+| **Sof samara** | | **2 500 000** |
 
 Bir martalik xarajatlar: ishlab chiqish 32 mln soʻm, oʻrgatish va oʻtish davri yana 3 mln, jami 35 mln soʻm. Bu misolda litsenziya yoʻq, chunki bot shu biznes uchun ishlab chiqilgan; tayyor CRM ishlatilganda yuqoridagi jadvalga oylik obuna toʻlovi qatori qoʻshilardi.
 
-**Oʻzini oqlash muddati: 35 000 000 ÷ 2 500 000 = 14 oy.**
+**Oʻzini oqlash muddati: 35 000 000 ÷ 2 500 000 = 14 oy.**
 
 Bu hisobdan nima koʻrinadi:
 
 1. **Birinchi yil oxirida loyiha hali minusda.** 12 oyda sof samara 30 mln boʻladi, sarflangani esa 35 mln. Plyusga 15-oyda chiqadi. Faqat birinchi yilga qarasangiz, qaror boshqacha boʻladi, shuning uchun loyihani necha yillik davrda baholashingizni oldindan hal qiling.
 2. **Birinchi bir-ikki oyda samara kamroq boʻladi:** mijozlar botga, xodimlar yangi tartibga koʻnikib oladi. Muddatga yana bir-ikki oy qoʻshib qoʻyish realroq.
-3. **Deyarli hammasi soatlarga bogʻliq.** Agar boʻshagan vaqtdan 60 emas, atigi 30 soat foydali ishga ketsa, sof samara oyiga 1 450 000 soʻmga tushadi va muddat taxminan ikki yilgacha choʻziladi. Boʻshagan vaqt umuman ishlatilmasa, oyiga 400 000 soʻm qoladi va muddat yetti yildan oshadi, yaʼni amalda loyiha oʻzini oqlamaydi. Shuning uchun eng muhim taxminni birinchi boʻlib tekshiring: boʻshagan vaqtda operatorlar aynan nima bilan shugʻullanadi.
+3. **Deyarli hammasi soatlarga bogʻliq.** Agar boʻshagan vaqtdan 60 emas, atigi 30 soat foydali ishga ketsa, sof samara oyiga 1 450 000 soʻmga tushadi va muddat taxminan ikki yilgacha choʻziladi. Boʻshagan vaqt umuman ishlatilmasa, oyiga 400 000 soʻm qoladi va muddat yetti yildan oshadi, yaʼni amalda loyiha oʻzini oqlamaydi. Shuning uchun eng muhim taxminni birinchi boʻlib tekshiring: boʻshagan vaqtda operatorlar aynan nima bilan shugʻullanadi.
 
-Moliyachiga ROI kerak boʻlsa: uch yilda samara 3,8 mln × 36 = 136,8 mln, barcha xarajatlar (bir martalik 35 mln va oyiga 1,3 mln) 35 + 1,3 × 36 = 81,8 mln, ROI = (136,8 − 81,8) ÷ 81,8 ≈ 67 %. Lekin uch yil — bu jarayon shu vaqt davomida oʻzgarmaydi degan taxmin.
+Moliyachiga ROI kerak boʻlsa: uch yilda samara 3,8 mln × 36 = 136,8 mln, barcha xarajatlar (bir martalik 35 mln va oyiga 1,3 mln) 35 + 1,3 × 36 = 81,8 mln, ROI = (136,8 − 81,8) ÷ 81,8 ≈ 67 %. Lekin uch yil — bu jarayon shu vaqt davomida oʻzgarmaydi degan taxmin.
 
 Qaror qabul qilish uchun oʻzini oqlash muddatini jarayon katta oʻzgarishlarsiz yana qancha vaqt shu holicha ishlashi bilan solishtiring. Yana uch yil shunday ishlashingizga ishonchingiz komil boʻlsa, 14–16 oy oqilona muddat. Bir yildan keyin yetkazib berish tartibini oʻzgartirmoqchi boʻlsangiz, loyihani tezroq oʻzini oqlaydigan hajmgacha qisqartiring: masalan, avval faqat buyurtma qabul qilish va hisobot, kuryerlar roʻyxatisiz.
 

@@ -1,5 +1,5 @@
 // Share images and icons.
-//   public/assets/img/og-{uz,ru,en}.png    1200 × 630: the hero poster (/?og=1) of each language page
+//   public/assets/img/og-{uz,ru,en,ja}.png 1200 × 630: the hero poster (/?og=1) of each language page
 //   public/assets/img/favicon.svg          the mon in sumi on washi
 //   public/assets/img/logo-512.png, apple-touch-icon.png
 // Playwright renders the pages from a throwaway static server with the same SwiftShader flags as the capture.
@@ -33,7 +33,7 @@ await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const port = server.address().port;
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 try {
-  for (const lang of ['uz', 'ru', 'en']) {
+  for (const lang of ['uz', 'ru', 'en', 'ja']) {
     const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
     await page.goto(`http://127.0.0.1:${port}${lang === 'uz' ? '/' : `/${lang}/`}?og=1`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
@@ -46,4 +46,4 @@ try {
   await browser.close();
   server.close();
 }
-console.log('og: og-uz/ru/en.png, favicon.svg, logo-512.png, apple-touch-icon.png');
+console.log('og: og-uz/ru/en/ja.png, favicon.svg, logo-512.png, apple-touch-icon.png');
