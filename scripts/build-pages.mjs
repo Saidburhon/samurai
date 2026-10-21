@@ -11,6 +11,7 @@
 // entries ({ lang, path, file }) for the font subsets, the preloads and the sitemaps.
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync, unlinkSync, rmdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 import { LANGS, HOME, LANG_NAME, SITE, pathOf, abs, site, has, esc } from './site.mjs';
 import { page, t } from './pages/chrome.mjs';
 import { renderCompany, PAGES } from './pages/company.mjs';
@@ -97,6 +98,7 @@ export function buildPages({ assets, landing = [] }) {
 
   const all = [...landing, ...entries];
   analytics(all, assets);
+  writeFileSync('public/_headers', csp(all));
   writeFileSync('public/robots.txt', robots());
   writeFileSync('public/_redirects', redirects(all));
   writeFileSync('public/llms.txt', llms(all));
@@ -124,6 +126,38 @@ Disallow: /api/
 
 Sitemap: ${SITE}/sitemap.xml
 `;
+}
+
+// ---- Content-Security-Policy, report-only (SEO-GEO-GUIDELINES, Headers and security: a CSP that still permits the
+// analytics and tag scripts; test it before enforcing). Every inline script the built pages carry is allowed by its
+// hash (the landing's head and boot scripts change with each landing build, so the hashes are recomputed here), plus
+// the stylesheet swap handler (onload="this.media='all'"), GA4 and Yandex Metrika. Report-only: it blocks nothing; the
+// browser console lists what an enforced policy would block. Enforce it (rename the header) after a GA4 real-time
+// test with the real IDs. Written into public/_headers, replacing the previous line.
+function csp(all) {
+  const files = new Set(all.map((e) => e.file));
+  for (const f of ['public/index.html', 'public/404.html', 'public/ru/index.html', 'public/en/index.html', 'public/ja/index.html']) if (existsSync(f)) files.add(f);
+  const hashes = new Set();
+  for (const f of files) {
+    const h = readFileSync(f, 'utf8');
+    for (const m of h.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+      if (/\bsrc=/.test(m[1]) || /type="application\/(ld\+)?json"/.test(m[1]) || !m[2].trim()) continue;
+      hashes.add(`'sha256-${createHash('sha256').update(m[2]).digest('base64')}'`);
+    }
+  }
+  const handler = `'sha256-${createHash('sha256').update("this.media='all'").digest('base64')}'`;
+  const GA = 'https://www.googletagmanager.com', YM = 'https://mc.yandex.ru';
+  const policy = [
+    "default-src 'self'",
+    `script-src 'self' ${[...hashes].sort().join(' ')} 'unsafe-hashes' ${handler} ${GA} ${YM}`,
+    `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com ${GA} ${YM} https://mc.yandex.com`,
+    `img-src 'self' data: blob: https://*.google-analytics.com ${GA} ${YM} https://mc.yandex.com`,
+    "style-src 'self' 'unsafe-inline'", "font-src 'self'", "worker-src 'self' blob:", "object-src 'none'",
+    "base-uri 'self'", "form-action 'self' mailto:", "frame-ancestors 'none'",
+  ].join('; ');
+  const cur = readFileSync('public/_headers', 'utf8').replace(/^  Content-Security-Policy-Report-Only: .*\n/m, '');
+  if (!/^  Strict-Transport-Security: .*$/m.test(cur)) throw new Error('_headers: no Strict-Transport-Security line under /* to put the CSP after');
+  return cur.replace(/^(  Strict-Transport-Security: .*\n)/m, `$1  Content-Security-Policy-Report-Only: ${policy}\n`);
 }
 
 // ---- _redirects: one address per page (Guideline: Canonicals, redirects and status codes) -----------------------

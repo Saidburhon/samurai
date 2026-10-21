@@ -1,4 +1,4 @@
-// Sends www.<domain> to the bare domain, keeping path and query.
+// Sends www.<domain> to https://<bare domain> in one hop, keeping path and query.
 // Attach more www hostnames in wrangler.json to reuse it for other sites.
 export default {
   fetch(request) {

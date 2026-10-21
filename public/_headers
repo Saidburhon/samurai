@@ -4,6 +4,7 @@
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-IGaFX+b5V7IqJhmXdrl4T+JbOgpi4PePGSAasrGBdpc=' 'sha256-JPigA/76jK+83M4QKvuw2jZaZhR0T4g8w75GKgeef04=' 'sha256-eu16iGkBogxTi5Qz/ATPYzBwUTVxNRqkgA/LokPvLv0=' 'sha256-wxrR5ymlN3NFLtz9AbSRCwJZirFc1Ma02++Ca5xx/GA=' 'unsafe-hashes' 'sha256-MhtPZXr7+LpJUY5qtMutB+qWfQtMaPccfe7QXtCcEYc=' https://www.googletagmanager.com https://mc.yandex.ru; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com; img-src 'self' data: blob: https://*.google-analytics.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com; style-src 'self' 'unsafe-inline'; font-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' mailto:; frame-ancestors 'none'
 
 # Icons and share images keep their names, so they cache briefly. Everything else under /assets/ has a content hash
 # in its name and never changes. No two rules overlap (Cloudflare would join their values with commas).

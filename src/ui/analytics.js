@@ -61,7 +61,7 @@ document.addEventListener('click', (e) => {
   if (method) { track('contact_click', { method, page: location.pathname, lang }); return; }
   if (el.matches('.cta, .btn, [data-cta]') && el.type !== 'submit') track('cta_click', { page: location.pathname, lang, cta: el.dataset.cta || el.textContent.trim().slice(0, 40) });
 }, true);
-window.addEventListener('qilich:lead', (e) => track('generate_lead', { form: e.detail?.form || 'contact', page: location.pathname, lang }));
+window.addEventListener('qilich:lead', (e) => track('generate_lead', { form: e.detail?.form || 'contact', ...(e.detail?.method ? { method: e.detail.method } : {}), page: location.pathname, lang }));
 
 // the banner
 const banner = document.getElementById('consent');

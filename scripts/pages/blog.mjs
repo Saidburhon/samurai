@@ -30,7 +30,12 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 // an Uzbek word quoted on a Russian, English or Japanese page (a post about bilingual interfaces quotes oʻ, gʻ,
 // «lagʻmon») is marked lang="uz": screen readers and fonts treat it as Uzbek, and the lint knows it is meant
 const UZ_WORD = /[^\s<>"«»“”„()[\],.;:!?]*[ʻʼ][^\s<>"«»“”„()[\],.;:!?]*/g;
-export const markUz = (html, lang) => (lang === 'uz' ? html : html.replace(/>([^<]+)</g, (m, t) => `>${t.replace(UZ_WORD, (w) => `<span lang="uz">${w}</span>`)}<`));
+export const markUz = (html, lang) => markJa(lang === 'uz' ? html : html.replace(/>([^<]+)</g, (m, t) => `>${t.replace(UZ_WORD, (w) => `<span lang="uz">${w}</span>`)}<`), lang);
+// Japanese words quoted in an uz, ru or en post (報連相, 改善) carry lang="ja", so they render in Japanese glyph forms and
+// a screen reader reads them as Japanese (SEO-GEO-GUIDELINES: no unmarked mixing of languages on one URL); text that
+// is already inside a lang="ja" element is left alone
+const JA_RUN = /[\u3040-\u30ff\u4e00-\u9fff々〆ー]+/g;
+const markJa = (html, lang) => (lang === 'ja' ? html : html.replace(/(<[^>]*\blang="ja"[^>]*>[^<]*)|>([^<]+)</g, (m, inJa, t) => (inJa ? inJa : `>${t.replace(JA_RUN, (w) => `<span lang="ja">${w}</span>`)}<`)));
 const fill = (s, o) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in o ? o[k] : m));
 
 export function b(lang, key) {
