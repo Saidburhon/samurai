@@ -487,3 +487,8 @@ export const S = {
     hk: 'かんてい',
   },
 };
+
+// the legend's rows (src/samurai/main.js legend()): each hamon's kanji, then its rōmaji and the local name (Japanese:
+// the level's word), so the page's script carries no copy of its own
+const HAMON = [['直刃', 'suguha'], ['湾れ', 'notare'], ['互の目', 'gunome'], ['丁子', 'chōji'], ['乱れ', 'midare']];
+for (const [l, T] of Object.entries(S)) T.legendRows = HAMON.map(([k, r], i) => [k, l === 'ja' ? T.diff[i] : `${r} · ${T.legendNames[i]}`]);

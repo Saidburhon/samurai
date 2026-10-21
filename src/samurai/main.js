@@ -93,16 +93,8 @@ function paint() {
   if (st.error) notes.push(`<div class="broken"><img src="${h(brokenSrc())}" alt="" width="220" height="80"><div><p>${h(S.errDrop)}</p><p class="acts"><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button><a href="tel:${h(cfg.phone.replace(/[^\d+]/g, ''))}">${h(cfg.phone.replace(/ /g, '\u00a0'))}</a></p></div></div>`);
   if (st.partial && st.done) notes.push(`<p class="note mono gap"><span>${h(S.partial)}</span><button class="tlink" type="button" data-act="retry">${h(S.retry)}</button></p>`);
   // the currency switch, the stamp and the actions belong to an estimate: only with at least one solution
-  const cur = hasSols ? `<p class="cur" role="group" aria-label="${h(S.cur.label)}"><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'usd' : 'uzs'}" aria-pressed="${C.cur === (lang === 'ja' ? 'usd' : 'uzs')}">${h(lang === 'ja' ? S.cur.usd : S.cur.uzs)}</button><i></i><button type="button" data-act="cur" data-k="${lang === 'ja' ? 'uzs' : 'usd'}" aria-pressed="${C.cur === (lang === 'ja' ? 'uzs' : 'usd')}">${h(lang === 'ja' ? S.cur.uzs : S.cur.usd)}</button></p>` : '';
-  const desk = `<div class="desk">
-    <div class="res-head"><h2 id="res-h" tabindex="-1">${h(S.res)}</h2><span class="no mono">${h(st.meta?.brief_no || '')}</span>${cur}</div>
-    ${notes.join('')}
-    <div class="res-status">${st.statusText && !st.done ? `<p class="status mono">${h(st.statusText)}</p>` : ''}</div>
-    ${questionsHtml(C, st)}
-    ${sheets}
-    ${waiting ? skeletonHtml(C, width) : ''}
-    ${notNeededHtml(C, st)}
-  </div>`;
+  const cur = hasSols ? `<p class="cur" role="group" aria-label="${h(S.cur.label)}">${(lang === 'ja' ? ['usd', 'uzs'] : ['uzs', 'usd']).map((k) => `<button type="button" data-act="cur" data-k="${k}" aria-pressed="${C.cur === k}">${h(S.cur[k])}</button>`).join('<i></i>')}</p>` : '';
+  const desk = `<div class="desk"><div class="res-head"><h2 id="res-h" tabindex="-1">${h(S.res)}</h2><span class="no mono">${h(st.meta?.brief_no || '')}</span>${cur}</div>${notes.join('')}<div class="res-status">${st.statusText && !st.done ? `<p class="status mono">${h(st.statusText)}</p>` : ''}</div>${questionsHtml(C, st)}${sheets}${waiting ? skeletonHtml(C, width) : ''}${notNeededHtml(C, st)}</div>`;
   const hasPlan = hasSols && (st.planSeen || st.done || st.source !== 'model');
   const printHead = `<div class="print-head"><b><svg aria-hidden="true"><use href="#mon"/></svg>QILICH</b><span>${h(S.printHead)}${SEP}${h(st.meta?.brief_no || '')}${SEP}${h(F.dateNum((st.meta?.generated_at || today).slice(0, 10), lang))}${SEP}${h(fill(S.valid, { n: cfg.validity || 30 }))}</span></div>`;
   // the brief and the desk share a wrapper, so the sticky brief stops where the sheets end (not over the plan)
@@ -448,7 +440,7 @@ function fitNow(f) {
 // the legend, sharing, the lead
 function legend() {
   const dlg = $('#legend-sheet');
-  dlg.innerHTML = `<button class="sheet-close" type="button" aria-label="${h(S.close)}"><i></i></button><h2>${h(S.row.diff)}</h2><ol>${S.legendNames.map((n, i) => `<li><b lang="ja">${['直刃', '湾れ', '互の目', '丁子', '乱れ'][i]}</b><span>${i + 1}/5${SEP}${h(lang === 'ja' ? S.diff[i] : `${['suguha', 'notare', 'gunome', 'chōji', 'midare'][i]}${SEP}${n}`)}</span>${hamonStrip({ difficulty: i + 1, seed: 40 + i })}</li>`).join('')}</ol><p>${h(S.legendText)}</p>`;
+  dlg.innerHTML = `<button class="sheet-close" type="button" aria-label="${h(S.close)}"><i></i></button><h2>${h(S.row.diff)}</h2><ol>${S.legendRows.map(([k, t], i) => `<li><b lang="ja">${k}</b><span>${i + 1}/5${SEP}${h(t)}</span>${hamonStrip({ difficulty: i + 1, seed: 40 + i })}</li>`).join('')}</ol><p>${h(S.legendText)}</p>`;
   deckleFor(dlg, 21);
   dlg.querySelector('.sheet-close').onclick = () => dlg.close();
   dlg.addEventListener('close', () => document.documentElement.classList.remove('legend-open', 'sheet-open'), { once: true });

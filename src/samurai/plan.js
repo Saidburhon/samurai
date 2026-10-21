@@ -7,10 +7,7 @@ import { endOfWork, holidaysBetween, addDays, daysBetween } from '../shared/holi
 import { h, fill, money, R, SEP } from './render.js';
 
 // the Yaki plates' four hatches: clay dots (plan), heat diagonals (build), water lines (test), a hairline (launch)
-const DEFS = `<defs>
-  <pattern id="ph-plan" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#0F0E0C" opacity=".55"/></pattern>
-  <pattern id="ph-build" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v4" stroke="#0F0E0C" stroke-width=".8" opacity=".55"/></pattern>
-  <pattern id="ph-test" width="4" height="3" patternUnits="userSpaceOnUse"><path d="M0 1.5h4" stroke="#0F0E0C" stroke-width=".7" opacity=".55"/></pattern>
+const DEFS = `<defs><pattern id="ph-plan" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#0F0E0C" opacity=".55"/></pattern><pattern id="ph-build" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v4" stroke="#0F0E0C" stroke-width=".8" opacity=".55"/></pattern><pattern id="ph-test" width="4" height="3" patternUnits="userSpaceOnUse"><path d="M0 1.5h4" stroke="#0F0E0C" stroke-width=".7" opacity=".55"/></pattern>
 </defs>`;
 const PH = ['plan', 'build', 'test', 'launch'];
 
@@ -119,21 +116,7 @@ export function planHtml(C, sols, st, width) {
   const { S } = C;
   const unitUsd = C.cur === 'usd' || C.lang === 'ja';
   const budgetVal = st.budgetUsd ? (unitUsd ? Math.round(st.budgetUsd) : Math.round((st.budgetUsd * C.rate.uzs_per_usd) / 1e6)) : '';
-  return `<section class="plan" id="plan" aria-labelledby="plan-h">
-    <div class="plan-top"><h2 id="plan-h">${h(S.plan)}</h2>
-      <p class="presets" role="group" aria-label="${h(S.presets)}"><span>${h(S.presets)}</span>${[['lean', S.lean], ['balanced', S.balanced], ['full', S.fullAll]].map(([k, v]) => `<button type="button" data-act="preset" data-k="${k}" aria-pressed="${st.preset === k}">${h(v)}</button>`).join('')}</p></div>
-    <div class="gwrap">${ganttHtml(C, sols, st, width)}</div>
-    ${totalsHtml(C, st)}
-    <form class="fitter" data-act="fit">
-      ${dateField(S.start, 'start', st.start, C.lang, ' data-act="start"')}
-      <label>${h(S.budget)} (${h(unitUsd ? 'USD' : S.budgetUnit)})<input inputmode="decimal" name="budget" value="${h(budgetVal)}"></label>
-      ${dateField(S.deadline, 'deadline', st.deadline || '', C.lang)}
-      <span class="quick">${S.quick.map((q, i) => `<button type="button" data-act="quick" data-m="${i + 1}">${h(q)}</button>`).join('')}</span>
-      <button class="btn" type="submit"><span>${h(S.fit)}</span></button>
-    </form>
-    <p class="fit-out" aria-live="polite">${st.fitMsg ? R(st.fitMsg) : ''}${st.fitMsg ? `<small>${h(S.fitNote)}</small>` : ''}</p>
-    ${st.nextStage?.length ? `<p class="next-st mono">${h(S.next)}: ${st.nextStage.map((t) => `<s>${h(t)}</s>`).join(SEP)}</p>` : ''}
-  </section>`;
+  return `<section class="plan" id="plan" aria-labelledby="plan-h"><div class="plan-top"><h2 id="plan-h">${h(S.plan)}</h2><p class="presets" role="group" aria-label="${h(S.presets)}"><span>${h(S.presets)}</span>${[['lean', S.lean], ['balanced', S.balanced], ['full', S.fullAll]].map(([k, v]) => `<button type="button" data-act="preset" data-k="${k}" aria-pressed="${st.preset === k}">${h(v)}</button>`).join('')}</p></div><div class="gwrap">${ganttHtml(C, sols, st, width)}</div>${totalsHtml(C, st)}<form class="fitter" data-act="fit">${dateField(S.start, 'start', st.start, C.lang, ' data-act="start"')}<label>${h(S.budget)} (${h(unitUsd ? 'USD' : S.budgetUnit)})<input inputmode="decimal" name="budget" value="${h(budgetVal)}"></label>${dateField(S.deadline, 'deadline', st.deadline || '', C.lang)}<span class="quick">${S.quick.map((q, i) => `<button type="button" data-act="quick" data-m="${i + 1}">${h(q)}</button>`).join('')}</span><button class="btn" type="submit"><span>${h(S.fit)}</span></button></form><p class="fit-out" aria-live="polite">${st.fitMsg ? R(st.fitMsg) : ''}${st.fitMsg ? `<small>${h(S.fitNote)}</small>` : ''}</p>${st.nextStage?.length ? `<p class="next-st mono">${h(S.next)}: ${st.nextStage.map((t) => `<s>${h(t)}</s>`).join(SEP)}</p>` : ''}</section>`;
 }
 
 /**

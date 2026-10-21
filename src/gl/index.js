@@ -1,10 +1,10 @@
 // The GL chunk's entry (§6.2): geometries -> renderer -> meshes (with the baked textures) -> first frame -> glReady ->
 // sign atlas. Imported by main.js only in cinema mode (after the intro drawing has finished, or at once with ?beat).
 // The bakes (§2.1) are computed on the CPU, in workers that main.js starts as soon as it runs (gl/bakecpu.js): the
-// hero's hamon, silk and hada (2048 × 128) have landed long before the gate, so glReady carries them and no stand-in
-// is ever on screen (G1 r2). The ishime follows (swapped in as it lands, usually before the gate too); the full-size
-// hada replaces the boot one in idle time after the lift (the same field, at twice the resolution). The 1 × 1
-// stand-ins remain only for a browser without workers, which bakes on the GPU (bake.js) before glReady.
+// hamon, the silk, the hada (2048 × 128) and the ishime land before the gate (~0.6–0.9 s), are in the materials
+// before their first draw, and glReady carries them, so no stand-in is ever on screen (G1 r2). The full-size hada
+// replaces the boot one in idle time after the lift (the same field, at twice the resolution). The 1 × 1 stand-ins
+// remain only for a browser without workers, which bakes on the GPU (bake.js) before glReady.
 import { DataTexture, DataUtils, RGBAFormat, HalfFloatType, UnsignedByteType, LinearFilter, LinearMipmapLinearFilter, ClampToEdgeWrapping, NoColorSpace,
   Scene, Mesh, BufferGeometry, Float32BufferAttribute } from 'three';
 import { Stage, buildGeometries, buildPart, PART_NAMES } from './stage.js';

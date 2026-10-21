@@ -192,11 +192,12 @@ export function bakePool(jobs, n = 3) {
         J.res(J.val);
       }
     };
-    w.onerror = (e) => { for (const k in out) out[k].rej(e); };
+    // a worker that fails resolves its jobs with null: the GL boot then bakes on the GPU (bake.js) before glReady
+    w.onerror = (e) => { if (e && e.preventDefault) e.preventDefault(); for (const k in out) if (!out[k].val) { out[k].val = null; out[k].res(null); } for (const x of W) x.terminate(); };
   }
   for (const j of jobs) {
     const parts = j.parts || 1, J = (out[j.name] = { ...j, parts, bands: [], ms: 0 });
-    J.p = new Promise((res, rej) => { J.res = res; J.rej = rej; });
+    J.p = new Promise((res) => { J.res = res; });
     const rows = Math.ceil(j.h / parts);
     for (let p = 0; p < parts; p++) {
       const y0 = p * rows, y1 = Math.min(j.h, y0 + rows);

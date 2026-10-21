@@ -236,9 +236,9 @@ export function startFilm({ stage, log = () => {}, q = new URLSearchParams(locat
     const now = performance.now(), dt = Math.min(0.25, (now - last) / 1000); last = now;
     dir.update(dt, time * 1000);
     if (state.intro) {
-      // (a small lead: a frame reaches the screen a little after it is issued; a screenshot waits for the next frame,
-      // which carries the newest GL frame, so a lead of the whole GPU time would run ahead of the wall clock)
-      state.intro.t = introT(now + Math.min(150, Q.gpuMs || 0));
+      // (the lead: a frame reaches the screen when the GPU has drawn it and stays until the next one does, so it is
+      // evaluated half a GPU frame ahead; a software renderer's frames take 0.3–0.5 s during the reveal)
+      state.intro.t = introT(now + Math.min(300, 0.5 * (Q.gpuMs || 0)));
       if (state.intro.t >= 1 || dir.x > 0.02) { if (state.intro.t < 1 && state.intro.speed < 4) introSpeed(4); if (state.intro.t >= 1) state.intro = null; }
     }
     frame(now);

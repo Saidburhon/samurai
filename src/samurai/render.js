@@ -56,13 +56,7 @@ export function briefHtml(C, st) {
   const { S } = C, heard = st.pick?.heard;
   const words = st.text ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${markQuotes(st.text, heard?.quotes, st.marked)}</p><button class="tlink more" type="button" data-act="more">${h(S.showText)}</button>`
     : heard?.quotes?.length ? `<span class="lbl mono">${h(S.yourText)}</span><p class="letter">${heard.quotes.map((q, i) => `${C.lang === 'ja' ? '「' : '«'}<mark class="on" style="--i:${i}">${h(q)}</mark>${C.lang === 'ja' ? '」' : '»'}`).join(C.lang === 'ja' ? '' : SEP)}</p>` : '';
-  return `<aside class="brief${st.briefOpen ? ' open' : ''}" aria-label="${h(S.res)}">
-    ${st.source === 'sample' ? `<p class="mono note k">${h(S.sample)}</p>` : ''}
-    <p class="no mono">${h(S.res)} <b>${h(st.meta?.brief_no || '')}</b></p>
-    ${words}
-    ${heard?.summary ? `<span class="lbl mono">${h(byCatalogue(st) ? S.srcFallback : S.heard)}</span><p class="heard-sum${st.fresh.has('heard') ? ' rise' : ''}">${h(heard.summary)}</p>` : ''}
-    ${st.source !== 'shared' ? `<button class="tlink edit" type="button" data-act="edit">${h(S.edit)}</button>` : ''}
-  </aside>`;
+  return `<aside class="brief${st.briefOpen ? ' open' : ''}" aria-label="${h(S.res)}">${st.source === 'sample' ? `<p class="mono note k">${h(S.sample)}</p>` : ''}<p class="no mono">${h(S.res)} <b>${h(st.meta?.brief_no || '')}</b></p>${words}${heard?.summary ? `<span class="lbl mono">${h(byCatalogue(st) ? S.srcFallback : S.heard)}</span><p class="heard-sum${st.fresh.has('heard') ? ' rise' : ''}">${h(heard.summary)}</p>` : ''}${st.source !== 'shared' ? `<button class="tlink edit" type="button" data-act="edit">${h(S.edit)}</button>` : ''}</aside>`;
 }
 
 export function questionsHtml(C, st) {
@@ -160,20 +154,7 @@ export function sheetHtml(C, s, st, { scale, width, inkIn }) {
   const was = st.was?.get(id);
   const mon = money(C, s.monthly_usd, s.monthly_uzs);
   const label = `${S.diff[s.difficulty - 1]}`;
-  return `<article class="sheet${inkIn ? ' ink-in' : ''}${state === 'off' ? ' ghost' : ''}" data-id="${h(id)}" data-state="${state}" aria-labelledby="t-${h(id)}">
-    <p class="sh-top"><b>${h(S.pr[s.priority])}</b>${cat}</p>
-    <h3 id="t-${h(id)}">${h(s.title)}</h3>
-    ${plate}
-    <dl class="sfacts">
-      <div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.big)}</span>` : ''}${bigHtml}<span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div>
-      <div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div>
-      <div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div>
-      <div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div>
-      <div><dt>${h(S.row.why)}</dt><dd class="why">${h(s.why)}</dd></div>
-    </dl>
-    <fieldset class="scope"><legend>${h(S.sc.legend)}</legend>${['off', 'mvp', 'full'].map((v) => `<label class="${st.struck?.has(id) && v === 'off' ? 'struck' : ''}"><input type="radio" name="sc-${h(id)}" value="${v}" data-act="scope" data-id="${h(id)}"${state === v ? ' checked' : ''}><span>${h(S.sc[v])}</span></label>`).join('')}</fieldset>
-    <div class="rows">${rows(C, s, st, entry)}</div>
-  </article>`;
+  return `<article class="sheet${inkIn ? ' ink-in' : ''}${state === 'off' ? ' ghost' : ''}" data-id="${h(id)}" data-state="${state}" aria-labelledby="t-${h(id)}"><p class="sh-top"><b>${h(S.pr[s.priority])}</b>${cat}</p><h3 id="t-${h(id)}">${h(s.title)}</h3>${plate}<dl class="sfacts"><div><dt>${h(S.row.price)}</dt><dd>${was?.big && was.big !== big ? `<span class="was mono-v${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.big)}</span>` : ''}${bigHtml}<span class="small"><span class="nw">${h(small)}${SEP}${h(sc === 'mvp' ? S.mvp : S.full)}</span></span><span class="mid">${h(S[other])}: ${R(money(C, s.usd[other], s.uzs[other])[0])}</span></dd></div><div><dt>${h(S.row.time)}</dt><dd class="mono-v gap">${was?.weeks && was.weeks !== W(s.weeks[sc]) ? `<span class="was${st.wasDrawn?.has(id) ? ' still' : ''}">${R(was.weeks)}</span>` : ''}<span class="nw">${h(S.mvp)} ${h(W(s.weeks.mvp))}</span><span class="nw">${h(S.full)} ${h(W(s.weeks.full))}</span></dd></div><div><dt>${h(S.row.month)}</dt><dd class="mono-v">≈ ${R(mon[0])}</dd></div><div><dt><button type="button" data-act="legend">${h(S.row.diff)}</button></dt><dd class="diffv">${hamonStrip({ difficulty: s.difficulty, seed: seedOf(s.catalogue_id) + 5, label: `${S.row.diff} ${s.difficulty}/5, ${label}` })}<span class="mono-v">${h(s.difficulty)}/5${SEP}${h(label)}</span>${s.difficulty_reason ? `<span>${h(s.difficulty_reason)}</span>` : ''}</dd></div><div><dt>${h(S.row.why)}</dt><dd class="why">${h(s.why)}</dd></div></dl><fieldset class="scope"><legend>${h(S.sc.legend)}</legend>${['off', 'mvp', 'full'].map((v) => `<label class="${st.struck?.has(id) && v === 'off' ? 'struck' : ''}"><input type="radio" name="sc-${h(id)}" value="${v}" data-act="scope" data-id="${h(id)}"${state === v ? ' checked' : ''}><span>${h(S.sc[v])}</span></label>`).join('')}</fieldset><div class="rows">${rows(C, s, st, entry)}</div></article>`;
 }
 // the large price: its range and its unit are each one unbreakable piece ("27,5–42,5" "mln soʻm", "UZS" "27.5–42.5
 // mln", "3,800万〜5,200万" "スム"); a line may break only between the pieces, never inside ドル, スム or "mln soʻm".
@@ -216,9 +197,7 @@ export function notNeededHtml(C, st) {
 
 export function refineHtml(C, st) {
   const { S } = C;
-  return `<section class="refine" aria-labelledby="rf-h"><h2 id="rf-h">${h(S.refine)}</h2><p class="chips">${Object.entries(S.chips).filter(([, v]) => v).map(([k, v]) => `<button type="button" data-act="chip" data-k="${k}" aria-pressed="${st.chips.has(k)}">${h(v)}</button>`).join('')}</p>
-    <form data-act="refine"><label class="vh" for="rf-t">${h(S.refineText)}</label><input id="rf-t" name="t" maxlength="200" placeholder="${h(S.refineText)}"><button class="btn" type="submit"><span>${h(S.refineRun)}</span>${KISSAKI}</button><div class="rf-status" aria-live="polite"></div></form>
-    ${st.removed?.length ? `<p class="removed mono">${h(S.removed)}: ${st.removed.map((t) => `<s>${h(t)}</s>`).join('')}</p>` : ''}</section>`;
+  return `<section class="refine" aria-labelledby="rf-h"><h2 id="rf-h">${h(S.refine)}</h2><p class="chips">${Object.entries(S.chips).filter(([, v]) => v).map(([k, v]) => `<button type="button" data-act="chip" data-k="${k}" aria-pressed="${st.chips.has(k)}">${h(v)}</button>`).join('')}</p><form data-act="refine"><label class="vh" for="rf-t">${h(S.refineText)}</label><input id="rf-t" name="t" maxlength="200" placeholder="${h(S.refineText)}"><button class="btn" type="submit"><span>${h(S.refineRun)}</span>${KISSAKI}</button><div class="rf-status" aria-live="polite"></div></form>${st.removed?.length ? `<p class="removed mono">${h(S.removed)}: ${st.removed.map((t) => `<s>${h(t)}</s>`).join('')}</p>` : ''}</section>`;
 }
 
 export function stampHtml(C, st) {
@@ -229,22 +208,10 @@ export function stampHtml(C, st) {
   const genuine = st.pick?.status === 'ok' && st.sols?.length > 0;
   const signed = genuine && st.verified && st.source !== 'sample';
   const sig = st.source === 'sample' ? S.sampleStamp : signed ? S.signed : genuine ? S.unsigned : '';
-  return `<div class="stamp${signed ? ' signed' : ''}">
-    <div><p>${h(fill(S.stampNo, { no: '\u0001', date })).replace(/ · /g, SEP).replace('\u0001', `<span class="nw">${h(m.brief_no)}</span>`)}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>
-    ${st.expired ? `<p>${h(S.expired)}${SEP}<button class="tlink" type="button" data-act="reprice">${h(S.reprice)}</button></p>` : ''}${st.repriced ? `<p>${h(S.repriced)}</p>` : ''}</div>
-    ${sig ? `<p class="sig">${h(sig)}${signed ? `<i class="hanko${st.stamped ? ' still' : ''}" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i>` : ''}</p>` : ''}
-  </div>`;
+  return `<div class="stamp${signed ? ' signed' : ''}"><div><p>${h(fill(S.stampNo, { no: '\u0001', date })).replace(/ · /g, SEP).replace('\u0001', `<span class="nw">${h(m.brief_no)}</span>`)}</p><p>${h(fill(S.valid, { n: C.cfg.validity || 30 }))}</p><p>${h(F.rateLine(C.rate, lang))}</p>${st.expired ? `<p>${h(S.expired)}${SEP}<button class="tlink" type="button" data-act="reprice">${h(S.reprice)}</button></p>` : ''}${st.repriced ? `<p>${h(S.repriced)}</p>` : ''}</div>${sig ? `<p class="sig">${h(sig)}${signed ? `<i class="hanko${st.stamped ? ' still' : ''}" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="1.2"/><use href="#mon" x="5" y="5" width="22" height="22" class="m"/></svg></i>` : ''}</p>` : ''}</div>`;
 }
 
 export function actionsHtml(C) {
   const { S } = C, tel = C.cfg.phone.replace(/[^\d+]/g, '');
-  return `<div class="actions">
-    <button class="btn solid" type="button" data-act="lead"><span>${h(S.lead)}</span>${KISSAKI}</button>
-    <button class="btn" type="button" data-act="share"><span>${h(S.share)}</span></button>
-    <button class="tlink" type="button" data-act="copy">${h(S.copy)}</button>
-    ${S.tg ? `<button class="tlink" type="button" data-act="tg">${h(S.tg)}</button>` : ''}
-    <button class="tlink" type="button" data-act="mail">${h(S.mail)}</button>
-    <button class="tlink" type="button" data-act="pdf">${h(S.pdf)}</button>
-    <a href="tel:${h(tel)}">${h(C.cfg.phone.replace(/ /g, '\u00a0'))}</a> <a href="mailto:${h(C.cfg.email)}" data-act="mailto">${h(C.cfg.email)}</a>
-  </div>`;
+  return `<div class="actions"><button class="btn solid" type="button" data-act="lead"><span>${h(S.lead)}</span>${KISSAKI}</button><button class="btn" type="button" data-act="share"><span>${h(S.share)}</span></button><button class="tlink" type="button" data-act="copy">${h(S.copy)}</button>${S.tg ? `<button class="tlink" type="button" data-act="tg">${h(S.tg)}</button>` : ''}<button class="tlink" type="button" data-act="mail">${h(S.mail)}</button><button class="tlink" type="button" data-act="pdf">${h(S.pdf)}</button><a href="tel:${h(tel)}">${h(C.cfg.phone.replace(/ /g, '\u00a0'))}</a> <a href="mailto:${h(C.cfg.email)}" data-act="mailto">${h(C.cfg.email)}</a></div>`;
 }
