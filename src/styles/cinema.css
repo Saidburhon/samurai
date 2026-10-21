@@ -253,7 +253,10 @@ html.film .s-togi .after { display: block; position: absolute; left: var(--m); t
 html.film .s-togi .hako[data-beat] { display: flex; }
 /* 鍔 B15–B16 */
 html.film .s-tsuba .b-carpet { position: absolute; left: var(--m); bottom: 120px; margin: 0; width: calc(7 * var(--col) + 6 * var(--g)); }
-html.film .s-tsuba .b-team { position: absolute; left: var(--m); top: 50%; margin: 0; padding: 0; border: 0; transform: translateY(-50%); }
+/* B16: the team line top-left on the indigo, in two lines, clear of the warm pool of light (r1: set across the pool's
+   brightest part, its andon type washed out) */
+html.film .s-tsuba .b-team { position: absolute; left: var(--m); top: 128px; margin: 0; padding: 0; border: 0; transform: none; }
+html.film .s-tsuba .b-team .st.xl { white-space: normal; max-width: 6.4em; line-height: 1.02; }
 /* 時 B17–B19: the kicker, the big clocks and one line on the left; the dial on the paper */
 html.film .s-toki > .kick { position: absolute; left: var(--m); top: 112px; }
 html.film .s-toki .clocks-big { position: absolute; left: var(--m); top: 150px; margin: 0; }
@@ -282,6 +285,20 @@ html.film .foot .colophon { padding-top: 14px; }
   html.film .s-tsuba .b-carpet { top: 92px; bottom: auto; width: auto; right: var(--m); }
   html.film .s-tsuba .b-carpet .st { font-size: 26px; }
   html.film .s-tsuba .b-team { top: auto; bottom: 96px; transform: none; }
+  /* the phone's carpet poster carries one headline: the team line (B15's line stays on the desktop's own beat) */
+  html.film .s-tsuba .b-carpet { display: none; }
+  /* B14: the statement under the guard, never across it */
+  html.film .s-tsuba .b-guard { bottom: 64px; }
+  html.film .s-tsuba .b-guard .cap { margin-top: 22px; }
+  /* B2–B6: the whole list, right-aligned to the margin, one column (r1: it ran off the right edge) */
+  html.cinema .svc { left: auto; right: var(--m); bottom: 60px; font-size: 14px; columns: auto; }
+  html.cinema .svc li { padding: 5px 0 5px 22px; }
+  html.cinema .svc li.on { font-size: 16px; }
+  html.cinema .svc li::before { width: 12px; }
+  /* B19: the 報連相 strip at the hakogaki's phone size */
+  html.film .s-toki .hako.hrs b { font-size: 26px; }
+  /* B20: the h2 runs to two lines on the phone; the line goes under both */
+  html.film .s-noto .pre { top: calc(128px + 2.2 * 40px + 22px); }
   html.film .s-tsuba .st.xl { font-size: 34px; }
   html.film .s-toki > .kick { top: 76px; }
   html.film .s-toki .clocks-big { top: 100px; }

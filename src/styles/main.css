@@ -295,6 +295,7 @@ html.menu-open .nav::after { display: none; }
 html.dark .kring { border-color: rgba(236, 230, 218, .6); }
 html.cinema.kt-pool #paper .lamp-pool { display: block; position: absolute; left: 0; top: 0; width: 420px; height: 420px; pointer-events: none;
   background: radial-gradient(closest-side, rgba(255, 214, 160, .06), rgba(255, 214, 160, .035) 45%, transparent); }
+html.cinema .klabel { position: absolute; inset: 0; z-index: 3; color: var(--fg); pointer-events: none; }
 .klabel .lt.below { transform: translate(-50%, 0); padding: 8px 0 0; }
 @media (prefers-reduced-motion: no-preference) {
   html.snd .sound svg { opacity: 1; animation: snd 1.2s cubic-bezier(.45, 0, .55, 1) infinite alternate; transform-origin: 50% 50%; }

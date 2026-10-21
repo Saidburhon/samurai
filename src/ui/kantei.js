@@ -51,13 +51,15 @@ export function initToys(F, stage) {
   const ring = document.createElement('div');
   ring.className = 'kring'; ring.setAttribute('aria-hidden', 'true');
   document.body.appendChild(ring);
+  // (its own layer beside #labels: the film's Labels empties #labels whenever a hold changes)
   const lab = document.createElement('div');
-  lab.className = 'plabel klabel';
-  if (labelsEl) labelsEl.appendChild(lab);
+  lab.className = 'plabel klabel'; lab.setAttribute('aria-hidden', 'true');
+  if (labelsEl) labelsEl.after(lab);
 
   const P = { x: -1, y: -1, armed: false, moved: -1e9, zoneT: -1e9, touch: false };
   const S = { s: 0.78, zf: 0.60, wP: 0, k1: 0, k2: 0, ringT: -1e9, last: performance.now(), drawT: 0, on: false, geo: null, label: '', labelKey: '', poolOn: false };
   Q.toys = S;
+  Q.toyLocate = (x, y) => { if (!S.geo) return null; const L = locate(S.geo, [x, y]); return { s: +L.s.toFixed(3), zf: +L.zf.toFixed(2), d: Math.round(L.d), part: L.part }; };
 
   const hero = () => {
     const d = F.state.d;
@@ -109,8 +111,8 @@ export function initToys(F, stage) {
     let part;
     if (dTsuba <= Math.min(dBlade, dGrip)) part = 'tsuba';
     else if (dGrip < dBlade) part = 'tsuka';
-    else if (s > 0.88) part = 'kissaki';
-    else part = zf < 0.5 ? 'shinogi' : 'hamon';
+    else if (s > 0.8) part = 'kissaki';
+    else part = zf < 0.3 ? 'shinogi' : 'hamon'; // the shinogi-ji lies above the ridge line (zf 0.28)
     return { s, zf, d, part, sp, ed };
   }
 
@@ -197,7 +199,6 @@ export function initToys(F, stage) {
       const u = 1 / g.ppu;
       for (const n of FITTINGS) P_[n].position.set(-KANTEI[n] * k * u, 0, 0);
       for (const n of GRIP) P_[n].position.set(-KANTEI.tsuka * k * u, 0, 0);
-      P_.mekugi.position.y = KANTEI.mekugi * k * u;
       if (st.nakagoMesh) st.nakagoMesh.visible = true;
     } else for (const n of [...FITTINGS, ...GRIP]) P_[n].position.set(0, 0, 0);
     // the lamp and its glint
@@ -232,7 +233,7 @@ export function initToys(F, stage) {
     const across = n(L.ed[0] - L.sp[0], L.ed[1] - L.sp[1]);
     // the anchor a little towards the habaki from the cursor, so the label never sits under the ring
     const s0 = clamp(L.s - 0.07, 0.04, 0.84);
-    if (L.part === 'kissaki') { at = st.project(st.point({ s: 0.985, zf: 0.2 })); dir = n(-0.35, -0.94); }
+    if (L.part === 'kissaki') { const up = L.zf < 0.5; at = st.project(st.point({ s: 0.955, zf: up ? 0.05 : 0.95 })); dir = up ? [-across[0], -across[1]] : across; }
     else if (L.part === 'shinogi') { at = st.project(st.point({ s: s0, zf: 0.28 })); dir = [-across[0], -across[1]]; }
     else if (L.part === 'hamon') { at = st.project(st.point({ s: s0, zf: 0.74 })); dir = across; }
     else if (L.part === 'tsuba') { at = [g.tsuba[0], g.tsuba[1] - g.tsR]; dir = [0, -1]; }
