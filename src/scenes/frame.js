@@ -117,6 +117,8 @@ export class Film {
     const sori = !same && tr.type === 'spin' ? lerp(A.pose.sori, B.pose.sori, ease('cam')(Math.min(1, p.cam * 2))) : lerp(A.pose.sori, B.pose.sori, ec);
     const sheath = lerp(A.sheath, B.sheath, e.mat);
     this.pose(roll, lerp(A.pose.pitch, B.pose.pitch, ec), sori, lerp(A.lift, B.lift, ec), H, sheath);
+    // Y2 (§2.3): the Yaki holds are ink plates on the paper (scenes/plates.js); the sword is not drawn there
+    st.sword.visible = !H.hide;
     // look (every value mixed in linear space)
     const L = same ? A.L : mixLook(A.L, B.L, e.look);
     st.applyLook(H.look, L);

@@ -233,6 +233,19 @@ html.film .s-yaki .beat { position: absolute; inset: 0; display: block; padding:
 html.film .s-yaki .big { position: absolute; left: var(--m); top: 140px; margin: 0; }
 html.film .s-yaki .line { position: absolute; left: var(--m); top: calc(140px + 1.08 * clamp(48px, calc(96 * var(--fit)), 96px) + 14px); max-width: 28em; padding: 0; color: var(--hagane); }
 html.film .s-yaki .hako, html.film .s-yaki .beat[data-beat="yaki.quench"] .hako { top: 128px; }
+/* Y2 (§2.3): the four steps in sumi ink on the washi, the flow page's plates set inline (scenes/plates.js); the text
+   sits on the paper in sumi */
+html.film .s-yaki, html.film .s-yaki .beat { --fg: var(--sumi); --fg2: var(--kurogane); --line: rgba(15, 14, 12, .22); color: var(--sumi); }
+html.film .s-yaki .line { color: var(--kurogane); }
+html.film .s-yaki .plate.pl { display: block; position: absolute; left: 0; top: 0; width: 0; height: 0; margin: 0; padding: 0; overflow: visible; pointer-events: none; grid-column: auto; }
+html.film .s-yaki .pl-in { position: absolute; left: 0; top: 0; transform-origin: 0 0; color: var(--sumi); }
+html.film .s-yaki .pl-in svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+html.film .s-yaki .pl-in g { stroke: #1A1714; }
+.pl-in .k1 { stroke-width: 1.15; opacity: .9; } .pl-in .k2 { stroke-width: .9; opacity: .84; } .pl-in .k3 { stroke-width: .75; opacity: .7; }
+.pl-in .k4 { stroke-width: .6; opacity: .66; } .pl-in .k5 { stroke-width: .5; opacity: .5; } .pl-in .k6 { stroke-width: .5; opacity: .42; }
+.pl-in .d1 { stroke-width: .7; opacity: .75; } .pl-in .d2 { stroke-width: .6; opacity: .6; } .pl-in .d3 { stroke-width: .55; opacity: .5; }
+.pl-in .cl { stroke-dasharray: 14 3 1.5 3; } .pl-in .dash { stroke-dasharray: 2 3; } .pl-in .dash2 { stroke-dasharray: 2 2; } .pl-in .hid { stroke-dasharray: 5 3; }
+.pl-in .dot { stroke-width: 1.1; opacity: .55; } .pl-in .fill { fill: #1A1714; stroke: none; }
 /* 研: the rub hint near the blade (B11), "even after launch" under the statement (B13) */
 html.film .s-togi .hint { display: block; position: absolute; left: var(--m); bottom: 112px; font-size: 13px; color: var(--kurogane); }
 html.film .s-togi .hint .tch { display: none; }
@@ -264,7 +277,7 @@ html.film .foot .colophon { padding-top: 14px; }
 @media (aspect-ratio < 1.2) {
   html.film .s-yaki > .kick { top: 76px; }
   html.film .s-yaki .big { top: 96px; font-size: 48px; }
-  html.film .s-yaki .line { top: auto; bottom: 120px; right: var(--m); font-size: 16px; }
+  html.film .s-yaki .line { top: 160px; bottom: auto; right: var(--m); font-size: 16px; }
   html.film .s-togi .after { top: auto; bottom: 150px; font-size: 24px; }
   html.film .s-tsuba .b-carpet { top: 92px; bottom: auto; width: auto; right: var(--m); }
   html.film .s-tsuba .b-carpet .st { font-size: 26px; }

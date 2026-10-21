@@ -7,6 +7,7 @@
 import { BEATS, PHONE, PORT_ALIAS, SCENE_OF, SCENES } from '../core/shots.js';
 import { SEQ, isFreeze } from '../core/tracks.js';
 import { EASES } from '../core/eases.js';
+import { Plates } from './plates.js';
 
 const SECTION_BEATS = (id) => {
   if (id === 'temur') return ['temur.quote'];
@@ -48,6 +49,7 @@ export class Dom {
     const row = document.querySelector('.contact .row');
     if (row && !row.querySelector('.hanko-c')) { const h = document.querySelector('.s-mei .hanko svg'); if (h) { const i = document.createElement('i'); i.className = 'hanko-c'; i.setAttribute('aria-hidden', 'true'); i.appendChild(h.cloneNode(true)); row.appendChild(i); } }
     this.ruler = [...document.querySelectorAll('.ruler li')];
+    this.plates = new Plates();
   }
   add(el, beats, sec) {
     el.classList.add('tk');
@@ -96,6 +98,7 @@ export class Dom {
     // the beat's own state: data-beat for the CSS, the lit services, the ruler
     const beatAttr = d.intro ? 'mei.hero' : d.hold || near;
     if (html.dataset.beat !== beatAttr) html.dataset.beat = beatAttr;
+    this.plates.apply(d);
     const lit = (SVC[layout] || SVC.land)[near] || [];
     for (const li of this.items) { const on = lit.includes(li.dataset.g); if (li.classList.contains('on') !== on) li.classList.toggle('on', on); }
     const si = SCENES.indexOf(scene);

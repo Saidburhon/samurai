@@ -282,3 +282,21 @@ html.menu-open .nav::after { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
 }
+
+/* ---- G2/G5 toys (src/ui/kantei.js): the kantei ring cursor, the lamp's pool on the paper, the part label below
+   the blade, the sound toggle's bars while sound is on ---- */
+.kring { position: fixed; left: -17px; top: -17px; width: 34px; height: 34px; z-index: 40; pointer-events: none; opacity: 0;
+  border: 1px solid rgba(15, 14, 12, .62); border-radius: 50%; transition: opacity .4s cubic-bezier(.45, 0, .55, 1); }
+.kring::before { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px; border-radius: 50%; background: var(--shu); }
+.kring::after { content: ""; position: absolute; inset: -6px; border-radius: 50%;
+  background: conic-gradient(from -2deg, rgba(15, 14, 12, .55) 0 4deg, transparent 4deg 90deg, rgba(15, 14, 12, .55) 90deg 94deg, transparent 94deg 180deg, rgba(15, 14, 12, .55) 180deg 184deg, transparent 184deg 270deg, rgba(15, 14, 12, .55) 270deg 274deg, transparent 274deg);
+  -webkit-mask: radial-gradient(circle, transparent 21.5px, #000 22px, #000 23px, transparent 23.5px); mask: radial-gradient(circle, transparent 21.5px, #000 22px, #000 23px, transparent 23.5px); }
+.kring.on { opacity: 1; transition: opacity .08s linear; }
+html.dark .kring { border-color: rgba(236, 230, 218, .6); }
+html.cinema.kt-pool #paper .lamp-pool { display: block; position: absolute; left: 0; top: 0; width: 420px; height: 420px; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 214, 160, .06), rgba(255, 214, 160, .035) 45%, transparent); }
+.klabel .lt.below { transform: translate(-50%, 0); padding: 8px 0 0; }
+@media (prefers-reduced-motion: no-preference) {
+  html.snd .sound svg { opacity: 1; animation: snd 1.2s cubic-bezier(.45, 0, .55, 1) infinite alternate; transform-origin: 50% 50%; }
+}
+@keyframes snd { from { transform: scaleY(.55); } to { transform: scaleY(1); } }

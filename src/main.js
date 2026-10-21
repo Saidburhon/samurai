@@ -40,7 +40,7 @@ function startCinema() {
   // whole drawing to bring it (the build does not modulepreload it: flow-mode phones must not pay for it, Addendum 2);
   // evaluating its modules is only class definitions. Nothing GL runs before the gate below (0.80 s).
   let mods = null;
-  const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js'), import('./core/film.js')]).then((m) => { log('fetched', performance.now()); return m; }));
+  const load = () => mods || (mods = Promise.all([import('./gl/index.js'), import('./core/poster.js'), import('./core/film.js'), import('./ui/kantei.js')]).then((m) => { log('fetched', performance.now()); return m; }));
   // once the chunk has arrived: the geometries in idle time, and the renderer with the two hero programs issued (a
   // few ms of main-thread work; their links run in the GPU process during the drawing, gl/index.js precompile). The
   // canvas stays out of the page until glReady (gl-warm)
@@ -79,13 +79,14 @@ function startCinema() {
     // on the boot path the canvas stays out of the page until glReady: the prewarm draws then never ask the
     // compositor for a frame of it (a software composite of the whole page, in the GPU process, between the programs)
     if (!q.has('beat')) html.classList.add('gl-warm');
-    const [{ boot }, poster, filmM] = await load();
+    const [{ boot }, poster, filmM, toysM] = await load();
     log('imported', performance.now());
     // wait for the cinema stylesheet (app_css loads without blocking the first paint)
     for (let i = 0; i < 200 && !getComputedStyle(html).getPropertyValue('--cinema-css'); i++) await new Promise((r) => setTimeout(r, 15));
-    const canvas = document.getElementById('gl');
-    const { stage, warm } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst'), bakes });
+    const canvas0 = document.getElementById('gl');
+    const { stage, warm } = await boot({ canvas: canvas0, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst'), bakes });
     Q.stage = stage;
+    guardContext(stage.renderer.domElement);
     if (q.has('beat')) {
       await warm();
       if (q.has('poster')) await poster.runPoster(stage, log);
@@ -112,6 +113,8 @@ function startCinema() {
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot', 'gl-warm');
       // the film takes over: the reveal and the lift, then the scroll (G3)
       const F = filmM.startFilm({ stage, log, q, intro: html.classList.contains('intro'), glReady: performance.now() });
+      // the hero's toys (G2/G5): the lamp orbit, the cursor lamp, kantei, the part label, the ring cursor, the ring
+      try { Q.toysApi = toysM.initToys(F, stage); } catch (e) { Q.toyError = String(e && e.stack || e); }
       // Idle work from 6.2 s, one item per idle period (never during the reveal or the lift, §6.3), before any later
       // scene can be reached: the word atlas, the full-size hada (big tiers), then the programs of the later scenes
       // (the full guard, the tang, the lacquer, the floor, the two other steel programs). A prewarm draws into the
@@ -140,4 +143,27 @@ function startCinema() {
       }, Math.max(0, 6200 - performance.now()));
     }
   }).catch((e) => { Q.glError = String(e && e.stack || e); console.error(e); }).finally(() => html.classList.remove('gl-boot', 'gl-warm'));
+}
+
+// WebGL context loss (G6): the film cannot go on without its textures and targets. Wait up to 2 s for the browser to
+// restore the context; restored, the page reloads at the same beat (#b=, no intro); not restored, it reloads as the
+// flow page (?tier=0) at the same scene. Either way the visitor keeps their place and never sees a dead canvas.
+const SCENE_ID = { mei: 'mei', utsuri: 'xizmatlar', yaki: 'jarayon', togi: 'kaizen', tsuba: 'tsuba', toki: 'vaqt', temur: 'temur', noto: 'aloqa', bookend: 'aloqa' };
+function guardContext(canvas) {
+  if (!canvas || canvas.__guard) return;
+  canvas.__guard = true;
+  let timer = 0;
+  const go = (restored) => {
+    const name = Q.name || 'mei.hero', u = new URL(location.href);
+    if (restored) { u.hash = 'b=' + name; } else { u.searchParams.set('tier', '0'); u.hash = SCENE_ID[name.split('.')[0]] || 'mei'; }
+    Q.contextLost = restored ? 'restored' : 'flow';
+    location.replace(u.toString());
+    if (restored) location.reload();
+  };
+  canvas.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    Q.contextLost = 'lost';
+    clearTimeout(timer); timer = setTimeout(() => go(false), 2000);
+  });
+  canvas.addEventListener('webglcontextrestored', () => { clearTimeout(timer); go(true); });
 }

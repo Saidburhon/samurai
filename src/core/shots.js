@@ -118,23 +118,25 @@ S['utsuri.backend'].sign = { row: 3, s: 0.64, zf: 0.72, width: 3.4, alpha: 1 };
 
 // 焼 Yaki (rough: the forge program, the water and the heat glow arrive with the scene at G4; here the bare, unpolished
 // blade with its tang, straight until the launch, on the forge table and over the water)
-const forge = { ...BASE, koshirae: 0, nakago: 1, polishFront: -0.05, glint: null };
+// Fallback Y2 (§2.3, decided at the final pass: the 3D forge and water never read as hot steel and real water): the
+// four steps are the oshigata plates on washi (scenes/plates.js); the sword is not drawn (hide), no ink layer
+const forge = { ...BASE, koshirae: 0, nakago: 1, polishFront: -0.05, glint: null, hide: 1 };
 S['yaki.plan'] = {
-  ...forge, look: 'ro', pose: { roll: 0, pitch: 0, sori: 0 }, ground: 'ro', lampPos: { at: { s: 0.5, zf: 0.5 }, add: [0, 6, 0.5] },
-  land: { cam: { mode: 'td', A: { s: 0, zf: 0 }, a: [0.266, 0.49], B: { s: 1, zf: 0 }, b: [0.92, 0.49], fov: 20, lift: 0.05 }, ink: { fit: 'plan', draw: 'plan', off: [8, 24] } },
-  port: { cam: { mode: 'td', A: { s: 0.15, zf: 0 }, a: [0.0, 0.48], B: { s: 0.85, zf: 0 }, b: [1.0, 0.48], fov: 20, lift: 0.05 }, ink: { fit: 'plan', draw: 'plan', off: [6, 14] } },
+  ...forge, look: 'ro', pose: { roll: 0, pitch: 0, sori: 0 }, ground: 'washi', lampPos: { at: { s: 0.5, zf: 0.5 }, add: [0, 6, 0.5] },
+  land: { cam: { mode: 'td', A: { s: 0, zf: 0 }, a: [0.266, 0.49], B: { s: 1, zf: 0 }, b: [0.92, 0.49], fov: 20, lift: 0.05 } },
+  port: { cam: { mode: 'td', A: { s: 0.15, zf: 0 }, a: [0.0, 0.48], B: { s: 0.85, zf: 0 }, b: [1.0, 0.48], fov: 20, lift: 0.05 } },
 };
 S['yaki.heat'] = {
-  ...forge, look: 'ro-hot', pose: { roll: 0, pitch: 0, sori: 0 }, ground: 'ro', lampPos: { at: { s: 0.5, zf: 0.5 }, add: [0, 6, 0.5] },
-  land: { cam: { mode: 'td', A: { s: 0, zf: 0 }, a: [0.211, 0.65], B: { s: 1, zf: 0 }, b: [1.02, 0.229], fov: 20, lift: 0.05 }, ink: { fit: 'plan', draw: 'plan', off: [8, 24], alpha: 0.35 } },
+  ...forge, look: 'ro-hot', pose: { roll: 0, pitch: 0, sori: 0 }, ground: 'washi', lampPos: { at: { s: 0.5, zf: 0.5 }, add: [0, 6, 0.5] },
+  land: { cam: { mode: 'td', A: { s: 0, zf: 0 }, a: [0.211, 0.65], B: { s: 1, zf: 0 }, b: [1.02, 0.229], fov: 20, lift: 0.05 } },
 };
 S['yaki.quench'] = {
-  ...forge, look: 'mizu-hot', pose: { roll: 0, pitch: -0.42, sori: 0 }, ground: 'mizu', lampPos: { at: { s: 0.5, zf: 0.5 }, add: [-2, 4, 3] },
+  ...forge, look: 'mizu-hot', pose: { roll: 0, pitch: -0.42, sori: 0 }, ground: 'washi', lampPos: { at: { s: 0.5, zf: 0.5 }, add: [-2, 4, 3] },
   land: { cam: { mode: 'orbit', target: { s: 0.45 }, az: -20, el: 6, dist: 7.5, fov: 24, ang: -24, off: [0, -0.05] } },
   port: { cam: { mode: 'orbit', target: { s: 0.45 }, az: -10, el: 6, dist: 9, fov: 28, ang: 90, off: [0, 0] } },
 };
 S['yaki.launch'] = {
-  ...forge, look: 'mizu', pose: { roll: 0, pitch: -0.08, sori: 1 }, ground: 'mizu', lampPos: { at: { s: 0.6, zf: 0.5 }, add: [-2, 3, 4] },
+  ...forge, look: 'mizu', pose: { roll: 0, pitch: -0.08, sori: 1 }, ground: 'washi', lampPos: { at: { s: 0.6, zf: 0.5 }, add: [-2, 3, 4] },
   land: { cam: { mode: 'orbit', target: { s: 0.5 }, az: -15, el: -4, dist: 8.0, fov: 24, ang: -18, off: [0, -0.10] } },
   port: { cam: { mode: 'orbit', target: { s: 0.5 }, az: -10, el: -4, dist: 9.5, fov: 28, ang: 90, off: [0, 0] } },
 };
@@ -223,11 +225,12 @@ export const TRANS = {
   'utsuri.web': { type: 'cam', studioW: 0.15, words: true },
   'utsuri.telegram': { type: 'cam', studioW: 0.15, words: true, flip: true },
   'utsuri.backend': { type: 'cam', studioW: 0.15, words: true },
-  'utsuri.ai': { type: 'spin', studioW: 0, spin: 2 * Math.PI, swap: 0.6, groups: { cam: [0.2, 0.8, 'spin'], look: [0.45, 0.75, 'sine'], mat: [0.5, 0.7, 'sine'], sign: [0.2, 0.45, 'sine'], ink: [0.6, 0.8, 'sine'] } },
+  // (Y2: the forge is a sheet of washi with the plates; the steel is cut away on the house diagonal)
+  'utsuri.ai': { type: 'cut', cut: { ang: -18, at: [0.5, 0.5] } },
   'yaki.plan': { type: 'cam' },
   'yaki.heat': { type: 'cam' },
   'yaki.quench': { type: 'cam' },
-  'yaki.launch': { type: 'cut', cut: { ang: 0, at: [0.5, 0.82] } },
+  'yaki.launch': { type: 'cut', cut: { ang: -18, at: [0.5, 0.56] } },
   'togi.stone': { type: 'cam', groups: { mat: [0.15, 0.85, 'power1.inOut'] } },
   'togi.front': { type: 'cam', groups: { mat: [0.15, 0.85, 'power1.inOut'], sign: [0.6, 0.85, 'sine'] } },
   'togi.mirror': { type: 'cut', cut: { ang: 90, at: [0.5, 0.5] } },
