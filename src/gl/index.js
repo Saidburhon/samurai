@@ -26,8 +26,9 @@ function adopt(canvas, tier) {
 export async function boot({ canvas: el, tier, log = () => {}, bakeFirst = true }) {
   const t0 = performance.now();
   const { canvas, context } = adopt(el, tier);
+  log('adopted', context ? 1 : 0); log('adoptMs', performance.now() - t0);
   const stage = new Stage(canvas, tier, context);
-  log('adopted', context ? 1 : 0);
+  log('stageMs', performance.now() - t0);
   const r = stage.renderer;
   const W = canvas.clientWidth || innerWidth, H = canvas.clientHeight || innerHeight;
   log('renderer', performance.now() - t0);

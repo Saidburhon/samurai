@@ -36,7 +36,7 @@ function startCinema() {
   const when = q.has('beat') ? Promise.resolve() : new Promise((res) => {
     const last = [...document.querySelectorAll('#osh-hero path[pathLength], #osh-hero .fill, .osh-labels .ol')].pop();
     let done = false; const go = () => { if (!done) { done = true; res(); } };
-    const at = Math.max(0, 800 - performance.now());
+    const at = Math.max(0, (+q.get('gate') || 800) - performance.now());
     const busy = () => (document.getAnimations ? document.getAnimations().some((a) => a.playState === 'running' && a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('#osh-paper')) : false);
     // (polled: the last element in the list is not always the last to finish)
     const t0 = performance.now() + at;
@@ -56,7 +56,7 @@ function startCinema() {
     // wait for the cinema stylesheet (app_css loads without blocking the first paint)
     for (let i = 0; i < 200 && !getComputedStyle(html).getPropertyValue('--cinema-css'); i++) await new Promise((r) => setTimeout(r, 15));
     const canvas = document.getElementById('gl');
-    const { stage } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') });
+    const { stage } = await boot({ canvas, tier, log, bakeFirst: q.has('beat') || q.has('bakefirst') });
     Q.stage = stage;
     if (q.has('beat')) {
       await poster.runPoster(stage, log);
@@ -68,7 +68,7 @@ function startCinema() {
       await p.apply('intro', { reveal: 0 });
       log('apply', performance.now() - t); t = performance.now();
       // dev: ?prewarm splits the first frame into each program's first draw (1 x 1 scissor) and the frame itself
-      if (q.has('prewarm')) { stage.blade.name = 'steel'; Q.prewarm = stage.prewarm([stage.blade, stage.parts.tsuba, stage.parts.tsuka]); log('prewarm', performance.now() - t); t = performance.now(); }
+      if (q.has('prewarm')) { stage.blade.name = 'steel'; Q.prewarm = stage.prewarm([stage.blade, stage.parts.tsuba, stage.parts.tsuka]); if (q.get('prewarm') === '2') Q.prewarm2 = stage.prewarm([stage.blade]); log('prewarm', performance.now() - t); t = performance.now(); }
       p.render(); stage.finish();
       log('frame1', performance.now() - t);
       Q.glReady = true; log('glReady', performance.now()); html.classList.remove('gl-boot');
